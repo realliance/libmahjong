@@ -1,5 +1,5 @@
 set(DIR ${CMAKE_CURRENT_LIST_DIR})
-target_sources(RiichiRoyale
+target_sources(LibMahjong
   PRIVATE
     "${DIR}/angrydiscardobot.cpp"
     "${DIR}/angrydiscardobot.h"

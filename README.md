@@ -44,7 +44,7 @@ Windows requires Visual Studio 2019, which can be found [here](https://visualstu
 Clone the repository:
 
 ```
-git clone git@github.com:HartleyAHartley/RiichiRoyale.git
+git clone git@github.com:HartleyAHartley/LibMahjong.git
 ```
 
 Run the following commands within the project directory (note that these commands are for ):
