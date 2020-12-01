@@ -26,7 +26,6 @@ git clone ggit@github.com:realliance/libmahjong.git
 
 Run the following commands within the project directory (note that these commands are for ):
 ```
-
 # Bootstrap CMake Environment
 cmake -S . -B build
 
