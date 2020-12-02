@@ -9,7 +9,7 @@ namespace Mahjong {
 class Piece {
  public:
   Piece() = default;
-  //NOTLINTNEXTLINE(google-explicit-constructor)
+  //NOLINTNEXTLINE(google-explicit-constructor)
   Piece(uint8_t p) : p(p) {}
 
   // TERMINAL_BIT, SUIT_2, RED_FIVE, PIECE_4

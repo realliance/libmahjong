@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 set(CMAKE_CXX_STANDARD 20)
 include(FetchContent)
-project(LibMahjong)
+project(libmahjong)
 include(ProcessorCount)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -10,18 +10,18 @@ option(PACKAGE_TOOLS "Build the tools" OFF)
 option(USE_CLANG_TIDY "Use Clang Tidy" OFF)
 option(CI_CLANG_FORMAT_FLAGS "Use CI Clang Format Flags" OFF)
 
-add_subdirectory(${LibMahjong_SOURCE_DIR}/libs)
+add_subdirectory(${libmahjong_SOURCE_DIR}/libs)
 
 if(PACKAGE_TESTS)
   enable_testing()
   include(GoogleTest)
-  add_subdirectory(${LibMahjong_SOURCE_DIR}/tests)
+  add_subdirectory(${libmahjong_SOURCE_DIR}/tests)
 endif()
 
-add_library(LibMahjong SHARED)
+add_library(libmahjong SHARED)
 
-set_target_properties(LibMahjong PROPERTIES PREFIX "")
-set_target_properties(LibMahjong PROPERTIES OUTPUT_NAME "libmahjong")
+set_target_properties(libmahjong PROPERTIES PREFIX "")
+set_target_properties(libmahjong PROPERTIES OUTPUT_NAME "libmahjong")
 
 ProcessorCount(N)
 if(NOT N EQUAL 0)
@@ -40,32 +40,27 @@ else()
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  target_compile_options(LibMahjong PRIVATE -pedantic -Wall -Wmost -Wextra)
+  target_compile_options(libmahjong PRIVATE -pedantic -Wall -Wmost -Wextra)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  target_compile_options(LibMahjong PRIVATE -pedantic -Wall -Wextra)
+  target_compile_options(libmahjong PRIVATE -pedantic -Wall -Wextra)
 endif()
 
-add_subdirectory(${LibMahjong_SOURCE_DIR}/include)
-add_subdirectory(${LibMahjong_SOURCE_DIR}/aicontrollers)
-add_subdirectory(${LibMahjong_SOURCE_DIR}/src)
+add_subdirectory(${libmahjong_SOURCE_DIR}/include)
+add_subdirectory(${libmahjong_SOURCE_DIR}/controllers)
+add_subdirectory(${libmahjong_SOURCE_DIR}/src)
 
-get_target_property(_sources LibMahjong SOURCES)
-
-if(PACKAGE_TESTS)
-  get_target_property(_sources LibMahjong SOURCES)
-  add_library(TestLibMahjong ${_sources})
-  target_include_directories(TestLibMahjong PUBLIC "${LibMahjong_SOURCE_DIR}/include")
-  target_include_directories(TestLibMahjong PUBLIC "${LibMahjong_SOURCE_DIR}/aicontrollers")
-endif()
+get_target_property(libmahjong_sources libmahjong SOURCES)
 
 if(PACKAGE_TOOLS)
-  add_subdirectory(${LibMahjong_SOURCE_DIR}/tools)
+  add_subdirectory(${libmahjong_SOURCE_DIR}/tools)
+  get_target_property(driver_sources driver SOURCES)
+  list(APPEND libmahjong_sources "${driver_sources}" )
 endif()
 
-target_link_libraries(LibMahjong PRIVATE ${CMAKE_DL_LIBS})
+target_link_libraries(libmahjong PRIVATE ${CMAKE_DL_LIBS})
 
-target_include_directories(LibMahjong PUBLIC "${LibMahjong_SOURCE_DIR}/include")
-target_include_directories(LibMahjong PUBLIC "${LibMahjong_SOURCE_DIR}/aicontrollers")
+target_include_directories(libmahjong PUBLIC "${libmahjong_SOURCE_DIR}/include")
+target_include_directories(libmahjong PUBLIC "${libmahjong_SOURCE_DIR}/controllers")
 
 add_custom_target(
   check
@@ -75,22 +70,22 @@ add_custom_target(
 
 find_program(iwyu_path NAMES include-what-you-use iwyu)
 if(iwyu_path)
-  set_property(TARGET LibMahjong PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
+  set_property(TARGET libmahjong PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
 endif()
 
 if (clang_tidy_path)
   add_custom_target(
     tidy
     COMMAND clang-tidy
-      --quiet --warnings-as-errors=* -p ${LibMahjong_BINARY_DIR} ${_sources}
-    WORKING_DIRECTORY ${LibMahjong_SOURCE_DIR}
+      --quiet --warnings-as-errors=* -p ${libmahjong_BINARY_DIR} ${libmahjong_sources}
+    WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
     VERBATIM
   )
   add_custom_target(
     fix
     COMMAND clang-tidy
-      --quiet --fix --fix-errors -p ${LibMahjong_BINARY_DIR} ${_sources}
-    WORKING_DIRECTORY ${LibMahjong_SOURCE_DIR}
+      --quiet --fix --fix-errors -p ${libmahjong_BINARY_DIR} ${libmahjong_sources}
+    WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
     VERBATIM
   )
 endif()
@@ -113,8 +108,8 @@ if (clang_format_path)
     format
     ALL
     COMMAND ${clang_format_path} ${CLANG_FORMAT_FLAGS}
-    ${_sources}
-    WORKING_DIRECTORY ${LibMahjong_SOURCE_DIR}
+    ${libmahjong_sources}
+    WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
     VERBATIM
   )
 
