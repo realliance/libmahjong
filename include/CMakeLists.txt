@@ -1,5 +1,5 @@
 set(DIR ${CMAKE_CURRENT_LIST_DIR})
-target_sources(LibMahjong
+target_sources(libmahjong
     PRIVATE
     "${DIR}/analysis.h"
     "${DIR}/decisionfunction.h"

@@ -1,4 +1,4 @@
-# LibMahjong
+# libmahjong
 
 # Development
 

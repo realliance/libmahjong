@@ -32,14 +32,14 @@ class Node : public std::enable_shared_from_this<Node> {
 
   auto operator!=(const Node& n) const -> bool;
 
-  Node(int id, Type type, Piece start, Node* parent, std::vector<Node*> leaves, size_t leafPosInParent) : id(id), type(type), start(start), parent(std::move(parent)), leaves(std::move(leaves)), leafPosInParent(leafPosInParent) {}
+  Node(int id, Type type, Piece start, Node* parent, std::vector<Node*> leaves, size_t leafPosInParent) : id(id), type(type), start(start), parent(parent), leaves(std::move(leaves)), leafPosInParent(leafPosInParent) {}
 
   ~Node();
   class const_iterator {
     const Node* root;
     bool end;
     friend Node;
-    explicit const_iterator(const Node* root, bool end) : root(std::move(root)), end(end) {}
+    explicit const_iterator(const Node* root, bool end) : root(root), end(end) {}
 
    public:
     auto operator++() -> const_iterator&;
