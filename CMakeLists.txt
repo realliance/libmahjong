@@ -3,6 +3,7 @@ set(CMAKE_CXX_STANDARD 20)
 include(FetchContent)
 project(LibMahjong)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(PACKAGE_TESTS "Build the tests" OFF)
 option(PACKAGE_TOOLS "Build the tools" OFF)
 
