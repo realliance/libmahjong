@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include <gtkmm/application.h>
 
-int main (int argc, char *argv[])
+auto main (int argc, char *argv[]) -> int
 {
   auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
 

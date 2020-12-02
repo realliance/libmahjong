@@ -6,9 +6,9 @@ add_executable(testingZone "")
 target_compile_definitions(testingZone PUBLIC -DNO_PYBIND)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-target_compile_options(LibMahjong PRIVATE -pedantic -Wall -Wmost -Wextra -fsanitize=address -fno-omit-frame-pointer)
+target_compile_options(LibMahjong PRIVATE -pedantic -Wall -Wmost -Wextra)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  target_compile_options(LibMahjong PRIVATE -pedantic -Wall -Wextra -fsanitize=address -fno-omit-frame-pointer)
+  target_compile_options(LibMahjong PRIVATE -pedantic -Wall -Wextra)
 endif()
 get_target_property(_sources LibMahjong SOURCES)
 target_sources(testingZone

@@ -1,10 +1,13 @@
 #pragma once
+#include <event.h>
+#include <piecetype.h>
+#include <playercontroller.h>
+#include <winds.h>
+
+#include <cstdint>
+#include <map>
 #include <string>
 #include <vector>
-#include <event.h>
-#include <playercontroller.h>
-#include <piecetype.h>
-#include <winds.h>
 
 /**
 == Fast Tanyao Bot ==
@@ -16,21 +19,22 @@
 
 using pieceSet = std::map<uint8_t, uint8_t>;
 
-class FastTanyao : public Mahjong::PlayerController{
-public:
-  auto Name() -> std::string;
-  auto GameStart(int _playerID) -> void;
-  auto RoundStart(std::vector<Mahjong::Piece> hand, Mahjong::Wind seatWind, Mahjong::Wind prevalentWind) -> void;
-  auto ReceiveEvent(Mahjong::Event e) -> void;
-  auto RetrieveDecision() -> Mahjong::Event;
-private:
+class FastTanyao : public Mahjong::PlayerController {
+ public:
+  auto Name() -> std::string override;
+  auto GameStart(int _playerID) -> void override;
+  auto RoundStart(std::vector<Mahjong::Piece> hand, Mahjong::Wind seatWind, Mahjong::Wind prevalentWind) -> void override;
+  auto ReceiveEvent(Mahjong::Event e) -> void override;
+  auto RetrieveDecision() -> Mahjong::Event override;
+
+ private:
   auto IncrementPiece(Mahjong::Piece piece, pieceSet& set) -> void;
-  auto IncreasePiece(Mahjong::Piece piece, pieceSet& set, uint8_t count) -> void;
-  auto DecrementPiece(Mahjong::Piece piece, pieceSet& set) -> void;
-  auto ShouldKeep(Mahjong::Piece piece) -> bool;
+  auto IncrementPiece(Mahjong::Piece piece, pieceSet& set, uint8_t count) -> void;
+  static auto DecrementPiece(Mahjong::Piece piece, pieceSet& set) -> void;
+  static auto ShouldKeep(Mahjong::Piece piece) -> bool;
   auto ProcessNewPiece(Mahjong::Piece piece) -> void;
   auto ChooseDiscard() -> Mahjong::Piece;
-  auto OutputSet(uint8_t id, pieceSet& set) -> void;
+  auto OutputSet(uint8_t id, const pieceSet& set) -> void;
   pieceSet possibleTriples;
   std::vector<Mahjong::Piece> immediateDiscard;
   std::vector<Mahjong::Piece> validDoras;

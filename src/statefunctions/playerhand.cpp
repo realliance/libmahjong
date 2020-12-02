@@ -1,6 +1,8 @@
-#include <stdint.h>
 #include <array>
+#include <cstdint>
+#include <iostream>
 #include <vector>
+
 #include "decisionfunction.h"
 #include "event.h"
 #include "gamestate.h"
@@ -10,60 +12,55 @@
 #include "playercontroller.h"
 #include "statefunctions.h"
 #include "stateutilities.h"
-using namespace Mahjong;
 
-auto Mahjong::PlayerHand(GameState& state) -> GameState&{
-  using DecisionFunction = auto (*)(const Mahjong::GameState &state)->bool;
+auto Mahjong::PlayerHand(GameState& state) -> GameState& {
+  using DecisionFunction = auto (*)(const Mahjong::GameState& state)->bool;
 
-  struct possibleDecision{
+  struct possibleDecision {
     Event::Type type;
     DecisionFunction func;
   };
 
   std::vector<possibleDecision> decisions = {
-    { Event::Tsumo, CanTsumo},
-    { Event::ConcealedKan, CanConcealedKan},
-    { Event::ConvertedKan, CanConvertedKan},
-    { Event::Riichi, CanRiichi},
-    { Event::Discard, [](const GameState& state){
-        return !state.hands[state.currentPlayer].riichi;
-      }
-    }
-  };
+    {Event::Tsumo, CanTsumo},
+    {Event::ConcealedKan, CanConcealedKan},
+    {Event::ConvertedKan, CanConvertedKan},
+    {Event::Riichi, CanRiichi},
+    {Event::Discard, [](const GameState& state) {
+       return !state.hands.at(state.currentPlayer).riichi;
+     }}};
 
   bool decisionAsked = false;
-  for(const auto& [decision, decisionIsPossible] : decisions){
-    if(decisionIsPossible(state)){
+  for (const auto& [decision, decisionIsPossible] : decisions) {
+    if (decisionIsPossible(state)) {
       decisionAsked = true;
-      state.players[state.currentPlayer].controller->ReceiveEvent(
-        Event{
-          decision, // type
-          state.currentPlayer, // player
-          static_cast<int16_t>(state.pendingPiece.toUint8_t()), // piece
-          true, // decision
-        }
-      );
+      state.players.at(state.currentPlayer).controller->ReceiveEvent(Event{
+        decision,                                              // type
+        state.currentPlayer,                                   // player
+        static_cast<int16_t>(state.pendingPiece.toUint8_t()),  // piece
+        true,                                                  // decision
+      });
     }
   }
 
   Event decision;
-  if(!decisionAsked){
+  if (!decisionAsked) {
     decision.type = Event::Discard;
     decision.piece = static_cast<uint16_t>(state.pendingPiece.toUint8_t());
     decision.player = state.currentPlayer;
     decision.decision = true;
     state.nextState = Discard;
-  }else {
-    decision = GetValidDecisionOrThrow(state,state.currentPlayer, true);
+  } else {
+    decision = GetValidDecisionOrThrow(state, state.currentPlayer, /*inHand=*/true);
   }
 
   //note riichi handling is a lil borked on the player agency side
   //checkout riichi.cpp for more info
-  if(decision.type == Event::Discard){
+  if (decision.type == Event::Discard) {
     state.pendingPiece = decision.piece;
   }
 
-  switch (decision.type){
+  switch (decision.type) {
     case Event::Tsumo:
       state.nextState = Tsumo;
       break;

@@ -1,33 +1,34 @@
 #include "fasttanyao.h"
+
+#include <algorithm>
+#include <cstdint>
+#include <utility>
+
 #include "event.h"
 #include "piecetype.h"
 #include "winds.h"
-#include <iostream>
-#include <memory>
-#include <tuple>
-#include <algorithm>
 
-auto FastTanyao::Name() -> std::string{
+auto FastTanyao::Name() -> std::string {
   return "Fast Tanyao";
 }
 
-auto FastTanyao::GameStart(int) -> void {}
+auto FastTanyao::GameStart(int /*playerID*/) -> void {}
 
 auto FastTanyao::ShouldKeep(Mahjong::Piece piece) -> bool {
   return !piece.isHonor() && !piece.isTerminal();
 }
 
-auto FastTanyao::OutputSet(uint8_t, pieceSet&) -> void {
+auto FastTanyao::OutputSet(uint8_t /*unused*/, const pieceSet& /*unused*/) -> void {
   //std::cout << "(" << Mahjong::Piece(id).toStr() << ", " << unsigned(set.at(id)) << ")" << std::endl;
 }
 
 auto FastTanyao::IncrementPiece(Mahjong::Piece piece, pieceSet& set) -> void {
-  IncreasePiece(piece, set, 1);
+  IncrementPiece(piece, set, /*count=*/1);
 }
 
-auto FastTanyao::IncreasePiece(Mahjong::Piece piece, pieceSet& set, uint8_t) -> void {
-  pieceSet::iterator setContainsPiece = set.find(piece.raw_value());
-  if(setContainsPiece != set.end()) {
+auto FastTanyao::IncrementPiece(Mahjong::Piece piece, pieceSet& set, uint8_t /*unused*/) -> void {
+  auto setContainsPiece = set.find(piece.raw_value());
+  if (setContainsPiece != set.end()) {
     setContainsPiece->second++;
     OutputSet(piece.raw_value(), set);
     return;
@@ -38,8 +39,8 @@ auto FastTanyao::IncreasePiece(Mahjong::Piece piece, pieceSet& set, uint8_t) -> 
 }
 
 auto FastTanyao::DecrementPiece(Mahjong::Piece piece, pieceSet& set) -> void {
-  pieceSet::iterator setContainsPiece = set.find(piece.raw_value());
-  if(setContainsPiece != set.end()) {
+  auto setContainsPiece = set.find(piece.raw_value());
+  if (setContainsPiece != set.end()) {
     setContainsPiece->second--;
     if (setContainsPiece->second == 0) {
       set.erase(setContainsPiece);
@@ -58,7 +59,7 @@ auto FastTanyao::ProcessNewPiece(Mahjong::Piece piece) -> void {
   IncrementPiece(piece, possibleTriples);
 }
 
-auto FastTanyao::RoundStart(std::vector<Mahjong::Piece> _hand, Mahjong::Wind, Mahjong::Wind) -> void {
+auto FastTanyao::RoundStart(std::vector<Mahjong::Piece> _hand, Mahjong::Wind /*seatWind*/, Mahjong::Wind /*prevalentWind*/) -> void {
   for (auto piece : _hand) {
     ProcessNewPiece(piece);
   }
@@ -66,7 +67,7 @@ auto FastTanyao::RoundStart(std::vector<Mahjong::Piece> _hand, Mahjong::Wind, Ma
 }
 
 auto FastTanyao::ChooseDiscard() -> Mahjong::Piece {
-  if (immediateDiscard.size() > 0) {
+  if (!immediateDiscard.empty()) {
     auto discard = immediateDiscard.back();
     immediateDiscard.pop_back();
     //std::cout << "Chose piece " << discard.toStr() << " to discard (imm discard)" << std::endl;
@@ -76,20 +77,20 @@ auto FastTanyao::ChooseDiscard() -> Mahjong::Piece {
   pieceSet discardOptions;
 
   // Document pieces in play, if anything adds up to 4 (nothing left), discard.
-  for (pieceSet::iterator set = possibleTriples.begin(); set != possibleTriples.end(); set++) {
+  for (auto set = possibleTriples.begin(); set != possibleTriples.end(); set++) {
     auto piece = set->first;
-    pieceSet::iterator setContainsPiece = allDiscards.find(piece);
-    if(setContainsPiece != allDiscards.end()) {
+    auto setContainsPiece = allDiscards.find(piece);
+    if (setContainsPiece != allDiscards.end()) {
       if (set->second + setContainsPiece->second == 4 && set->second < 3) {
         DecrementPiece(Mahjong::Piece(piece), possibleTriples);
         //std::cout << "Chose piece " << Mahjong::Piece(piece).toStr() << " to discard (all pieces in play)" << std::endl;
         return Mahjong::Piece(piece);
-      } else if (set->second > 0) {
-        IncreasePiece(Mahjong::Piece(piece), discardOptions, set->second);
+      }
+      if (set->second > 0) {
+        IncrementPiece(Mahjong::Piece(piece), discardOptions, set->second);
       }
     }
   }
-
 
   auto minValue = *std::min_element(discardOptions.begin(), discardOptions.end(), [](const auto& l, const auto& r) { return l.second < r.second; });
   //std::cout << unsigned(minValue.first) << ", " << unsigned(minValue.second) << std::endl;
@@ -102,7 +103,7 @@ auto FastTanyao::ChooseDiscard() -> Mahjong::Piece {
 auto FastTanyao::ReceiveEvent(Mahjong::Event e) -> void {
   const Mahjong::Piece eventPiece = Mahjong::Piece(e.piece);
   if (e.type <= Mahjong::Event::Discard && e.decision) {
-    if (e.type == Mahjong::Event::Discard || ShouldKeep(e.piece)) {
+    if (e.type == Mahjong::Event::Discard || ShouldKeep(Mahjong::Piece(e.piece))) {
       if (e.type < decidedDecision.type) {
         //std::cout << "Choosing decision " << e.type << std::endl;
         decidedDecision = e;
@@ -110,17 +111,17 @@ auto FastTanyao::ReceiveEvent(Mahjong::Event e) -> void {
     }
   }
 
-  switch(e.type) {
+  switch (e.type) {
     case Mahjong::Event::Dora:
       if (ShouldKeep(eventPiece)) {
-          validDoras.push_back(eventPiece);
-        }
+        validDoras.push_back(eventPiece);
+      }
       break;
     case Mahjong::Event::Pon:
-      IncreasePiece(eventPiece, allDiscards, 3);
+      IncrementPiece(eventPiece, allDiscards, /*count=*/3);
       break;
     case Mahjong::Event::Kan:
-      IncreasePiece(eventPiece, allDiscards, 4);
+      IncrementPiece(eventPiece, allDiscards, /*count=*/4);
     case Mahjong::Event::Chi:
       IncrementPiece(eventPiece, allDiscards);
       IncrementPiece(eventPiece + 1, allDiscards);
@@ -137,7 +138,7 @@ auto FastTanyao::ReceiveEvent(Mahjong::Event e) -> void {
   }
 }
 
-auto FastTanyao::RetrieveDecision() -> Mahjong::Event{
+auto FastTanyao::RetrieveDecision() -> Mahjong::Event {
   if (decidedDecision.type == Mahjong::Event::Discard) {
     decidedDecision.piece = ChooseDiscard().raw_value();
   }

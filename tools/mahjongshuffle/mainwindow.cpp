@@ -9,7 +9,7 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow()
-: grid(), button("Get New Hand"){
+: button("Get New Hand"){
 
   set_border_width(10);
 
@@ -37,7 +37,7 @@ MainWindow::MainWindow()
   front = Gdk::Pixbuf::create_from_file("../../build/_deps/riichimahjongtiles-src/Regular/Front.svg");
   for(int i = 0; i < 14; i ++){
     int width = 100;
-    auto top = Gdk::Pixbuf::create_from_file(getFilePath(Hand[i].toUint8_t()));
+    auto top = Gdk::Pixbuf::create_from_file(getFilePath(Hand.at(i).toUint8_t()));
     auto piece = front->copy();
     top->composite(
       piece,0,0,top->get_width(),top->get_height(),
@@ -47,7 +47,7 @@ MainWindow::MainWindow()
     imageArray.emplace_back(Gtk::Image(piece->scale_simple(
       width*((float)piece->get_width()/piece->get_height()),
       width,Gdk::INTERP_BILINEAR )));
-    grid.attach(imageArray[i],i,0);
+    grid.attach(imageArray.at(i),i,0);
   }
 
   add(grid);
@@ -106,7 +106,7 @@ void MainWindow::on_button_clicked()
     if(dots == 3){
       dotsStr = "...";
     }
-    Mahjong::Node* root = breakdownHand(Hand);
+    auto root = breakdownHand(Hand);
     bool stdform = true;
     int cnt = 0;
     bool branched = false;
@@ -161,7 +161,7 @@ void MainWindow::on_button_clicked()
       root->DumpAsDot(os);
       os.close();
     }
-    delete root;
+    
   }while(notstop && loopButton.get_active() && i< 1000000 && !stopButton.get_active());
   std::stringstream err;
   err << (double)errorRate/total;
@@ -171,12 +171,12 @@ void MainWindow::on_button_clicked()
   heavenPercent.set_text("Heaven rate: " + heaven.str());
   for(int i = 0; i < 14; i ++){
     int width = 100;
-    auto top = Gdk::Pixbuf::create_from_file(getFilePath(Hand[i].toUint8_t()));
+    auto top = Gdk::Pixbuf::create_from_file(getFilePath(Hand.at(i).toUint8_t()));
     auto piece = front->copy();
     top->composite(
       piece,0,0,top->get_width(),top->get_height(),
       0,0,1,1,Gdk::INTERP_BILINEAR,255);
-    imageArray[i].set(
+    imageArray.at(i).set(
       piece->scale_simple(
         width*((float)piece->get_width()/piece->get_height()),
         width,Gdk::INTERP_BILINEAR

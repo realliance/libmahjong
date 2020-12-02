@@ -1,8 +1,9 @@
-#include <string>
 #include "piecetype.h"
 
-#include "mahjongns.h"
-using namespace Mahjong;
+#include <map>
+#include <string>
+
+using Mahjong::Piece;
 
 auto Piece::toUint8_t() const -> uint8_t {
   return p & ~uint8_t(RED_FIVE);
@@ -12,11 +13,11 @@ auto Piece::raw_value() const -> uint8_t {
   return p;
 }
 
-auto Piece::isHonor() const -> bool{
+auto Piece::isHonor() const -> bool {
   return (p & CHARACTER_SUIT) == HONOR_SUIT;
 }
 
-auto Piece::isTerminal() const -> bool{
+auto Piece::isTerminal() const -> bool {
   return (p & TERMINAL_BIT) != ERROR;
 }
 
@@ -29,7 +30,7 @@ auto Piece::isRedFive() const -> bool {
 }
 
 auto Piece::getSuit() const -> uint8_t {
-  return p & 3<<5;
+  return p & 3 << 5;
 }
 
 auto Piece::getPieceNum() const -> uint8_t {
@@ -37,20 +38,20 @@ auto Piece::getPieceNum() const -> uint8_t {
 }
 
 auto Piece::isGreen() const -> bool {
-  if(p == GREEN_DRAGON){
+  if (p == GREEN_DRAGON) {
     return true;
   }
-  if(getSuit() != BAMBOO_SUIT){
+  if (getSuit() != BAMBOO_SUIT) {
     return false;
   }
-  if(((getPieceNum() % 2) == 1) && getPieceNum() != 3){
+  if (((getPieceNum() % 2) == 1) && getPieceNum() != 3) {
     return false;
   }
   return true;
 }
 
 auto Piece::fromWind(Wind w) -> Piece {
-  switch (w){
+  switch (w) {
     case East:
       return Piece(EAST_WIND);
     case South:
@@ -64,50 +65,50 @@ auto Piece::fromWind(Wind w) -> Piece {
   }
 }
 
-const std::map<uint8_t,std::string> STR_MAP = {
-    {Piece::ERROR, "ERRORPIECE"},
-    {Piece::RED_DRAGON , "Red Dragon"},
-    {Piece::WHITE_DRAGON , "White Dragon"},
-    {Piece::GREEN_DRAGON , "Green Dragon"},
-    {Piece::ONE_CHARACTER , "Man1"},
-    {Piece::TWO_CHARACTER , "Man2"},
-    {Piece::THREE_CHARACTER , "Man3"},
-    {Piece::FOUR_CHARACTER , "Man4"},
-    {Piece::RED_FIVE_CHARACTER , "Man5-Dora"},
-    {Piece::FIVE_CHARACTER , "Man5"},
-    {Piece::SIX_CHARACTER , "Man6"},
-    {Piece::SEVEN_CHARACTER , "Man7"},
-    {Piece::EIGHT_CHARACTER , "Man8"},
-    {Piece::NINE_CHARACTER , "Man9"},
-    {Piece::SOUTH_WIND , "South"},
-    {Piece::NORTH_WIND , "North"},
-    {Piece::ONE_PIN , "Pin1"},
-    {Piece::TWO_PIN , "Pin2"},
-    {Piece::THREE_PIN , "Pin3"},
-    {Piece::FOUR_PIN , "Pin4"},
-    {Piece::RED_FIVE_PIN , "Pin5-Dora"},
-    {Piece::FIVE_PIN , "Pin5"},
-    {Piece::SIX_PIN , "Pin6"},
-    {Piece::SEVEN_PIN , "Pin7"},
-    {Piece::EIGHT_PIN , "Pin8"},
-    {Piece::NINE_PIN , "Pin9"},
-    {Piece::WEST_WIND , "West"},
-    {Piece::ONE_BAMBOO , "Sou1"},
-    {Piece::TWO_BAMBOO , "Sou2"},
-    {Piece::THREE_BAMBOO , "Sou3"},
-    {Piece::FOUR_BAMBOO , "Sou4"},
-    {Piece::RED_FIVE_BAMBOO , "Sou5-Dora"},
-    {Piece::FIVE_BAMBOO , "Sou5"},
-    {Piece::SIX_BAMBOO , "Sou6"},
-    {Piece::SEVEN_BAMBOO , "Sou7"},
-    {Piece::EIGHT_BAMBOO , "Sou8"},
-    {Piece::NINE_BAMBOO , "Sou9"},
-    {Piece::EAST_WIND , "East"},
+const std::map<uint8_t, std::string> STR_MAP = {
+  {Piece::ERROR, "ERRORPIECE"},
+  {Piece::RED_DRAGON, "Red Dragon"},
+  {Piece::WHITE_DRAGON, "White Dragon"},
+  {Piece::GREEN_DRAGON, "Green Dragon"},
+  {Piece::ONE_CHARACTER, "Man1"},
+  {Piece::TWO_CHARACTER, "Man2"},
+  {Piece::THREE_CHARACTER, "Man3"},
+  {Piece::FOUR_CHARACTER, "Man4"},
+  {Piece::RED_FIVE_CHARACTER, "Man5-Dora"},
+  {Piece::FIVE_CHARACTER, "Man5"},
+  {Piece::SIX_CHARACTER, "Man6"},
+  {Piece::SEVEN_CHARACTER, "Man7"},
+  {Piece::EIGHT_CHARACTER, "Man8"},
+  {Piece::NINE_CHARACTER, "Man9"},
+  {Piece::SOUTH_WIND, "South"},
+  {Piece::NORTH_WIND, "North"},
+  {Piece::ONE_PIN, "Pin1"},
+  {Piece::TWO_PIN, "Pin2"},
+  {Piece::THREE_PIN, "Pin3"},
+  {Piece::FOUR_PIN, "Pin4"},
+  {Piece::RED_FIVE_PIN, "Pin5-Dora"},
+  {Piece::FIVE_PIN, "Pin5"},
+  {Piece::SIX_PIN, "Pin6"},
+  {Piece::SEVEN_PIN, "Pin7"},
+  {Piece::EIGHT_PIN, "Pin8"},
+  {Piece::NINE_PIN, "Pin9"},
+  {Piece::WEST_WIND, "West"},
+  {Piece::ONE_BAMBOO, "Sou1"},
+  {Piece::TWO_BAMBOO, "Sou2"},
+  {Piece::THREE_BAMBOO, "Sou3"},
+  {Piece::FOUR_BAMBOO, "Sou4"},
+  {Piece::RED_FIVE_BAMBOO, "Sou5-Dora"},
+  {Piece::FIVE_BAMBOO, "Sou5"},
+  {Piece::SIX_BAMBOO, "Sou6"},
+  {Piece::SEVEN_BAMBOO, "Sou7"},
+  {Piece::EIGHT_BAMBOO, "Sou8"},
+  {Piece::NINE_BAMBOO, "Sou9"},
+  {Piece::EAST_WIND, "East"},
 };
 
-auto Piece::toStr() const -> std::string{
-  if(STR_MAP.contains(p)){
+auto Piece::toStr() const -> std::string {
+  if (STR_MAP.contains(p)) {
     return STR_MAP.at(p);
   }
-  return STR_MAP.at(0); //ERRORPIECE
+  return STR_MAP.at(0);  //ERRORPIECE
 }

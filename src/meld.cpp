@@ -1,11 +1,8 @@
-#include <ostream>
 #include "meld.h"
 
+#include <ostream>
 
-#include "mahjongns.h"
-using namespace Mahjong;
-
-auto operator<<(std::ostream& os, const Meld& meld) -> std::ostream&{
+auto operator<<(std::ostream& os, const Mahjong::Meld& meld) -> std::ostream& {
   os << "{ type: " << MeldTypeToStr(meld.type);
   os << ", start: " << meld.start.toStr() << "}";
   return os;
