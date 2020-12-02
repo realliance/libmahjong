@@ -1,8 +1,0 @@
-pybind11 ~= 2.5
-pygame == 2.0.0.dev14
-pygame-gui ~= 0.5.7
-numpy==1.19.3
-
-toml
-
-setuptools
