@@ -18,6 +18,5 @@ target_sources(LibMahjong
     "${DIR}/stateutilities.h"
     "${DIR}/walls.h"
     "${DIR}/winds.h"
-    "${DIR}/mahjongns.h"
     "${DIR}/score.h"
 )

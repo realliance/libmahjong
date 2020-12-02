@@ -1,24 +1,26 @@
 #pragma once
+#include <functional>
 #include <string>
 #include <vector>
-#include <set>
-#include <functional>
+
+namespace Mahjong {
+class PlayerController;
+}
 
 #ifndef NO_PYBIND
-namespace pybind11 { class object; }
+namespace pybind11 {
+class object;
+}
 #endif
 
-namespace Mahjong { struct GameSettings; class PlayerController; }
+namespace Mahjong {
+using newControllerInst = std::function<PlayerController*()>;
 
-namespace Mahjong{
-  using newControllerInst = std::function<PlayerController*()>;
-
-  auto GetAvailableControllers() -> std::vector<std::string>;
-  auto GetController(std::string controller) -> newControllerInst;
-  auto RegisterController(newControllerInst newFunc, std::string Name) -> bool;
+auto GetAvailableControllers() -> std::vector<std::string>;
+auto GetController(const std::string& controller) -> newControllerInst;
+auto RegisterController(newControllerInst newFunc, const std::string& Name) -> bool;
 #ifndef NO_PYBIND
-  static std::set<std::string> pythonManagedControllers;
-  auto RegisterPythonController(pybind11::object pythonController, std::string Name) -> bool;
-  auto UnregisterController(std::string Name) -> void;
+auto RegisterPythonController(const pybind11::object& pythonController, const std::string& Name) -> bool;
+auto UnregisterController(const std::string& Name) -> void;
 #endif
-};
+}  // namespace Mahjong

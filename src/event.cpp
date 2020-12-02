@@ -1,10 +1,12 @@
 #include "event.h"
-#include "piecetype.h"
+
 #include <iostream>
 
-using namespace Mahjong;
+#include "piecetype.h"
 
-auto operator<<(std::ostream& os, const Event& e) -> std::ostream&{
+using Mahjong::Event, Mahjong::EventTypeToStr, Mahjong::Piece;
+
+auto operator<<(std::ostream& os, const Event& e) -> std::ostream& {
   os << "{type: " << EventTypeToStr(e.type);
   os << " player: " << e.player;
   uint8_t p = e.piece;
