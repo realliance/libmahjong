@@ -46,7 +46,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 add_subdirectory(${libmahjong_SOURCE_DIR}/include)
-add_subdirectory(${libmahjong_SOURCE_DIR}/aicontrollers)
+add_subdirectory(${libmahjong_SOURCE_DIR}/controllers)
 add_subdirectory(${libmahjong_SOURCE_DIR}/src)
 
 get_target_property(libmahjong_sources libmahjong SOURCES)
@@ -60,7 +60,7 @@ endif()
 target_link_libraries(libmahjong PRIVATE ${CMAKE_DL_LIBS})
 
 target_include_directories(libmahjong PUBLIC "${libmahjong_SOURCE_DIR}/include")
-target_include_directories(libmahjong PUBLIC "${libmahjong_SOURCE_DIR}/aicontrollers")
+target_include_directories(libmahjong PUBLIC "${libmahjong_SOURCE_DIR}/controllers")
 
 add_custom_target(
   check
