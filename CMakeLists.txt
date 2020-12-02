@@ -7,7 +7,7 @@ include(ProcessorCount)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(PACKAGE_TESTS "Build the tests" OFF)
 option(PACKAGE_TOOLS "Build the tools" OFF)
-option(USE_CLANG_TIDY "Use Clang Tidy" ON)
+option(USE_CLANG_TIDY "Use Clang Tidy" OFF)
 option(CI_CLANG_FORMAT_FLAGS "Use CI Clang Format Flags" OFF)
 
 add_subdirectory(${LibMahjong_SOURCE_DIR}/libs)
@@ -29,11 +29,14 @@ if(NOT N EQUAL 0)
   set(ctest_test_args ${ctest_test_args} PARALLEL_LEVEL ${N})
 endif()
 
+find_program(clang_format_path NAMES clang-format-10 clang-format)
 if (USE_CLANG_TIDY)
-  find_program(clang_format_path NAMES clang-format-10 clang-format REQUIRED)
+  find_program(clang_tidy_path NAMES clang-tidy-10 clang-tidy clang-tidy-11 REQUIRED)
   set(CMAKE_CXX_CLANG_TIDY
     clang-tidy;
   )
+else()
+  find_program(clang_tidy_path NAMES clang-tidy-10 clang-tidy clang-tidy-11)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -75,7 +78,7 @@ if(iwyu_path)
   set_property(TARGET LibMahjong PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
 endif()
 
-if (USE_CLANG_TIDY)
+if (clang_tidy_path)
   add_custom_target(
     tidy
     COMMAND clang-tidy
@@ -90,7 +93,9 @@ if (USE_CLANG_TIDY)
     WORKING_DIRECTORY ${LibMahjong_SOURCE_DIR}
     VERBATIM
   )
+endif()
 
+if (clang_format_path)
   if(CI_CLANG_FORMAT_FLAGS)
     set(CLANG_FORMAT_FLAGS 
       --verbose;
