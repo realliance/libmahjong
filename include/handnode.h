@@ -48,6 +48,7 @@ class Node : public std::enable_shared_from_this<Node> {
     // iterator traits
     using difference_type = std::ptrdiff_t;
     using pointer = const Node*;
+    using reference = const Node&;
     using iterator_category = std::forward_iterator_tag;
   };
   class iterator {
@@ -62,6 +63,7 @@ class Node : public std::enable_shared_from_this<Node> {
     // iterator traits
     using difference_type = std::ptrdiff_t;
     using pointer = Node*;
+    using reference = const Node&;
     using iterator_category = std::forward_iterator_tag;
   };
   static auto TypeToStr(uint8_t nodetype) -> std::string;

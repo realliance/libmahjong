@@ -1,4 +1,0 @@
-Ron, Exhaust, and Tsumo can go to RoundEnd or GameEnd.
-Change not yet reflected in the graphics.
-
-RoundEnd only goes to RoundStart

@@ -139,8 +139,8 @@ auto Mahjong::GetPossibleStdFormHand() -> std::vector<Piece> {
   std::vector<bool> choosePair = {false, false, false, false, true};
   std::shuffle(choosePair.begin(), choosePair.end(), g);
   std::uniform_int_distribution<> pairChance(0, 3);
-  std::uniform_int_distribution<> tripletSelection(0, TRIPLETS.size());
-  std::uniform_int_distribution<> pairSelection(0, PAIRS.size());
+  std::uniform_int_distribution<> tripletSelection(0, TRIPLETS.size() - 1);
+  std::uniform_int_distribution<> pairSelection(0, PAIRS.size() - 1);
 
   std::vector<Piece> hand;
   for (bool choice : choosePair) {

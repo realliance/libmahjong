@@ -37,6 +37,7 @@ Node::~Node() {
     }
   }
   for (Node* leaf : leaves) {
+    leaf->parent = nullptr;
     delete leaf;
   }
 }
@@ -217,7 +218,7 @@ auto Node::AsBranchVectors(const Node* root) -> std::vector<std::vector<const No
 auto Node::IsComplete() const -> bool {
   auto branches = AsBranchVectors(this);
   return std::any_of(branches.begin(), branches.end(), [](auto branch) {
-    return std::none_of(branch.begin(), branch.end(), [](auto node) { return node->type == Node::Single; });
+    return std::none_of(branch.rbegin(), branch.rend(), [](auto node) { return node->type == Node::Single; });
   });
 }
 

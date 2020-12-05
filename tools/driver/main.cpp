@@ -1,4 +1,7 @@
+#include <atomic>
 #include <fstream>
+#include <iomanip>
+#include <thread>
 
 #include "analysis.h"
 #include "angrydiscardobot.h"
@@ -14,74 +17,58 @@
 #include "thricebot.h"
 #include "walls.h"
 
-using Mahjong::PlayerController, Mahjong::StartGame, Mahjong::Event;
-
-std::array<int, 4> scores = {0, 0, 0, 0};
-
-template <class T>
-class Proxy : public PlayerController {
- public:
-  auto Name() -> std::string override { return proxied.Name(); }
-  auto GameStart(int _playerID) -> void override {
-    // for(int i = 0; i < 4; i++){
-    //   scores[i] = 0;
-    // }
-    return proxied.GameStart(_playerID);
-  }
-  auto RoundStart(std::vector<Mahjong::Piece> hand, Mahjong::Wind seatWind, Mahjong::Wind prevalentWind) -> void override { return proxied.RoundStart(hand, seatWind, prevalentWind); }
-  auto ReceiveEvent(Mahjong::Event e) -> void override {
-    if (e.type == Event::PointDiff) {
-      scores.at(e.player) += e.piece * 100;
-    }
-    return proxied.ReceiveEvent(e);
-  }
-  auto RetrieveDecision() -> Mahjong::Event override { return proxied.RetrieveDecision(); }
-
- private:
-  T proxied;
-};
+const int THREADS = 8;
+const int ITERATIONS = 1000000;
 
 auto main() -> int {
-  Mahjong::RegisterController([]() { return new Proxy<FastTanyao>(); }, "ProxiedFastTanyao");
-  const int ROUNDS = 100;
-  for (int i = 0; i < ROUNDS; i++) {
-    std::cout << i << " " << std::flush;
-    StartGame({{"GentlemanBot", "GentlemanBot", "ProxiedFastTanyao", "Fast Tanyao"},
-               {},
-               0},
-              /*async=*/false);
+  std::atomic<int> branches = 134;
+  std::atomic<int> cnt = 0;
+  std::atomic<int> sync = 0;
+  std::atomic_flag gated = false;
+  std::cout << std::fixed << std::setprecision(1);
+  auto branchFinder = [&cnt, &branches, &sync, &gated](int thread) {
+    std::shared_ptr<Mahjong::Node> root;
+    for (int i = 0; i <= ITERATIONS / THREADS; i++) {
+      if ((i % (ITERATIONS / 1000)) == 0) {
+        sync++;
+        if (sync == THREADS) {
+          if (!gated.test_and_set()) {
+            std::cout << "Progess: " << std::setw(5) << static_cast<double>(i) * 100 * THREADS / ITERATIONS << "%\r" << std::flush;
+            sync -= THREADS;
+            gated.clear();
+          }
+        }
+      }
+      auto hand = Mahjong::GetPossibleStdFormHand();
+      root = Mahjong::breakdownHand(hand);
+      size_t tempBranches = Mahjong::Node::AsBranchVectors(root.get()).size();
+      if (tempBranches > branches) {
+        branches = tempBranches;
+        std::ofstream os(std::to_string(thread) + "hand.gv");
+        root->DumpAsDot(os);
+        os.close();
+        cnt = 1;
+        std::cout << std::endl
+                  << "t" << thread << ": "
+                  << "branches: " << Mahjong::Node::AsBranchVectors(root.get()).size() << std::endl;
+      } else if (tempBranches == branches) {
+        std::ofstream os(std::to_string(thread) + "hand.gv");
+        root->DumpAsDot(os);
+        os.close();
+        cnt++;
+        std::cout << std::endl
+                  << "t" << thread << ": "
+                  << "Count: " << cnt << std::endl;
+      }
+    }
+  };
+  std::array<std::thread, THREADS> threads;
+  for (int i = 0; i < THREADS; i++) {
+    threads.at(i) = std::thread(branchFinder, i);
   }
-  std::cout << std::endl;
-  std::cout << "Scores: ";
-  for (int i = 0; i < 4; i++) {
-    std::cout << scores.at(i) / ROUNDS << ", ";
+  for (int i = 0; i < THREADS; i++) {
+    threads.at(i).join();
   }
-  std::cout << std::endl;
-  // GameState state;
-  // state.nextState = Discard;
-  // state.seed = 0xBEEFBABE;
-  // state.g.seed(state.seed);
-  // state.walls = Walls(state.g);
-  // state.walls.TakeHand();state.walls.TakeHand();state.walls.TakeHand();state.walls.TakeHand();
-  // state.walls.TakePiece();state.walls.TakePiece();state.walls.TakePiece();state.walls.TakePiece();state.walls.TakePiece();state.walls.TakePiece();
-  // state.currentPlayer = 3;
-  // state.turnNum = 40;
-  // state.lastCall = 36;
-  // state.pendingPiece = Piece::NINE_CHARACTER;
-  // state.roundNum = 2;
-  // state.hands[0].live = {Piece::NINE_CHARACTER,Piece::NINE_CHARACTER,Piece::NINE_CHARACTER,Piece::ONE_PIN,Piece::TWO_PIN,Piece::THREE_PIN,Piece::EAST_WIND,Piece::EAST_WIND};
-  // state.hands[0].melds = {
-  //   {
-  //     Meld::Chi,
-  //     Piece::THREE_BAMBOO
-  //   },
-  //   {
-  //     Meld::Pon,
-  //     Piece::SIX_BAMBOO
-  //   }
-  // };
-
-  // std::cout << (isComplete(state,0) ? "Complete" : "Is Not Complete") << std::endl;
 
   return 0;
 }

@@ -19,7 +19,7 @@ struct Breakdown {
   std::shared_ptr<Node> rootNode{};
   Node* currentNode{};
   bool paired = false;
-  int minPossible{};
+  int maxPossible{};
   int id = 0;
   std::array<int8_t, Piece::PIECESIZE> counts = {};
   std::vector<int> possibilities;
@@ -42,11 +42,11 @@ auto anyPossibleChi(const std::array<int8_t, Piece::PIECESIZE> counts, Piece p) 
 }
 
 auto possiblePair(const std::array<int8_t, Piece::PIECESIZE> counts, Piece p) -> bool {
-  return (counts.at(p.toUint8_t()) == 2);
+  return (counts.at(p.toUint8_t()) >= 2);
 }
 
 auto possiblePon(const std::array<int8_t, Piece::PIECESIZE> counts, Piece p) -> bool {
-  return counts.at(p.toUint8_t()) == 3;
+  return counts.at(p.toUint8_t()) >= 3;
 }
 
 void countPieces(Breakdown* b) {
@@ -55,16 +55,15 @@ void countPieces(Breakdown* b) {
   }
 }
 
-const int MAX_POSSIBLE = 14;
 void updatePossibilities(Breakdown* b) {
   b->possibilities.resize(b->pieces.size());
-  b->minPossible = MAX_POSSIBLE;
+  b->maxPossible = 0;
   for (size_t i = 0; i < b->pieces.size(); i++) {
     b->possibilities.at(i) = 0;
     b->possibilities.at(i) += possibleChis(b->counts, b->pieces.at(i));
     b->possibilities.at(i) += b->paired ? 0 : static_cast<int>(possiblePair(b->counts, b->pieces.at(i)));
     b->possibilities.at(i) += static_cast<int>(possiblePon(b->counts, b->pieces.at(i)));
-    b->minPossible = b->possibilities.at(i) < b->minPossible ? b->possibilities.at(i) : b->minPossible;
+    b->maxPossible = b->possibilities.at(i) > b->maxPossible ? b->possibilities.at(i) : b->maxPossible;
   }
 }
 
@@ -125,9 +124,9 @@ auto breakdownSingle(Breakdown* b, int piecePos) -> void {
 auto getNextPiece(Breakdown* b) -> int {
   int piecePos = 0;
   for (size_t i = 0; i < b->pieces.size(); i++) {
-    if (b->possibilities.at(i) <= b->possibilities[piecePos]) {
+    if (b->possibilities.at(i) >= b->possibilities[piecePos]) {
       piecePos = i;
-      if (b->possibilities.at(i) == b->minPossible) {
+      if (b->possibilities.at(i) == b->maxPossible) {
         break;
       }
     }
@@ -196,66 +195,28 @@ auto driver(Breakdown* b) -> void {
     breakdownSingle(b, piecePos);
     return driver(b);
   }
-  if (b->possibilities[piecePos] == 1) {
-    if (anyPossibleChi(b->counts, b->pieces[piecePos])) {
-      for (int i = 0; i < 3; i++) {
-        if (possibleChiForward(b->counts, b->pieces[piecePos] - i)) {
-          breakdownForwardChi(b, piecePos - i);
-          break;
-        }
-      }
-      return driver(b);
-    }
-    if (possiblePon(b->counts, b->pieces[piecePos])) {
-      breakdownPon(b, piecePos);
-      return driver(b);
-    }
-    if (possiblePair(b->counts, b->pieces[piecePos])) {
-      breakdownPair(b, piecePos);
-      return driver(b);
-    }
-  }
-  if (b->possibilities[piecePos] == 2) {
-    auto* current = b->currentNode;
-    int branch = 0;
-    if (possibleChiForward(b->counts, b->pieces[piecePos] - 0)) {
-      branch++;
-      breakdownForwardChi(b, piecePos - 0);
+
+  using possibleFunc = auto (*)(const std::array<int8_t, Piece::PIECESIZE>, Mahjong::Piece)->bool;
+  using breakdownFunc = auto (*)(Breakdown*, int)->void;
+  const std::vector<std::pair<possibleFunc, breakdownFunc>> possibilityandbreakdown = {
+    {possibleChiForward, breakdownForwardChi},
+    {[](auto counts, auto piece) { return possibleChiForward(counts, piece - 1); },
+     [](auto counts, auto piece) { return breakdownForwardChi(counts, piece - 1); }},
+    {[](auto counts, auto piece) { return possibleChiForward(counts, piece - 2); },
+     [](auto counts, auto piece) { return breakdownForwardChi(counts, piece - 2); }},
+    {possiblePon, breakdownPon},
+    {possiblePair, breakdownPair}};
+  int branch = 0;
+  auto* current = b->currentNode;
+  for (const auto& [possibility, breakdown] : possibilityandbreakdown) {
+    if (possibility(b->counts, b->pieces[piecePos])) {
+      breakdown(b, piecePos);
       driver(b);
-      resetCounts(b, current);
-    }
-    if (possibleChiForward(b->counts, b->pieces[piecePos] - 1)) {
       branch++;
-      breakdownForwardChi(b, piecePos - 1);
-      if (branch == 2) {
-        return driver(b);
-      }
-      driver(b);
       resetCounts(b, current);
-    }
-    if (possibleChiForward(b->counts, b->pieces[piecePos] - 2)) {
-      branch++;
-      breakdownForwardChi(b, piecePos - 2);
-      if (branch == 2) {
-        return driver(b);
-      }
-      driver(b);
-      resetCounts(b, current);
-    }
-    if (possiblePon(b->counts, b->pieces[piecePos])) {
-      branch++;
-      breakdownPon(b, piecePos);
-      if (branch == 2) {
-        return driver(b);
-      }
-      driver(b);
-      resetCounts(b, current);
-    }
-    if (possiblePair(b->counts, b->pieces[piecePos])) {
-      branch++;
-      breakdownPair(b, piecePos);
-      if (branch == 2) {
-        return driver(b);
+      updatePossibilities(b);
+      if (branch == b->possibilities[piecePos]) {
+        break;
       }
     }
   }
