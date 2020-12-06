@@ -34,4 +34,18 @@ package_add_test(Remove_Pieces remove_pieces.test.cpp)
 package_add_test(Discard_Piece discard_piece.test.cpp)
 package_add_test(Piece_Type piece_type.test.cpp)
 package_add_test(HandFormer handformer.test.cpp)
-package_add_test(Yakus yakus/riichi.test.cpp)
+package_add_test(Yakus 
+    yakus/riichi.test.cpp 
+    yakus/concealedhand.test.cpp
+    yakus/pinfu.test.cpp
+    yakus/puredoublechi.test.cpp
+    yakus/allsimples.test.cpp
+    yakus/mixedtriplechi.test.cpp
+    yakus/purestraight.test.cpp
+    yakus/dragonpon.test.cpp
+    yakus/windpons.test.cpp
+    yakus/outsidehand.test.cpp
+    yakus/afterkan.test.cpp
+    yakus/robbingkan.test.cpp
+    yakus/underthesea.test.cpp
+)

@@ -688,14 +688,20 @@ auto isOutsideHand(const GameState& state, int player, const std::vector<const M
   return state.hands.at(state.currentPlayer).open ? 1 : 2;
 }
 
-auto isAfterAKan(const GameState& state, int /*unused*/, const std::vector<const Mahjong::Node*>& /*unused*/) -> int {
-  if (state.nextState == KanDiscard) {
+auto isAfterAKan(const GameState& state, int player, const std::vector<const Mahjong::Node*>& /*unused*/) -> int {
+  if (state.currentPlayer != player) {
+    return 0;
+  }
+  if (state.prevState == Replacement) {
     return 1;
   }
   return 0;
 }
 
-auto isRobbingAKan(const GameState& state, int /*unused*/, const std::vector<const Mahjong::Node*>& /*unused*/) -> int {
+auto isRobbingAKan(const GameState& state, int player, const std::vector<const Mahjong::Node*>& /*unused*/) -> int {
+  if (!state.hasRonned.at(player)) {
+    return 0;
+  }
   if (state.nextState == KanDiscard) {
     return 1;
   }
