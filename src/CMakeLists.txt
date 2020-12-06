@@ -16,6 +16,7 @@ target_sources(libmahjong
     "${DIR}/statecontroller.cpp"
     "${DIR}/stateutilities.cpp"
     "${DIR}/walls.cpp"
+    "${DIR}/handformer.cpp"
 
     "${DIR}/statefunctions/chi.cpp"
     "${DIR}/statefunctions/concealedkan.cpp"
