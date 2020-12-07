@@ -57,4 +57,5 @@ package_add_test(Yakus
     yakus/littlethreedragons.test.cpp
     yakus/allterminalsandhonors.test.cpp
     yakus/terminalinsets.test.cpp
+    yakus/twicepuredoublechi.test.cpp
 )
