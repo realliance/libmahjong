@@ -58,4 +58,6 @@ package_add_test(Yakus
     yakus/allterminalsandhonors.test.cpp
     yakus/terminalinsets.test.cpp
     yakus/twicepuredoublechi.test.cpp
+    yakus/fullflush.test.cpp
+    yakus/blessingofman.test.cpp
 )
