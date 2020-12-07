@@ -48,4 +48,13 @@ package_add_test(Yakus
     yakus/afterkan.test.cpp
     yakus/robbingkan.test.cpp
     yakus/underthesea.test.cpp
+    yakus/sevenpairs.test.cpp
+    yakus/triplepon.test.cpp
+    yakus/concealedpon.test.cpp
+    yakus/triplekan.test.cpp
+    yakus/allpon.test.cpp
+    yakus/halfflush.test.cpp
+    yakus/littlethreedragons.test.cpp
+    yakus/allterminalsandhonors.test.cpp
+    yakus/terminalinsets.test.cpp
 )

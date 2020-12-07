@@ -797,9 +797,6 @@ auto isThreeKans(const GameState& state, int player, const std::vector<const Mah
 }
 
 auto isAllPons(const GameState& state, int player, const std::vector<const Mahjong::Node*>& branch) -> int {
-  if (isAllTerminalsAndHonors(state, player, branch) != 0) {
-    return 0;
-  }
   for (const auto& node : branch) {
     if (node->type != Node::PonSet) {
       return 0;
