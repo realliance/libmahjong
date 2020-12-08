@@ -60,4 +60,17 @@ package_add_test(Yakus
     yakus/twicepuredoublechi.test.cpp
     yakus/fullflush.test.cpp
     yakus/blessingofman.test.cpp
+    yakus/thirteenorphans.test.cpp
+    yakus/ninegates.test.cpp
+    yakus/blessingofheaven.test.cpp
+    yakus/blessingofearth.test.cpp
+    yakus/fourconcealedpons.test.cpp
+    yakus/fourkans.test.cpp
+    yakus/allgreen.test.cpp
+    yakus/allterminals.test.cpp
+    yakus/allhonors.test.cpp
+    yakus/bigthreedragons.test.cpp
+    yakus/littlefourwinds.test.cpp
+    yakus/bigfourwinds.test.cpp
+    yakus/maxbranches.test.cpp
 )
