@@ -437,7 +437,6 @@ auto isRiichi(const GameState& state, int player, const std::vector<const Mahjon
     if (state.turnNum - state.hands.at(player).riichiRound <= ONEROUNDOFTURNS && state.lastCall < state.hands.at(player).riichiRound) {
       han++;
     }
-    return han;
   }
   return 0;
 }
