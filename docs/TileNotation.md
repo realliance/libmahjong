@@ -56,7 +56,7 @@ WHITE_DRAGON, WHITE_DRAGON, WHITE_DRAGON,
 GREEN_DRAGON, GREEN_DRAGON
 ```
 
-## Refereneces
+## References
 
 Original Notation Reference
 
