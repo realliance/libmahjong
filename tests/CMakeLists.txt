@@ -74,3 +74,4 @@ package_add_test(Yakus
     yakus/bigfourwinds.test.cpp
     yakus/maxbranches.test.cpp
 )
+package_add_test(Score_Hand score_hand.test.cpp)
