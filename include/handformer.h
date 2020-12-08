@@ -3,8 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "piecetype.h"
-
 namespace Mahjong {
+class Piece;
 auto HandFromNotation(std::string notation) -> std::vector<Piece>;
-}
+}  // namespace Mahjong

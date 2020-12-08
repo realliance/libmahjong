@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include <string>
-#include <iostream>
 #include "handformer.h"
 #include "piecetype.h"
 
@@ -62,7 +61,6 @@ TEST(HandFormer, HandFromNotationInvalidPiece) {
   std::vector<Piece> hand = {
     Piece(Piece::ERROR)};
   auto result = HandFromNotation("7g");
-  std::cout << result[0].toStr() << std::endl;
   EXPECT_EQ(result, hand);
 }
 
@@ -72,6 +70,5 @@ TEST(HandFormer, HandFromNotationInvalidPieceSet) {
     Piece(Piece::ERROR),
     Piece(Piece::ERROR)};
   auto result = HandFromNotation("799g");
-  std::cout << result[0].toStr() << std::endl;
   EXPECT_EQ(result, hand);
 }

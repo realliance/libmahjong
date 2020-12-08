@@ -1,7 +1,10 @@
 #include "handformer.h"
 
+#include <ctype.h>
+
 #include <algorithm>
-#include <iostream>
+#include <cstdint>
+#include <iterator>
 #include <map>
 #include <string>
 #include <vector>
@@ -31,34 +34,41 @@ auto Mahjong::HandFromNotation(std::string notation) -> std::vector<Piece> {
   std::vector<Piece> result;
   std::vector<int8_t> currentTiles;
   for (const auto& c : notation) {
+    if (!std::isdigit(c) && !std::isalpha(c)) {
+      // Push -1 if input is invalid (which is later translated to an error piece)
+      currentTiles.push_back(-1);
+      continue;
+    }
+
     if (std::isdigit(c)) {
+      // Converts character digit to integer number (safe with UTF-7 and UTF-8)
       auto value = c - '0';
       currentTiles.push_back(value);
-    } else if (!std::isdigit(c) && !std::isalpha(c)) {
-      currentTiles.push_back(-1);
-    } else {
-      auto setSuit = Piece::ERROR;
-      auto isError = true;
-      if (NOTATION_TO_SUIT.count(c) > 0) {
-        setSuit = NOTATION_TO_SUIT[c];
-        isError = false;
-      }
-      auto isHonor = Piece(setSuit).isHonor();
-      transform(
-        currentTiles.begin(),
-        currentTiles.end(),
-        std::back_inserter(result),
-        [&setSuit, &isHonor, &isError](int8_t i) -> Piece {
-          if (isError || i == -1) {
-            return Piece(Piece::ERROR);
-          }
-          if (isHonor) {
-            return Piece(NOTATION_TO_HONOR[i]);
-          }
-          return Piece::formPiece(setSuit, i);
-        });
-      currentTiles.clear();
+      continue;
     }
+
+    // Input must be alphabetical, translate queued set
+    auto setSuit = Piece::ERROR;
+    auto isError = true;
+    if (NOTATION_TO_SUIT.count(c) > 0) {
+      setSuit = NOTATION_TO_SUIT[c];
+      isError = false;
+    }
+    auto isHonor = Piece(setSuit).isHonor();
+    transform(
+      currentTiles.begin(),
+      currentTiles.end(),
+      std::back_inserter(result),
+      [&setSuit, &isHonor, &isError](int8_t i) -> Piece {
+        if (isError || i == -1) {
+          return Piece(Piece::ERROR);
+        }
+        if (isHonor) {
+          return Piece(NOTATION_TO_HONOR[i]);
+        }
+        return Piece::formPiece(setSuit, i);
+      });
+    currentTiles.clear();
   }
   return result;
 }

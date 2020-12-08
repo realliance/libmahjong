@@ -75,9 +75,9 @@ auto Piece::formPiece(Piece::Type suit, uint8_t number) -> Piece {
 
   if (suit == CHARACTER_SUIT || suit == PIN_SUIT || suit == BAMBOO_SUIT || suit == HONOR_SUIT) {
     return Piece(suit | valueAppend);
-  } else {
-    return Piece(ERROR);
   }
+
+  return Piece(ERROR);
 }
 
 const std::map<uint8_t, std::string> STR_MAP = {
