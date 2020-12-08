@@ -15,7 +15,7 @@ using Mahjong::Node;
 using Mahjong::Piece;
 using Mahjong::Meld;
 
-TEST(isBlessingOfMan, Yakuman) {
+TEST(isBlessingOfHeaven, Yakuman) {
   auto gameState = GameState();
   gameState.hands[0] = Hand(HandFromNotation("111p222m333s444p11z"));
   gameState.hands[0].open = false;
@@ -36,7 +36,7 @@ TEST(isBlessingOfMan, Yakuman) {
   FAIL();
 }
 
-TEST(isBlessingOfMan, MustBeEastWind) {
+TEST(isBlessingOfHeaven, MustBeEastWind) {
   auto gameState = GameState();
   gameState.hands[1] = Hand(HandFromNotation("111p222m333s444p11z"));
   gameState.hands[1].open = false;
@@ -57,7 +57,7 @@ TEST(isBlessingOfMan, MustBeEastWind) {
   SUCCEED();
 }
 
-TEST(isBlessingOfMan, NoConcealedKans) {
+TEST(isBlessingOfHeaven, NoConcealedKans) {
   auto meld = Meld{Meld::ConcealedKan, Piece(Piece::EIGHT_PIN)};
 
   auto gameState = GameState();
@@ -68,7 +68,7 @@ TEST(isBlessingOfMan, NoConcealedKans) {
   gameState.turnNum = 0;
 
   // No calls have occured
-  gameState.lastCall = -1;
+  gameState.lastCall = 0;
 
   auto root = breakdownHand(gameState.hands.at(0).live);
 
@@ -81,7 +81,7 @@ TEST(isBlessingOfMan, NoConcealedKans) {
   SUCCEED();
 }
 
-TEST(isBlessingOfMan, BadHand) {
+TEST(isBlessingOfHeaven, BadHand) {
   auto gameState = GameState();
   gameState.hands[0] = Hand(HandFromNotation("111p252m333s444p11z"));
   gameState.hands[0].open = false;
