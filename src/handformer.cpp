@@ -63,10 +63,15 @@ auto Mahjong::HandFromNotation(std::string notation) -> std::vector<Piece> {
         if (isError || i == -1) {
           return Piece(Piece::ERROR);
         }
+
         if (isHonor) {
           return Piece(NOTATION_TO_HONOR[i]);
         }
-        return Piece::formPiece(setSuit, i);
+
+        auto isRedFive = i == 0;
+        auto value = isRedFive ? 5 : i;
+
+        return Piece::formPiece(setSuit, value, isRedFive);
       });
     currentTiles.clear();
   }

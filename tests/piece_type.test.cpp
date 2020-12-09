@@ -157,3 +157,16 @@ TEST(PieceType, operatorEqual){
   EXPECT_FALSE(Piece(Piece::RED_FIVE_BAMBOO)==Piece(Piece::FIVE_PIN));
   EXPECT_TRUE(Piece(Piece::RED_FIVE_BAMBOO)==Piece(Piece::RED_FIVE_BAMBOO));
 }
+
+TEST(PieceType, formPiece){
+  EXPECT_EQ(Piece::formPiece(Piece::CHARACTER_SUIT, 5), Piece(Piece::FIVE_CHARACTER));
+  EXPECT_EQ(Piece::formPiece(Piece::PIN_SUIT, 3), Piece(Piece::THREE_PIN));
+  EXPECT_EQ(Piece::formPiece(Piece::BAMBOO_SUIT, 1), Piece(Piece::ONE_BAMBOO));
+  EXPECT_EQ(Piece::formPiece(Piece::CHARACTER_SUIT, 9), Piece(Piece::NINE_CHARACTER));
+  EXPECT_EQ(Piece::formPiece(Piece::HONOR_SUIT, 1), Piece(Piece::EAST_WIND));
+  EXPECT_EQ(Piece::formPiece(Piece::HONOR_SUIT, 7), Piece(Piece::GREEN_DRAGON));
+  EXPECT_EQ(Piece::formPiece(Piece::CHARACTER_SUIT, 5, true), Piece(Piece::RED_FIVE_CHARACTER));
+  EXPECT_EQ(Piece::formPiece(Piece::HONOR_SUIT, 8), Piece(Piece::ERROR));
+  EXPECT_EQ(Piece::formPiece(Piece::CHARACTER_SUIT, 11), Piece(Piece::ERROR));
+  EXPECT_EQ(Piece::formPiece(Piece::CHARACTER_SUIT, 3, true), Piece(Piece::ERROR));
+}
