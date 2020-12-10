@@ -1,33 +1,42 @@
 #include "handformer.h"
 
-#include <ctype.h>
+#include <ctype.h>  // for isdigit, isalpha
 
-#include <algorithm>
-#include <cstdint>
-#include <iterator>
-#include <map>
-#include <string>
-#include <vector>
+#include <algorithm>  // for transform
+#include <cstdint>    // for uint8_t, int8_t
+#include <iterator>   // for back_insert_iterator, back_inserter
+#include <map>        // for map, operator==, _Rb_tree_iterator, _Rb_tree_...
+#include <string>     // for basic_string, string, to_string
+#include <utility>    // for pair
+#include <vector>     // for vector
 
-#include "piecetype.h"
+#include "piecetype.h"  // for Piece, Piece::Type, Piece::BAMBOO_SUIT, Piece...
 
 using Mahjong::Piece;
 
-std::map<char, Piece::Type> NOTATION_TO_SUIT = {
+const std::map<char, Piece::Type> NOTATION_TO_SUIT = {
   {'m', Piece::CHARACTER_SUIT},
   {'s', Piece::BAMBOO_SUIT},
   {'p', Piece::PIN_SUIT},
   {'z', Piece::HONOR_SUIT},
 };
 
-std::map<uint8_t, Piece::Type> NOTATION_TO_HONOR = {
-  {1, Piece::EAST_WIND},
-  {2, Piece::SOUTH_WIND},
-  {3, Piece::WEST_WIND},
-  {4, Piece::NORTH_WIND},
-  {5, Piece::WHITE_DRAGON},
-  {6, Piece::GREEN_DRAGON},
-  {7, Piece::RED_DRAGON},
+const std::map<Piece::Type, char> SUIT_TO_NOTATION = {
+  {Piece::CHARACTER_SUIT, 'm'},
+  {Piece::BAMBOO_SUIT, 's'},
+  {Piece::PIN_SUIT, 'p'},
+  {Piece::HONOR_SUIT, 'z'},
+};
+
+const std::map<uint8_t, Piece::Type>
+  NOTATION_TO_HONOR = {
+    {1, Piece::EAST_WIND},
+    {2, Piece::SOUTH_WIND},
+    {3, Piece::WEST_WIND},
+    {4, Piece::NORTH_WIND},
+    {5, Piece::WHITE_DRAGON},
+    {6, Piece::GREEN_DRAGON},
+    {7, Piece::RED_DRAGON},
 };
 
 auto Mahjong::HandFromNotation(std::string notation) -> std::vector<Piece> {
@@ -51,7 +60,7 @@ auto Mahjong::HandFromNotation(std::string notation) -> std::vector<Piece> {
     auto setSuit = Piece::ERROR;
     auto isError = true;
     if (NOTATION_TO_SUIT.count(c) > 0) {
-      setSuit = NOTATION_TO_SUIT[c];
+      setSuit = NOTATION_TO_SUIT.at(c);
       isError = false;
     }
     auto isHonor = Piece(setSuit).isHonor();
@@ -65,7 +74,7 @@ auto Mahjong::HandFromNotation(std::string notation) -> std::vector<Piece> {
         }
 
         if (isHonor) {
-          return Piece(NOTATION_TO_HONOR[i]);
+          return Piece(NOTATION_TO_HONOR.at(i));
         }
 
         auto isRedFive = i == 0;
@@ -75,5 +84,77 @@ auto Mahjong::HandFromNotation(std::string notation) -> std::vector<Piece> {
       });
     currentTiles.clear();
   }
+  // Free Remaining tiles (in case of no ending suit)
+  currentTiles.clear();
+
+  return result;
+}
+
+auto Mahjong::IsValidNotation(std::string notation) -> bool {
+  std::vector<uint8_t> currentSet;
+  for (const auto& c : notation) {
+    // If symbol, not valid
+    if (!std::isdigit(c) && !std::isalpha(c)) {
+      return false;
+    }
+
+    if (std::isdigit(c)) {
+      // Converts character digit to integer number (safe with UTF-7 and UTF-8)
+      auto value = c - '0';
+      currentSet.push_back(value);
+      continue;
+    }
+
+    // Suit Found, check if valid
+    if (NOTATION_TO_SUIT.count(c) == 0) {
+      return false;
+    }
+
+    if (c == 'z') {
+      for (const auto& i : currentSet) {
+        if (i > 7) {
+          return false;
+        }
+      }
+    }
+
+    currentSet.clear();
+  }
+
+  // Check if notation ended with suit for final set.
+  if (currentSet.size() > 0) {
+    return false;
+  }
+
+  return true;
+}
+
+auto Mahjong::HandToNotation(std::vector<Piece> hand) -> std::string {
+  std::map<Piece::Type, std::vector<uint8_t>> suitAndTiles;
+
+  for (const auto& t : hand) {
+    if (t == Piece(Piece::ERROR)) {
+      continue;
+    }
+
+    const auto suit = (Piece::Type)t.getSuit();
+    if (t.isRedFive()) {
+      suitAndTiles[suit].push_back(0);
+      continue;
+    }
+
+    suitAndTiles[suit].push_back(t.getPieceNum());
+  }
+
+  std::string result;
+  for (const auto& pair : suitAndTiles) {
+    std::string numberList;
+    for (const auto& i : pair.second) {
+      numberList.append(std::to_string(i));
+    }
+    result.append(numberList);
+    result.push_back(SUIT_TO_NOTATION.at(pair.first));
+  }
+
   return result;
 }
