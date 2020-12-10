@@ -6,6 +6,7 @@
 #include <ext/alloc_traits.h>
 #include <map>
 #include <memory>
+#include <set>
 #include <utility>
 #include <vector>
 
@@ -335,7 +336,7 @@ auto isInTenpai13Pieces(std::vector<Piece> hand, bool allWaits) -> std::vector<P
     return {};
   }
   std::array<int8_t, Piece::PIECESIZE> counts = {};
-  std::vector<Piece> waits;
+  std::set<Piece> waits;
   for (const auto& p : hand) {
     counts.at(p.toUint8_t())++;
   }
@@ -346,15 +347,15 @@ auto isInTenpai13Pieces(std::vector<Piece> hand, bool allWaits) -> std::vector<P
     hand.push_back(p);
     auto root = breakdownHand(hand);
     if (root->IsComplete()) {
-      waits.push_back(p);
+      waits.emplace(p);
       if (!allWaits) {
-        return waits;
+        return std::vector(waits.begin(), waits.end());
       }
     }
 
     hand.pop_back();
   }
-  return waits;
+  return std::vector(waits.begin(), waits.end());
 }
 
 const int PIECESINAHAND = 14;
@@ -370,7 +371,7 @@ auto isInTenpai(std::vector<Piece> hand, bool allWaits) -> std::vector<Piece> {
     return {};
   }
   std::array<bool, Piece::PIECESIZE> removedbefore = {};
-  std::vector<Piece> waits;
+  std::set<Piece> waits;
   for (int i = 0; i < PIECESINAHAND; i++) {
     Piece removed = hand.front();
     hand.erase(hand.begin());
@@ -384,11 +385,11 @@ auto isInTenpai(std::vector<Piece> hand, bool allWaits) -> std::vector<Piece> {
       if (!allWaits) {
         return tempwaits;
       }
-      waits.insert(waits.begin(), tempwaits.begin(), tempwaits.end());
+      waits.insert(tempwaits.begin(), tempwaits.end());
     }
     hand.push_back(removed);
   }
-  return waits;
+  return std::vector(waits.begin(), waits.end());
 }
 
 //see above comment

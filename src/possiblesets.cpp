@@ -206,7 +206,7 @@ auto TestValid(const std::vector<Piece>& hand) -> bool {
   return true;
 }
 
-auto Mahjong::GetPossibleTenpaiHand(bool replacement) -> std::vector<Piece> {
+auto Mahjong::GetPossibleTenpaiHand(bool replacement, Piece* removed) -> std::vector<Piece> {
   std::vector<Piece> tenpaihand = GetPossibleStdFormHand();
   std::random_device rd;
   std::mt19937 g(rd());
@@ -214,6 +214,9 @@ auto Mahjong::GetPossibleTenpaiHand(bool replacement) -> std::vector<Piece> {
   std::uniform_int_distribution<> pieceIndex(0, 13);
   std::uniform_int_distribution<> pieceSelect(0, 33);
   int ind = pieceIndex(g);
+  if (removed != nullptr) {
+    *removed = tenpaihand[ind];
+  }
   if (!replacement) {
     tenpaihand.erase(tenpaihand.begin() + ind);
     return tenpaihand;

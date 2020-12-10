@@ -57,6 +57,7 @@ cmake-build-debug
 # Graph Formats
 *.gv
 *.tgf
+*.gml
 
 release
 
