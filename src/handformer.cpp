@@ -1,16 +1,16 @@
 #include "handformer.h"
 
-#include <ctype.h>  // for isdigit, isalpha
+#include <ctype.h>
 
-#include <algorithm>  // for transform
-#include <cstdint>    // for uint8_t, int8_t
-#include <iterator>   // for back_insert_iterator, back_inserter
-#include <map>        // for map, operator==, _Rb_tree_iterator, _Rb_tree_...
-#include <string>     // for basic_string, string, to_string
-#include <utility>    // for pair
-#include <vector>     // for vector
+#include <algorithm>
+#include <cstdint>
+#include <iterator>
+#include <map>
+#include <string>
+#include <utility>
+#include <vector>
 
-#include "piecetype.h"  // for Piece, Piece::Type, Piece::BAMBOO_SUIT, Piece...
+#include "piecetype.h"
 
 using Mahjong::Piece;
 
@@ -39,6 +39,10 @@ const std::map<uint8_t, Piece::Type>
     {7, Piece::RED_DRAGON},
 };
 
+/**
+ * HandFromNotation will attempt to produce as much of the hand as possible.
+ * Use IsValidNotation to guarantee a successful input.
+ */
 auto Mahjong::HandFromNotation(std::string notation) -> std::vector<Piece> {
   std::vector<Piece> result;
   std::vector<int8_t> currentTiles;
