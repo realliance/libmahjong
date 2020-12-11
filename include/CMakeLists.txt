@@ -19,4 +19,5 @@ target_sources(libmahjong
     "${DIR}/walls.h"
     "${DIR}/winds.h"
     "${DIR}/score.h"
+    "${DIR}/handformer.h"
 )

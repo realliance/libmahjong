@@ -65,6 +65,38 @@ auto Piece::fromWind(Wind w) -> Piece {
   }
 }
 
+auto Piece::formPiece(Piece::Type suit, uint8_t number, bool isRedFive) -> Piece {
+  if (suit == HONOR_SUIT) {
+    if (number < 1 || number > 7) {
+      return Piece(ERROR);
+    }
+
+    return Piece(suit | number);
+  }
+
+  if (number < 1 || number > 9) {
+    return Piece(ERROR);
+  }
+
+  auto valueAppend = number;
+  if (isRedFive) {
+    if (number != 5) {
+      return Piece(ERROR);
+    }
+    valueAppend |= RED_FIVE;
+  }
+
+  if (number == 1 || number == 9) {
+    valueAppend |= TERMINAL_BIT;
+  }
+
+  if (suit == CHARACTER_SUIT || suit == PIN_SUIT || suit == BAMBOO_SUIT) {
+    return Piece(suit | valueAppend);
+  }
+
+  return Piece(ERROR);
+}
+
 const std::map<uint8_t, std::string> STR_MAP = {
   {Piece::ERROR, "ERRORPIECE"},
   {Piece::RED_DRAGON, "Red Dragon"},

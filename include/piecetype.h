@@ -73,6 +73,7 @@ class Piece {
   [[nodiscard]] auto toStr() const -> std::string;
 
   static auto fromWind(Wind w) -> Piece;
+  static auto formPiece(Piece::Type suit, uint8_t number, bool isRedFive = false) -> Piece;
 
   inline auto operator++() -> Piece& {
     p = p + 1;
