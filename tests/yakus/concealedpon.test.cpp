@@ -52,6 +52,27 @@ TEST(isThreeConcealedPons, PonsMustBeConcealed) {
   FAIL();
 }
 
+TEST(isThreeConcealedPons, CanHaveAdditionalOpenPon) {
+  auto meld = Meld();
+  meld.type = Meld::Pon;
+  meld.start = Piece(Piece::TWO_BAMBOO);
+
+  auto gameState = GameState();
+  gameState.hands[0] = Hand(HandFromNotation("111m111p111s44m"));
+  gameState.hands[0].melds.push_back(meld);
+  gameState.hands[0].open = true;
+
+  auto root = breakdownHand(gameState.hands.at(0).live);
+
+  for (const auto& branch : Node::AsBranchVectors(root.get())) {
+    if (Mahjong::isThreeConcealedPons(gameState, 0, branch) == 2) {
+      SUCCEED();
+      return;
+    }
+  }
+  FAIL();
+}
+
 TEST(isThreeConcealedPons, PonsMustBeConcealedNegative) {
   auto meld = Meld();
   meld.type = Meld::Pon;
