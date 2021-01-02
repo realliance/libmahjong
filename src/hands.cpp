@@ -437,6 +437,7 @@ auto isRiichi(const GameState& state, int player, const std::vector<const Mahjon
     if (state.turnNum - state.hands.at(player).riichiRound <= ONEROUNDOFTURNS && state.lastCall < state.hands.at(player).riichiRound) {
       han++;
     }
+    return han;
   }
   return 0;
 }
@@ -687,14 +688,20 @@ auto isOutsideHand(const GameState& state, int player, const std::vector<const M
   return state.hands.at(state.currentPlayer).open ? 1 : 2;
 }
 
-auto isAfterAKan(const GameState& state, int /*unused*/, const std::vector<const Mahjong::Node*>& /*unused*/) -> int {
-  if (state.nextState == KanDiscard) {
+auto isAfterAKan(const GameState& state, int player, const std::vector<const Mahjong::Node*>& /*unused*/) -> int {
+  if (state.currentPlayer != player) {
+    return 0;
+  }
+  if (state.prevState == Replacement) {
     return 1;
   }
   return 0;
 }
 
-auto isRobbingAKan(const GameState& state, int /*unused*/, const std::vector<const Mahjong::Node*>& /*unused*/) -> int {
+auto isRobbingAKan(const GameState& state, int player, const std::vector<const Mahjong::Node*>& /*unused*/) -> int {
+  if (!state.hasRonned.at(player)) {
+    return 0;
+  }
   if (state.nextState == KanDiscard) {
     return 1;
   }
@@ -790,9 +797,6 @@ auto isThreeKans(const GameState& state, int player, const std::vector<const Mah
 }
 
 auto isAllPons(const GameState& state, int player, const std::vector<const Mahjong::Node*>& branch) -> int {
-  if (isAllTerminalsAndHonors(state, player, branch) != 0) {
-    return 0;
-  }
   for (const auto& node : branch) {
     if (node->type != Node::PonSet) {
       return 0;
