@@ -4,7 +4,9 @@
 #include "gamestate.h"
 #include "handformer.h"
 
-using namespace Mahjong;
+using Mahjong::Hand;
+using Mahjong::GameState;
+using Mahjong::HandFromNotation;
 
 TEST(isRiichi, 1Han) {
   auto gameState = GameState();

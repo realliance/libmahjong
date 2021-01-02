@@ -91,7 +91,7 @@ TEST(isWindOrDragonPon, CanWhenOpen) {
 
 TEST(isWindOrDragonPon, BadHand) {
   auto gameState = GameState();
-  gameState.hands[0] = Hand(HandFromNotation("123m456m222z11z"));
+  gameState.hands[0] = Hand(HandFromNotation("123m456m222p11p"));
 
   auto root = breakdownHand(gameState.hands.at(0).live);
 
