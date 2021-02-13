@@ -43,3 +43,7 @@ cmake --build build
 ## Testing and Documentation
 
 The test suite is located in `tests/` and can be run with `make -C build check`
+
+## Attribution
+
+The Riichi Mahjong 2016 Ruleset is redistributed from the [European Mahjong Association](http://mahjong-europe.org/portal/images/docs/Riichi-rules-2016-EN.pdf) under the CC BY-NC-SA 4.0. Their ruleset forms the basis for libmahjong.
