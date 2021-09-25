@@ -1,5 +1,7 @@
 # libmahjong
 
+`libmahjong` is a library for running games of Riichi Mahjong, originally built to power [Riichi Royale](https://github.com/realliance/RiichiRoyale), and later [Gametable](https://github.com/realliance/gametable). The library uses a state machine to represent the status of the game, and allows for players (whether artificial or real) to interact at appropriate times. 
+
 # Development
 
 ## Getting Started
