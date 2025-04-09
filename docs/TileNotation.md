@@ -1,6 +1,6 @@
 # Shorthand Tile Notation
 
-The following tile notation is used by `Mahjong::HandFromNotation` to produce a list of tiles from a given string. This string is made up of any number of sets of tiles, which `Mahjong::HandFromNotation` will expand into a corresponding list.
+The following tile notation is used by `mahjong::HandFromNotation` to produce a list of tiles from a given string. This string is made up of any number of sets of tiles, which `mahjong::HandFromNotation` will expand into a corresponding list.
 
 
 A given set of tiles (a set being any number of tiles greater than 1) is defined by digits followed by a suit character. All digits within that set are translated to the corresponding numbered tile with the given set suit. Red Fives corresponds to the digit `0`.
@@ -32,7 +32,7 @@ An easy way to remember this order is winds-then-dragons, with each set being in
 
 ## `libmahjong` Specifics
 
-`Mahjong::HandFromNotation` holds compliance with this notation. If invalid inputs are given, `Mahjong::HandFromNotation` will translate them to piece `ERROR_PIECE` to stay aligned with other piece functions. If an individual tile is invalid (such as giving a symbol in place of a number), this individual piece will be translated to `ERROR_PIECE`. If a letter is found that does not correspond to any value on the suit label, it is considered an invalid set and all tiles in that set are translated to `ERROR_PIECE`.
+`mahjong::HandFromNotation` holds compliance with this notation. If invalid inputs are given, `mahjong::HandFromNotation` will translate them to piece `ERROR_PIECE` to stay aligned with other piece functions. If an individual tile is invalid (such as giving a symbol in place of a number), this individual piece will be translated to `ERROR_PIECE`. If a letter is found that does not correspond to any value on the suit label, it is considered an invalid set and all tiles in that set are translated to `ERROR_PIECE`.
 
 ## Examples
 

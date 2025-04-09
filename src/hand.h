@@ -1,0 +1,29 @@
+#pragma once
+#include <algorithm>
+#include <cstddef>
+#include <iosfwd>
+#include <utility>
+#include <vector>
+
+#include "meld.h"
+#include "piecetype.h"
+
+namespace mahjong {
+
+class Hand {
+ public:
+  Hand() = default;
+  explicit Hand(std::vector<Piece> live) : live(std::move(std::move(live))) {}
+  auto sort() -> void { std::ranges::sort(live); }
+  std::vector<Piece> live;
+  std::vector<Meld> melds;
+  std::vector<Piece> discards;
+  bool open = false;
+  bool riichi = false;
+  size_t riichiPieceDiscard = -1;
+  int riichiRound = -1;
+};
+
+}  // namespace mahjong
+
+auto operator<<(std::ostream& os, const mahjong::Hand& hand) -> std::ostream&;

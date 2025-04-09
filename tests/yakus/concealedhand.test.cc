@@ -1,0 +1,52 @@
+#include <gtest/gtest.h>
+#include <array>
+#include <string>
+#include <vector>
+
+#include "gamestate.h"
+#include "hand.h"
+#include "handformer.h"
+#include "hands.h"
+#include "piecetype.h"
+#include "walls.h"
+
+namespace mahjong {
+TEST(isFullyConcealedHand, 1Han) {
+  auto game_state = GameState();
+  game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
+  game_state.hands[0].open = false;
+  game_state.currentPlayer = 0;
+
+  EXPECT_EQ(isFullyConcealedHand(game_state, 0), 1);
+}
+
+TEST(isFullyConcealedHand, MustTsumo) {
+  auto game_state = GameState();
+  game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
+  game_state.hands[0].open = false;
+  game_state.currentPlayer = 1;
+
+  EXPECT_EQ(isFullyConcealedHand(game_state, 0), 0);
+}
+
+TEST(isFullyConcealedHand, MustBeClosedHand) {
+  auto game_state = GameState();
+  game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
+  game_state.hands[0].open = true;
+  game_state.currentPlayer = 0;
+
+  EXPECT_EQ(isFullyConcealedHand(game_state, 0), 0);
+}
+
+TEST(isFullyConcealedHand, MustHavePiecesRemainingInWall) {
+  auto game_state = GameState();
+  game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
+  game_state.hands[0].open = false;
+  game_state.currentPlayer = 0;
+
+  // Empty the Wall
+  game_state.walls.livingWalls.clear();
+
+  EXPECT_EQ(isFullyConcealedHand(game_state, 0), 0);
+}
+}  // namespace mahjong

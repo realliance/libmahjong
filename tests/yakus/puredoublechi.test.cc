@@ -1,0 +1,64 @@
+#include <gtest/gtest.h>
+#include <array>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "analysis.h"
+#include "gamestate.h"
+#include "hand.h"
+#include "handformer.h"
+#include "handnode.h"
+#include "hands.h"
+#include "piecetype.h"
+
+namespace mahjong {
+
+TEST(isPureDoubleChi, 1Han) {
+  auto game_state = GameState();
+  game_state.hands[0] = Hand(HandFromNotation("234m234m555p888s88p"));
+  game_state.hands[0].open = false;
+
+  auto root = breakdownHand(game_state.hands.at(0).live);
+
+  for (const auto& branch : Node::AsBranchVectors(root.get())) {
+    if (mahjong::isPureDoubleChi(game_state, 0, branch) == 1) {
+      SUCCEED();
+      return;
+    }
+  }
+  FAIL();
+}
+
+TEST(isPureDoubleChi, BadHand) {
+  auto game_state = GameState();
+  game_state.hands[0] = Hand(HandFromNotation("234m123m555p888s88p"));
+  game_state.hands[0].open = false;
+
+  auto root = breakdownHand(game_state.hands.at(0).live);
+
+  for (const auto& branch : Node::AsBranchVectors(root.get())) {
+    if (mahjong::isPureDoubleChi(game_state, 0, branch) == 1) {
+      FAIL();
+      return;
+    }
+  }
+  SUCCEED();
+}
+
+TEST(isPureDoubleChi, MustBeConcealed) {
+  auto game_state = GameState();
+  game_state.hands[0] = Hand(HandFromNotation("234m234m555p888s88p"));
+  game_state.hands[0].open = true;
+
+  auto root = breakdownHand(game_state.hands.at(0).live);
+
+  for (const auto& branch : Node::AsBranchVectors(root.get())) {
+    if (mahjong::isPureDoubleChi(game_state, 0, branch) == 1) {
+      FAIL();
+      return;
+    }
+  }
+  SUCCEED();
+}
+}  // namespace mahjong

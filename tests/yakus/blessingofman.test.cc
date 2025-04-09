@@ -1,0 +1,106 @@
+#include <gtest/gtest.h>
+#include <array>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "analysis.h"
+#include "gamestate.h"
+#include "hand.h"
+#include "handformer.h"
+#include "handnode.h"
+#include "hands.h"
+#include "piecetype.h"
+
+namespace mahjong {
+TEST(isBlessingOfMan, 5Han) {
+  auto game_state = GameState();
+  game_state.hands[3] = Hand(HandFromNotation("123m123p444m111z55m"));
+  game_state.hands[3].open = false;
+
+  game_state.turnNum = 1;
+
+  // No calls have occured
+  game_state.lastCall = -1;
+
+  game_state.hasRonned[3] = true;
+
+  auto root = breakdownHand(game_state.hands.at(3).live);
+
+  for (const auto& branch : Node::AsBranchVectors(root.get())) {
+    if (mahjong::isBlessingOfMan(game_state, 3, branch) == 5) {
+      SUCCEED();
+      return;
+    }
+  }
+  FAIL();
+}
+
+TEST(isBlessingOfMan, MustBeARon) {
+  auto game_state = GameState();
+  game_state.hands[3] = Hand(HandFromNotation("123m123p444m111z55m"));
+  game_state.hands[3].open = false;
+
+  game_state.turnNum = 3;
+
+  // No calls have occured
+  game_state.lastCall = -1;
+
+  game_state.hasRonned[3] = false;
+
+  auto root = breakdownHand(game_state.hands.at(3).live);
+
+  for (const auto& branch : Node::AsBranchVectors(root.get())) {
+    if (mahjong::isBlessingOfMan(game_state, 3, branch) == 5) {
+      FAIL();
+      return;
+    }
+  }
+  SUCCEED();
+}
+
+TEST(isBlessingOfMan, MustBeBeforePlayerFirstTurn) {
+  auto game_state = GameState();
+  game_state.hands[0] = Hand(HandFromNotation("123m123p444m111z55m"));
+  game_state.hands[0].open = false;
+
+  game_state.turnNum = 2;
+
+  // No calls have occured
+  game_state.lastCall = -1;
+
+  game_state.hasRonned[0] = true;
+
+  auto root = breakdownHand(game_state.hands.at(0).live);
+
+  for (const auto& branch : Node::AsBranchVectors(root.get())) {
+    if (mahjong::isBlessingOfMan(game_state, 0, branch) == 5) {
+      FAIL();
+      return;
+    }
+  }
+  SUCCEED();
+}
+
+TEST(isBlessingOfMan, NoCalledMustHaveOccured) {
+  auto game_state = GameState();
+  game_state.hands[3] = Hand(HandFromNotation("123m123p444m111z55m"));
+  game_state.hands[3].open = false;
+
+  game_state.turnNum = 1;
+
+  game_state.lastCall = 0;
+
+  game_state.hasRonned[3] = true;
+
+  auto root = breakdownHand(game_state.hands.at(3).live);
+
+  for (const auto& branch : Node::AsBranchVectors(root.get())) {
+    if (mahjong::isBlessingOfMan(game_state, 3, branch) == 5) {
+      FAIL();
+      return;
+    }
+  }
+  SUCCEED();
+}
+}  // namespace mahjong

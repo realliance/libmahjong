@@ -1,0 +1,46 @@
+#include <gtest/gtest.h>
+#include <array>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "analysis.h"
+#include "gamestate.h"
+#include "hand.h"
+#include "handformer.h"
+#include "handnode.h"
+#include "hands.h"
+#include "piecetype.h"
+
+namespace mahjong {
+
+TEST(isTriplePon, 2Han) {
+  auto game_state = GameState();
+  game_state.hands[0] = Hand(HandFromNotation("111m111p111s666z44m"));
+
+  auto root = breakdownHand(game_state.hands.at(0).live);
+
+  for (const auto& branch : Node::AsBranchVectors(root.get())) {
+    if (mahjong::isTriplePon(game_state, 0, branch) == 2) {
+      SUCCEED();
+      return;
+    }
+  }
+  FAIL();
+}
+
+TEST(isTriplePon, BadHand) {
+  auto game_state = GameState();
+  game_state.hands[0] = Hand(HandFromNotation("111m111p222m666z44m"));
+
+  auto root = breakdownHand(game_state.hands.at(0).live);
+
+  for (const auto& branch : Node::AsBranchVectors(root.get())) {
+    if (mahjong::isTriplePon(game_state, 0, branch) == 2) {
+      FAIL();
+      return;
+    }
+  }
+  SUCCEED();
+}
+}  // namespace mahjong

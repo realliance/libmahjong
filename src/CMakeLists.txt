@@ -1,40 +1,47 @@
-set(DIR ${CMAKE_CURRENT_LIST_DIR})
-target_sources(libmahjong
-  PRIVATE
-    "${DIR}/decisionfunction.cpp"
-    "${DIR}/event.cpp"
-    "${DIR}/gamestate.cpp"
-    "${DIR}/hand.cpp"
-    "${DIR}/handnode.cpp"
-    "${DIR}/hands.cpp"
-    "${DIR}/handtree.cpp"
-    "${DIR}/controllermanager.cpp"
-    "${DIR}/meld.cpp"
-    "${DIR}/piecetype.cpp"
-    "${DIR}/player.cpp"
-    "${DIR}/possiblesets.cpp"
-    "${DIR}/statecontroller.cpp"
-    "${DIR}/stateutilities.cpp"
-    "${DIR}/walls.cpp"
-    "${DIR}/handformer.cpp"
 
-    "${DIR}/statefunctions/chi.cpp"
-    "${DIR}/statefunctions/concealedkan.cpp"
-    "${DIR}/statefunctions/convertedkan.cpp"
-    "${DIR}/statefunctions/discard.cpp"
-    "${DIR}/statefunctions/draw.cpp"
-    "${DIR}/statefunctions/error.cpp"
-    "${DIR}/statefunctions/exhaust.cpp"
-    "${DIR}/statefunctions/gameend.cpp"
-    "${DIR}/statefunctions/gamestart.cpp"
-    "${DIR}/statefunctions/kan.cpp"
-    "${DIR}/statefunctions/kandiscard.cpp"
-    "${DIR}/statefunctions/playerhand.cpp"
-    "${DIR}/statefunctions/pon.cpp"
-    "${DIR}/statefunctions/replacement.cpp"
-    "${DIR}/statefunctions/riichi.cpp"
-    "${DIR}/statefunctions/ron.cpp"
-    "${DIR}/statefunctions/roundend.cpp"
-    "${DIR}/statefunctions/roundstart.cpp"
-    "${DIR}/statefunctions/tsumo.cpp"
-)
+
+add_subdirectory(controllers)
+add_subdirectory(statefunctions)
+
+target_sources(
+  libmahjong
+  PRIVATE "analysis.h"
+          "controllermanager.cc"
+          "controllermanager.h"
+          "decisionfunction.cc"
+          "decisionfunction.h"
+          "event.cc"
+          "event.h"
+          "gamestate.cc"
+          "gamestate.h"
+          "hand.cc"
+          "hand.h"
+          "handformer.cc"
+          "handformer.h"
+          "handnode.cc"
+          "handnode.h"
+          "hands.cc"
+          "hands.h"
+          "handtree.cc"
+          "meld.cc"
+          "meld.h"
+          "pieces.h"
+          "piecetype.cc"
+          "piecetype.h"
+          "player.cc"
+          "player.h"
+          "playercontroller.h"
+          "possiblesets.cc"
+          "score.h"
+          "settings.h"
+          "statecontroller.cc"
+          "statefunctions.h"
+          "stateutilities.cc"
+          "stateutilities.h"
+          "walls.cc"
+          "walls.h"
+          "winds.h")
+get_target_property(libmahjong_sources_ libmahjong SOURCES)
+set(libmahjong_sources
+    ${libmahjong_sources} ${libmahjong_sources_}
+    PARENT_SCOPE)
