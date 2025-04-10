@@ -19,7 +19,6 @@ macro(package_add_test test_name)
 
   target_link_libraries(${test_name} libmahjong GTest::gtest_main)
   target_include_directories(can_chi PRIVATE ${libmahjong_SOURCE_DIR}/src)
-  target_compile_definitions(driver PUBLIC -DNO_PYBIND)
   target_compile_options(libmahjong PRIVATE ${lib_mahjong_compile_options})
   set_target_properties(${test_name} PROPERTIES FOLDER tests)
   get_target_property(test_sources ${test_name} SOURCES)
