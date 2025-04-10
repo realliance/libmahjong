@@ -1,8 +1,9 @@
 #pragma once
 #include <iostream>
 
+#include "playercontroller.h"
+
 namespace mahjong {
-class PlayerController;
 
 struct Player {
   int points{};
@@ -10,5 +11,3 @@ struct Player {
 };
 
 };  // namespace mahjong
-
-std::ostream& operator<<(std::ostream& os, const mahjong::Player& player);

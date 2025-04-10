@@ -65,7 +65,24 @@ class Node : public std::enable_shared_from_this<Node> {
     using pointer = Node*;
     using iterator_category = std::forward_iterator_tag;
   };
-  static std::string TypeToStr(uint8_t nodetype);
+
+  std::string typeToStr() const {
+    switch (type) {
+      case kChiSet:
+        return "Chi";
+      case kPonSet:
+        return "Pon";
+      case kPair:
+        return "Pair";
+      case kSingle:
+        return "Single";
+      case kRoot:
+        return "RootNode";
+      default:
+        return "Invalid Type";
+    }
+  }
+
   std::ostream& DumpAsTGF(std::ostream& os) const;
   std::ostream& DumpAsDot(std::ostream& os) const;
   [[nodiscard]] static std::vector<std::vector<const Node*>> AsBranchVectors(
@@ -78,5 +95,3 @@ class Node : public std::enable_shared_from_this<Node> {
 };
 
 }  // namespace mahjong
-
-std::ostream& operator<<(std::ostream& os, const mahjong::Node& node);

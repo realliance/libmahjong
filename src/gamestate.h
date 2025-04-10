@@ -37,5 +37,3 @@ struct GameState {
 };
 
 }  // namespace mahjong
-
-std::ostream& operator<<(std::ostream& os, const mahjong::GameState& state);

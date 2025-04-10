@@ -54,8 +54,7 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 
   find_program(iwyu_path NAMES include-what-you-use iwyu)
   if(iwyu_path)
-    set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path}
-                                       CXXFLAGS="-Xiwyu --error")
+    set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
   endif()
 
   find_program(clang_format_path NAMES clang-format)

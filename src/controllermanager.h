@@ -3,9 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace mahjong {
-class PlayerController;
-}
+#include "playercontroller.h"
 
 namespace mahjong {
 using newControllerInst = std::function<PlayerController*()>;

@@ -2,21 +2,7 @@
 
 #include <algorithm>
 
-std::ostream& operator<<(std::ostream& os, const mahjong::Node& node) {
-  os << "{ id: " << node.id << ", type:" << mahjong::Node::TypeToStr(node.type);
-  os << ", start:" << node.start.toStr();
-  os << ", parent: "
-     << (node.parent != nullptr ? std::to_string(node.parent->id)
-                                : "No Parent");
-  os << ", leaves: [ ";
-  for (const auto& leaf : node.leaves) {
-    os << "id: " << leaf->id << ", ";
-  }
-  os << " ], "
-     << "leafPosInParent: " << node.leafPosInParent << " },";
-  os << '\n';
-  return os;
-}
+#include "typeprinter.h"
 
 namespace mahjong {
 
@@ -147,30 +133,13 @@ bool Node::ConstIterator::operator!=(const Node::ConstIterator& other) const {
   return end_ != other.end_;
 }
 
-std::string Node::TypeToStr(uint8_t nodetype) {
-  switch (nodetype) {
-    case kChiSet:
-      return "Chi";
-    case kPonSet:
-      return "Pon";
-    case kPair:
-      return "Pair";
-    case kSingle:
-      return "Single";
-    case kRoot:
-      return "RootNode";
-    default:
-      return "Invalid Type";
-  }
-}
-
 std::ostream& Node::DumpAsTGF(std::ostream& os) const {
   std::vector<std::string> nodes;
   std::vector<std::string> connections;
   for (const auto& node : *this) {
     nodes.push_back(std::to_string(node.id) + " Piece: " +
                     (node.type != kRoot ? node.start.toStr() : "Root") +
-                    " Type: " + TypeToStr(node.type));
+                    " Type: " + node.typeToStr());
     for (const auto& leaf : node.leaves) {
       connections.push_back(std::to_string(node.id) + " " +
                             std::to_string(leaf->id));
@@ -190,10 +159,9 @@ std::ostream& Node::DumpAsDot(std::ostream& os) const {
   std::vector<std::string> nodes;
   std::vector<std::string> connections;
   for (const auto& node : *this) {
-    nodes.push_back(std::to_string(node.id) + " [label=\"" +
-                    TypeToStr(node.type) + ": " +
-                    (node.type != kRoot ? node.start.toStr() : "Root") + "\"" +
-                    ",shape=" + NodeTypeToShapeStr(node.type) +
+    nodes.push_back(std::to_string(node.id) + " [label=\"" + node.typeToStr() +
+                    ": " + (node.type != kRoot ? node.start.toStr() : "Root") +
+                    "\"" + ",shape=" + NodeTypeToShapeStr(node.type) +
                     ",color=" + NodeTypeToColorStr(node.type) + "];");
     for (const auto& leaf : node.leaves) {
       connections.push_back(std::to_string(node.id) + " -> " +

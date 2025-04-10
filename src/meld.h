@@ -16,16 +16,28 @@ struct Meld {
   };
   Type type;
   Piece start;
+
   bool operator==(Meld other) const {
     if (type != other.type) {
       return false;
     }
     return start == other.start;
   }
+
+  std::string typeToStr() const {
+    switch (type) {
+      case Meld::kChi:
+        return "Chi";
+      case Meld::kKan:
+        return "Kan";
+      case Meld::kPon:
+        return "Pon";
+      case Meld::kConcealedKan:
+        return "ConcealedKan";
+      default:
+        return "InvalidMeldType";
+    }
+  }
 };
 
-std::string MeldTypeToStr(Meld::Type s);
-
 }  // namespace mahjong
-
-std::ostream& operator<<(std::ostream& os, const mahjong::Meld& meld);

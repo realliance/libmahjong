@@ -1,12 +1,12 @@
 #pragma once
 #include <cstdint>
 
+#include "event.h"
+#include "gamestate.h"
 #include "piecetype.h"
 #include "winds.h"
 
 namespace mahjong {
-struct Event;
-struct GameState;
 
 Wind GetSeat(int round, int player);
 

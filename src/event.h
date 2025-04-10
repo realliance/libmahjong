@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 
+#include "piecetype.h"
+
 namespace mahjong {
 
 struct Event {
@@ -29,6 +31,41 @@ struct Event {
   int player = {};
   int16_t piece = {};
   bool decision = {};
+
+  std::string typeToStr() const {
+    switch (type) {
+      case Event::kRon:
+        return "Ron";
+      case Event::kKan:
+        return "Kan";
+      case Event::kPon:
+        return "Pon";
+      case Event::kChi:
+        return "Chi";
+      case Event::kTsumo:
+        return "Tsumo";
+      case Event::kConcealedKan:
+        return "ConcealedKan";
+      case Event::kConvertedKan:
+        return "ConvertedKan";
+      case Event::kRiichi:
+        return "Riichi";
+      case Event::kDiscard:
+        return "Discard";
+      case Event::kDecline:
+        return "Decline";
+      case Event::kDora:
+        return "Dora";
+      case Event::kPointDiff:
+        return "PointDiff";
+      case Event::kExhaustiveDraw:
+        return "ExhaustiveDraw";
+      case Event::kEnd:
+        return "End";
+      default:
+        return "InvalidState";
+    }
+  }
 };
 
 const Event kEndEvent = {.type = Event::kEnd,
@@ -39,42 +76,4 @@ const Event kDeclineEvent = {.type = Event::kDecline,
                              .player = -1,
                              .piece = 0,
                              .decision = false};
-
-inline std::string EventTypeToStr(Event::Type s) {
-  switch (s) {
-    case Event::kRon:
-      return "Ron";
-    case Event::kKan:
-      return "Kan";
-    case Event::kPon:
-      return "Pon";
-    case Event::kChi:
-      return "Chi";
-    case Event::kTsumo:
-      return "Tsumo";
-    case Event::kConcealedKan:
-      return "ConcealedKan";
-    case Event::kConvertedKan:
-      return "ConvertedKan";
-    case Event::kRiichi:
-      return "Riichi";
-    case Event::kDiscard:
-      return "Discard";
-    case Event::kDecline:
-      return "Decline";
-    case Event::kDora:
-      return "Dora";
-    case Event::kPointDiff:
-      return "PointDiff";
-    case Event::kExhaustiveDraw:
-      return "ExhaustiveDraw";
-    case Event::kEnd:
-      return "End";
-    default:
-      return "InvalidState";
-  }
-}
-
 }  // namespace mahjong
-
-std::ostream& operator<<(std::ostream& os, const mahjong::Event& e);

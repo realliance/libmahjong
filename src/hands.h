@@ -1,14 +1,12 @@
 #pragma once
 #include <vector>
 
+#include "gamestate.h"
+#include "handnode.h"
 #include "piecetype.h"
 #include "score.h"
-namespace mahjong {
-class Node;
-}
 
 namespace mahjong {
-struct GameState;
 
 Score scoreHand(const GameState& state, int player);
 

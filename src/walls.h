@@ -1,5 +1,6 @@
 #pragma once
 #include <iosfwd>
+#include <ostream>
 #include <random>
 #include <vector>
 
@@ -23,5 +24,3 @@ class Walls {
   [[nodiscard]] int GetRemainingPieces() const;
 };
 }  // namespace mahjong
-
-std::ostream& operator<<(std::ostream& os, const mahjong::Walls& walls);

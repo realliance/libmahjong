@@ -12,8 +12,10 @@
 #include "stateutilities.h"
 #include "walls.h"
 
-bool mahjong::CanRon(const GameState& state,
-                     int player) {  // TODO(alice): I really hate this
+namespace mahjong {
+
+bool CanRon(const GameState& state,
+            int player) {  // TODO(alice): I really hate this
   for (const auto& piece : state.hands.at(player).discards) {
     if (state.pendingPiece == piece) {
       return false;
@@ -41,7 +43,7 @@ bool mahjong::CanRon(const GameState& state,
   return can_ron;
 }
 
-bool mahjong::CanKan(const GameState& state, int player) {
+bool CanKan(const GameState& state, int player) {
   if (state.walls.GetRemainingPieces() == 0) {
     return false;
   }
@@ -51,14 +53,14 @@ bool mahjong::CanKan(const GameState& state, int player) {
   return CountPieces(state, player, state.pendingPiece) == 3;
 }
 
-bool mahjong::CanPon(const GameState& state, int player) {
+bool CanPon(const GameState& state, int player) {
   if (state.hands.at(player).riichi) {
     return false;
   }
   return CountPieces(state, player, state.pendingPiece) == 2;
 }
 
-bool mahjong::CanChi(const GameState& state, int player) {
+bool CanChi(const GameState& state, int player) {
   if (state.hands.at(player).riichi) {
     return false;
   }
@@ -83,11 +85,11 @@ bool mahjong::CanChi(const GameState& state, int player) {
   return false;
 }
 
-bool mahjong::CanTsumo(const GameState& state) {
+bool CanTsumo(const GameState& state) {
   return isComplete(state, state.currentPlayer);
 }
 
-bool mahjong::CanConvertedKan(const GameState& state) {
+bool CanConvertedKan(const GameState& state) {
   if (state.walls.GetRemainingPieces() == 0) {
     return false;
   }
@@ -99,7 +101,7 @@ bool mahjong::CanConvertedKan(const GameState& state) {
       });
 }
 
-bool mahjong::CanConcealedKan(const GameState& state) {
+bool CanConcealedKan(const GameState& state) {
   if (state.walls.GetRemainingPieces() == 0) {
     return false;
   }
@@ -109,7 +111,7 @@ bool mahjong::CanConcealedKan(const GameState& state) {
   return CountPieces(state, state.currentPlayer, state.pendingPiece) == 4;
 }
 
-bool mahjong::CanRiichi(const GameState& state) {
+bool CanRiichi(const GameState& state) {
   if (state.hands.at(state.currentPlayer).riichi) {
     return false;
   }
@@ -118,3 +120,4 @@ bool mahjong::CanRiichi(const GameState& state) {
   }
   return !isInTenpai(state.hands.at(state.currentPlayer).live).empty();
 }
+}  // namespace mahjong

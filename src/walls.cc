@@ -9,23 +9,6 @@
 
 #include "pieces.h"
 
-std::ostream& operator<<(std::ostream& os, const mahjong::Walls& walls) {
-  os << "{ doraCount: " << walls.doraCount;
-  os << " replacements: " << walls.replacements;
-  os << " livingWalls: [" << '\n';
-  for (const auto& piece : walls.livingWalls) {
-    os << piece.toStr() << ", ";
-  }
-  os << "]" << '\n';
-  os << " deadWall: [" << '\n';
-  for (const auto& piece : walls.deadWall) {
-    os << piece.toStr() << ", ";
-  }
-  os << "]" << '\n';
-  os << "}";
-  return os;
-}
-
 namespace mahjong {
 
 const std::vector<Piece> kPieceSet = {

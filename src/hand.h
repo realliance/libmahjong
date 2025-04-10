@@ -25,5 +25,3 @@ class Hand {
 };
 
 }  // namespace mahjong
-
-std::ostream& operator<<(std::ostream& os, const mahjong::Hand& hand);

@@ -2,6 +2,7 @@
 
 #include "gamestate.h"
 #include "statefunctions.h"
+#include "typeprinter.h"
 
 namespace mahjong {
 GameState& Error(GameState& state) {
