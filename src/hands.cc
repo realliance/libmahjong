@@ -352,7 +352,6 @@ const std::vector<Piece> kPieceSet{
 std::vector<Piece> isInTenpai13Pieces(std::vector<Piece> hand, bool allWaits) {
   int min_singles = countSingles(hand);
   // These numbers were found by looking at a lot of handtrees and their single count
-  // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   if (min_singles > 5 || min_singles == 3 || min_singles == 0) {
     return {};
   }
@@ -387,7 +386,6 @@ std::vector<Piece> isInTenpai(std::vector<Piece> hand, bool allWaits) {
   }
   int min_singles = countSingles(hand);
   // These numbers are the same as above except one more piece means 1 higher on the single count
-  // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   if (min_singles > 6 || min_singles == 1 || min_singles == 4 ||
       min_singles == 0) {
     return {};
@@ -1016,7 +1014,6 @@ int isBlessingOfMan(const GameState& state, int player,
     return 0;
   }
   if (state.hasRonned.at(player)) {
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     return 5;
   }
   return 0;
@@ -1035,7 +1032,6 @@ int isFullFlush(const GameState& state, int player,
       return 0;
     }
   }
-  // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   return state.hands.at(player).open ? 5 : 6;
 }
 
@@ -1083,7 +1079,6 @@ int isNineGates(const GameState& state, int player,
     return 0;
   }
   std::map<int, int> pieces;
-  // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   for (int i = 1; i < 10; i++) {
     pieces.at(i) = 0;
   }
@@ -1104,7 +1099,6 @@ int isNineGates(const GameState& state, int player,
     return 0;
   }
   for (const auto& [piece, count] : pieces) {
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if ((piece == 1 || piece == 9)) {
       if (count != 3) {
         return 0;

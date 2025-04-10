@@ -132,7 +132,6 @@ Node::Iterator& Node::Iterator::operator++() {
 }
 
 Node& Node::Iterator::operator*() const {
-  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
   return const_cast<Node&>(*itr_.root_);
 }
 

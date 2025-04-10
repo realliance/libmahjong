@@ -5,9 +5,9 @@
 #include <random>
 #include <vector>
 
-#include "hand.h"  // IWYU pragma: keep
+#include "hand.h"
 #include "piecetype.h"
-#include "player.h"  // IWYU pragma: keep
+#include "player.h"
 #include "walls.h"
 
 namespace mahjong {
