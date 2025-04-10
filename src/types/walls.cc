@@ -2,12 +2,11 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <iostream>
 #include <iterator>
 #include <random>
-#include <string>
 
 #include "types/pieces.h"
+#include "types/piecetype.h"
 
 namespace mahjong {
 

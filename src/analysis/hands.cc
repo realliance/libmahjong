@@ -12,11 +12,11 @@
 #include "analysis/analysis.h"
 #include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
-#include "types/pieces.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "types/meld.h"
+#include "types/pieces.h"
 #include "types/walls.h"
 #include "types/winds.h"
 

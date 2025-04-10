@@ -13,6 +13,7 @@
 #include "controllers/totobot.h"
 
 namespace mahjong {
+class PlayerController;
 
 namespace {
 std::map<std::string, newControllerInst> available_controllers = {

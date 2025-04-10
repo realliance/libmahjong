@@ -2,10 +2,10 @@
 #include <array>
 #include <string>
 
-#include "utils/handformer.h"
 #include "analysis/hands.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
+#include "utils/handformer.h"
 
 namespace mahjong {
 

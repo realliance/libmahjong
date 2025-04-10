@@ -2,9 +2,9 @@
 #include <cstdint>
 #include <vector>
 
+#include "analysis/hands.h"
 #include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
-#include "analysis/hands.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/hand.h"

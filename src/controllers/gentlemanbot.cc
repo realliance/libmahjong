@@ -6,9 +6,9 @@
 #include <memory>
 
 #include "analysis/analysis.h"
-#include "types/pieces.h"
 #include "types/event.h"
 #include "types/handnode.h"
+#include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/winds.h"
 

@@ -7,6 +7,7 @@
 #include "types/winds.h"
 
 namespace mahjong {
+struct GameState;
 
 Wind GetSeat(int round, int player);
 

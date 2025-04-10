@@ -25,11 +25,9 @@ function(package_add_test test_name)
   set_target_properties(${test_name} PROPERTIES FOLDER tests/${test_name})
   gtest_discover_tests(${test_name})
 
-  get_target_property(test_sources ${test_name} SOURCES)
-  list(TRANSFORM test_sources PREPEND ${CMAKE_CURRENT_LIST_DIR}/)
-  set(libmahjong_sources
-      ${libmahjong_sources} ${test_sources}
-      PARENT_SCOPE)
+  get_target_property(test_source ${test_name} SOURCES)
+  list(TRANSFORM test_source PREPEND ${CMAKE_CURRENT_LIST_DIR}/)
+  set(test_sources ${test_sources} ${test_source} PARENT_SCOPE)
 endfunction()
 
 add_subdirectory(utils)
@@ -41,8 +39,6 @@ package_add_test(game_play "game_play.test.cc")
 package_add_test(piece_type "piece_type.test.cc")
 package_add_test(remove_pieces "remove_pieces.test.cc")
 package_add_test(setup "setup.test.cc")
-
-
 
 package_add_test(handformer "utils/handformer.test.cc")
 
@@ -73,3 +69,7 @@ package_add_test(
   "yakus/twicepuredoublechi.test.cc"
   "yakus/fullflush.test.cc"
   "yakus/blessingofman.test.cc")
+
+set(project_sources
+    ${project_sources} ${test_sources}
+    PARENT_SCOPE)

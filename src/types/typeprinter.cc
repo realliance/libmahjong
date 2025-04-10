@@ -1,12 +1,20 @@
 #include "typeprinter.h"
 
+#include <array>
+#include <cstddef>
+#include <cstdint>
 #include <ostream>
+#include <string>
+#include <vector>
 
+#include "controllers/playercontroller.h"
 #include "event.h"
 #include "gamestate.h"
 #include "hand.h"
 #include "handnode.h"
 #include "meld.h"
+#include "types/piecetype.h"
+#include "types/player.h"
 #include "walls.h"
 
 std::ostream& operator<<(std::ostream& os, const mahjong::Event& e) {

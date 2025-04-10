@@ -57,12 +57,23 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
   endif()
 
+  find_program(iwyu_tool_path NAMES iwyu-tool)
+  find_program(iwyu_fix_includes NAMES iwyu-fix-includes)
+  if(iwyu_tool_path AND iwyu_fix_includes)
+  add_custom_target(
+    iwyu_fix ALL
+    COMMAND ${CMAKE_SOURCE_DIR}/iwyu_fix.sh
+    DEPENDS libmahjong
+    WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
+    VERBATIM)
+  endif()
+
   find_program(clang_format_path NAMES clang-format)
   if(clang_format_path)
     set(CLANG_FORMAT_FLAGS -i;)
     add_custom_target(
       format ALL
-      COMMAND ${clang_format_path} ${CLANG_FORMAT_FLAGS} ${libmahjong_sources}
+      COMMAND ${clang_format_path} ${CLANG_FORMAT_FLAGS} ${project_sources}
       WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
       VERBATIM)
   endif()

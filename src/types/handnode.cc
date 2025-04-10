@@ -1,8 +1,10 @@
 #include "handnode.h"
 
 #include <algorithm>
+#include <cstdint>
 
 #include "typeprinter.h"
+#include "types/piecetype.h"
 
 namespace mahjong {
 

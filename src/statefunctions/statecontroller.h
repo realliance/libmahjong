@@ -3,6 +3,8 @@
 #include "types/settings.h"
 
 namespace mahjong {
+struct GameSettings;
+
 int StartGame(const GameSettings& settings, bool async);
 void ExitGame(int game);
 

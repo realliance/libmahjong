@@ -10,8 +10,8 @@
 #include <vector>
 
 #include "analysis.h"
-#include "types/pieces.h"
 #include "types/handnode.h"
+#include "types/pieces.h"
 #include "types/piecetype.h"
 
 namespace mahjong {

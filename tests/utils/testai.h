@@ -3,8 +3,8 @@
 #include <vector>
 
 #include "controllers/playercontroller.h"
-#include "types/piecetype.h"
 #include "types/event.h"
+#include "types/piecetype.h"
 #include "types/winds.h"
 
 //Always Calls (Angry) and Always Discards the tile it draws

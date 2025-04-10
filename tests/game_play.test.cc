@@ -1,11 +1,17 @@
 #include <gtest/gtest.h>
+#include <array>
+#include <string>
+#include <vector>
+
+#include "analysis/hands.h"
 #include "statefunctions/decisionfunction.h"
 #include "statefunctions/statefunctions.h"
-#include "statefunctions/stateutilities.h"
-#include "analysis/hands.h"
-#include "types/pieces.h"
+#include "types/event.h"
 #include "types/gamestate.h"
-#include "types/winds.h"
+#include "types/hand.h"
+#include "types/pieces.h"
+#include "types/piecetype.h"
+#include "types/player.h"
 #include "utils/testai.h"
 
 namespace mahjong {

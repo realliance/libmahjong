@@ -5,11 +5,11 @@
 
 #include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
-#include "types/pieces.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/meld.h"
+#include "types/pieces.h"
 #include "types/piecetype.h"
 
 namespace mahjong {

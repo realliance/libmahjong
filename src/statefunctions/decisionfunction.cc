@@ -4,8 +4,8 @@
 #include <array>
 #include <vector>
 
-#include "statefunctions/stateutilities.h"
 #include "analysis/hands.h"
+#include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/meld.h"

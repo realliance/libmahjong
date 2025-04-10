@@ -4,6 +4,8 @@
 #include <string>
 #include <utility>
 
+#include "types/winds.h"
+
 namespace mahjong {
 
 uint8_t Piece::toUint8_t() const {

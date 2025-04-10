@@ -1,11 +1,12 @@
 #pragma once
 #include <event.h>
-#include "playercontroller.h"
-#include "types/piecetype.h"
-#include "types/winds.h"
-
 #include <string>
 #include <vector>
+
+#include "playercontroller.h"
+#include "types/event.h"
+#include "types/piecetype.h"
+#include "types/winds.h"
 
 // Always Calls (Angry) and Always Discards the tile it draws
 

@@ -5,13 +5,13 @@
 #include <vector>
 
 #include "analysis/analysis.h"
-#include "utils/handformer.h"
 #include "analysis/hands.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "types/piecetype.h"
 #include "types/walls.h"
+#include "utils/handformer.h"
 
 namespace mahjong {
 

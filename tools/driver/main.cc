@@ -7,7 +7,6 @@
 #include "controllers/fasttanyao.h"
 #include "controllers/playercontroller.h"
 #include "statefunctions/statecontroller.h"
-#include "statefunctions/statefunctions.h"
 #include "types/event.h"
 #include "types/piecetype.h"
 #include "types/settings.h"

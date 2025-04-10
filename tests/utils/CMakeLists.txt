@@ -11,6 +11,6 @@ target_sources(test_utils PRIVATE "handformer.cc" "handformer.h" "testai.cc"
 
 get_target_property(test_utils_sources test_utils SOURCES)
 list(TRANSFORM test_utils_sources PREPEND ${CMAKE_CURRENT_LIST_DIR}/)
-set(libmahjong_sources
-    ${libmahjong_sources} ${test_utils_sources}
+set(test_sources
+    ${test_sources} ${test_utils_sources}
     PARENT_SCOPE)

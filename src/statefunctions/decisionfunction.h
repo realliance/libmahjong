@@ -3,6 +3,8 @@
 #include "types/gamestate.h"
 
 namespace mahjong {
+struct GameState;
+
 bool CanKan(const GameState& state, int player);
 bool CanPon(const GameState& state, int player);
 bool CanChi(const GameState& state, int player);

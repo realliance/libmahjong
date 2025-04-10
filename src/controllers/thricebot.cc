@@ -2,8 +2,8 @@
 
 #include <cstddef>
 
-#include "types/pieces.h"
 #include "types/event.h"
+#include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/winds.h"
 

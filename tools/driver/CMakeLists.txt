@@ -12,6 +12,6 @@ target_sources(driver PRIVATE "main.cc")
 
 get_target_property(driver_sources driver SOURCES)
 list(TRANSFORM driver_sources PREPEND ${CMAKE_CURRENT_LIST_DIR}/)
-set(libmahjong_sources
-    ${libmahjong_sources} ${driver_sources}
+set(tool_sources
+    ${tool_sources} ${driver_sources}
     PARENT_SCOPE)
