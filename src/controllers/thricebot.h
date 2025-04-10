@@ -4,11 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "event.h"
-#include "pieces.h"
-#include "piecetype.h"
+#include "types/pieces.h"
 #include "playercontroller.h"
-#include "winds.h"
+#include "types/event.h"
+#include "types/piecetype.h"
+#include "types/winds.h"
 
 struct HandTile {
   mahjong::Piece piece;

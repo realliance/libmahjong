@@ -1,0 +1,21 @@
+target_sources(
+  libmahjong
+  PRIVATE "chi.cc"
+          "concealedkan.cc"
+          "convertedkan.cc"
+          "discard.cc"
+          "draw.cc"
+          "error.cc"
+          "exhaust.cc"
+          "gameend.cc"
+          "gamestart.cc"
+          "kan.cc"
+          "kandiscard.cc"
+          "playerhand.cc"
+          "pon.cc"
+          "replacement.cc"
+          "riichi.cc"
+          "ron.cc"
+          "roundend.cc"
+          "roundstart.cc"
+          "tsumo.cc")

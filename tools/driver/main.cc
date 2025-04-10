@@ -3,16 +3,15 @@
 #include <string>
 #include <vector>
 
-#include "controllermanager.h"
+#include "controllers/controllermanager.h"
 #include "controllers/fasttanyao.h"
-#include "event.h"
-#include "piecetype.h"
-#include "playercontroller.h"
-#include "settings.h"
-#include "statefunctions.h"
-#include "winds.h"
-
-using mahjong::PlayerController, mahjong::StartGame, mahjong::Event;
+#include "controllers/playercontroller.h"
+#include "statefunctions/statecontroller.h"
+#include "statefunctions/statefunctions.h"
+#include "types/event.h"
+#include "types/piecetype.h"
+#include "types/settings.h"
+#include "types/winds.h"
 
 namespace {
 
@@ -21,7 +20,7 @@ std::array<int, 4> scores = {0, 0, 0, 0};
 }
 
 template <class T>
-class Proxy : public PlayerController {
+class Proxy : public mahjong::PlayerController {
  public:
   std::string Name() override { return proxied_.Name(); }
   void GameStart(int _playerID) override {
@@ -35,12 +34,12 @@ class Proxy : public PlayerController {
     return proxied_.RoundStart(hand, seatWind, prevalentWind);
   }
   void ReceiveEvent(mahjong::Event e) override {
-    if (e.type == Event::kPointDiff) {
+    if (e.type == mahjong::Event::kPointDiff) {
       scores.at(e.player) += e.piece * 100;
     }
     return proxied_.ReceiveEvent(e);
   }
-  mahjong::Event  RetrieveDecision() override{
+  mahjong::Event RetrieveDecision() override {
     return proxied_.RetrieveDecision();
   }
 
@@ -54,7 +53,7 @@ int main() {
   constexpr int kRounds = 100;
   for (int i = 0; i < kRounds; i++) {
     std::cout << i << " " << std::flush;
-    StartGame(
+    mahjong::StartGame(
         mahjong::GameSettings{
             .seatControllers = {"GentlemanBot", "GentlemanBot",
                                 "ProxiedFastTanyao", "Fast Tanyao"},

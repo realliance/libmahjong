@@ -2,10 +2,10 @@
 
 #include <cstddef>
 
-#include "event.h"
-#include "pieces.h"
-#include "piecetype.h"
-#include "winds.h"
+#include "types/pieces.h"
+#include "types/event.h"
+#include "types/piecetype.h"
+#include "types/winds.h"
 
 std::string ThriceBot::Name() {
   return "ThriceBot";

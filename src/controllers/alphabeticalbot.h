@@ -1,8 +1,8 @@
 #pragma once
 #include <event.h>
-#include <piecetype.h>
-#include <playercontroller.h>
-#include <winds.h>
+#include "playercontroller.h"
+#include "types/piecetype.h"
+#include "types/winds.h"
 
 #include <string>
 #include <vector>

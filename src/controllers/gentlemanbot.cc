@@ -5,12 +5,12 @@
 #include <cstdint>
 #include <memory>
 
-#include "analysis.h"
-#include "event.h"
-#include "handnode.h"
-#include "pieces.h"
-#include "piecetype.h"
-#include "winds.h"
+#include "analysis/analysis.h"
+#include "types/pieces.h"
+#include "types/event.h"
+#include "types/handnode.h"
+#include "types/piecetype.h"
+#include "types/winds.h"
 
 namespace {
 

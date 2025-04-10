@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 #include <string>
 
-#include "pieces.h"
-#include "piecetype.h"
-#include "winds.h"
+#include "types/pieces.h"
+#include "types/piecetype.h"
+#include "types/winds.h"
 
 namespace mahjong {
 

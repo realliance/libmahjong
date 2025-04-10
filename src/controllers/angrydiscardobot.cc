@@ -1,8 +1,8 @@
 #include "angrydiscardobot.h"
 
-#include "event.h"
-#include "piecetype.h"
-#include "winds.h"
+#include "types/event.h"
+#include "types/piecetype.h"
+#include "types/winds.h"
 
 std::string AngryDiscardoBot::Name() {
   return "AngryDiscardoBot";

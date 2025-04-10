@@ -1,0 +1,19 @@
+target_sources(
+  libmahjong
+  PRIVATE "event.h"
+          "gamestate.h"
+          "hand.h"
+          "handnode.cc"
+          "handnode.h"
+          "meld.h"
+          "pieces.h"
+          "piecetype.cc"
+          "piecetype.h"
+          "player.h"
+          "score.h"
+          "settings.h"
+          "typeprinter.cc"
+          "typeprinter.h"
+          "walls.cc"
+          "walls.h"
+          "winds.h")

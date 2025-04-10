@@ -4,13 +4,13 @@
 #include <string>
 #include <vector>
 
-#include "analysis.h"
-#include "gamestate.h"
-#include "hand.h"
-#include "handformer.h"
-#include "handnode.h"
-#include "hands.h"
-#include "piecetype.h"
+#include "analysis/analysis.h"
+#include "utils/handformer.h"
+#include "analysis/hands.h"
+#include "types/gamestate.h"
+#include "types/hand.h"
+#include "types/handnode.h"
+#include "types/piecetype.h"
 
 namespace mahjong {
 

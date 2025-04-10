@@ -3,11 +3,11 @@
 #include <string>
 #include <vector>
 
-#include "decisionfunction.h"
-#include "gamestate.h"
-#include "pieces.h"
-#include "hand.h"
-#include "piecetype.h"
+#include "statefunctions/decisionfunction.h"
+#include "types/gamestate.h"
+#include "types/pieces.h"
+#include "types/hand.h"
+#include "types/piecetype.h"
 
 namespace mahjong {
 

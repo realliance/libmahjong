@@ -11,4 +11,7 @@ target_sources(
           "totobot.cc"
           "totobot.h"
           "gentlemanbot.cc"
-          "gentlemanbot.h")
+          "gentlemanbot.h"
+          "playercontroller.h"
+          "controllermanager.cc"
+          "controllermanager.h")
