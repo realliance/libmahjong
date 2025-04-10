@@ -5,7 +5,7 @@
 
 namespace mahjong {
 class Piece;
-auto HandFromNotation(const std::string& notation) -> std::vector<Piece>;
-auto IsValidNotation(const std::string& notation) -> bool;
-auto HandToNotation(const std::vector<Piece>& hand) -> std::string;
+std::vector<Piece> HandFromNotation(const std::string& notation);
+bool IsValidNotation(const std::string& notation);
+std::string HandToNotation(const std::vector<Piece>& hand);
 }  // namespace mahjong

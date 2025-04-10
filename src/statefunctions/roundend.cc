@@ -10,7 +10,9 @@
 #include "statefunctions.h"
 #include "stateutilities.h"
 
-auto mahjong::RoundEnd(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& RoundEnd(GameState& state) {
   state.currentPlayer = -1;
   state.turnNum = -1;
   state.lastCall = -1;
@@ -57,3 +59,5 @@ auto mahjong::RoundEnd(GameState& state) -> GameState& {
   }
   return state;
 }
+
+}  // namespace mahjong

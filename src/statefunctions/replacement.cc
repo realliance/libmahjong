@@ -10,7 +10,8 @@
 #include "stateutilities.h"
 #include "walls.h"
 
-auto mahjong::Replacement(GameState& state) -> GameState& {
+namespace mahjong {
+GameState& Replacement(GameState& state) {
   Piece draw = state.walls.TakeReplacementTile();
   state.hands.at(state.currentPlayer).live.push_back(draw);
   state.hands.at(state.currentPlayer).sort();
@@ -28,3 +29,5 @@ auto mahjong::Replacement(GameState& state) -> GameState& {
   state.nextState = PlayerHand;
   return state;
 }
+
+}  // namespace mahjong

@@ -9,8 +9,7 @@
 
 #include "pieces.h"
 
-auto operator<<(std::ostream& os, const mahjong::Walls& walls)
-    -> std::ostream& {
+std::ostream& operator<<(std::ostream& os, const mahjong::Walls& walls) {
   os << "{ doraCount: " << walls.doraCount;
   os << " replacements: " << walls.replacements;
   os << " livingWalls: [" << '\n';
@@ -79,7 +78,7 @@ Walls::Walls(std::vector<Piece> wall) {
   }
 }
 
-auto Walls::TakePiece() -> Piece {
+Piece Walls::TakePiece() {
   if (!livingWalls.empty()) {
     Piece p = livingWalls.front();
     livingWalls.erase(livingWalls.begin());
@@ -88,7 +87,7 @@ auto Walls::TakePiece() -> Piece {
   return kError;
 }
 
-auto Walls::TakeHand() -> std::vector<Piece> {
+std::vector<Piece> Walls::TakeHand() {
   if (livingWalls.size() < 13) {
     return {};
   }
@@ -101,7 +100,7 @@ auto Walls::TakeHand() -> std::vector<Piece> {
   return hand;
 }
 
-auto Walls::TakeReplacementTile() -> Piece {
+Piece Walls::TakeReplacementTile() {
   if (livingWalls.empty()) {
     return kError;
   }
@@ -117,21 +116,21 @@ auto Walls::TakeReplacementTile() -> Piece {
   return p;
 }
 
-auto Walls::GetDoras() const -> std::vector<Piece> {
+std::vector<Piece> Walls::GetDoras() const {
   std::vector<Piece> doras;
   std::copy_n(deadWall.begin() + replacements, doraCount,
               std::back_inserter(doras));
   return doras;
 }
 
-auto Walls::GetUraDoras() const -> std::vector<Piece> {
+std::vector<Piece> Walls::GetUraDoras() const {
   std::vector<Piece> doras;
   std::copy_n(deadWall.begin() + replacements + doraCount, doraCount,
               std::back_inserter(doras));
   return doras;
 }
 
-auto Walls::GetRemainingPieces() const -> int {
+int Walls::GetRemainingPieces() const {
   return livingWalls.size();
 }
 

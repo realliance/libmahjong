@@ -5,7 +5,9 @@
 #include "playercontroller.h"
 #include "statefunctions.h"
 
-auto mahjong::GameStart(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& GameStart(GameState& state) {
   for (int i = 0; i < 4; i++) {
     state.players.at(i).points = 25000;
     state.players.at(i).controller->GameStart(i);
@@ -14,3 +16,5 @@ auto mahjong::GameStart(GameState& state) -> GameState& {
   state.nextState = RoundStart;
   return state;
 }
+
+}  // namespace mahjong

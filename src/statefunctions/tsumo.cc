@@ -9,7 +9,9 @@
 #include "statefunctions.h"
 #include "stateutilities.h"
 
-auto mahjong::Tsumo(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& Tsumo(GameState& state) {
   AlertPlayers(state, Event{
                           .type = Event::kTsumo,          // type
                           .player = state.currentPlayer,  // player
@@ -55,3 +57,4 @@ auto mahjong::Tsumo(GameState& state) -> GameState& {
   state.nextState = RoundEnd;
   return state;
 }
+}  // namespace mahjong

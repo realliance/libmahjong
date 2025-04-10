@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-auto operator<<(std::ostream& os, const mahjong::Node& node) -> std::ostream& {
+std::ostream& operator<<(std::ostream& os, const mahjong::Node& node) {
   os << "{ id: " << node.id << ", type:" << mahjong::Node::TypeToStr(node.type);
   os << ", start:" << node.start.toStr();
   os << ", parent: "
@@ -21,7 +21,7 @@ auto operator<<(std::ostream& os, const mahjong::Node& node) -> std::ostream& {
 namespace mahjong {
 
 namespace {
-auto NodeTypeToColorStr(uint8_t nodetype) -> std::string {
+std::string NodeTypeToColorStr(uint8_t nodetype) {
   switch (nodetype) {
     case Node::kChiSet:
       return "purple";
@@ -38,7 +38,7 @@ auto NodeTypeToColorStr(uint8_t nodetype) -> std::string {
   }
 }
 
-auto NodeTypeToShapeStr(uint8_t nodetype) -> std::string {
+std::string NodeTypeToShapeStr(uint8_t nodetype) {
   switch (nodetype) {
     case Node::kChiSet:
       return "house";
@@ -56,23 +56,23 @@ auto NodeTypeToShapeStr(uint8_t nodetype) -> std::string {
 }
 }  // namespace
 
-auto Node::begin() const -> ConstIterator {
+Node::ConstIterator Node::begin() const {
   return ConstIterator(this, /*end=*/false);
 }
 
-auto Node::end() const -> ConstIterator {
+Node::ConstIterator Node::end() const {
   return ConstIterator(this, /*end=*/true);
 }
 
-auto Node::begin() -> Iterator {
+Node::Iterator Node::begin() {
   return Iterator(this, /*end=*/false);
 }
 
-auto Node::end() -> Iterator {
+Node::Iterator Node::end() {
   return Iterator(this, /*end=*/true);
 }
 
-auto Node::operator!=(const Node& n) const -> bool {
+bool Node::operator!=(const Node& n) const {
   return id == n.id && type == n.type && start == n.start &&
          parent == n.parent && leaves == n.leaves &&
          leafPosInParent == n.leafPosInParent;
@@ -90,7 +90,7 @@ Node::~Node() {
   }
 }
 
-auto Node::ConstIterator::operator++() -> ConstIterator& {
+Node::ConstIterator& Node::ConstIterator::operator++() {
   if (!root_->leaves.empty()) {
     root_ = root_->leaves.front();
     return *this;
@@ -126,30 +126,29 @@ auto Node::ConstIterator::operator++() -> ConstIterator& {
   return *this;
 }
 
-auto Node::Iterator::operator++() -> Iterator& {
+Node::Iterator& Node::Iterator::operator++() {
   itr_.operator++();
   return *this;
 }
 
-auto Node::Iterator::operator*() const -> Node& {
+Node& Node::Iterator::operator*() const {
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
   return const_cast<Node&>(*itr_.root_);
 }
 
-auto Node::ConstIterator::operator*() const -> const Node& {
+const Node& Node::ConstIterator::operator*() const {
   return *root_;
 }
 
-auto Node::Iterator::operator!=(const Iterator& other) const -> bool {
+bool Node::Iterator::operator!=(const Iterator& other) const {
   return itr_ != other.itr_;
 }
 
-auto Node::ConstIterator::operator!=(const Node::ConstIterator& other) const
-    -> bool {
+bool Node::ConstIterator::operator!=(const Node::ConstIterator& other) const {
   return end_ != other.end_;
 }
 
-auto Node::TypeToStr(uint8_t nodetype) -> std::string {
+std::string Node::TypeToStr(uint8_t nodetype) {
   switch (nodetype) {
     case kChiSet:
       return "Chi";
@@ -166,7 +165,7 @@ auto Node::TypeToStr(uint8_t nodetype) -> std::string {
   }
 }
 
-auto Node::DumpAsTGF(std::ostream& os) const -> std::ostream& {
+std::ostream& Node::DumpAsTGF(std::ostream& os) const {
   std::vector<std::string> nodes;
   std::vector<std::string> connections;
   for (const auto& node : *this) {
@@ -188,7 +187,7 @@ auto Node::DumpAsTGF(std::ostream& os) const -> std::ostream& {
   return os;
 }
 
-auto Node::DumpAsDot(std::ostream& os) const -> std::ostream& {
+std::ostream& Node::DumpAsDot(std::ostream& os) const {
   std::vector<std::string> nodes;
   std::vector<std::string> connections;
   for (const auto& node : *this) {
@@ -214,8 +213,7 @@ auto Node::DumpAsDot(std::ostream& os) const -> std::ostream& {
   return os;
 }
 
-auto Node::AsBranchVectors(const Node* root)
-    -> std::vector<std::vector<const Node*>> {
+std::vector<std::vector<const Node*>> Node::AsBranchVectors(const Node* root) {
   std::vector<std::vector<const Node*>> branches;
   std::vector<const Node*> nodeloc;
   nodeloc.push_back(root);
@@ -241,7 +239,7 @@ auto Node::AsBranchVectors(const Node* root)
   return branches;
 }
 
-auto Node::IsComplete() const -> bool {
+bool Node::IsComplete() const {
   auto branches = AsBranchVectors(this);
   return std::ranges::any_of(branches, [](auto branch) {
     return std::none_of(branch.begin(), branch.end(),

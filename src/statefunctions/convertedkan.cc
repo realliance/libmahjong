@@ -11,7 +11,8 @@
 #include "statefunctions.h"
 #include "stateutilities.h"
 
-auto mahjong::ConvertedKan(GameState& state) -> GameState& {
+namespace mahjong {
+GameState& ConvertedKan(GameState& state) {
   AlertPlayers(state, Event{
                           .type = Event::kConvertedKan,   // type
                           .player = state.currentPlayer,  // player
@@ -37,3 +38,4 @@ auto mahjong::ConvertedKan(GameState& state) -> GameState& {
   state.nextState = Error;
   return state;
 }
+}  // namespace mahjong

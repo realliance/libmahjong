@@ -1,30 +1,30 @@
 #include "testai.h"
 #include "event.h"
 
-auto TesterBot::Name() -> std::string{
+std::string TesterBot::Name() {
   return "TesterBot";
 }
 
-auto TesterBot::GameStart(int) -> void {}
+void TesterBot::GameStart(int) {}
 
-auto TesterBot::RoundStart(std::vector<mahjong::Piece>, mahjong::Wind, mahjong::Wind) -> void {
+void TesterBot::RoundStart(std::vector<mahjong::Piece>, mahjong::Wind, mahjong::Wind) {
 }
 
-auto TesterBot::ReceiveEvent(mahjong::Event e) -> void{
+void TesterBot::ReceiveEvent(mahjong::Event e) {
   events.push_back(e);
 }
 
-auto TesterBot::AddEvents(std::vector<mahjong::Event> e) -> void {
+void TesterBot::AddEvents(std::vector<mahjong::Event> e) {
   events.insert(events.end(),e.begin(),e.end());
 }
 
-auto TesterBot::GetEvents() -> std::vector<mahjong::Event> {
+std::vector<mahjong::Event> TesterBot::GetEvents() {
   std::vector<mahjong::Event> e;
   std::swap(events,e);
   return e;
 }
 
-auto TesterBot::RetrieveDecision() -> mahjong::Event{
+mahjong::Event TesterBot::RetrieveDecision() {
   if(queue.empty()){
     throw "Not Enough Events";
   }

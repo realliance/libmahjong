@@ -4,20 +4,20 @@
 #include "piecetype.h"
 #include "winds.h"
 
-auto TotoBot::Name() -> std::string {
+std::string TotoBot::Name() {
   return "TotoBot";
 }
 
-auto TotoBot::GameStart(int /*playerID*/) -> void {}
+void TotoBot::GameStart(int /*playerID*/) {}
 
-auto TotoBot::RoundStart(std::vector<mahjong::Piece> hand,
+void TotoBot::RoundStart(std::vector<mahjong::Piece> hand,
                          mahjong::Wind /*seatWind*/,
-                         mahjong::Wind /*prevalentWind*/) -> void {
+                         mahjong::Wind /*prevalentWind*/) {
   hand_ = hand;
   lastEvent_.type = mahjong::Event::kDiscard;
 }
 
-auto TotoBot::ReceiveEvent(mahjong::Event e) -> void {
+void TotoBot::ReceiveEvent(mahjong::Event e) {
   if (e.decision) {
     if (e.type <= lastEvent_.type) {
       lastEvent_ = e;
@@ -27,7 +27,7 @@ auto TotoBot::ReceiveEvent(mahjong::Event e) -> void {
   }
 }
 
-auto TotoBot::RetrieveDecision() -> mahjong::Event {
+mahjong::Event TotoBot::RetrieveDecision() {
   if (lastEvent_.type != mahjong::Event::kDiscard) {
     lastEvent_.type = mahjong::Event::kDecline;
   }

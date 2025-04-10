@@ -10,160 +10,140 @@ class Node;
 namespace mahjong {
 struct GameState;
 
-auto scoreHand(const GameState& state, int player) -> Score;
+Score scoreHand(const GameState& state, int player);
 
-auto getBasicPoints(Score s) -> int;
+int getBasicPoints(Score s);
 
-auto getFu(const GameState& state, int player,
-           const std::vector<const mahjong::Node*>& branch) -> int;
+int getFu(const GameState& state, int player,
+          const std::vector<const mahjong::Node*>& branch);
 
-auto isOpenPinfu(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch) -> bool;
+bool isOpenPinfu(const GameState& state, int player,
+                 const std::vector<const mahjong::Node*>& branch);
 
-auto countPiece(const GameState& state, int player, Piece p) -> int;
+int countPiece(const GameState& state, int player, Piece p);
 
-auto isComplete(const GameState& state, int player) -> bool;
+bool isComplete(const GameState& state, int player);
 
-auto isInTenpai(std::vector<Piece> hand, bool allWaits = false)
-    -> std::vector<Piece>;
-auto isInTenpai13Pieces(std::vector<Piece> hand, bool allWaits = false)
-    -> std::vector<Piece>;
+std::vector<Piece> isInTenpai(std::vector<Piece> hand, bool allWaits = false);
+std::vector<Piece> isInTenpai13Pieces(std::vector<Piece> hand,
+                                      bool allWaits = false);
 
-auto getRiichiDiscard(std::vector<Piece> hand) -> std::vector<Piece>;
+std::vector<Piece> getRiichiDiscard(std::vector<Piece> hand);
 
 using yakuFunc = int (*)(const GameState&, int,
                          const std::vector<const mahjong::Node*>&);
 
-auto isRiichi(const GameState& state, int player,
-              const std::vector<const mahjong::Node*>& /*unused*/ = {}) -> int;
+int isRiichi(const GameState& state, int player,
+             const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isFullyConcealedHand(
+int isFullyConcealedHand(
     const GameState& state, int player,
-    const std::vector<const mahjong::Node*>& /*unused*/ = {}) -> int;
+    const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isPinfu(const GameState& state, int player,
-             const std::vector<const mahjong::Node*>& branch) -> int;
+int isPinfu(const GameState& state, int player,
+            const std::vector<const mahjong::Node*>& branch);
 
-auto isPureDoubleChi(const GameState& state, int player,
-                     const std::vector<const mahjong::Node*>& branch) -> int;
+int isPureDoubleChi(const GameState& state, int player,
+                    const std::vector<const mahjong::Node*>& branch);
 
-auto isAllSimples(const GameState& state, int player,
-                  const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isAllSimples(const GameState& state, int player,
+                 const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isMixedTripleChi(const GameState& state, int player,
-                      const std::vector<const mahjong::Node*>& branch) -> int;
+int isMixedTripleChi(const GameState& state, int player,
+                     const std::vector<const mahjong::Node*>& branch);
 
-auto isPureStraight(const GameState& state, int player,
-                    const std::vector<const mahjong::Node*>& branch) -> int;
+int isPureStraight(const GameState& state, int player,
+                   const std::vector<const mahjong::Node*>& branch);
 
-auto isWindOrDragonPon(const GameState& state, int player,
-                       const std::vector<const mahjong::Node*>& branch) -> int;
+int isWindOrDragonPon(const GameState& state, int player,
+                      const std::vector<const mahjong::Node*>& branch);
 
-auto isOutsideHand(const GameState& state, int player,
-                   const std::vector<const mahjong::Node*>& branch) -> int;
+int isOutsideHand(const GameState& state, int player,
+                  const std::vector<const mahjong::Node*>& branch);
 
-auto isAfterAKan(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isAfterAKan(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isRobbingAKan(const GameState& state, int player,
-                   const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isRobbingAKan(const GameState& state, int player,
+                  const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isBottomOfTheSea(const GameState& state, int player,
-                      const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isBottomOfTheSea(const GameState& state, int player,
+                     const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isSevenPairs(const GameState& state, int player,
-                  const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isSevenPairs(const GameState& state, int player,
+                 const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isTriplePon(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch) -> int;
+int isTriplePon(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& branch);
 
-auto isThreeConcealedPons(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& branch)
-    -> int;
+int isThreeConcealedPons(const GameState& state, int player,
+                         const std::vector<const mahjong::Node*>& branch);
 
-auto isThreeKans(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isThreeKans(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isAllPons(const GameState& state, int player,
-               const std::vector<const mahjong::Node*>& branch) -> int;
+int isAllPons(const GameState& state, int player,
+              const std::vector<const mahjong::Node*>& branch);
 
-auto isHalfFlush(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch) -> int;
+int isHalfFlush(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& branch);
 
-auto isLittleThreeDragons(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& branch)
-    -> int;
+int isLittleThreeDragons(const GameState& state, int player,
+                         const std::vector<const mahjong::Node*>& branch);
 
-auto isAllTerminalsAndHonors(
+int isAllTerminalsAndHonors(
     const GameState& state, int player,
-    const std::vector<const mahjong::Node*>& /*unused*/ = {}) -> int;
+    const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isTerminalsInAllSets(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& branch)
-    -> int;
+int isTerminalsInAllSets(const GameState& state, int player,
+                         const std::vector<const mahjong::Node*>& branch);
 
-auto isTwicePureDoubleChi(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& branch)
-    -> int;
+int isTwicePureDoubleChi(const GameState& state, int player,
+                         const std::vector<const mahjong::Node*>& branch);
 
-auto isBlessingOfMan(const GameState& state, int player,
-                     const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isBlessingOfMan(const GameState& state, int player,
+                    const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isFullFlush(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isFullFlush(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isThirteenOrphans(const GameState& state, int player,
-                       const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isThirteenOrphans(const GameState& state, int player,
+                      const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isNineGates(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch) -> int;
+int isNineGates(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& branch);
 
-auto isBlessingOfHeaven(
+int isBlessingOfHeaven(
     const GameState& state, int player,
-    const std::vector<const mahjong::Node*>& /*unused*/ = {}) -> int;
+    const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isBlessingOfEarth(const GameState& state, int player,
-                       const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isBlessingOfEarth(const GameState& state, int player,
+                      const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isFourConcealedPon(const GameState& state, int player,
-                        const std::vector<const mahjong::Node*>& branch) -> int;
+int isFourConcealedPon(const GameState& state, int player,
+                       const std::vector<const mahjong::Node*>& branch);
 
-auto isFourKans(const GameState& state, int player,
-                const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isFourKans(const GameState& state, int player,
+               const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isAllGreen(const GameState& state, int player,
-                const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isAllGreen(const GameState& state, int player,
+               const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isAllTerminals(const GameState& state, int player,
-                    const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isAllTerminals(const GameState& state, int player,
+                   const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isAllHonors(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isAllHonors(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
-auto isBigThreeDragons(const GameState& state, int player,
-                       const std::vector<const mahjong::Node*>& branch) -> int;
+int isBigThreeDragons(const GameState& state, int player,
+                      const std::vector<const mahjong::Node*>& branch);
 
-auto isLittleFourWinds(const GameState& state, int player,
-                       const std::vector<const mahjong::Node*>& branch) -> int;
+int isLittleFourWinds(const GameState& state, int player,
+                      const std::vector<const mahjong::Node*>& branch);
 
-auto isBigFourWinds(const GameState& state, int player,
-                    const std::vector<const mahjong::Node*>& branch) -> int;
+int isBigFourWinds(const GameState& state, int player,
+                   const std::vector<const mahjong::Node*>& branch);
 
-auto isMaxBranches(const GameState& state, int player,
-                   const std::vector<const mahjong::Node*>& /*unused*/ = {})
-    -> int;
+int isMaxBranches(const GameState& state, int player,
+                  const std::vector<const mahjong::Node*>& /*unused*/ = {});
 }  // namespace mahjong

@@ -3,7 +3,7 @@
 #include <ostream>
 #include <string>
 
-auto operator<<(std::ostream& os, const mahjong::Hand& hand) -> std::ostream& {
+std::ostream& operator<<(std::ostream& os, const mahjong::Hand& hand) {
   os << "{ open: " << hand.open;
   os << " riichi: " << hand.riichi;
   os << " riichiPieceDiscard: " << hand.riichiPieceDiscard;

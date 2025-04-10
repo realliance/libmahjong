@@ -10,7 +10,9 @@
 #include "statefunctions.h"
 #include "stateutilities.h"
 
-auto mahjong::Riichi(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& Riichi(GameState& state) {
   // we should ask the players but
   //  deadlines prevent this
   //  -alice
@@ -34,3 +36,4 @@ auto mahjong::Riichi(GameState& state) -> GameState& {
   state.nextState = Discard;
   return state;
 }
+}  // namespace mahjong

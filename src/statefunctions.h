@@ -4,49 +4,49 @@
 
 namespace mahjong {
 
-auto StartGame(const GameSettings& settings, bool async) -> int;
-auto ExitGame(int game) -> void;
+int StartGame(const GameSettings& settings, bool async);
+void ExitGame(int game);
 
-auto StateController(GameSettings settings) -> void;
+void StateController(GameSettings settings);
 
-using StateFunction = auto (*)(GameState&) -> GameState&;
+using StateFunction = GameState& (*)(GameState&);
 
-auto GameStart(GameState& state) -> GameState&;
+GameState& GameStart(GameState& state);
 
-auto RoundStart(GameState& state) -> GameState&;
+GameState& RoundStart(GameState& state);
 
-auto Draw(GameState& state) -> GameState&;
+GameState& Draw(GameState& state);
 
-auto PlayerHand(GameState& state) -> GameState&;
+GameState& PlayerHand(GameState& state);
 
-auto Riichi(GameState& state) -> GameState&;
+GameState& Riichi(GameState& state);
 
-auto ConcealedKan(GameState& state) -> GameState&;
+GameState& ConcealedKan(GameState& state);
 
-auto ConvertedKan(GameState& state) -> GameState&;
+GameState& ConvertedKan(GameState& state);
 
-auto Tsumo(GameState& state) -> GameState&;
+GameState& Tsumo(GameState& state);
 
-auto Discard(GameState& state) -> GameState&;
+GameState& Discard(GameState& state);
 
-auto Pon(GameState& state) -> GameState&;
+GameState& Pon(GameState& state);
 
-auto Chi(GameState& state) -> GameState&;
+GameState& Chi(GameState& state);
 
-auto Kan(GameState& state) -> GameState&;
+GameState& Kan(GameState& state);
 
-auto Exhaust(GameState& state) -> GameState&;
+GameState& Exhaust(GameState& state);
 
-auto KanDiscard(GameState& state) -> GameState&;
+GameState& KanDiscard(GameState& state);
 
-auto Replacement(GameState& state) -> GameState&;
+GameState& Replacement(GameState& state);
 
-auto Ron(GameState& state) -> GameState&;
+GameState& Ron(GameState& state);
 
-auto RoundEnd(GameState& state) -> GameState&;
+GameState& RoundEnd(GameState& state);
 
-auto GameEnd(GameState& state) -> GameState&;
+GameState& GameEnd(GameState& state);
 
-auto Error(GameState& state) -> GameState&;
+GameState& Error(GameState& state);
 
 }  // namespace mahjong

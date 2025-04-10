@@ -4,8 +4,7 @@
 
 #include "playercontroller.h"
 
-auto operator<<(std::ostream& os, const mahjong::Player& player)
-    -> std::ostream& {
+std::ostream& operator<<(std::ostream& os, const mahjong::Player& player) {
   os << "{ controller: "
      << ((player.controller != nullptr) ? player.controller->Name()
                                         : "NULLPTR");

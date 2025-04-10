@@ -10,7 +10,9 @@
 #include "statefunctions.h"
 #include "stateutilities.h"
 
-auto mahjong::KanDiscard(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& KanDiscard(GameState& state) {
   std::array<bool, 4> need_decision = {false, false, false, false};
   for (int player = 0; player < 4; player++) {
     if (player == state.currentPlayer) {
@@ -48,3 +50,5 @@ auto mahjong::KanDiscard(GameState& state) -> GameState& {
 
   return state;
 }
+
+}  // namespace mahjong

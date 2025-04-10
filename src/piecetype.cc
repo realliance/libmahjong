@@ -6,39 +6,39 @@
 
 namespace mahjong {
 
-auto Piece::toUint8_t() const -> uint8_t {
+uint8_t Piece::toUint8_t() const {
   return p_ & ~static_cast<uint8_t>(kRedFive);
 }
 
-auto Piece::raw_value() const -> uint8_t {
+uint8_t Piece::raw_value() const {
   return p_;
 }
 
-auto Piece::isHonor() const -> bool {
+bool Piece::isHonor() const {
   return (p_ & kCharacterSuit) == kHonorSuit;
 }
 
-auto Piece::isTerminal() const -> bool {
+bool Piece::isTerminal() const {
   return (p_ & kTerminalBit) != kError;
 }
 
-auto Piece::isBoardPiece() const -> bool {
+bool Piece::isBoardPiece() const {
   return (p_ & 0x0F) != kError;
 }
 
-auto Piece::isRedFive() const -> bool {
+bool Piece::isRedFive() const {
   return (p_ & kRedFive) != kError;
 }
 
-auto Piece::getSuit() const -> uint8_t {
+uint8_t Piece::getSuit() const {
   return p_ & 3 << 5;
 }
 
-auto Piece::getPieceNum() const -> uint8_t {
+uint8_t Piece::getPieceNum() const {
   return p_ & 15;
 }
 
-auto Piece::isGreen() const -> bool {
+bool Piece::isGreen() const {
   if (p_ == kGreenDragon) {
     return true;
   }
@@ -51,7 +51,7 @@ auto Piece::isGreen() const -> bool {
   return true;
 }
 
-auto Piece::fromWind(Wind w) -> Piece {
+Piece Piece::fromWind(Wind w) {
   switch (w) {
     case kEast:
       return Piece(kEastWind);
@@ -66,8 +66,7 @@ auto Piece::fromWind(Wind w) -> Piece {
   }
 }
 
-auto Piece::formPiece(Piece::Type suit, uint8_t number, bool isRedFive)
-    -> Piece {
+Piece Piece::formPiece(Piece::Type suit, uint8_t number, bool isRedFive) {
   if (suit == kHonorSuit) {
     if (number < 1 || number > 7) {
       return Piece(kError);
@@ -140,7 +139,7 @@ const std::map<uint8_t, std::string> kStrMap = {
     {Piece::kEastWind, "East"},
 };
 
-auto Piece::toStr() const -> std::string {
+std::string Piece::toStr() const {
   if (kStrMap.contains(p_)) {
     return kStrMap.at(p_);
   }

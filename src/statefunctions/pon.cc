@@ -11,7 +11,9 @@
 #include "statefunctions.h"
 #include "stateutilities.h"
 
-auto mahjong::Pon(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& Pon(GameState& state) {
   state.hands.at(state.lastCaller).open = true;
 
   AlertPlayers(state, Event{
@@ -49,3 +51,5 @@ auto mahjong::Pon(GameState& state) -> GameState& {
   state.nextState = Discard;
   return state;
 }
+
+}  // namespace mahjong

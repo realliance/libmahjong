@@ -23,7 +23,7 @@ class Node : public std::enable_shared_from_this<Node> {
   std::vector<Node*> leaves;
   size_t leafPosInParent;
 
-  auto operator!=(const Node& n) const -> bool;
+  bool operator!=(const Node& n) const;
 
   Node(int id, Type type, Piece start, Node* parent, std::vector<Node*> leaves,
        size_t leafPosInParent)
@@ -43,9 +43,9 @@ class Node : public std::enable_shared_from_this<Node> {
         : root_(root), end_(end) {}
 
    public:
-    auto operator++() -> ConstIterator&;
-    auto operator*() const -> const Node&;
-    auto operator!=(const ConstIterator& other) const -> bool;
+    ConstIterator& operator++();
+    const Node& operator*() const;
+    bool operator!=(const ConstIterator& other) const;
     // iterator traits
     using difference_type = std::ptrdiff_t;
     using pointer = const Node*;
@@ -57,26 +57,26 @@ class Node : public std::enable_shared_from_this<Node> {
     explicit Iterator(Node* root, bool end) : itr_(root, end) {}
 
    public:
-    auto operator++() -> Iterator&;
-    auto operator*() const -> Node&;
-    auto operator!=(const Iterator& other) const -> bool;
+    Iterator& operator++();
+    Node& operator*() const;
+    bool operator!=(const Iterator& other) const;
     // iterator traits
     using difference_type = std::ptrdiff_t;
     using pointer = Node*;
     using iterator_category = std::forward_iterator_tag;
   };
-  static auto TypeToStr(uint8_t nodetype) -> std::string;
-  auto DumpAsTGF(std::ostream& os) const -> std::ostream&;
-  auto DumpAsDot(std::ostream& os) const -> std::ostream&;
-  [[nodiscard]] static auto AsBranchVectors(const Node* root)
-      -> std::vector<std::vector<const Node*>>;
-  [[nodiscard]] auto IsComplete() const -> bool;
-  [[nodiscard]] auto begin() const -> ConstIterator;
-  [[nodiscard]] auto end() const -> ConstIterator;
-  [[nodiscard]] auto begin() -> Iterator;
-  [[nodiscard]] auto end() -> Iterator;
+  static std::string TypeToStr(uint8_t nodetype);
+  std::ostream& DumpAsTGF(std::ostream& os) const;
+  std::ostream& DumpAsDot(std::ostream& os) const;
+  [[nodiscard]] static std::vector<std::vector<const Node*>> AsBranchVectors(
+      const Node* root);
+  [[nodiscard]] bool IsComplete() const;
+  [[nodiscard]] ConstIterator begin() const;
+  [[nodiscard]] ConstIterator end() const;
+  [[nodiscard]] Iterator begin();
+  [[nodiscard]] Iterator end();
 };
 
 }  // namespace mahjong
 
-auto operator<<(std::ostream& os, const mahjong::Node& node) -> std::ostream&;
+std::ostream& operator<<(std::ostream& os, const mahjong::Node& node);

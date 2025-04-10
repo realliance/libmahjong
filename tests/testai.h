@@ -10,13 +10,13 @@
 
 class TesterBot : public mahjong::PlayerController{
 public:
-  auto Name() -> std::string;
-  auto GameStart(int _playerID) -> void;
-  auto RoundStart(std::vector<mahjong::Piece> hand, mahjong::Wind seatWind, mahjong::Wind prevalentWind) -> void;
-  auto ReceiveEvent(mahjong::Event e) -> void;
-  auto RetrieveDecision() -> mahjong::Event;
-  auto AddEvents(std::vector<mahjong::Event> events) -> void;
-  auto GetEvents() -> std::vector<mahjong::Event>;
+  std::string Name();
+  void GameStart(int _playerID);
+  void RoundStart(std::vector<mahjong::Piece> hand, mahjong::Wind seatWind, mahjong::Wind prevalentWind);
+  void ReceiveEvent(mahjong::Event e);
+  mahjong::Event RetrieveDecision();
+  void AddEvents(std::vector<mahjong::Event> events);
+  std::vector<mahjong::Event> GetEvents();
 private:
   std::vector<mahjong::Event> queue;
   std::vector<mahjong::Event> events;

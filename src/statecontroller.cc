@@ -18,7 +18,7 @@ int thread_index = 1;
 std::map<int, bool> should_halt;
 }  // namespace
 
-auto mahjong::StartGame(const GameSettings& settings, bool async) -> int {
+int mahjong::StartGame(const GameSettings& settings, bool async) {
   if (async) {
     std::thread gameloop(&mahjong::StateController, settings);
     gameloop.detach();
@@ -28,14 +28,14 @@ auto mahjong::StartGame(const GameSettings& settings, bool async) -> int {
   return 0;
 }
 
-auto mahjong::ExitGame(int game) -> void {
+void mahjong::ExitGame(int game) {
   if (should_halt.contains(game)) {
     // std::cerr << "Halting Game..." << std::endl;
     should_halt[game] = true;
   }
 }
 
-auto mahjong::StateController(GameSettings settings) -> void {
+void mahjong::StateController(GameSettings settings) {
   GameState state;
   int id = thread_index++;
   should_halt[id] = false;

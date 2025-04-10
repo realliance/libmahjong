@@ -11,7 +11,9 @@
 #include "statefunctions.h"
 #include "stateutilities.h"
 
-auto mahjong::ConcealedKan(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& ConcealedKan(GameState& state) {
   AlertPlayers(state, Event{
                           .type = Event::kConcealedKan,   // type
                           .player = state.currentPlayer,  // player
@@ -31,3 +33,5 @@ auto mahjong::ConcealedKan(GameState& state) -> GameState& {
   state.nextState = KanDiscard;
   return state;
 }
+
+}  // namespace mahjong

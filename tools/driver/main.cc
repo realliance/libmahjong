@@ -5,11 +5,11 @@
 
 #include "controllermanager.h"
 #include "controllers/fasttanyao.h"
-#include "playercontroller.h"
-#include "statefunctions.h"
 #include "event.h"
 #include "piecetype.h"
+#include "playercontroller.h"
 #include "settings.h"
+#include "statefunctions.h"
 #include "winds.h"
 
 using mahjong::PlayerController, mahjong::StartGame, mahjong::Event;
@@ -23,24 +23,24 @@ std::array<int, 4> scores = {0, 0, 0, 0};
 template <class T>
 class Proxy : public PlayerController {
  public:
-  auto Name() -> std::string override { return proxied_.Name(); }
-  auto GameStart(int _playerID) -> void override {
+  std::string Name() override { return proxied_.Name(); }
+  void GameStart(int _playerID) override {
     // for(int i = 0; i < 4; i++){
     //   scores[i] = 0;
     // }
     return proxied_.GameStart(_playerID);
   }
-  auto RoundStart(std::vector<mahjong::Piece> hand, mahjong::Wind seatWind,
-                  mahjong::Wind prevalentWind) -> void override {
+  void RoundStart(std::vector<mahjong::Piece> hand, mahjong::Wind seatWind,
+                  mahjong::Wind prevalentWind) override {
     return proxied_.RoundStart(hand, seatWind, prevalentWind);
   }
-  auto ReceiveEvent(mahjong::Event e) -> void override {
+  void ReceiveEvent(mahjong::Event e) override {
     if (e.type == Event::kPointDiff) {
       scores.at(e.player) += e.piece * 100;
     }
     return proxied_.ReceiveEvent(e);
   }
-  auto RetrieveDecision() -> mahjong::Event override {
+  mahjong::Event  RetrieveDecision() override{
     return proxied_.RetrieveDecision();
   }
 
@@ -48,7 +48,7 @@ class Proxy : public PlayerController {
   T proxied_;
 };
 
-auto main() -> int {
+int main() {
   mahjong::RegisterController([]() { return new Proxy<FastTanyao>(); },
                               "ProxiedFastTanyao");
   constexpr int kRounds = 100;

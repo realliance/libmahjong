@@ -13,7 +13,9 @@
 #include "statefunctions.h"
 #include "stateutilities.h"
 
-auto mahjong::PlayerHand(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& PlayerHand(GameState& state) {
   using DecisionFunction = auto (*)(const mahjong::GameState& state)->bool;
 
   struct PossibleDecision {
@@ -88,3 +90,5 @@ auto mahjong::PlayerHand(GameState& state) -> GameState& {
 
   return state;
 }
+
+}  // namespace mahjong

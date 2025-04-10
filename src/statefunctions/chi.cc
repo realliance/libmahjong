@@ -14,7 +14,7 @@
 
 namespace mahjong {
 namespace {
-auto GetChiStart(const GameState& state, int player) -> Piece {
+Piece GetChiStart(const GameState& state, int player) {
   if (CountPieces(state, player, state.pendingPiece - 2) > 0 &&
       CountPieces(state, player, state.pendingPiece - 1) > 0) {
     return state.pendingPiece - 2;
@@ -31,7 +31,7 @@ auto GetChiStart(const GameState& state, int player) -> Piece {
 }
 }  // namespace
 
-auto Chi(GameState& state) -> GameState& {
+GameState& Chi(GameState& state) {
   // only gives a single one of the chis
   // ui oof
   Piece chi_start = GetChiStart(state, state.lastCaller);

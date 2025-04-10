@@ -120,7 +120,7 @@ const std::vector<Piece> kPieceSet{
     kGreenDragon,  kRedDragon,      kEastWind,       kSouthWind,
     kNorthWind,    kWestWind};
 
-auto TestValid(const std::vector<Piece>& hand) -> bool {
+bool TestValid(const std::vector<Piece>& hand) {
   std::map<Piece, bool> pieces;
   for (const auto& piece : hand) {
     if (pieces.contains(piece)) {
@@ -132,7 +132,7 @@ auto TestValid(const std::vector<Piece>& hand) -> bool {
 }
 }  // namespace
 
-auto GetPossibleStdFormHand() -> std::vector<Piece> {
+std::vector<Piece> GetPossibleStdFormHand() {
   std::vector<Piece> living_walls;
   std::vector<Piece> dead_wall;
   for (int i = 0; i < 4; i++) {
@@ -191,7 +191,7 @@ auto GetPossibleStdFormHand() -> std::vector<Piece> {
   return hand;
 }
 
-auto TestStdForm(std::vector<Piece> hand) -> bool {
+bool TestStdForm(std::vector<Piece> hand) {
   auto root = breakdownHand(std::move(hand));
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     bool complete = true;
@@ -210,7 +210,7 @@ auto TestStdForm(std::vector<Piece> hand) -> bool {
   return false;
 }
 
-auto GetPossibleTenpaiHand(bool replacement) -> std::vector<Piece> {
+std::vector<Piece> GetPossibleTenpaiHand(bool replacement) {
   std::vector<Piece> tenpaihand = GetPossibleStdFormHand();
   std::random_device rd;
   std::mt19937 g(rd());

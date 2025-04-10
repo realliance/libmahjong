@@ -11,7 +11,9 @@
 #include "statefunctions.h"
 #include "stateutilities.h"
 
-auto mahjong::Kan(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& Kan(GameState& state) {
   AlertPlayers(state, Event{
                           .type = Event::kKan,         // type
                           .player = state.lastCaller,  // player
@@ -46,3 +48,5 @@ auto mahjong::Kan(GameState& state) -> GameState& {
   state.nextState = KanDiscard;
   return state;
 }
+
+}  // namespace mahjong

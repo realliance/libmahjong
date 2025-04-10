@@ -40,7 +40,7 @@ const std::map<uint8_t, Piece::Type> kNotationToHonor = {
  * HandFromNotation will attempt to produce as much of the hand as possible.
  * Use IsValidNotation to guarantee a successful input.
  */
-auto HandFromNotation(const std::string& notation) -> std::vector<Piece> {
+std::vector<Piece> HandFromNotation(const std::string& notation) {
   std::vector<Piece> result;
   std::vector<int8_t> current_tiles;
   for (const auto& c : notation) {
@@ -91,7 +91,7 @@ auto HandFromNotation(const std::string& notation) -> std::vector<Piece> {
   return result;
 }
 
-auto IsValidNotation(const std::string& notation) -> bool {
+bool IsValidNotation(const std::string& notation) {
   std::vector<uint8_t> current_set;
   for (const auto& c : notation) {
     // If symbol, not valid
@@ -126,7 +126,7 @@ auto IsValidNotation(const std::string& notation) -> bool {
   return current_set.empty();
 }
 
-auto HandToNotation(const std::vector<Piece>& hand) -> std::string {
+std::string HandToNotation(const std::vector<Piece>& hand) {
   std::map<Piece::Type, std::vector<uint8_t>> suit_and_tiles;
 
   for (const auto& t : hand) {

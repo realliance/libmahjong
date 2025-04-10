@@ -8,18 +8,16 @@ namespace mahjong {
 struct Event;
 struct GameState;
 
-auto GetSeat(int round, int player) -> Wind;
+Wind GetSeat(int round, int player);
 
-auto RemovePieces(GameState& state, int player, Piece p, uint8_t count)
-    -> uint8_t;
-auto DiscardPiece(GameState& state, int player, Piece p) -> void;
+uint8_t RemovePieces(GameState& state, int player, Piece p, uint8_t count);
+void DiscardPiece(GameState& state, int player, Piece p);
 
-auto AlertPlayers(const GameState& state, Event e) -> void;
-auto AskForDiscard(const GameState& state) -> Piece;
-auto CountPieces(const GameState& state, int player, Piece p) -> uint8_t;
-auto ValidateDecision(const GameState& state, int player, Event decision,
-                      bool inHand) -> bool;
-auto GetValidDecisionOrThrow(const GameState& state, int player, bool inHand)
-    -> Event;
+void AlertPlayers(const GameState& state, Event e);
+Piece AskForDiscard(const GameState& state);
+uint8_t CountPieces(const GameState& state, int player, Piece p);
+bool ValidateDecision(const GameState& state, int player, Event decision,
+                      bool inHand);
+Event GetValidDecisionOrThrow(const GameState& state, int player, bool inHand);
 
 }  // namespace mahjong

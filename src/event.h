@@ -40,7 +40,7 @@ const Event kDeclineEvent = {.type = Event::kDecline,
                              .piece = 0,
                              .decision = false};
 
-inline auto EventTypeToStr(Event::Type s) -> std::string {
+inline std::string EventTypeToStr(Event::Type s) {
   switch (s) {
     case Event::kRon:
       return "Ron";
@@ -77,4 +77,4 @@ inline auto EventTypeToStr(Event::Type s) -> std::string {
 
 }  // namespace mahjong
 
-auto operator<<(std::ostream& os, const mahjong::Event& e) -> std::ostream&;
+std::ostream& operator<<(std::ostream& os, const mahjong::Event& e);

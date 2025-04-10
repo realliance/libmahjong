@@ -11,5 +11,4 @@ struct Player {
 
 };  // namespace mahjong
 
-auto operator<<(std::ostream& os, const mahjong::Player& player)
-    -> std::ostream&;
+std::ostream& operator<<(std::ostream& os, const mahjong::Player& player);

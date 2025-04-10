@@ -16,13 +16,12 @@ class object;
 namespace mahjong {
 using newControllerInst = std::function<PlayerController*()>;
 
-auto GetAvailableControllers() -> std::vector<std::string>;
-auto GetController(const std::string& controller) -> newControllerInst;
-auto RegisterController(newControllerInst newFunc, const std::string& Name)
-    -> bool;
+std::vector<std::string> GetAvailableControllers();
+newControllerInst GetController(const std::string& controller);
+bool RegisterController(newControllerInst newFunc, const std::string& Name);
 #ifndef NO_PYBIND
-auto RegisterPythonController(const pybind11::object& pythonController,
-                              const std::string& Name) -> bool;
-auto UnregisterController(const std::string& Name) -> void;
+bool RegisterPythonController(const pybind11::object& pythonController,
+                              const std::string& Name);
+void UnregisterController(const std::string& Name);
 #endif
 }  // namespace mahjong

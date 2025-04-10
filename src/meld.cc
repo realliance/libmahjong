@@ -2,14 +2,14 @@
 
 #include <ostream>
 
-auto operator<<(std::ostream& os, const mahjong::Meld& meld) -> std::ostream& {
+std::ostream& operator<<(std::ostream& os, const mahjong::Meld& meld) {
   os << "{ type: " << MeldTypeToStr(meld.type);
   os << ", start: " << meld.start.toStr() << "}";
   return os;
 }
 
 namespace mahjong {
-auto MeldTypeToStr(Meld::Type s) -> std::string {
+std::string MeldTypeToStr(Meld::Type s) {
   switch (s) {
     case Meld::kChi:
       return "Chi";

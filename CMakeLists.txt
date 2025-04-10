@@ -58,14 +58,14 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
                                        CXXFLAGS="-Xiwyu --error")
   endif()
 
-  # find_program(clang_format_path NAMES clang-format)
-  # if(clang_format_path)
-  #   set(CLANG_FORMAT_FLAGS -i;)
-  #   add_custom_target(
-  #     format ALL
-  #     COMMAND ${clang_format_path} ${CLANG_FORMAT_FLAGS} ${libmahjong_sources}
-  #     WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
-  #     VERBATIM)
-  # endif()
+  find_program(clang_format_path NAMES clang-format)
+  if(clang_format_path)
+    set(CLANG_FORMAT_FLAGS -i;)
+    add_custom_target(
+      format ALL
+      COMMAND ${clang_format_path} ${CLANG_FORMAT_FLAGS} ${libmahjong_sources}
+      WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
+      VERBATIM)
+  endif()
 
 endif()

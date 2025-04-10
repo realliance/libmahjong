@@ -10,7 +10,9 @@
 #include "statefunctions.h"
 #include "stateutilities.h"
 
-auto mahjong::Ron(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& Ron(GameState& state) {
   state.hands.at(state.lastCaller).live.push_back(state.pendingPiece);
   state.hands.at(state.lastCaller).sort();
 
@@ -84,3 +86,4 @@ auto mahjong::Ron(GameState& state) -> GameState& {
   state.nextState = RoundEnd;
   return state;
 }
+}  // namespace mahjong

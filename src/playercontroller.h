@@ -12,12 +12,12 @@ namespace mahjong {
 class PlayerController {
  public:
   virtual ~PlayerController() = default;
-  virtual auto GameStart(int playerID) -> void = 0;
-  virtual auto RoundStart(std::vector<Piece> hand, Wind seatWind,
-                          Wind prevalentWind) -> void = 0;
-  virtual auto ReceiveEvent(Event e) -> void = 0;
-  virtual auto RetrieveDecision() -> Event = 0;
-  virtual auto Name() -> std::string = 0;
+  virtual void GameStart(int playerID) = 0;
+  virtual void RoundStart(std::vector<Piece> hand, Wind seatWind,
+                          Wind prevalentWind) = 0;
+  virtual void ReceiveEvent(Event e) = 0;
+  virtual Event RetrieveDecision() = 0;
+  virtual std::string Name() = 0;
 };
 
 }  // namespace mahjong

@@ -23,21 +23,21 @@ void countpieces(std::array<int8_t, mahjong::Piece::kPiecesize> counts,
 
 }  // namespace
 
-auto GentlemanBot::Name() -> std::string {
+std::string GentlemanBot::Name() {
   return "GentlemanBot";
 }
 
-auto GentlemanBot::GameStart(int /*playerID*/) -> void {}
+void GentlemanBot::GameStart(int /*playerID*/) {}
 
-auto GentlemanBot::RoundStart(std::vector<mahjong::Piece> hand,
+void GentlemanBot::RoundStart(std::vector<mahjong::Piece> hand,
                               mahjong::Wind /*seatWind*/,
-                              mahjong::Wind /*prevalentWind*/) -> void {
+                              mahjong::Wind /*prevalentWind*/) {
   hand_ = hand;
   lastEvent_.type = mahjong::Event::kDiscard;
   riichi_ = false;
 }
 
-auto GentlemanBot::ReceiveEvent(mahjong::Event e) -> void {
+void GentlemanBot::ReceiveEvent(mahjong::Event e) {
   if (e.decision) {
     if (e.type <= lastEvent_.type) {
       lastEvent_ = e;
@@ -53,7 +53,7 @@ auto GentlemanBot::ReceiveEvent(mahjong::Event e) -> void {
   }
 }
 
-auto GentlemanBot::RetrieveDecision() -> mahjong::Event {
+mahjong::Event GentlemanBot::RetrieveDecision() {
   if (lastEvent_.type == mahjong::Event::kRiichi) {
     lastEvent_.type = mahjong::Event::kRiichi;
     riichi_ = true;
@@ -67,7 +67,7 @@ auto GentlemanBot::RetrieveDecision() -> mahjong::Event {
   return e;
 }
 
-auto GentlemanBot::getDiscard() -> mahjong::Piece {
+mahjong::Piece GentlemanBot::getDiscard() {
   std::vector<mahjong::Piece> free_pieces;
   std::vector<mahjong::Piece> prefered_discards;
   std::vector<mahjong::Piece> second_tier_discards;

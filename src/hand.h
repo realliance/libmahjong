@@ -14,7 +14,7 @@ class Hand {
  public:
   Hand() = default;
   explicit Hand(std::vector<Piece> live) : live(std::move(std::move(live))) {}
-  auto sort() -> void { std::ranges::sort(live); }
+  void sort() { std::ranges::sort(live); }
   std::vector<Piece> live;
   std::vector<Meld> melds;
   std::vector<Piece> discards;
@@ -26,4 +26,4 @@ class Hand {
 
 }  // namespace mahjong
 
-auto operator<<(std::ostream& os, const mahjong::Hand& hand) -> std::ostream&;
+std::ostream& operator<<(std::ostream& os, const mahjong::Hand& hand);

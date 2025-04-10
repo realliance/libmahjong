@@ -7,7 +7,9 @@
 #include "playercontroller.h"
 #include "statefunctions.h"
 
-auto mahjong::GameEnd(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& GameEnd(GameState& state) {
   for (auto& player : state.players) {
     player.controller->ReceiveEvent(kEndEvent);
 #ifndef NO_PYBIND
@@ -21,3 +23,5 @@ auto mahjong::GameEnd(GameState& state) -> GameState& {
   }
   return state;
 }
+
+}  // namespace mahjong

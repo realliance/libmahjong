@@ -15,7 +15,7 @@
 
 namespace mahjong {
 
-auto Discard(GameState& state) -> GameState& {
+GameState& Discard(GameState& state) {
   AlertPlayers(state, Event{
                           .type = Event::kDiscard,        // type
                           .player = state.currentPlayer,  // player

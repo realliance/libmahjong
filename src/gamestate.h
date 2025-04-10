@@ -25,9 +25,9 @@ struct GameState {
   uint64_t seed = 0;
   std::mt19937 g;
   Piece pendingPiece = Piece(Piece::Type::kError);
-  auto (*prevState)(struct GameState&) -> struct GameState&;
-  auto (*currState)(struct GameState&) -> struct GameState&;
-  auto (*nextState)(struct GameState&) -> struct GameState&;
+  struct GameState& (*prevState)(struct GameState&);
+  struct GameState& (*currState)(struct GameState&);
+  struct GameState& (*nextState)(struct GameState&);
   Walls walls;
   std::array<int, 4> scores = {};
   std::array<bool, 4> hasRonned = {};
@@ -38,5 +38,4 @@ struct GameState {
 
 }  // namespace mahjong
 
-auto operator<<(std::ostream& os, const mahjong::GameState& state)
-    -> std::ostream&;
+std::ostream& operator<<(std::ostream& os, const mahjong::GameState& state);

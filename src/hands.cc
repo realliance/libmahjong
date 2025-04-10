@@ -25,7 +25,7 @@ namespace mahjong {
 namespace {
 const int kMaxSingles = 15;
 
-auto countSingles(std::vector<Piece> hand) -> int {
+int countSingles(std::vector<Piece> hand) {
   auto root = breakdownHand(std::move(hand));
   int min_singles = kMaxSingles;
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
@@ -41,7 +41,7 @@ auto countSingles(std::vector<Piece> hand) -> int {
 }
 }  // namespace
 
-auto countPiece(const GameState& state, int player, Piece p) -> int {
+int countPiece(const GameState& state, int player, Piece p) {
   int count = 0;
   for (const auto& piece : state.hands.at(player).live) {
     if (piece == p) {
@@ -82,7 +82,7 @@ const std::vector<yakuFunc> kYakumanFunctions = {
     isBigThreeDragons, isLittleFourWinds,  isBigFourWinds,
     isMaxBranches};
 
-auto scoreHand(const GameState& state, int player) -> Score {
+Score scoreHand(const GameState& state, int player) {
   auto root = breakdownHand(state.hands.at(player).live);
   Score s;
   s.han = 0;
@@ -146,7 +146,7 @@ const int kSanbaimanBasicPoints = 6000;
 const int kSanbaimanMinHan = 11;
 const int kYakumanBasicPoints = 8000;
 
-auto getBasicPoints(Score s) -> int {
+int getBasicPoints(Score s) {
   if (s.yakuman > 0) {
     return s.yakuman * kYakumanBasicPoints;
   }
@@ -201,8 +201,8 @@ const int kHighedgewait = 7;
 
 const int kFuRounding = 10;
 
-auto getFu(const GameState& state, int player,
-           const std::vector<const mahjong::Node*>& branch) -> int {
+int getFu(const GameState& state, int player,
+          const std::vector<const mahjong::Node*>& branch) {
   if (isSevenPairs(state, player, branch) != 0) {
     return kSevenpairs;
   }
@@ -278,8 +278,8 @@ auto getFu(const GameState& state, int player,
          (kFuRounding - (fu % kFuRounding));  // rounding up to multiple of ten
 }
 
-auto isOpenPinfu(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch) -> bool {
+bool isOpenPinfu(const GameState& state, int player,
+                 const std::vector<const mahjong::Node*>& branch) {
   for (const auto& node : branch) {
     if (node->type == Node::kPonSet) {
       return false;
@@ -306,7 +306,7 @@ auto isOpenPinfu(const GameState& state, int player,
   return waits.size() != 1;
 }
 
-auto isComplete(const GameState& state, int player) -> bool {
+bool isComplete(const GameState& state, int player) {
   auto root = breakdownHand(state.hands.at(player).live);
   if (!root->IsComplete() && (isThirteenOrphans(state, player) == 0) &&
       (isSevenPairs(state, player) == 0)) {
@@ -349,8 +349,7 @@ const std::vector<Piece> kPieceSet{
 // the frequency it needs to be ran
 // will revisit if necessary
 // assumption is 14 piece hand
-auto isInTenpai13Pieces(std::vector<Piece> hand, bool allWaits)
-    -> std::vector<Piece> {
+std::vector<Piece> isInTenpai13Pieces(std::vector<Piece> hand, bool allWaits) {
   int min_singles = countSingles(hand);
   // These numbers were found by looking at a lot of handtrees and their single count
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -382,7 +381,7 @@ auto isInTenpai13Pieces(std::vector<Piece> hand, bool allWaits)
 
 const int kPiecesinahand = 14;
 
-auto isInTenpai(std::vector<Piece> hand, bool allWaits) -> std::vector<Piece> {
+std::vector<Piece> isInTenpai(std::vector<Piece> hand, bool allWaits) {
   if (hand.empty()) {
     return {};
   }
@@ -416,7 +415,7 @@ auto isInTenpai(std::vector<Piece> hand, bool allWaits) -> std::vector<Piece> {
 }
 
 // see above comment
-auto getRiichiDiscard(std::vector<Piece> hand) -> std::vector<Piece> {
+std::vector<Piece> getRiichiDiscard(std::vector<Piece> hand) {
   if (hand.empty()) {
     return {};
   }
@@ -452,8 +451,8 @@ auto getRiichiDiscard(std::vector<Piece> hand) -> std::vector<Piece> {
 }
 
 const int kOneroundofturns = 4;
-auto isRiichi(const GameState& state, int player,
-              const std::vector<const mahjong::Node*>& /*unused*/) -> int {
+int isRiichi(const GameState& state, int player,
+             const std::vector<const mahjong::Node*>& /*unused*/) {
   if (state.hands.at(player).riichi) {
     int han = 1;
     if (state.turnNum < 4 && state.lastCall < 0) {
@@ -469,9 +468,8 @@ auto isRiichi(const GameState& state, int player,
   return 0;
 }
 
-auto isFullyConcealedHand(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& /*unused*/)
-    -> int {
+int isFullyConcealedHand(const GameState& state, int player,
+                         const std::vector<const mahjong::Node*>& /*unused*/) {
   if (state.currentPlayer == player && !state.hands.at(player).open &&
       state.walls.GetRemainingPieces() > 0) {
     return 1;
@@ -479,8 +477,8 @@ auto isFullyConcealedHand(const GameState& state, int player,
   return 0;
 }
 
-auto isPinfu(const GameState& state, int player,
-             const std::vector<const mahjong::Node*>& branch) -> int {
+int isPinfu(const GameState& state, int player,
+            const std::vector<const mahjong::Node*>& branch) {
   if (state.hands.at(player).open) {
     return 0;
   }
@@ -508,8 +506,8 @@ auto isPinfu(const GameState& state, int player,
   return 1;
 }
 
-auto isPureDoubleChi(const GameState& state, int player,
-                     const std::vector<const mahjong::Node*>& branch) -> int {
+int isPureDoubleChi(const GameState& state, int player,
+                    const std::vector<const mahjong::Node*>& branch) {
   if (state.hands.at(player).open) {
     return 0;
   }
@@ -533,8 +531,8 @@ auto isPureDoubleChi(const GameState& state, int player,
   return 0;
 }
 
-auto isAllSimples(const GameState& state, int player,
-                  const std::vector<const mahjong::Node*>& /*unused*/) -> int {
+int isAllSimples(const GameState& state, int player,
+                 const std::vector<const mahjong::Node*>& /*unused*/) {
   for (const auto& piece : state.hands.at(player).live) {
     if (piece.isHonor() || piece.isTerminal()) {
       return 0;
@@ -549,8 +547,8 @@ auto isAllSimples(const GameState& state, int player,
 }
 
 const int kPiecesinasuit = 9;
-auto isMixedTripleChi(const GameState& state, int player,
-                      const std::vector<const mahjong::Node*>& branch) -> int {
+int isMixedTripleChi(const GameState& state, int player,
+                     const std::vector<const mahjong::Node*>& branch) {
   std::array<bool, kPiecesinasuit> bamboo_chi = {};
   std::array<bool, kPiecesinasuit> char_chi = {};
   std::array<bool, kPiecesinasuit> pin_chi = {};
@@ -591,8 +589,8 @@ auto isMixedTripleChi(const GameState& state, int player,
 const int kFirstchistart = 1;
 const int kSecondchistart = 4;
 const int kThirdchistart = 7;
-auto isPureStraight(const GameState& state, int player,
-                    const std::vector<const mahjong::Node*>& branch) -> int {
+int isPureStraight(const GameState& state, int player,
+                   const std::vector<const mahjong::Node*>& branch) {
   std::array<bool, 3> bamboo_chi = {};
   std::array<bool, 3> char_chi = {};
   std::array<bool, 3> pin_chi = {};
@@ -655,8 +653,8 @@ auto isPureStraight(const GameState& state, int player,
   return 0;
 }
 
-auto isWindOrDragonPon(const GameState& state, int player,
-                       const std::vector<const mahjong::Node*>& branch) -> int {
+int isWindOrDragonPon(const GameState& state, int player,
+                      const std::vector<const mahjong::Node*>& branch) {
   std::vector<Piece> matches{
       kWhiteDragon, kGreenDragon, kRedDragon,
       Piece::fromWind(GetSeat(state.roundNum, player)),
@@ -683,8 +681,8 @@ auto isWindOrDragonPon(const GameState& state, int player,
   return han;
 }
 
-auto isOutsideHand(const GameState& state, int player,
-                   const std::vector<const mahjong::Node*>& branch) -> int {
+int isOutsideHand(const GameState& state, int player,
+                  const std::vector<const mahjong::Node*>& branch) {
   if ((isTerminalsInAllSets(state, player, branch) != 0) ||
       (isAllTerminalsAndHonors(state, player, branch) != 0)) {
     return 0;
@@ -722,8 +720,8 @@ auto isOutsideHand(const GameState& state, int player,
   return state.hands.at(state.currentPlayer).open ? 1 : 2;
 }
 
-auto isAfterAKan(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& /*unused*/) -> int {
+int isAfterAKan(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& /*unused*/) {
   if (state.currentPlayer != player) {
     return 0;
   }
@@ -733,8 +731,8 @@ auto isAfterAKan(const GameState& state, int player,
   return 0;
 }
 
-auto isRobbingAKan(const GameState& state, int player,
-                   const std::vector<const mahjong::Node*>& /*unused*/) -> int {
+int isRobbingAKan(const GameState& state, int player,
+                  const std::vector<const mahjong::Node*>& /*unused*/) {
   if (!state.hasRonned.at(player)) {
     return 0;
   }
@@ -744,17 +742,16 @@ auto isRobbingAKan(const GameState& state, int player,
   return 0;
 }
 
-auto isBottomOfTheSea(const GameState& state, int /*unused*/,
-                      const std::vector<const mahjong::Node*>& /*unused*/)
-    -> int {
+int isBottomOfTheSea(const GameState& state, int /*unused*/,
+                     const std::vector<const mahjong::Node*>& /*unused*/) {
   if (state.walls.GetRemainingPieces() == 0) {
     return 1;
   }
   return 0;
 }
 
-auto isSevenPairs(const GameState& state, int player,
-                  const std::vector<const mahjong::Node*>& /*unused*/) -> int {
+int isSevenPairs(const GameState& state, int player,
+                 const std::vector<const mahjong::Node*>& /*unused*/) {
   if (state.hands.at(player).open) {
     return 0;
   }
@@ -767,8 +764,8 @@ auto isSevenPairs(const GameState& state, int player,
   return 2;
 }
 
-auto isTriplePon(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch) -> int {
+int isTriplePon(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& branch) {
   std::array<bool, kPiecesinasuit> bamboo_pon = {};
   std::array<bool, kPiecesinasuit> char_pon = {};
   std::array<bool, kPiecesinasuit> pin_pon = {};
@@ -806,9 +803,8 @@ auto isTriplePon(const GameState& state, int player,
   return 0;
 }
 
-auto isThreeConcealedPons(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& branch)
-    -> int {
+int isThreeConcealedPons(const GameState& state, int player,
+                         const std::vector<const mahjong::Node*>& branch) {
   int concealed_pons = 0;
   for (const auto& node : branch) {
     if (node->type == Node::kPonSet) {
@@ -826,8 +822,8 @@ auto isThreeConcealedPons(const GameState& state, int player,
   return 0;
 }
 
-auto isThreeKans(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& /*unused*/) -> int {
+int isThreeKans(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& /*unused*/) {
   int kans = 0;
   for (const auto& meld : state.hands.at(player).melds) {
     if (meld.type >= Meld::kKan) {
@@ -840,8 +836,8 @@ auto isThreeKans(const GameState& state, int player,
   return 0;
 }
 
-auto isAllPons(const GameState& state, int player,
-               const std::vector<const mahjong::Node*>& branch) -> int {
+int isAllPons(const GameState& state, int player,
+              const std::vector<const mahjong::Node*>& branch) {
   for (const auto& node : branch) {
     if (node->type != Node::kPonSet) {
       return 0;
@@ -855,8 +851,8 @@ auto isAllPons(const GameState& state, int player,
   return 2;
 }
 
-auto isHalfFlush(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch) -> int {
+int isHalfFlush(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& branch) {
   if (isFullFlush(state, player, branch) != 0) {
     return 0;
   }
@@ -886,9 +882,8 @@ auto isHalfFlush(const GameState& state, int player,
   return 0;
 }
 
-auto isLittleThreeDragons(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& branch)
-    -> int {
+int isLittleThreeDragons(const GameState& state, int player,
+                         const std::vector<const mahjong::Node*>& branch) {
   bool pair = false;
   int pons = 0;
   for (const auto& node : branch) {
@@ -929,9 +924,9 @@ auto isLittleThreeDragons(const GameState& state, int player,
   return 0;
 }
 
-auto isAllTerminalsAndHonors(
+int isAllTerminalsAndHonors(
     const GameState& state, int player,
-    const std::vector<const mahjong::Node*>& /*unused*/) -> int {
+    const std::vector<const mahjong::Node*>& /*unused*/) {
   for (const auto& piece : state.hands.at(player).live) {
     if (!piece.isHonor() && !piece.isTerminal()) {
       return 0;
@@ -945,9 +940,8 @@ auto isAllTerminalsAndHonors(
   return 2;
 }
 
-auto isTerminalsInAllSets(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& branch)
-    -> int {
+int isTerminalsInAllSets(const GameState& state, int player,
+                         const std::vector<const mahjong::Node*>& branch) {
   if (isFullFlush(state, player, branch) != 0) {
     return 0;
   }
@@ -984,9 +978,8 @@ auto isTerminalsInAllSets(const GameState& state, int player,
   return state.hands.at(state.currentPlayer).open ? 2 : 3;
 }
 
-auto isTwicePureDoubleChi(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& branch)
-    -> int {
+int isTwicePureDoubleChi(const GameState& state, int player,
+                         const std::vector<const mahjong::Node*>& branch) {
   if (state.hands.at(player).open) {
     return 0;
   }
@@ -1011,9 +1004,8 @@ auto isTwicePureDoubleChi(const GameState& state, int player,
   return 0;
 }
 
-auto isBlessingOfMan(const GameState& state, int player,
-                     const std::vector<const mahjong::Node*>& /*unused*/)
-    -> int {
+int isBlessingOfMan(const GameState& state, int player,
+                    const std::vector<const mahjong::Node*>& /*unused*/) {
   if (state.hands.at(player).open) {
     return 0;
   }
@@ -1030,8 +1022,8 @@ auto isBlessingOfMan(const GameState& state, int player,
   return 0;
 }
 
-auto isFullFlush(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& /*unused*/) -> int {
+int isFullFlush(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& /*unused*/) {
   int suit = state.hands.at(player).live.front().getSuit();
   for (const auto& piece : state.hands.at(player).live) {
     if (piece.getSuit() != suit) {
@@ -1047,9 +1039,8 @@ auto isFullFlush(const GameState& state, int player,
   return state.hands.at(player).open ? 5 : 6;
 }
 
-auto isThirteenOrphans(const GameState& state, int player,
-                       const std::vector<const mahjong::Node*>& /*unused*/)
-    -> int {
+int isThirteenOrphans(const GameState& state, int player,
+                      const std::vector<const mahjong::Node*>& /*unused*/) {
   if (state.hands.at(player).open) {
     return 0;
   }
@@ -1080,8 +1071,8 @@ auto isThirteenOrphans(const GameState& state, int player,
   return 1;
 }
 
-auto isNineGates(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch) -> int {
+int isNineGates(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& branch) {
   if (state.hands.at(player).open) {
     return 0;
   }
@@ -1125,9 +1116,8 @@ auto isNineGates(const GameState& state, int player,
   return 1;
 }
 
-auto isBlessingOfHeaven(const GameState& state, int player,
-                        const std::vector<const mahjong::Node*>& /*unused*/)
-    -> int {
+int isBlessingOfHeaven(const GameState& state, int player,
+                       const std::vector<const mahjong::Node*>& /*unused*/) {
   if (state.hands.at(player).open) {
     return 0;
   }
@@ -1143,9 +1133,8 @@ auto isBlessingOfHeaven(const GameState& state, int player,
   return 1;
 }
 
-auto isBlessingOfEarth(const GameState& state, int player,
-                       const std::vector<const mahjong::Node*>& /*unused*/)
-    -> int {
+int isBlessingOfEarth(const GameState& state, int player,
+                      const std::vector<const mahjong::Node*>& /*unused*/) {
   if (state.hands.at(player).open) {
     return 0;
   }
@@ -1161,9 +1150,8 @@ auto isBlessingOfEarth(const GameState& state, int player,
   return 1;
 }
 
-auto isFourConcealedPon(const GameState& state, int player,
-                        const std::vector<const mahjong::Node*>& branch)
-    -> int {
+int isFourConcealedPon(const GameState& state, int player,
+                       const std::vector<const mahjong::Node*>& branch) {
   if (state.hands.at(player).open) {
     return 0;
   }
@@ -1184,8 +1172,8 @@ auto isFourConcealedPon(const GameState& state, int player,
   return 0;
 }
 
-auto isFourKans(const GameState& state, int player,
-                const std::vector<const mahjong::Node*>& /*unused*/) -> int {
+int isFourKans(const GameState& state, int player,
+               const std::vector<const mahjong::Node*>& /*unused*/) {
   int kans = 0;
   for (const auto& meld : state.hands.at(player).melds) {
     if (meld.type >= Meld::kKan) {
@@ -1198,8 +1186,8 @@ auto isFourKans(const GameState& state, int player,
   return 0;
 }
 
-auto isAllGreen(const GameState& state, int player,
-                const std::vector<const mahjong::Node*>& /*unused*/) -> int {
+int isAllGreen(const GameState& state, int player,
+               const std::vector<const mahjong::Node*>& /*unused*/) {
   for (const auto& piece : state.hands.at(player).live) {
     if (!piece.isGreen()) {
       return 0;
@@ -1213,9 +1201,8 @@ auto isAllGreen(const GameState& state, int player,
   return 1;
 }
 
-auto isAllTerminals(const GameState& state, int player,
-                    const std::vector<const mahjong::Node*>& /*unused*/)
-    -> int {
+int isAllTerminals(const GameState& state, int player,
+                   const std::vector<const mahjong::Node*>& /*unused*/) {
   for (const auto& piece : state.hands.at(player).live) {
     if (!piece.isTerminal()) {
       return 0;
@@ -1229,8 +1216,8 @@ auto isAllTerminals(const GameState& state, int player,
   return 1;
 }
 
-auto isAllHonors(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& /*unused*/) -> int {
+int isAllHonors(const GameState& state, int player,
+                const std::vector<const mahjong::Node*>& /*unused*/) {
   for (const auto& piece : state.hands.at(player).live) {
     if (!piece.isHonor()) {
       return 0;
@@ -1244,8 +1231,8 @@ auto isAllHonors(const GameState& state, int player,
   return 1;
 }
 
-auto isBigThreeDragons(const GameState& state, int player,
-                       const std::vector<const mahjong::Node*>& branch) -> int {
+int isBigThreeDragons(const GameState& state, int player,
+                      const std::vector<const mahjong::Node*>& branch) {
   int pons = 0;
   for (const auto& node : branch) {
     switch (node->start.toUint8_t()) {
@@ -1278,8 +1265,8 @@ auto isBigThreeDragons(const GameState& state, int player,
   return 0;
 }
 
-auto isLittleFourWinds(const GameState& state, int player,
-                       const std::vector<const mahjong::Node*>& branch) -> int {
+int isLittleFourWinds(const GameState& state, int player,
+                      const std::vector<const mahjong::Node*>& branch) {
   bool pair = false;
   int pons = 0;
   for (const auto& node : branch) {
@@ -1322,8 +1309,8 @@ auto isLittleFourWinds(const GameState& state, int player,
   return 0;
 }
 
-auto isBigFourWinds(const GameState& state, int player,
-                    const std::vector<const mahjong::Node*>& branch) -> int {
+int isBigFourWinds(const GameState& state, int player,
+                   const std::vector<const mahjong::Node*>& branch) {
   int pons = 0;
   for (const auto& node : branch) {
     switch (node->start.toUint8_t()) {
@@ -1358,8 +1345,8 @@ auto isBigFourWinds(const GameState& state, int player,
   return 0;
 }
 
-auto isMaxBranches(const GameState& state, int player,
-                   const std::vector<const mahjong::Node*>& /*unused*/) -> int {
+int isMaxBranches(const GameState& state, int player,
+                  const std::vector<const mahjong::Node*>& /*unused*/) {
   int start = state.hands.at(player).live[0].getPieceNum();
   int suit = state.hands.at(player).live[0].getSuit();
   std::array<int, 6> sets = {};

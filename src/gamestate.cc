@@ -6,8 +6,7 @@
 #include "hand.h"
 #include "player.h"
 
-auto operator<<(std::ostream& os, const mahjong::GameState& state)
-    -> std::ostream& {
+std::ostream& operator<<(std::ostream& os, const mahjong::GameState& state) {
   os << "currentPlayer: " << state.currentPlayer << '\n';
   os << "turnNum: " << state.turnNum << '\n';
   os << "roundNum: " << state.roundNum << '\n';

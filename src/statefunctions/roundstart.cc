@@ -14,7 +14,9 @@
 #include "walls.h"
 #include "winds.h"
 
-auto mahjong::RoundStart(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& RoundStart(GameState& state) {
   if (state.overrideWall.empty()) {
     state.walls = Walls(state.g);
   } else {
@@ -39,3 +41,4 @@ auto mahjong::RoundStart(GameState& state) -> GameState& {
   state.nextState = Draw;
   return state;
 }
+}  // namespace mahjong

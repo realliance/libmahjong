@@ -4,20 +4,20 @@
 #include "piecetype.h"
 #include "winds.h"
 
-auto AngryDiscardoBot::Name() -> std::string {
+std::string AngryDiscardoBot::Name() {
   return "AngryDiscardoBot";
 }
 
-auto AngryDiscardoBot::GameStart(int /*playerID*/) -> void {}
+void AngryDiscardoBot::GameStart(int /*playerID*/) {}
 
-auto AngryDiscardoBot::RoundStart(std::vector<mahjong::Piece> hand,
+void AngryDiscardoBot::RoundStart(std::vector<mahjong::Piece> hand,
                                   mahjong::Wind /*seatWind*/,
-                                  mahjong::Wind /*prevalentWind*/) -> void {
+                                  mahjong::Wind /*prevalentWind*/) {
   hand_ = hand;
   lastEvent_.type = mahjong::Event::kDiscard;
 }
 
-auto AngryDiscardoBot::ReceiveEvent(mahjong::Event e) -> void {
+void AngryDiscardoBot::ReceiveEvent(mahjong::Event e) {
   if (e.decision) {
     if (e.type <= lastEvent_.type) {
       lastEvent_ = e;
@@ -27,7 +27,7 @@ auto AngryDiscardoBot::ReceiveEvent(mahjong::Event e) -> void {
   }
 }
 
-auto AngryDiscardoBot::RetrieveDecision() -> mahjong::Event {
+mahjong::Event AngryDiscardoBot::RetrieveDecision() {
   if (lastEvent_.type == mahjong::Event::kDiscard) {
     lastEvent_.piece = hand_[n_].toUint8_t();
     n_ = (n_ + 1) % hand_.size();

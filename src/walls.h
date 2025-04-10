@@ -15,13 +15,13 @@ class Walls {
   std::vector<Piece> deadWall;
   int doraCount = 1;
   int replacements = 4;
-  auto TakePiece() -> Piece;
-  auto TakeHand() -> std::vector<Piece>;
-  auto TakeReplacementTile() -> Piece;
-  [[nodiscard]] auto GetDoras() const -> std::vector<Piece>;
-  [[nodiscard]] auto GetUraDoras() const -> std::vector<Piece>;
-  [[nodiscard]] auto GetRemainingPieces() const -> int;
+  Piece TakePiece();
+  std::vector<Piece> TakeHand();
+  Piece TakeReplacementTile();
+  [[nodiscard]] std::vector<Piece> GetDoras() const;
+  [[nodiscard]] std::vector<Piece> GetUraDoras() const;
+  [[nodiscard]] int GetRemainingPieces() const;
 };
 }  // namespace mahjong
 
-auto operator<<(std::ostream& os, const mahjong::Walls& walls) -> std::ostream&;
+std::ostream& operator<<(std::ostream& os, const mahjong::Walls& walls);

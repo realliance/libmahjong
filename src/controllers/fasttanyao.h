@@ -21,22 +21,21 @@ using pieceSet = std::map<uint8_t, uint8_t>;
 
 class FastTanyao : public mahjong::PlayerController {
  public:
-  auto Name() -> std::string override;
-  auto GameStart(int _playerID) -> void override;
-  auto RoundStart(std::vector<mahjong::Piece> hand, mahjong::Wind seatWind,
-                  mahjong::Wind prevalentWind) -> void override;
-  auto ReceiveEvent(mahjong::Event e) -> void override;
-  auto RetrieveDecision() -> mahjong::Event override;
+  std::string Name() override;
+  void GameStart(int _playerID) override;
+  void RoundStart(std::vector<mahjong::Piece> hand, mahjong::Wind seatWind,
+                  mahjong::Wind prevalentWind) override;
+  void ReceiveEvent(mahjong::Event e) override;
+  mahjong::Event RetrieveDecision() override;
 
  private:
-  auto IncrementPiece(mahjong::Piece piece, pieceSet& set) -> void;
-  auto IncrementPiece(mahjong::Piece piece, pieceSet& set, uint8_t count)
-      -> void;
-  static auto DecrementPiece(mahjong::Piece piece, pieceSet& set) -> void;
-  static auto ShouldKeep(mahjong::Piece piece) -> bool;
-  auto ProcessNewPiece(mahjong::Piece piece) -> void;
-  auto ChooseDiscard() -> mahjong::Piece;
-  auto OutputSet(uint8_t id, const pieceSet& set) -> void;
+  void IncrementPiece(mahjong::Piece piece, pieceSet& set);
+  void IncrementPiece(mahjong::Piece piece, pieceSet& set, uint8_t count);
+  static void DecrementPiece(mahjong::Piece piece, pieceSet& set);
+  static bool ShouldKeep(mahjong::Piece piece);
+  void ProcessNewPiece(mahjong::Piece piece);
+  mahjong::Piece ChooseDiscard();
+  void OutputSet(uint8_t id, const pieceSet& set);
   pieceSet possible_triples_;
   std::vector<mahjong::Piece> immediate_discard_;
   std::vector<mahjong::Piece> valid_doras_;

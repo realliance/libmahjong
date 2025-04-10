@@ -7,24 +7,24 @@
 #include "piecetype.h"
 #include "winds.h"
 
-auto AlphabeticalBot::Name() -> std::string {
+std::string AlphabeticalBot::Name() {
   return "AlphabeticalBot";
 }
 
-auto AlphabeticalBot::GameStart(int id) -> void {
+void AlphabeticalBot::GameStart(int id) {
   id_ = id;
   // std::cout << "Started player " << id << std::endl;
 }
 
-auto AlphabeticalBot::RoundStart(std::vector<mahjong::Piece> hand,
+void AlphabeticalBot::RoundStart(std::vector<mahjong::Piece> hand,
                                  /*seatWind=*/mahjong::Wind,
-                                 /*prevalentWind=*/mahjong::Wind) -> void {
+                                 /*prevalentWind=*/mahjong::Wind) {
   hand_ = hand;
   decisionToTake_.type = mahjong::Event::kDiscard;
   decisionToTake_.player = id_;
 }
 
-auto AlphabeticalBot::ReceiveEvent(mahjong::Event e) -> void {
+void AlphabeticalBot::ReceiveEvent(mahjong::Event e) {
   // const mahjong::Piece eventPiece = mahjong::Piece(e.piece);
   // std::cout << "Player " << id <<" got event " << e << std::endl;
   if (e.type <= mahjong::Event::kDiscard && e.decision && e.player == id_) {
@@ -59,7 +59,7 @@ auto AlphabeticalBot::ReceiveEvent(mahjong::Event e) -> void {
   }
 }
 
-auto AlphabeticalBot::RetrieveDecision() -> mahjong::Event {
+mahjong::Event AlphabeticalBot::RetrieveDecision() {
   if (hand_.empty()) {
     return decisionToTake_;
   }
@@ -76,7 +76,7 @@ auto AlphabeticalBot::RetrieveDecision() -> mahjong::Event {
 }
 
 // Choose a piece to discard (
-auto AlphabeticalBot::getDiscardPiece() -> int {
+int AlphabeticalBot::getDiscardPiece() {
   std::vector<std::string> string_board;
   string_board.reserve(hand_.size());
   for (auto& i : hand_) {

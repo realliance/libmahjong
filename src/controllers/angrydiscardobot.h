@@ -12,12 +12,12 @@
 
 class AngryDiscardoBot : public mahjong::PlayerController {
  public:
-  auto Name() -> std::string override;
-  auto GameStart(int _playerID) -> void override;
-  auto RoundStart(std::vector<mahjong::Piece> hand, mahjong::Wind seatWind,
-                  mahjong::Wind prevalentWind) -> void override;
-  auto ReceiveEvent(mahjong::Event e) -> void override;
-  auto RetrieveDecision() -> mahjong::Event override;
+  std::string Name() override;
+  void GameStart(int _playerID) override;
+  void RoundStart(std::vector<mahjong::Piece> hand, mahjong::Wind seatWind,
+                  mahjong::Wind prevalentWind) override;
+  void ReceiveEvent(mahjong::Event e) override;
+  mahjong::Event RetrieveDecision() override;
 
  private:
   std::vector<mahjong::Piece> hand_;

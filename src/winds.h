@@ -5,7 +5,7 @@ namespace mahjong {
 
 enum Wind { kEast, kSouth, kWest, kNorth };
 
-inline auto WindToStr(Wind s) -> std::string {
+inline std::string WindToStr(Wind s) {
   switch (s) {
     case kEast:
       return "East";

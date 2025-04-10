@@ -63,35 +63,35 @@ class Piece {
 
   static const int kPiecesize = 256;
 
-  [[nodiscard]] auto isHonor() const -> bool;
-  [[nodiscard]] auto isTerminal() const -> bool;
-  [[nodiscard]] auto isGreen() const -> bool;
-  [[nodiscard]] auto isRedFive() const -> bool;
-  [[nodiscard]] auto isBoardPiece() const -> bool;
-  [[nodiscard]] auto toUint8_t() const -> uint8_t;
-  [[nodiscard]] auto raw_value() const -> uint8_t;
-  [[nodiscard]] auto getSuit() const -> uint8_t;
-  [[nodiscard]] auto getPieceNum() const -> uint8_t;
-  [[nodiscard]] auto toStr() const -> std::string;
+  [[nodiscard]] bool isHonor() const;
+  [[nodiscard]] bool isTerminal() const;
+  [[nodiscard]] bool isGreen() const;
+  [[nodiscard]] bool isRedFive() const;
+  [[nodiscard]] bool isBoardPiece() const;
+  [[nodiscard]] uint8_t toUint8_t() const;
+  [[nodiscard]] uint8_t raw_value() const;
+  [[nodiscard]] uint8_t getSuit() const;
+  [[nodiscard]] uint8_t getPieceNum() const;
+  [[nodiscard]] std::string toStr() const;
 
-  static auto fromWind(Wind w) -> Piece;
-  static auto formPiece(Piece::Type suit, uint8_t number,
-                        bool isRedFive = false) -> Piece;
+  static Piece fromWind(Wind w);
+  static Piece formPiece(Piece::Type suit, uint8_t number,
+                         bool isRedFive = false);
 
-  auto operator++() -> Piece& {
+  Piece& operator++() {
     p_ = p_ + 1;
     return *this;
   }
 
-  auto operator==(const Piece rhs) const -> bool {
+  bool operator==(const Piece rhs) const {
     return (p_ | kRedFive) == (rhs.p_ | kRedFive);
   }
 
-  auto operator!=(const Piece rhs) const -> bool {
+  bool operator!=(const Piece rhs) const {
     return (p_ | kRedFive) != (rhs.p_ | kRedFive);
   }
 
-  auto operator-(uint8_t i) const -> Piece {
+  Piece operator-(uint8_t i) const {
     if (i == 0) {
       return Piece(p_);
     }
@@ -106,7 +106,7 @@ class Piece {
                  ~static_cast<uint8_t>(kTerminalBit));
   }
 
-  auto operator+(uint8_t i) const -> Piece {
+  Piece operator+(uint8_t i) const {
     if (i == 0) {
       return Piece(p_);
     }

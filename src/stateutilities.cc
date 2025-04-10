@@ -14,12 +14,12 @@
 
 namespace mahjong {
 
-auto GetSeat(int round, int player) -> Wind {
+Wind GetSeat(int round, int player) {
   return static_cast<Wind>((player + 3 * (round % 4)) % 4);
 }
 
 // Push Event to Player Queue
-auto AlertPlayers(const GameState& state, Event e) -> void {
+void AlertPlayers(const GameState& state, Event e) {
   e.decision = false;
   for (const auto& player : state.players) {
     player.controller->ReceiveEvent(e);
@@ -27,14 +27,13 @@ auto AlertPlayers(const GameState& state, Event e) -> void {
 }
 
 // Count number of piece p that are in given players hands
-auto CountPieces(const GameState& state, int player, Piece p) -> uint8_t {
+uint8_t CountPieces(const GameState& state, int player, Piece p) {
   return std::count(state.hands.at(player).live.begin(),
                     state.hands.at(player).live.end(), p);
 }
 
 // Remove an instance of piece p from given players hand
-auto RemovePieces(GameState& state, int player, Piece p, uint8_t count)
-    -> uint8_t {
+uint8_t RemovePieces(GameState& state, int player, Piece p, uint8_t count) {
   count = std::min(CountPieces(state, player, p), count);
   uint8_t removed = 0;
   state.hands.at(player).live.erase(
@@ -52,12 +51,12 @@ auto RemovePieces(GameState& state, int player, Piece p, uint8_t count)
 }
 
 // Discard an instance of piece p from given players hand
-auto DiscardPiece(GameState& state, int player, Piece p) -> void {
+void DiscardPiece(GameState& state, int player, Piece p) {
   RemovePieces(state, player, p, /*count=*/1);
   state.hands.at(player).discards.push_back(p);
 }
 
-auto AskForDiscard(const GameState& state) -> Piece {
+Piece AskForDiscard(const GameState& state) {
   state.players.at(state.currentPlayer)
       .controller->ReceiveEvent(Event{
           .type = Event::kDiscard,        // type
@@ -71,8 +70,7 @@ auto AskForDiscard(const GameState& state) -> Piece {
           .piece);
 }
 
-auto GetValidDecisionOrThrow(const GameState& state, int player, bool inHand)
-    -> Event {
+Event GetValidDecisionOrThrow(const GameState& state, int player, bool inHand) {
   Event decision;
   bool valid = false;
   int i = 0;
@@ -106,8 +104,8 @@ auto GetValidDecisionOrThrow(const GameState& state, int player, bool inHand)
   return decision;
 }
 
-auto ValidateDecision(const GameState& state, int player, Event decision,
-                      bool inHand) -> bool {
+bool ValidateDecision(const GameState& state, int player, Event decision,
+                      bool inHand) {
   if (decision.type > Event::kDiscard) {
     return false;
   }

@@ -7,7 +7,9 @@
 #include "piecetype.h"
 #include "statefunctions.h"
 
-auto mahjong::Exhaust(GameState& state) -> GameState& {
+namespace mahjong {
+
+GameState& Exhaust(GameState& state) {
   std::array<int, 4> winning_players = {};
   int total_winners = 0;
   for (int i = 0; i < 4; i++) {
@@ -53,3 +55,5 @@ auto mahjong::Exhaust(GameState& state) -> GameState& {
   state.nextState = RoundEnd;
   return state;
 }
+
+}  // namespace mahjong

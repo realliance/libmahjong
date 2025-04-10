@@ -43,7 +43,7 @@ std::map<std::string, newControllerInst> available_controllers = {
 };
 }  // namespace
 
-auto GetAvailableControllers() -> std::vector<std::string> {
+std::vector<std::string> GetAvailableControllers() {
   std::vector<std::string> names;
   names.reserve(available_controllers.size());
   for (const auto& [name, _] : available_controllers) {
@@ -52,15 +52,14 @@ auto GetAvailableControllers() -> std::vector<std::string> {
   return names;
 }
 
-auto GetController(const std::string& controller) -> newControllerInst {
+newControllerInst GetController(const std::string& controller) {
   if (available_controllers.contains(controller)) {
     return available_controllers[controller];
   }
   throw "No Such Controller";
 }
 
-auto RegisterController(newControllerInst newFunc, const std::string& name)
-    -> bool {
+bool RegisterController(newControllerInst newFunc, const std::string& name) {
   if (available_controllers.contains(name)) {
     return false;
   }

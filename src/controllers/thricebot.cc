@@ -7,19 +7,19 @@
 #include "piecetype.h"
 #include "winds.h"
 
-auto ThriceBot::Name() -> std::string {
+std::string ThriceBot::Name() {
   return "ThriceBot";
 }
 
-auto ThriceBot::GameStart(int id) -> void {
+void ThriceBot::GameStart(int id) {
   pid_ = id;
 }
 
 const float kHonorWeight = 1.5;
 const float kNormalWeight = 1;
 
-auto ThriceBot::RoundStart(std::vector<mahjong::Piece> _hand, mahjong::Wind s,
-                           mahjong::Wind p) -> void {
+void ThriceBot::RoundStart(std::vector<mahjong::Piece> _hand, mahjong::Wind s,
+                           mahjong::Wind p) {
   for (mahjong::Piece m : _hand) {
     HandTile h;
     h.piece = m;
@@ -55,7 +55,7 @@ void ThriceBot::assignweights() {
   }
 }
 
-auto ThriceBot::assignTileWeight(HandTile h1) -> HandTile {
+HandTile ThriceBot::assignTileWeight(HandTile h1) {
   HandTile h;
   h.piece = h1.piece;
   h.weight = h1.weight;
@@ -83,7 +83,7 @@ void ThriceBot::checkDiscard() {
   }
 }
 
-auto ThriceBot::ReceiveEvent(mahjong::Event e) -> void {
+void ThriceBot::ReceiveEvent(mahjong::Event e) {
   if (e.decision) {
     if (e.type <= lastEvent_.type) {
       lastEvent_ = e;
@@ -107,7 +107,7 @@ auto ThriceBot::ReceiveEvent(mahjong::Event e) -> void {
   }
 }
 
-auto ThriceBot::RetrieveDecision() -> mahjong::Event {
+mahjong::Event ThriceBot::RetrieveDecision() {
   if (lastEvent_.type == mahjong::Event::kDiscard) {
     lastEvent_.piece = popDiscard().toUint8_t();
   } else if (lastEvent_.type == mahjong::Event::kPon) {
@@ -132,7 +132,7 @@ auto ThriceBot::RetrieveDecision() -> mahjong::Event {
   return e;
 }
 
-auto ThriceBot::checkTile(mahjong::Piece p) -> bool {
+bool ThriceBot::checkTile(mahjong::Piece p) {
   int j = 0;
   for (auto& i : hand_) {
     if (i.piece.getSuit() == p.getSuit() &&
@@ -143,7 +143,7 @@ auto ThriceBot::checkTile(mahjong::Piece p) -> bool {
   return j == 2 || j == 3;
 }
 
-auto ThriceBot::popDiscard() -> mahjong::Piece {
+mahjong::Piece ThriceBot::popDiscard() {
   if (hand_.empty()) {
     return mahjong::Piece(mahjong::kError);
   }

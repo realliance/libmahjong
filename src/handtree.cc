@@ -29,8 +29,8 @@ namespace {
 
 const int kMaxPossible = 14;
 
-auto possibleChiForward(const std::array<int8_t, Piece::kPiecesize> counts,
-                        Piece p) -> bool {
+bool possibleChiForward(const std::array<int8_t, Piece::kPiecesize> counts,
+                        Piece p) {
   if (p.isHonor()) {
     return false;
   }
@@ -38,26 +38,23 @@ auto possibleChiForward(const std::array<int8_t, Piece::kPiecesize> counts,
          counts.at((p + 2).toUint8_t()) > 0;
 }
 
-auto possibleChis(const std::array<int8_t, Piece::kPiecesize> counts, Piece p)
-    -> int {
+int possibleChis(const std::array<int8_t, Piece::kPiecesize> counts, Piece p) {
   return p.isHonor() ? 0
                      : ((static_cast<int>(possibleChiForward(counts, p)) +
                          static_cast<int>(possibleChiForward(counts, p - 1)) +
                          static_cast<int>(possibleChiForward(counts, p - 2))));
 }
 
-auto anyPossibleChi(const std::array<int8_t, Piece::kPiecesize> counts, Piece p)
-    -> bool {
+bool anyPossibleChi(const std::array<int8_t, Piece::kPiecesize> counts,
+                    Piece p) {
   return possibleChis(counts, p) > 0;
 }
 
-auto possiblePair(const std::array<int8_t, Piece::kPiecesize> counts, Piece p)
-    -> bool {
+bool possiblePair(const std::array<int8_t, Piece::kPiecesize> counts, Piece p) {
   return (counts.at(p.toUint8_t()) == 2);
 }
 
-auto possiblePon(const std::array<int8_t, Piece::kPiecesize> counts, Piece p)
-    -> bool {
+bool possiblePon(const std::array<int8_t, Piece::kPiecesize> counts, Piece p) {
   return counts.at(p.toUint8_t()) == 3;
 }
 
@@ -84,7 +81,7 @@ void updatePossibilities(Breakdown* b) {
   }
 }
 
-auto addLeaf(Breakdown* b, Piece start, Node::Type type) -> Node* {
+Node* addLeaf(Breakdown* b, Piece start, Node::Type type) {
   std::vector<Node*> leaves;
   b->currentNode->leaves.push_back(new Node(
       b->id++,                       // id
@@ -97,7 +94,7 @@ auto addLeaf(Breakdown* b, Piece start, Node::Type type) -> Node* {
   return b->currentNode->leaves.back();
 }
 
-auto breakdownForwardChi(Breakdown* b, int piecePos) -> void {
+void breakdownForwardChi(Breakdown* b, int piecePos) {
   Piece start = b->pieces[piecePos];
   for (int i = 0; i < 3; i++) {
     b->counts.at((start + i).toUint8_t())--;
@@ -110,7 +107,7 @@ auto breakdownForwardChi(Breakdown* b, int piecePos) -> void {
   b->currentNode = addLeaf(b, start, Node::kChiSet);
 }
 
-auto breakdownPon(Breakdown* b, int piecePos) -> void {
+void breakdownPon(Breakdown* b, int piecePos) {
   Piece start = b->pieces[piecePos];
   b->counts.at(b->pieces[piecePos].toUint8_t()) -= 3;
   if (b->counts.at(b->pieces[piecePos].toUint8_t()) == 0) {
@@ -121,7 +118,7 @@ auto breakdownPon(Breakdown* b, int piecePos) -> void {
   b->currentNode = addLeaf(b, start, Node::kPonSet);
 }
 
-auto breakdownPair(Breakdown* b, int piecePos) -> void {
+void breakdownPair(Breakdown* b, int piecePos) {
   b->paired = true;
   Piece start = b->pieces[piecePos];
   b->counts.at(b->pieces[piecePos].toUint8_t()) -= 2;
@@ -133,7 +130,7 @@ auto breakdownPair(Breakdown* b, int piecePos) -> void {
   b->currentNode = addLeaf(b, start, Node::kPair);
 }
 
-auto breakdownSingle(Breakdown* b, int piecePos) -> void {
+void breakdownSingle(Breakdown* b, int piecePos) {
   b->currentNode = addLeaf(b, b->pieces[piecePos], Node::kSingle);
 
   b->counts.at(b->pieces[piecePos].toUint8_t())--;
@@ -144,7 +141,7 @@ auto breakdownSingle(Breakdown* b, int piecePos) -> void {
   }
 }
 
-auto getNextPiece(Breakdown* b) -> int {
+int getNextPiece(Breakdown* b) {
   int piece_pos = 0;
   for (size_t i = 0; i < b->pieces.size(); i++) {
     if (b->possibilities.at(i) <= b->possibilities[piece_pos]) {
@@ -157,7 +154,7 @@ auto getNextPiece(Breakdown* b) -> int {
   return piece_pos;
 }
 
-auto resetCounts(Breakdown* b, const Node* target) -> void {
+void resetCounts(Breakdown* b, const Node* target) {
   if (b->currentNode == nullptr) {
     std::cerr << "reset Failure: current node nullptr." << '\n';
     std::ofstream os("error.gv");
@@ -209,7 +206,7 @@ auto resetCounts(Breakdown* b, const Node* target) -> void {
 }
 
 // NOLINTNEXTLINE(misc-no-recursion)
-auto driver(Breakdown* b) -> void {
+void driver(Breakdown* b) {
   for (updatePossibilities(b); b->pieces.empty(); updatePossibilities(b)) {
     int piece_pos = getNextPiece(b);
     if (b->possibilities[piece_pos] == 0) {
@@ -284,7 +281,7 @@ auto driver(Breakdown* b) -> void {
 
 }  // namespace
 
-auto breakdownHand(std::vector<Piece> pieces) -> std::shared_ptr<Node> {
+std::shared_ptr<Node> breakdownHand(std::vector<Piece> pieces) {
   Breakdown b;
   b.pieces = std::move(pieces);
   countPieces(&b);

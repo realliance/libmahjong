@@ -4,7 +4,7 @@
 
 #include "piecetype.h"
 
-auto operator<<(std::ostream& os, const mahjong::Event& e) -> std::ostream& {
+std::ostream& operator<<(std::ostream& os, const mahjong::Event& e) {
   os << "{type: " << mahjong::EventTypeToStr(e.type);
   os << " player: " << e.player;
   uint8_t p = e.piece;

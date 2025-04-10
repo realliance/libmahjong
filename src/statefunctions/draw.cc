@@ -7,7 +7,8 @@
 #include "statefunctions.h"
 #include "walls.h"
 
-auto mahjong::Draw(GameState& state) -> GameState& {
+namespace mahjong {
+GameState& Draw(GameState& state) {
   state.currentPlayer = (state.currentPlayer + 1) % 4;
   state.turnNum++;
   state.pendingPiece = state.walls.TakePiece();
@@ -16,3 +17,4 @@ auto mahjong::Draw(GameState& state) -> GameState& {
   state.nextState = PlayerHand;
   return state;
 }
+}  // namespace mahjong

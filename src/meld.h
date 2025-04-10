@@ -16,7 +16,7 @@ struct Meld {
   };
   Type type;
   Piece start;
-  auto operator==(Meld other) const -> bool {
+  bool operator==(Meld other) const {
     if (type != other.type) {
       return false;
     }
@@ -24,8 +24,8 @@ struct Meld {
   }
 };
 
-auto MeldTypeToStr(Meld::Type s) -> std::string;
+std::string MeldTypeToStr(Meld::Type s);
 
 }  // namespace mahjong
 
-auto operator<<(std::ostream& os, const mahjong::Meld& meld) -> std::ostream&;
+std::ostream& operator<<(std::ostream& os, const mahjong::Meld& meld);
