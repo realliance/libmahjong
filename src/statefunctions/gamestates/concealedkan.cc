@@ -1,6 +1,7 @@
 #include <array>
 #include <cstdint>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 #include "statefunctions/statefunctions.h"
@@ -13,7 +14,7 @@
 
 namespace mahjong {
 
-GameState& ConcealedKan(GameState& state) {
+GameState&& ConcealedKan(GameState&& state) {
   AlertPlayers(state, Event{
                           .type = Event::kConcealedKan,   // type
                           .player = state.currentPlayer,  // player
@@ -25,13 +26,13 @@ GameState& ConcealedKan(GameState& state) {
                    /*count=*/4) != 4) {
     std::cerr << "Not Enough pieces to remove in ConcealedKan" << '\n';
     state.nextState = Error;
-    return state;
+    return std::move(state);
   }
   state.hands.at(state.currentPlayer)
       .melds.push_back({Meld::kConcealedKan, state.pendingPiece});
   state.concealedKan = true;
   state.nextState = KanDiscard;
-  return state;
+  return std::move(state);
 }
 
 }  // namespace mahjong

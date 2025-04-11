@@ -79,7 +79,7 @@ mahjong::Event AlphabeticalBot::RetrieveDecision() {
 int AlphabeticalBot::getDiscardPiece() {
   std::vector<std::string> string_board;
   string_board.reserve(hand_.size());
-  for (auto& i : hand_) {
+  for (const auto& i : hand_) {
     string_board.push_back(i.toStr());
   }
 

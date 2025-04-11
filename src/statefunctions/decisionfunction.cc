@@ -85,39 +85,38 @@ bool CanChi(const GameState& state, int player) {
   return false;
 }
 
-bool CanTsumo(const GameState& state) {
-  return isComplete(state, state.currentPlayer);
+bool CanTsumo(const GameState& state, int player) {
+  return isComplete(state, player);
 }
 
-bool CanConvertedKan(const GameState& state) {
+bool CanConvertedKan(const GameState& state, int player) {
   if (state.walls.GetRemainingPieces() == 0) {
     return false;
   }
-  return std::any_of(
-      state.hands.at(state.currentPlayer).melds.begin(),
-      state.hands.at(state.currentPlayer).melds.end(), [&](auto meld) {
-        return meld.type == Meld::kPon &&
-               CountPieces(state, state.currentPlayer, meld.start) == 1;
-      });
+  return std::any_of(state.hands.at(player).melds.begin(),
+                     state.hands.at(player).melds.end(), [&](auto meld) {
+                       return meld.type == Meld::kPon &&
+                              CountPieces(state, player, meld.start) == 1;
+                     });
 }
 
-bool CanConcealedKan(const GameState& state) {
+bool CanConcealedKan(const GameState& state, int player) {
   if (state.walls.GetRemainingPieces() == 0) {
     return false;
   }
-  if (state.hands.at(state.currentPlayer).riichi) {
+  if (state.hands.at(player).riichi) {
     return false;  // arguably this should be allowed sometimes
   }
-  return CountPieces(state, state.currentPlayer, state.pendingPiece) == 4;
+  return CountPieces(state, player, state.pendingPiece) == 4;
 }
 
-bool CanRiichi(const GameState& state) {
-  if (state.hands.at(state.currentPlayer).riichi) {
+bool CanRiichi(const GameState& state, int player) {
+  if (state.hands.at(player).riichi) {
     return false;
   }
-  if (state.hands.at(state.currentPlayer).open) {
+  if (state.hands.at(player).open) {
     return false;
   }
-  return !isInTenpai(state.hands.at(state.currentPlayer).live).empty();
+  return !isInTenpai(state.hands.at(player).live).empty();
 }
 }  // namespace mahjong

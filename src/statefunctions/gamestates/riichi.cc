@@ -1,5 +1,6 @@
 #include <array>
 #include <cstdint>
+#include <utility>
 #include <vector>
 
 #include "analysis/hands.h"
@@ -12,7 +13,7 @@
 
 namespace mahjong {
 
-GameState& Riichi(GameState& state) {
+GameState&& Riichi(GameState&& state) {
   // we should ask the players but
   //  deadlines prevent this
   //  -alice
@@ -34,6 +35,6 @@ GameState& Riichi(GameState& state) {
   state.riichiSticks++;
 
   state.nextState = Discard;
-  return state;
+  return std::move(state);
 }
 }  // namespace mahjong

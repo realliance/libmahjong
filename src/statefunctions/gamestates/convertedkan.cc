@@ -1,6 +1,7 @@
 #include <array>
 #include <cstdint>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 #include "statefunctions/statefunctions.h"
@@ -12,7 +13,7 @@
 #include "types/piecetype.h"
 
 namespace mahjong {
-GameState& ConvertedKan(GameState& state) {
+GameState&& ConvertedKan(GameState&& state) {
   AlertPlayers(state, Event{
                           .type = Event::kConvertedKan,   // type
                           .player = state.currentPlayer,  // player
@@ -24,18 +25,18 @@ GameState& ConvertedKan(GameState& state) {
                    /*count=*/1) != 1) {
     std::cerr << "Not Enough pieces to remove in ConvertedKan" << '\n';
     state.nextState = Error;
-    return state;
+    return std::move(state);
   }
   state.concealedKan = false;
   for (auto& meld : state.hands.at(state.currentPlayer).melds) {
     if (meld.type == Meld::kPon && meld.start == state.pendingPiece) {
       meld.type = Meld::kKan;
       state.nextState = KanDiscard;
-      return state;
+      return std::move(state);
     }
   }
   std::cerr << "Could Not find matching pon" << '\n';
   state.nextState = Error;
-  return state;
+  return std::move(state);
 }
 }  // namespace mahjong

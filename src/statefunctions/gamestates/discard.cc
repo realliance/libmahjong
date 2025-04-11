@@ -1,6 +1,7 @@
 #include <array>
 #include <cstdint>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 #include "controllers/playercontroller.h"
@@ -15,7 +16,7 @@
 
 namespace mahjong {
 
-GameState& Discard(GameState& state) {
+GameState&& Discard(GameState&& state) {
   AlertPlayers(state, Event{
                           .type = Event::kDiscard,        // type
                           .player = state.currentPlayer,  // player
@@ -25,19 +26,12 @@ GameState& Discard(GameState& state) {
                       });
   DiscardPiece(state, state.currentPlayer, state.pendingPiece);
 
-  using DecisionFunction =
-      auto (*)(const mahjong::GameState& state, int player)->bool;
-
-  struct PossibleDecision {
-    Event::Type type;
-    DecisionFunction func;
-  };
-
   std::vector<PossibleDecision> decisions = {
       {.type = Event::kChi, .func = CanChi},
       {.type = Event::kPon, .func = CanPon},
       {.type = Event::kKan, .func = CanKan},
-      {.type = Event::kRon, .func = CanRon}};
+      {.type = Event::kRon, .func = CanRon},
+  };
 
   std::array<bool, 4> need_decision = {false, false, false, false};
   for (int player = 0; player < 4; player++) {
@@ -77,7 +71,7 @@ GameState& Discard(GameState& state) {
   if (decision.type == Event::kDecline &&
       state.walls.GetRemainingPieces() == 0) {
     state.nextState = Exhaust;
-    return state;
+    return std::move(state);
   }
 
   if (decision.type != Event::kDecline) {
@@ -107,7 +101,7 @@ GameState& Discard(GameState& state) {
       break;
   }
 
-  return state;
+  return std::move(state);
 }
 
 }  // namespace mahjong

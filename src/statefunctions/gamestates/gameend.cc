@@ -1,4 +1,5 @@
 #include <array>
+#include <utility>
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/statefunctions.h"
@@ -8,13 +9,13 @@
 
 namespace mahjong {
 
-GameState& GameEnd(GameState& state) {
+GameState&& GameEnd(GameState&& state) {
   for (auto& player : state.players) {
     player.controller->ReceiveEvent(kEndEvent);
     delete player.controller;
     player.controller = nullptr;
   }
-  return state;
+  return std::move(state);
 }
 
 }  // namespace mahjong

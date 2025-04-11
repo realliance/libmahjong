@@ -1,5 +1,6 @@
 #include <array>
 #include <cstdint>
+#include <utility>
 #include <vector>
 
 #include "statefunctions/statefunctions.h"
@@ -12,7 +13,7 @@
 
 namespace mahjong {
 
-GameState& RoundEnd(GameState& state) {
+GameState&& RoundEnd(GameState&& state) {
   state.currentPlayer = -1;
   state.turnNum = -1;
   state.lastCall = -1;
@@ -57,7 +58,7 @@ GameState& RoundEnd(GameState& state) {
   } else {
     state.nextState = RoundStart;
   }
-  return state;
+  return std::move(state);
 }
 
 }  // namespace mahjong

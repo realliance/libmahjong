@@ -1,6 +1,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <utility>
 #include <vector>
 
 #include "controllers/playercontroller.h"
@@ -16,7 +17,7 @@
 
 namespace mahjong {
 
-GameState& RoundStart(GameState& state) {
+GameState&& RoundStart(GameState&& state) {
   if (state.overrideWall.empty()) {
     state.walls = Walls(state.g);
   } else {
@@ -39,6 +40,6 @@ GameState& RoundStart(GameState& state) {
                       });
 
   state.nextState = Draw;
-  return state;
+  return std::move(state);
 }
 }  // namespace mahjong

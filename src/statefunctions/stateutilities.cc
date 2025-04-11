@@ -125,13 +125,13 @@ bool ValidateDecision(const GameState& state, int player, Event decision,
     case Event::kChi:
       return CanChi(state, player);
     case Event::kTsumo:
-      return CanTsumo(state);
+      return CanTsumo(state, player);
     case Event::kConcealedKan:
-      return CanConcealedKan(state);
+      return CanConcealedKan(state, player);
     case Event::kConvertedKan:
-      return CanConvertedKan(state);
+      return CanConvertedKan(state, player);
     case Event::kRiichi:
-      return CanRiichi(state);
+      return CanRiichi(state, player);
     case Event::kDiscard:
       return CountPieces(state, player, Piece(decision.piece)) > 0;
     case Event::kDecline:

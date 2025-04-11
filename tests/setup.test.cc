@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <array>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "statefunctions/statefunctions.h"
@@ -33,7 +34,7 @@ TEST(Setup, DoraIndicator) {
   for (int i = 0; i < 4; i++) {
     state.players[i].controller = &bot;
   }
-  ASSERT_NO_THROW(RoundStart(state));
+  ASSERT_NO_THROW(state = RoundStart(std::move(state)));
   EXPECT_EQ(state.walls.GetDoras().size(), 1);
 }
 
@@ -43,11 +44,11 @@ TEST(Setup, Dealing) {
   for (int i = 0; i < 4; i++) {
     state.players[i].controller = &bot;
   }
-  ASSERT_NO_THROW(RoundStart(state));
+  ASSERT_NO_THROW(state = RoundStart(std::move(state)));
   for (int i = 0; i < 4; i++) {
     EXPECT_EQ(state.hands[i].live.size(), 13);
   }
-  Draw(state);
+  state = Draw(std::move(state));
   EXPECT_EQ(state.currentPlayer, 0);
 }
 

@@ -100,10 +100,10 @@ Score scoreHand(const GameState& state, int player) {
       }
     }
 
-    for (auto yaku_function : kYakuFunctions) {
+    for (const auto& yaku_function : kYakuFunctions) {
       branchscore.han += yaku_function(state, player, branch);
     }
-    for (auto yaku_function : kYakumanFunctions) {
+    for (const auto& yaku_function : kYakumanFunctions) {
       branchscore.yakuman += yaku_function(state, player, branch);
     }
     for (const auto& dora : state.walls.GetDoras()) {
@@ -319,12 +319,12 @@ bool isComplete(const GameState& state, int player) {
       }
     }
 
-    for (auto yaku_function : kYakuFunctions) {
+    for (const auto& yaku_function : kYakuFunctions) {
       if (yaku_function(state, player, branch) > 0) {
         return true;
       }
     }
-    for (auto yaku_function : kYakumanFunctions) {
+    for (const auto& yaku_function : kYakumanFunctions) {
       if (yaku_function(state, player, branch) > 0) {
         return true;
       }

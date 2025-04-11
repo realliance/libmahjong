@@ -1,4 +1,5 @@
 #include <array>
+#include <utility>
 #include <vector>
 
 #include "analysis/hands.h"
@@ -9,7 +10,7 @@
 
 namespace mahjong {
 
-GameState& Exhaust(GameState& state) {
+GameState&& Exhaust(GameState&& state) {
   std::array<int, 4> winning_players = {};
   int total_winners = 0;
   for (int i = 0; i < 4; i++) {
@@ -53,7 +54,7 @@ GameState& Exhaust(GameState& state) {
     }
   }
   state.nextState = RoundEnd;
-  return state;
+  return std::move(state);
 }
 
 }  // namespace mahjong

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <array>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "analysis/hands.h"
@@ -23,8 +24,8 @@ TEST(GamePlay, Discard) {
   for (int i = 0; i < 4; i++) {
     state.players[i].controller = &bot;
   }
-  RoundStart(state);
-  Draw(state);
+  state = RoundStart(std::move(state));
+  state = Draw(std::move(state));
   Event e = {
       .type = Event::kDiscard,
       .player = 0,
@@ -32,7 +33,7 @@ TEST(GamePlay, Discard) {
       .decision = true,
   };
   bot.AddEvents({e});
-  ASSERT_NO_THROW(PlayerHand(state));
+  ASSERT_NO_THROW(state = PlayerHand(std::move(state)));
   EXPECT_EQ(e, bot.GetEvents()[0]);
   EXPECT_EQ(state.hands[0].discards[0], kSixBamboo);
 }

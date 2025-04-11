@@ -1,5 +1,6 @@
 #include <array>
 #include <cstdint>
+#include <utility>
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
@@ -12,7 +13,7 @@
 
 namespace mahjong {
 
-GameState& KanDiscard(GameState& state) {
+GameState&& KanDiscard(GameState&& state) {
   std::array<bool, 4> need_decision = {false, false, false, false};
   for (int player = 0; player < 4; player++) {
     if (player == state.currentPlayer) {
@@ -48,7 +49,7 @@ GameState& KanDiscard(GameState& state) {
     state.nextState = Replacement;
   }
 
-  return state;
+  return std::move(state);
 }
 
 }  // namespace mahjong

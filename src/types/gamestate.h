@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <functional>
 #include <iostream>
 #include <random>
 #include <vector>
@@ -13,6 +14,7 @@
 namespace mahjong {
 
 struct GameState {
+  using StateFunction = GameState && (*)(GameState&&);
   bool halt = false;
   int currentPlayer = -1;
   int turnNum = -1;
@@ -25,9 +27,9 @@ struct GameState {
   uint64_t seed = 0;
   std::mt19937 g;
   Piece pendingPiece = Piece(Piece::Type::kError);
-  struct GameState& (*prevState)(struct GameState&);
-  struct GameState& (*currState)(struct GameState&);
-  struct GameState& (*nextState)(struct GameState&);
+  StateFunction prevState;
+  StateFunction currState;
+  StateFunction nextState;
   Walls walls;
   std::array<int, 4> scores = {};
   std::array<bool, 4> hasRonned = {};

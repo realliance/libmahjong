@@ -1,12 +1,12 @@
 #include <iostream>
 
 #include "statefunctions/statefunctions.h"
+#include "types/gamestate.h"
 #include "types/typeprinter.h"
 
 namespace mahjong {
-struct GameState;
 
-GameState& Error(GameState& state) {
+GameState&& Error(GameState&& state) {
   std::cerr << "ERROR STATE REACHED" << '\n';
   std::cerr << "GameState: " << '\n';
   std::cerr << state;

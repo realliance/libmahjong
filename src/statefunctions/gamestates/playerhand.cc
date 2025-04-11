@@ -1,6 +1,7 @@
 #include <array>
 #include <cstdint>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 #include "controllers/playercontroller.h"
@@ -15,26 +16,20 @@
 
 namespace mahjong {
 
-GameState& PlayerHand(GameState& state) {
-  using DecisionFunction = auto (*)(const mahjong::GameState& state)->bool;
-
-  struct PossibleDecision {
-    Event::Type type;
-    DecisionFunction func;
-  };
-
+GameState&& PlayerHand(GameState&& state) {
   std::vector<PossibleDecision> decisions = {
-      {.type = Event::kTsumo, .func = CanTsumo},
-      {.type = Event::kConcealedKan, .func = CanConcealedKan},
-      {.type = Event::kConvertedKan, .func = CanConvertedKan},
-      {.type = Event::kRiichi, .func = CanRiichi},
-      {.type = Event::kDiscard, .func = [](const GameState& state) {
-         return !state.hands.at(state.currentPlayer).riichi;
-       }}};
+      PossibleDecision{.type = Event::kTsumo, .func = CanTsumo},
+      PossibleDecision{.type = Event::kConcealedKan, .func = CanConcealedKan},
+      PossibleDecision{.type = Event::kConvertedKan, .func = CanConvertedKan},
+      PossibleDecision{.type = Event::kRiichi, .func = CanRiichi},
+      PossibleDecision{.type = Event::kDiscard,
+                       .func = [](const GameState& state, int) {
+                         return !state.hands.at(state.currentPlayer).riichi;
+                       }}};
 
   bool decision_asked = false;
   for (const auto& [decision, decisionIsPossible] : decisions) {
-    if (decisionIsPossible(state)) {
+    if (decisionIsPossible(state, state.currentPlayer)) {
       decision_asked = true;
       state.players.at(state.currentPlayer)
           .controller->ReceiveEvent(Event{
@@ -88,7 +83,7 @@ GameState& PlayerHand(GameState& state) {
       break;
   }
 
-  return state;
+  return std::move(state);
 }
 
 }  // namespace mahjong

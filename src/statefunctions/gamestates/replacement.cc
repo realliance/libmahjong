@@ -1,5 +1,6 @@
 #include <array>
 #include <cstdint>
+#include <utility>
 #include <vector>
 
 #include "statefunctions/statefunctions.h"
@@ -11,7 +12,7 @@
 #include "types/walls.h"
 
 namespace mahjong {
-GameState& Replacement(GameState& state) {
+GameState&& Replacement(GameState&& state) {
   Piece draw = state.walls.TakeReplacementTile();
   state.hands.at(state.currentPlayer).live.push_back(draw);
   state.hands.at(state.currentPlayer).sort();
@@ -27,7 +28,7 @@ GameState& Replacement(GameState& state) {
                });
 
   state.nextState = PlayerHand;
-  return state;
+  return std::move(state);
 }
 
 }  // namespace mahjong

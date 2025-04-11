@@ -1,6 +1,7 @@
 #include <array>
 #include <cstdint>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 #include "statefunctions/statefunctions.h"
@@ -31,14 +32,14 @@ Piece GetChiStart(const GameState& state, int player) {
 }
 }  // namespace
 
-GameState& Chi(GameState& state) {
+GameState&& Chi(GameState&& state) {
   // only gives a single one of the chis
   // ui oof
   Piece chi_start = GetChiStart(state, state.lastCaller);
   if (chi_start == kError) {
     std::cerr << "Failed to get start of Chi" << '\n';
     state.nextState = Error;
-    return state;
+    return std::move(state);
   }
 
   if (state.hands.at(state.currentPlayer).riichi &&
@@ -69,14 +70,14 @@ GameState& Chi(GameState& state) {
       RemovePieces(state, state.lastCaller, chi_start + 2, /*count=*/1) != 1) {
     std::cerr << "Not Enough Pieces to remove in Chi" << '\n';
     state.nextState = Error;
-    return state;
+    return std::move(state);
   }
   state.hands.at(state.lastCaller).melds.push_back({Meld::kChi, chi_start});
 
   state.pendingPiece = AskForDiscard(state);
 
   state.nextState = Discard;
-  return state;
+  return std::move(state);
 }
 
 }  // namespace mahjong

@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <vector>
 
 #include "types/gamestate.h"
@@ -7,6 +8,9 @@
 #include "types/score.h"
 
 namespace mahjong {
+
+using yakuFunc = std::function<int(const GameState&, int,
+                                   const std::vector<const mahjong::Node*>&)>;
 
 Score scoreHand(const GameState& state, int player);
 
@@ -27,9 +31,6 @@ std::vector<Piece> isInTenpai13Pieces(std::vector<Piece> hand,
                                       bool allWaits = false);
 
 std::vector<Piece> getRiichiDiscard(std::vector<Piece> hand);
-
-using yakuFunc = int (*)(const GameState&, int,
-                         const std::vector<const mahjong::Node*>&);
 
 int isRiichi(const GameState& state, int player,
              const std::vector<const mahjong::Node*>& /*unused*/ = {});

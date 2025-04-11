@@ -1,5 +1,6 @@
 #include <array>
 #include <cstdint>
+#include <utility>
 #include <vector>
 
 #include "analysis/hands.h"
@@ -12,7 +13,7 @@
 
 namespace mahjong {
 
-GameState& Ron(GameState& state) {
+GameState&& Ron(GameState&& state) {
   state.hands.at(state.lastCaller).live.push_back(state.pendingPiece);
   state.hands.at(state.lastCaller).sort();
 
@@ -84,6 +85,6 @@ GameState& Ron(GameState& state) {
   }
 
   state.nextState = RoundEnd;
-  return state;
+  return std::move(state);
 }
 }  // namespace mahjong

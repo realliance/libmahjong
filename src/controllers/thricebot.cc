@@ -134,7 +134,7 @@ mahjong::Event ThriceBot::RetrieveDecision() {
 
 bool ThriceBot::checkTile(mahjong::Piece p) {
   int j = 0;
-  for (auto& i : hand_) {
+  for (const auto& i : hand_) {
     if (i.piece.getSuit() == p.getSuit() &&
         i.piece.getPieceNum() == p.getPieceNum()) {
       j++;

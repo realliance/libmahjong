@@ -80,7 +80,7 @@ mahjong::Piece FastTanyao::ChooseDiscard() {
   pieceSet discard_options;
 
   // Document pieces in play, if anything adds up to 4 (nothing left), discard.
-  for (auto& possible_triple : possible_triples_) {
+  for (const auto& possible_triple : possible_triples_) {
     auto piece = possible_triple.first;
     auto set_contains_piece = all_discards_.find(piece);
     if (set_contains_piece != all_discards_.end()) {

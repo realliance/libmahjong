@@ -1,5 +1,6 @@
 #include <array>
 #include <cstdint>
+#include <utility>
 
 #include "analysis/hands.h"
 #include "statefunctions/statefunctions.h"
@@ -11,7 +12,7 @@
 
 namespace mahjong {
 
-GameState& Tsumo(GameState& state) {
+GameState&& Tsumo(GameState&& state) {
   AlertPlayers(state, Event{
                           .type = Event::kTsumo,          // type
                           .player = state.currentPlayer,  // player
@@ -55,6 +56,6 @@ GameState& Tsumo(GameState& state) {
     state.counters = 0;
   }
   state.nextState = RoundEnd;
-  return state;
+  return std::move(state);
 }
 }  // namespace mahjong

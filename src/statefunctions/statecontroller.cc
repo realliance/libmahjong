@@ -7,6 +7,7 @@
 #include <random>
 #include <string>
 #include <thread>
+#include <utility>
 #include <vector>
 
 #include "controllers/controllermanager.h"
@@ -56,14 +57,12 @@ void mahjong::StateController(GameSettings settings) {
     std::swap(state.overrideWall, settings.overrideWall);
     state.seed = 0xBEEFBABE;
   }
-  state.prevState = nullptr;
   state.currState = GameStart;
-  state.nextState = GameStart;
   while (state.nextState != GameEnd && !should_halt[id]) {
     try {
       state.prevState = state.currState;
       state.currState = state.nextState;
-      state = state.nextState(state);
+      state = state.nextState(std::move(state));
     } catch (const unsigned int e) {
       switch (e) {
         case 0xFACEFEED:  // Halted during controller decision
@@ -79,6 +78,6 @@ void mahjong::StateController(GameSettings settings) {
     }
   }
   if (state.nextState == GameEnd) {
-    state.nextState(state);
+    state.nextState(std::move(state));
   }
 }
