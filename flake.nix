@@ -13,7 +13,6 @@
 
         packages = with pkgs; [
           cmake
-          git
         ];
 
         googletest = pkgs.fetchFromGitHub {
