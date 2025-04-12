@@ -1,0 +1,26 @@
+name: Build libmahjong
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - toolchain: gcc
+          - toolchain: clang
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - uses: cachix/install-nix-action@v30
+      - name: Build using Nix
+        run: |
+          nix build -L '.#libmahjong-${{ matrix.toolchain }}'
