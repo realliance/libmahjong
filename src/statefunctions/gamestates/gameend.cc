@@ -12,8 +12,7 @@ namespace mahjong {
 GameState&& GameEnd(GameState&& state) {
   for (auto& player : state.players) {
     player.controller->ReceiveEvent(kEndEvent);
-    delete player.controller;
-    player.controller = nullptr;
+    player.controller.reset();
   }
   return std::move(state);
 }

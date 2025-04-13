@@ -1,24 +1,32 @@
 #pragma once
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "playercontroller.h"
 #include "types/event.h"
 #include "types/piecetype.h"
 #include "types/winds.h"
 
-#include <string>
-#include <vector>
+namespace mahjong {
 
-// Always Calls (Angry) and Always Discards the tile it draws
-
-class TotoBot : public mahjong::PlayerController {
+class TotoBot : public PlayerController {
  public:
-  std::string Name() override;
+  static std::unique_ptr<PlayerController> New() {
+    return std::make_unique<TotoBot>();
+  }
+
   void GameStart(int _playerID) override;
-  void RoundStart(std::vector<mahjong::Piece> hand, mahjong::Wind seatWind,
-                  mahjong::Wind prevalentWind) override;
-  void ReceiveEvent(mahjong::Event e) override;
-  mahjong::Event RetrieveDecision() override;
+  void RoundStart(std::vector<Piece> hand, Wind seatWind,
+                  Wind prevalentWind) override;
+  void ReceiveEvent(Event e) override;
+  Event RetrieveDecision() override;
+
+  std::string Name() override { return "TotoBot"; };
 
  private:
-  std::vector<mahjong::Piece> hand_;
-  mahjong::Event lastEvent_;
+  std::vector<Piece> hand_;
+  Event lastEvent_;
 };
+
+}  // namespace mahjong

@@ -1,5 +1,6 @@
 #pragma once
-#include <event.h>
+#include <functional>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -8,20 +9,28 @@
 #include "types/piecetype.h"
 #include "types/winds.h"
 
-// Always Calls (Angry) and Always Discards the tile it draws
+namespace mahjong {
 
-class AlphabeticalBot : public mahjong::PlayerController {
+// Always Discards Alphabetically.
+class AlphabeticalBot : public PlayerController {
  public:
-  std::string Name() override;
-  void GameStart(int _playerID) override;
-  void RoundStart(std::vector<mahjong::Piece> hand, mahjong::Wind seatWind,
-                  mahjong::Wind prevalentWind) override;
-  void ReceiveEvent(mahjong::Event e) override;
-  mahjong::Event RetrieveDecision() override;
+  static std::unique_ptr<PlayerController> New() {
+    return std::make_unique<AlphabeticalBot>();
+  }
+
+  void GameStart(int player_id) override { id_ = player_id; }
+  void RoundStart(std::vector<Piece> hand, Wind seatWind,
+                  Wind prevalentWind) override;
+  void ReceiveEvent(Event e) override;
+  Event RetrieveDecision() override;
+
+  std::string Name() override { return "AlphabeticalBot"; };
 
  private:
-  std::vector<mahjong::Piece> hand_;
-  int id_;
   int getDiscardPiece();
-  mahjong::Event decisionToTake_;
+
+  std::vector<Piece> hand_;
+  int id_;
+  Event decisionToTake_;
 };
+}  // namespace mahjong

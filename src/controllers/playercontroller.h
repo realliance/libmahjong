@@ -11,10 +11,10 @@ namespace mahjong {
 
 class PlayerController {
  public:
-  virtual ~PlayerController() = default;
-  virtual void GameStart(int playerID) = 0;
-  virtual void RoundStart(std::vector<Piece> hand, Wind seatWind,
-                          Wind prevalentWind) = 0;
+  virtual ~PlayerController() noexcept = default;
+  virtual void GameStart(int player_id) = 0;
+  virtual void RoundStart(std::vector<Piece> hand, Wind seat_wind,
+                          Wind prevalent_wind) = 0;
   virtual void ReceiveEvent(Event e) = 0;
   virtual Event RetrieveDecision() = 0;
   virtual std::string Name() = 0;

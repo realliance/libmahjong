@@ -6,16 +6,19 @@
 #include <memory>
 
 #include "analysis/analysis.h"
+#include "controllermanager.h"
 #include "types/event.h"
 #include "types/handnode.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/winds.h"
 
-namespace {
+namespace mahjong {
+REGISTER_PLAYER_CONTROLLER(GentlemanBot);
 
-void countpieces(std::array<int8_t, mahjong::Piece::kPiecesize> counts,
-                 const std::vector<mahjong::Piece>& pieces) {
+namespace {
+void CountPieces(std::array<int8_t, Piece::kPiecesize> counts,
+                 const std::vector<Piece>& pieces) {
   for (const auto& p : pieces) {
     counts.at(p.toUint8_t())++;
   }
@@ -23,27 +26,20 @@ void countpieces(std::array<int8_t, mahjong::Piece::kPiecesize> counts,
 
 }  // namespace
 
-std::string GentlemanBot::Name() {
-  return "GentlemanBot";
-}
-
-void GentlemanBot::GameStart(int /*playerID*/) {}
-
-void GentlemanBot::RoundStart(std::vector<mahjong::Piece> hand,
-                              mahjong::Wind /*seatWind*/,
-                              mahjong::Wind /*prevalentWind*/) {
+void GentlemanBot::RoundStart(std::vector<Piece> hand, Wind /*seatWind*/,
+                              Wind /*prevalentWind*/) {
   hand_ = hand;
-  lastEvent_.type = mahjong::Event::kDiscard;
+  lastEvent_.type = Event::kDiscard;
   riichi_ = false;
 }
 
-void GentlemanBot::ReceiveEvent(mahjong::Event e) {
+void GentlemanBot::ReceiveEvent(Event e) {
   if (e.decision) {
     if (e.type <= lastEvent_.type) {
       lastEvent_ = e;
     }
 
-    if (e.type == mahjong::Event::kDiscard) {
+    if (e.type == Event::kDiscard) {
       if (!riichi_) {
         hand_.emplace_back(e.piece);
         lastEvent_.piece = getDiscard().toUint8_t();
@@ -53,32 +49,31 @@ void GentlemanBot::ReceiveEvent(mahjong::Event e) {
   }
 }
 
-mahjong::Event GentlemanBot::RetrieveDecision() {
-  if (lastEvent_.type == mahjong::Event::kRiichi) {
-    lastEvent_.type = mahjong::Event::kRiichi;
+Event GentlemanBot::RetrieveDecision() {
+  if (lastEvent_.type == Event::kRiichi) {
+    lastEvent_.type = Event::kRiichi;
     riichi_ = true;
-  } else if (lastEvent_.type != mahjong::Event::kDiscard) {
-    lastEvent_.type = mahjong::Event::kDecline;
+  } else if (lastEvent_.type != Event::kDiscard) {
+    lastEvent_.type = Event::kDecline;
   }
 
-  mahjong::Event e = lastEvent_;
-  lastEvent_.type =
-      mahjong::Event::kDiscard;  // lowest """priority""" event type
+  Event e = lastEvent_;
+  lastEvent_.type = Event::kDiscard;  // lowest """priority""" event type
   return e;
 }
 
-mahjong::Piece GentlemanBot::getDiscard() {
-  std::vector<mahjong::Piece> free_pieces;
-  std::vector<mahjong::Piece> prefered_discards;
-  std::vector<mahjong::Piece> second_tier_discards;
-  std::vector<mahjong::Piece> third_tier_discards;
+Piece GentlemanBot::getDiscard() {
+  std::vector<Piece> free_pieces;
+  std::vector<Piece> prefered_discards;
+  std::vector<Piece> second_tier_discards;
+  std::vector<Piece> third_tier_discards;
 
-  std::array<int8_t, mahjong::Piece::kPiecesize> counts = {};
-  auto symbolic_hand = mahjong::breakdownHand(hand_);
+  std::array<int8_t, Piece::kPiecesize> counts = {};
+  auto symbolic_hand = breakdownHand(hand_);
   auto* current_node = symbolic_hand.get();
 
   while (true) {
-    if (current_node->type == mahjong::Node::kSingle) {
+    if (current_node->type == Node::kSingle) {
       free_pieces.push_back(current_node->start);
     }
     if (current_node->leaves.empty()) {
@@ -88,7 +83,7 @@ mahjong::Piece GentlemanBot::getDiscard() {
     current_node = current_node->leaves[0];
   }
 
-  countpieces(counts, free_pieces);
+  CountPieces(counts, free_pieces);
 
   for (const auto& p : free_pieces) {
     if (counts.at((p + 1).toUint8_t()) > 0 ||
@@ -137,5 +132,7 @@ mahjong::Piece GentlemanBot::getDiscard() {
     }
     return p;
   }
-  return mahjong::Piece(mahjong::kError);
+  return Piece(kError);
 }
+
+}  // namespace mahjong

@@ -6,8 +6,9 @@ set_target_properties(test_utils PROPERTIES FOLDER tests/utils)
 target_compile_options(test_utils PRIVATE ${lib_mahjong_compile_options})
 target_link_libraries(test_utils PRIVATE libmahjong)
 target_include_directories(test_utils PUBLIC "${libmahjong_SOURCE_DIR}/src")
-target_sources(test_utils PRIVATE "handformer.cc" "handformer.h" "testai.cc"
-                                  "testai.h")
+target_sources(
+  test_utils PRIVATE "handformer.cc" "handformer.h" "playercontrollerfake.cc"
+                     "playercontrollerfake.h")
 
 get_target_property(test_utils_sources test_utils SOURCES)
 list(TRANSFORM test_utils_sources PREPEND ${CMAKE_CURRENT_LIST_DIR}/)

@@ -3,6 +3,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <memory>
 
 #include "analysis/hands.h"
 #include "statefunctions/decisionfunction.h"
@@ -13,16 +14,19 @@
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/player.h"
-#include "utils/testai.h"
+#include "utils/playercontrollerfake.h"
+#include "controllers/playercontroller.h"
 
 namespace mahjong {
 
 TEST(GamePlay, Discard) {
   GameState state;
   state.overrideWall = {kSixBamboo};
-  TesterBot bot;
+  PlayerControllerFake* bot_ptr;
+  std::unique_ptr<PlayerControllerFake> bot;
+
   for (int i = 0; i < 4; i++) {
-    state.players[i].controller = &bot;
+    state.players[i].controller = std::move(bot);
   }
   state = RoundStart(std::move(state));
   state = Draw(std::move(state));
@@ -32,9 +36,9 @@ TEST(GamePlay, Discard) {
       .piece = Piece(kSixBamboo).toUint8_t(),
       .decision = true,
   };
-  bot.AddEvents({e});
+  bot_ptr->AddEvents({e});
   ASSERT_NO_THROW(state = PlayerHand(std::move(state)));
-  EXPECT_EQ(e, bot.GetEvents()[0]);
+  EXPECT_EQ(e, bot_ptr->GetEvents()[0]);
   EXPECT_EQ(state.hands[0].discards[0], kSixBamboo);
 }
 

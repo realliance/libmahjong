@@ -44,8 +44,7 @@ void mahjong::StateController(GameSettings settings) {
   should_halt[id] = false;
 
   for (int i = 0; i < 4; i++) {
-    state.players.at(i).controller =
-        GetController(settings.seatControllers.at(i))();
+    ControllerManager::Instance().NewController(settings.seatControllers.at(i));
   }
   if (settings.seed != 0U) {
     state.seed = settings.seed;

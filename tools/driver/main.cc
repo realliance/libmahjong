@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "controllers/controllermanager.h"
 #include "controllers/fasttanyao.h"
@@ -47,8 +48,9 @@ class Proxy : public mahjong::PlayerController {
 };
 
 int main() {
-  mahjong::RegisterController([]() { return new Proxy<FastTanyao>(); },
-                              "ProxiedFastTanyao");
+  mahjong::ControllerManager::Instance().RegisterController(
+      []() { return std::make_unique<Proxy<mahjong::FastTanyao>>(); },
+      "ProxiedFastTanyao");
   constexpr int kRounds = 100;
   for (int i = 0; i < kRounds; i++) {
     std::cout << i << " " << std::flush;

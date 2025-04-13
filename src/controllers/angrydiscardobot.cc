@@ -1,39 +1,29 @@
 #include "angrydiscardobot.h"
 
+#include "controllermanager.h"
 #include "types/event.h"
 #include "types/piecetype.h"
-#include "types/winds.h"
 
-std::string AngryDiscardoBot::Name() {
-  return "AngryDiscardoBot";
-}
+namespace mahjong {
+REGISTER_PLAYER_CONTROLLER(AngryDiscardoBot);
 
-void AngryDiscardoBot::GameStart(int /*playerID*/) {}
-
-void AngryDiscardoBot::RoundStart(std::vector<mahjong::Piece> hand,
-                                  mahjong::Wind /*seatWind*/,
-                                  mahjong::Wind /*prevalentWind*/) {
-  hand_ = hand;
-  lastEvent_.type = mahjong::Event::kDiscard;
-}
-
-void AngryDiscardoBot::ReceiveEvent(mahjong::Event e) {
+void AngryDiscardoBot::ReceiveEvent(Event e) {
   if (e.decision) {
     if (e.type <= lastEvent_.type) {
       lastEvent_ = e;
     }
-  } else if (e.type == mahjong::Event::kDiscard) {
+  } else if (e.type == Event::kDiscard) {
     hand_.emplace_back(e.piece);
   }
 }
 
-mahjong::Event AngryDiscardoBot::RetrieveDecision() {
-  if (lastEvent_.type == mahjong::Event::kDiscard) {
+Event AngryDiscardoBot::RetrieveDecision() {
+  if (lastEvent_.type == Event::kDiscard) {
     lastEvent_.piece = hand_[n_].toUint8_t();
     n_ = (n_ + 1) % hand_.size();
   }
-  mahjong::Event e = lastEvent_;
-  lastEvent_.type =
-      mahjong::Event::kDiscard;  // lowest """priority""" event type
+  Event e = lastEvent_;
+  lastEvent_.type = Event::kDiscard;  // lowest """priority""" event type
   return e;
 }
+}  // namespace mahjong

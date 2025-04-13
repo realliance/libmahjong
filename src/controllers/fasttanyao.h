@@ -1,44 +1,53 @@
 #pragma once
+#include <cstdint>
+#include <functional>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "playercontroller.h"
 #include "types/event.h"
 #include "types/piecetype.h"
 #include "types/winds.h"
 
-#include <cstdint>
-#include <map>
-#include <string>
-#include <vector>
-
-/**
-== Fast Tanyao Bot ==
-- Attempt to get to all simples **quickly**
-- Immediately dump all terminals and honors
-- Call on everything that isn't a terminal or honor
-- Disregard Defense (Where we're going, we don't need defense)
-**/
+namespace mahjong {
 
 using pieceSet = std::map<uint8_t, uint8_t>;
 
-class FastTanyao : public mahjong::PlayerController {
+// == Fast Tanyao Bot ==
+// - Attempt to get to all simples **quickly**
+// - Immediately dump all terminals and honors
+// - Call on everything that isn't a terminal or honor
+// - Disregard Defense (Where we're going, we don't need defense)
+class FastTanyao : public PlayerController {
  public:
-  std::string Name() override;
-  void GameStart(int _playerID) override;
-  void RoundStart(std::vector<mahjong::Piece> hand, mahjong::Wind seatWind,
-                  mahjong::Wind prevalentWind) override;
-  void ReceiveEvent(mahjong::Event e) override;
-  mahjong::Event RetrieveDecision() override;
+  static std::unique_ptr<PlayerController> New() {
+    return std::make_unique<FastTanyao>();
+  }
+
+  void GameStart(int _playerID) override {}
+  void RoundStart(std::vector<Piece> hand, Wind seatWind,
+                  Wind prevalentWind) override;
+  void ReceiveEvent(Event e) override;
+  Event RetrieveDecision() override;
+
+  std::string Name() override { return "FastTanyao"; };
 
  private:
-  void IncrementPiece(mahjong::Piece piece, pieceSet& set);
-  void IncrementPiece(mahjong::Piece piece, pieceSet& set, uint8_t count);
-  static void DecrementPiece(mahjong::Piece piece, pieceSet& set);
-  static bool ShouldKeep(mahjong::Piece piece);
-  void ProcessNewPiece(mahjong::Piece piece);
-  mahjong::Piece ChooseDiscard();
+  void IncrementPiece(Piece piece, pieceSet& set);
+  void IncrementPiece(Piece piece, pieceSet& set, uint8_t count);
+  static void DecrementPiece(Piece piece, pieceSet& set);
+  static bool ShouldKeep(Piece piece);
+  void ProcessNewPiece(Piece piece);
+  Piece ChooseDiscard();
   void OutputSet(uint8_t id, const pieceSet& set);
+
   pieceSet possible_triples_;
-  std::vector<mahjong::Piece> immediate_discard_;
-  std::vector<mahjong::Piece> valid_doras_;
-  mahjong::Event decided_decision_;
+  std::vector<Piece> immediate_discard_;
+  std::vector<Piece> valid_doras_;
+  Event decided_decision_;
   pieceSet all_discards_;
 };
+
+}  // namespace mahjong

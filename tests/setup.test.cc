@@ -3,6 +3,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <memory>
 
 #include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
@@ -11,7 +12,8 @@
 #include "types/player.h"
 #include "types/walls.h"
 #include "types/winds.h"
-#include "utils/testai.h"
+#include "utils/playercontrollerfake.h"
+#include "controllers/playercontroller.h"
 
 namespace mahjong {
 
@@ -30,9 +32,10 @@ TEST(Setup, PrevalentWind) {
 
 TEST(Setup, DoraIndicator) {
   GameState state;
-  TesterBot bot;
+  PlayerControllerFake bot;
   for (int i = 0; i < 4; i++) {
-    state.players[i].controller = &bot;
+    state.players[i].controller = std::make_unique<PlayerControllerFake>();
+    ;
   }
   ASSERT_NO_THROW(state = RoundStart(std::move(state)));
   EXPECT_EQ(state.walls.GetDoras().size(), 1);
@@ -40,9 +43,8 @@ TEST(Setup, DoraIndicator) {
 
 TEST(Setup, Dealing) {
   GameState state;
-  TesterBot bot;
   for (int i = 0; i < 4; i++) {
-    state.players[i].controller = &bot;
+    state.players[i].controller = std::make_unique<PlayerControllerFake>();
   }
   ASSERT_NO_THROW(state = RoundStart(std::move(state)));
   for (int i = 0; i < 4; i++) {

@@ -1,6 +1,8 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <functional>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -10,32 +12,40 @@
 #include "types/piecetype.h"
 #include "types/winds.h"
 
-struct HandTile {
-  mahjong::Piece piece;
-  float weight{};
-};
+namespace mahjong {
 
-class ThriceBot : public mahjong::PlayerController {
+class ThriceBot : public PlayerController {
  public:
-  std::string Name() override;
-  void GameStart(int _playerID) override;
-  void RoundStart(std::vector<mahjong::Piece> hand, mahjong::Wind seatWind,
-                  mahjong::Wind prevalentWind) override;
-  void ReceiveEvent(mahjong::Event e) override;
-  mahjong::Event RetrieveDecision() override;
+  struct HandTile {
+    Piece piece;
+    float weight{};
+  };
+
+  static std::unique_ptr<PlayerController> New() {
+    return std::make_unique<ThriceBot>();
+  }
+
+  void GameStart(int player_id) override { pid_ = player_id; }
+  void RoundStart(std::vector<Piece> hand, Wind seatWind,
+                  Wind prevalentWind) override;
+  void ReceiveEvent(Event e) override;
+  Event RetrieveDecision() override;
+
+  std::string Name() override { return "ThriceBot"; };
 
  private:
-  // private functions
   void assignweights();
-  mahjong::Piece popDiscard();
+  Piece popDiscard();
   HandTile assignTileWeight(HandTile);
   void checkDiscard();
-  bool checkTile(mahjong::Piece);
-  // instance vars
+  bool checkTile(Piece);
+
   std::vector<HandTile> hand_;
-  std::array<uint8_t, mahjong::Piece::kPiecesize> discarded_ = {};
-  mahjong::Event lastEvent_;
-  mahjong::Wind swind_;
-  mahjong::Wind pwind_;
+  std::array<uint8_t, Piece::kPiecesize> discarded_ = {};
+  Event lastEvent_;
+  Wind swind_;
+  Wind pwind_;
   int pid_;
 };
+
+}  // namespace mahjong
