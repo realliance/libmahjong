@@ -13,6 +13,7 @@
 
         packages = with pkgs; [
           cmake
+          git
         ];
 
         googletest = pkgs.fetchFromGitHub {
@@ -28,35 +29,69 @@
       in
       {
         devShells = {
-          default = pkgs.mkShell.override { stdenv = pkgs.clangStdenv; } {
-            packages = packages ++ [ pkgs.clang ];
+          default = pkgs.mkShell {
+            packages = packages ++ [ pkgs.git ];
           };
         };
 
         packages = rec {
-          libmahjong-gcc = pkgs.stdenv.mkDerivation rec {
-            name = "libmahjong-gcc";
+          gcc = pkgs.stdenv.mkDerivation rec {
+            name = "libmahjong";
+            pname = "libmahjong";
+            version = "0.1.0";
 
             src = ./.;
 
             cmakeFlags = flags ++ [
               "-Dlibmahjong_clang_tidy=OFF"
+              "-DCMAKE_INSTALL_LIBDIR=lib"
+              "-DCMAKE_INSTALL_INCLUDEDIR=include"
             ];
             
             nativeBuildInputs = packages;
+            
+            # Ensure headers and library files are installed
+            postInstall = ''
+              mkdir -p $out/lib
+              cp libmahjong.so $out/lib/
+            '';
+            
+            meta = with pkgs.lib; {
+              description = "Riichi Mahjong Game Engine Library";
+            };
           };
           
-          libmahjong-clang = pkgs.clangStdenv.mkDerivation rec {
-            name = "libmahjong-clang";
+          clang = pkgs.clangStdenv.mkDerivation rec {
+            name = "libmahjong";
+            pname = "libmahjong";
+            version = "0.1.0";
 
             src = ./.;
 
-            cmakeFlags = flags;
+            cmakeFlags = flags ++ [
+              "-DCMAKE_INSTALL_LIBDIR=lib"
+              "-DCMAKE_INSTALL_INCLUDEDIR=include" 
+            ];
             
             nativeBuildInputs = packages ++ [ pkgs.clang ];
+            
+            # Ensure headers and library files are installed
+            postInstall = ''
+              mkdir -p $out/lib
+              cp libmahjong.so $out/lib/
+            '';
+            
+            meta = with pkgs.lib; {
+              description = "Riichi Mahjong Game Engine Library";
+            };
           };
 
-          default = libmahjong-clang;
+          default = gcc;
+        };
+        
+        # Add library output for consumers
+        lib = {
+          libmahjong = self.packages.${system}.default;
         };
       }
     );
