@@ -6,6 +6,7 @@
 #include <ostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "controllers/playercontroller.h"
 #include "event.h"

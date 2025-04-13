@@ -1,5 +1,6 @@
 #include <array>
 #include <utility>
+#include <memory>
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/statefunctions.h"

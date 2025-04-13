@@ -1,6 +1,7 @@
 #include <array>
 #include <cstdint>
 #include <utility>
+#include <memory>
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"

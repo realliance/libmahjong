@@ -1,7 +1,5 @@
 #include "statecontroller.h"
 
-#include <array>
-#include <functional>
 #include <iostream>
 #include <map>
 #include <random>
@@ -13,7 +11,6 @@
 #include "controllers/controllermanager.h"
 #include "statefunctions.h"
 #include "types/gamestate.h"
-#include "types/player.h"
 #include "types/settings.h"
 
 namespace {

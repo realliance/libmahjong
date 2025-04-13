@@ -2,7 +2,6 @@
 #include <cstdint>
 
 #include "types/event.h"
-#include "types/gamestate.h"
 #include "types/piecetype.h"
 #include "types/winds.h"
 

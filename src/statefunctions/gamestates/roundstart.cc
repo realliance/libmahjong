@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <utility>
 #include <vector>
+#include <memory>
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/statefunctions.h"

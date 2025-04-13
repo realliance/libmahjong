@@ -4,6 +4,7 @@
 #include <array>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 #include "controllers/playercontroller.h"
 #include "decisionfunction.h"
