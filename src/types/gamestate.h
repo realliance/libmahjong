@@ -9,6 +9,7 @@
 #include "hand.h"
 #include "piecetype.h"
 #include "player.h"
+#include "settings.h"
 #include "walls.h"
 
 namespace mahjong {
@@ -30,11 +31,11 @@ struct GameState {
   StateFunction prevState;
   StateFunction currState;
   StateFunction nextState;
-  Walls walls;
-  std::array<int, 4> scores = {};
-  std::array<bool, 4> hasRonned = {};
-  std::array<Hand, 4> hands = {};
-  std::array<Player, 4> players = {};
+  Walls walls{};
+  std::array<int, kNumPlayers> scores = {};
+  std::array<bool, kNumPlayers> hasRonned = {};
+  std::array<Hand, kNumPlayers> hands = {};
+  std::array<Player, kNumPlayers> players = {};
   std::vector<Piece> overrideWall;
 };
 
