@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 #include <array>
+#include <memory>
 #include <string>
 #include <utility>
 #include <vector>
-#include <memory>
 
 #include "analysis/hands.h"
+#include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
 #include "statefunctions/statefunctions.h"
 #include "types/event.h"
@@ -15,18 +16,17 @@
 #include "types/piecetype.h"
 #include "types/player.h"
 #include "utils/playercontrollerfake.h"
-#include "controllers/playercontroller.h"
 
 namespace mahjong {
 
 TEST(GamePlay, Discard) {
-  GameState state;
-  state.overrideWall = {kSixBamboo};
+  std::unique_ptr<GameState> state;
+  state->overrideWall = {kSixBamboo};
   PlayerControllerFake* bot_ptr;
   std::unique_ptr<PlayerControllerFake> bot;
 
   for (int i = 0; i < 4; i++) {
-    state.players[i].controller = std::move(bot);
+    state->players[i].controller = std::move(bot);
   }
   state = RoundStart(std::move(state));
   state = Draw(std::move(state));
@@ -39,7 +39,7 @@ TEST(GamePlay, Discard) {
   bot_ptr->AddEvents({e});
   ASSERT_NO_THROW(state = PlayerHand(std::move(state)));
   EXPECT_EQ(e, bot_ptr->GetEvents()[0]);
-  EXPECT_EQ(state.hands[0].discards[0], kSixBamboo);
+  EXPECT_EQ(state->hands[0].discards[0], kSixBamboo);
 }
 
 TEST(GamePlay, Furiten) {

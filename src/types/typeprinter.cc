@@ -3,10 +3,10 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <ostream>
 #include <string>
 #include <vector>
-#include <memory>
 
 #include "controllers/playercontroller.h"
 #include "event.h"

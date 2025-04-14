@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <map>
+#include <memory>
 #include <random>
 #include <string>
 #include <thread>
@@ -36,7 +37,7 @@ void mahjong::ExitGame(int game) {
 }
 
 void mahjong::StateController(GameSettings settings) {
-  GameState state;
+  std::unique_ptr<GameState> state;
   int id = thread_index++;
   should_halt[id] = false;
 
@@ -44,21 +45,21 @@ void mahjong::StateController(GameSettings settings) {
     ControllerManager::Instance().NewController(settings.seatControllers.at(i));
   }
   if (settings.seed != 0U) {
-    state.seed = settings.seed;
+    state->seed = settings.seed;
   } else {
     std::random_device rd;
-    state.seed = rd();
+    state->seed = rd();
   }
   if (!settings.overrideWall.empty()) {
-    std::swap(state.overrideWall, settings.overrideWall);
-    state.seed = 0xBEEFBABE;
+    std::swap(state->overrideWall, settings.overrideWall);
+    state->seed = 0xBEEFBABE;
   }
-  state.currState = GameStart;
-  while (state.nextState != GameEnd && !should_halt[id]) {
+  state->currState = GameStart;
+  while (state->nextState != GameEnd && !should_halt[id]) {
     try {
-      state.prevState = state.currState;
-      state.currState = state.nextState;
-      state = state.nextState(std::move(state));
+      state->prevState = state->currState;
+      state->currState = state->nextState;
+      state = state->nextState(std::move(state));
     } catch (const unsigned int e) {
       switch (e) {
         case 0xFACEFEED:  // Halted during controller decision
@@ -66,14 +67,14 @@ void mahjong::StateController(GameSettings settings) {
           return;
         case 0xBAD22222:  // Asked for decision too many times.
           std::cerr << "Asked for decision too many times" << '\n';
-          state.nextState = Error;
+          state->nextState = Error;
           break;
         default:
           throw(e);
       }
     }
   }
-  if (state.nextState == GameEnd) {
-    state.nextState(std::move(state));
+  if (state->nextState == GameEnd) {
+    state->nextState(std::move(state));
   }
 }

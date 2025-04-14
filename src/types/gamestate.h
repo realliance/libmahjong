@@ -15,7 +15,8 @@
 namespace mahjong {
 
 struct GameState {
-  using StateFunction = GameState && (*)(GameState&&);
+  using StateFunction =
+      std::unique_ptr<GameState> (*)(std::unique_ptr<GameState>);
   bool halt = false;
   int currentPlayer = -1;
   int turnNum = -1;

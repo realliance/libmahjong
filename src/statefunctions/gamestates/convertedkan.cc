@@ -1,6 +1,7 @@
 #include <array>
 #include <cstdint>
 #include <iostream>
+#include <memory>
 #include <utility>
 #include <vector>
 
@@ -13,30 +14,30 @@
 #include "types/piecetype.h"
 
 namespace mahjong {
-GameState&& ConvertedKan(GameState&& state) {
-  AlertPlayers(state, Event{
-                          .type = Event::kConvertedKan,   // type
-                          .player = state.currentPlayer,  // player
-                          .piece = static_cast<int16_t>(
-                              state.pendingPiece.toUint8_t()),  // piece
-                          .decision = false,                    // decision
-                      });
-  if (RemovePieces(state, state.currentPlayer, state.pendingPiece,
+std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
+  AlertPlayers(*state, Event{
+                           .type = Event::kConvertedKan,    // type
+                           .player = state->currentPlayer,  // player
+                           .piece = static_cast<int16_t>(
+                               state->pendingPiece.toUint8_t()),  // piece
+                           .decision = false,                     // decision
+                       });
+  if (RemovePieces(*state, state->currentPlayer, state->pendingPiece,
                    /*count=*/1) != 1) {
     std::cerr << "Not Enough pieces to remove in ConvertedKan" << '\n';
-    state.nextState = Error;
+    state->nextState = Error;
     return std::move(state);
   }
-  state.concealedKan = false;
-  for (auto& meld : state.hands.at(state.currentPlayer).melds) {
-    if (meld.type == Meld::kPon && meld.start == state.pendingPiece) {
+  state->concealedKan = false;
+  for (auto& meld : state->hands.at(state->currentPlayer).melds) {
+    if (meld.type == Meld::kPon && meld.start == state->pendingPiece) {
       meld.type = Meld::kKan;
-      state.nextState = KanDiscard;
+      state->nextState = KanDiscard;
       return std::move(state);
     }
   }
   std::cerr << "Could Not find matching pon" << '\n';
-  state.nextState = Error;
+  state->nextState = Error;
   return std::move(state);
 }
 }  // namespace mahjong

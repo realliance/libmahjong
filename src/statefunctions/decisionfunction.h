@@ -9,7 +9,6 @@ namespace mahjong {
 using DecisionFunction =
     std::function<bool(const mahjong::GameState& state, int player)>;
 
-
 struct PossibleDecision {
   Event::Type type;
   DecisionFunction func;

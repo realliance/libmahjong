@@ -1,4 +1,5 @@
 #include <array>
+#include <memory>
 #include <utility>
 #include <vector>
 
@@ -9,13 +10,13 @@
 #include "types/walls.h"
 
 namespace mahjong {
-GameState&& Draw(GameState&& state) {
-  state.currentPlayer = (state.currentPlayer + 1) % 4;
-  state.turnNum++;
-  state.pendingPiece = state.walls.TakePiece();
-  state.hands.at(state.currentPlayer).live.push_back(state.pendingPiece);
-  state.hands.at(state.currentPlayer).sort();
-  state.nextState = PlayerHand;
+std::unique_ptr<GameState> Draw(std::unique_ptr<GameState> state) {
+  state->currentPlayer = (state->currentPlayer + 1) % 4;
+  state->turnNum++;
+  state->pendingPiece = state->walls.TakePiece();
+  state->hands.at(state->currentPlayer).live.push_back(state->pendingPiece);
+  state->hands.at(state->currentPlayer).sort();
+  state->nextState = PlayerHand;
   return std::move(state);
 }
 }  // namespace mahjong

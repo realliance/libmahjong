@@ -1,6 +1,7 @@
 #include <array>
 #include <cstdint>
 #include <iostream>
+#include <memory>
 #include <utility>
 #include <vector>
 
@@ -32,51 +33,54 @@ Piece GetChiStart(const GameState& state, int player) {
 }
 }  // namespace
 
-GameState&& Chi(GameState&& state) {
+std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
   // only gives a single one of the chis
   // ui oof
-  Piece chi_start = GetChiStart(state, state.lastCaller);
+  Piece chi_start = GetChiStart(*state, state->lastCaller);
   if (chi_start == kError) {
     std::cerr << "Failed to get start of Chi" << '\n';
-    state.nextState = Error;
+    state->nextState = Error;
     return std::move(state);
   }
 
-  if (state.hands.at(state.currentPlayer).riichi &&
-      state.hands.at(state.currentPlayer).discards.size() ==
-          state.hands.at(state.currentPlayer).riichiPieceDiscard) {
-    state.hands.at(state.currentPlayer).riichiPieceDiscard++;
+  if (state->hands.at(state->currentPlayer).riichi &&
+      state->hands.at(state->currentPlayer).discards.size() ==
+          state->hands.at(state->currentPlayer).riichiPieceDiscard) {
+    state->hands.at(state->currentPlayer).riichiPieceDiscard++;
   }
 
-  state.hands.at(state.lastCaller).open = true;
-  state.currentPlayer = state.lastCaller;
+  state->hands.at(state->lastCaller).open = true;
+  state->currentPlayer = state->lastCaller;
 
   AlertPlayers(
-      state, Event{
-                 .type = Event::kChi,         // type
-                 .player = state.lastCaller,  // player
-                 .piece = static_cast<int16_t>(chi_start.toUint8_t()),  // piece
-                 .decision = false,  // decision
-             });
+      *state,
+      Event{
+          .type = Event::kChi,                                   // type
+          .player = state->lastCaller,                           // player
+          .piece = static_cast<int16_t>(chi_start.toUint8_t()),  // piece
+          .decision = false,                                     // decision
+      });
 
-  state.hands.at(state.lastCaller).live.push_back(state.pendingPiece);
-  state.hands.at(state.lastCaller).sort();
-  state.lastCall = state.turnNum;
-  state.concealedKan = false;
-  state.turnNum++;
+  state->hands.at(state->lastCaller).live.push_back(state->pendingPiece);
+  state->hands.at(state->lastCaller).sort();
+  state->lastCall = state->turnNum;
+  state->concealedKan = false;
+  state->turnNum++;
 
-  if (RemovePieces(state, state.lastCaller, chi_start, /*count=*/1) != 1 ||
-      RemovePieces(state, state.lastCaller, chi_start + 1, /*count=*/1) != 1 ||
-      RemovePieces(state, state.lastCaller, chi_start + 2, /*count=*/1) != 1) {
+  if (RemovePieces(*state, state->lastCaller, chi_start, /*count=*/1) != 1 ||
+      RemovePieces(*state, state->lastCaller, chi_start + 1, /*count=*/1) !=
+          1 ||
+      RemovePieces(*state, state->lastCaller, chi_start + 2, /*count=*/1) !=
+          1) {
     std::cerr << "Not Enough Pieces to remove in Chi" << '\n';
-    state.nextState = Error;
+    state->nextState = Error;
     return std::move(state);
   }
-  state.hands.at(state.lastCaller).melds.push_back({Meld::kChi, chi_start});
+  state->hands.at(state->lastCaller).melds.push_back({Meld::kChi, chi_start});
 
-  state.pendingPiece = AskForDiscard(state);
+  state->pendingPiece = AskForDiscard(*state);
 
-  state.nextState = Discard;
+  state->nextState = Discard;
   return std::move(state);
 }
 

@@ -1,8 +1,8 @@
 #include <array>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 #include "controllers/controllermanager.h"
 #include "controllers/fasttanyao.h"
@@ -68,19 +68,19 @@ int main() {
   }
   std::cout << '\n';
   // GameState state;
-  // state.nextState = Discard;
-  // state.seed = 0xBEEFBABE;
-  // state.g.seed(state.seed);
-  // state.walls = Walls(state.g);
-  // state.walls.TakeHand();state.walls.TakeHand();state.walls.TakeHand();state.walls.TakeHand();
-  // state.walls.TakePiece();state.walls.TakePiece();state.walls.TakePiece();state.walls.TakePiece();state.walls.TakePiece();state.walls.TakePiece();
-  // state.currentPlayer = 3;
-  // state.turnNum = 40;
-  // state.lastCall = 36;
-  // state.pendingPiece = kNineCharacter;
-  // state.roundNum = 2;
-  // state.hands[0].live = {kNineCharacter,kNineCharacter,kNineCharacter,kOnePin,kTwoPin,kThreePin,kEastWind,kEastWind};
-  // state.hands[0].melds = {
+  // state->nextState = Discard;
+  // state->seed = 0xBEEFBABE;
+  // state->g.seed(state->seed);
+  // state->walls = Walls(state->g);
+  // state->walls.TakeHand();state->walls.TakeHand();state->walls.TakeHand();state->walls.TakeHand();
+  // state->walls.TakePiece();state->walls.TakePiece();state->walls.TakePiece();state->walls.TakePiece();state->walls.TakePiece();state->walls.TakePiece();
+  // state->currentPlayer = 3;
+  // state->turnNum = 40;
+  // state->lastCall = 36;
+  // state->pendingPiece = kNineCharacter;
+  // state->roundNum = 2;
+  // state->hands[0].live = {kNineCharacter,kNineCharacter,kNineCharacter,kOnePin,kTwoPin,kThreePin,kEastWind,kEastWind};
+  // state->hands[0].melds = {
   //   {
   //     Meld::kChi,
   //     kThreeBamboo

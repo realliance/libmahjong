@@ -1,10 +1,11 @@
 #include <gtest/gtest.h>
 #include <array>
+#include <memory>
 #include <string>
 #include <utility>
 #include <vector>
-#include <memory>
 
+#include "controllers/playercontroller.h"
 #include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
@@ -13,7 +14,6 @@
 #include "types/walls.h"
 #include "types/winds.h"
 #include "utils/playercontrollerfake.h"
-#include "controllers/playercontroller.h"
 
 namespace mahjong {
 
@@ -31,27 +31,26 @@ TEST(Setup, PrevalentWind) {
 }
 
 TEST(Setup, DoraIndicator) {
-  GameState state;
+  std::unique_ptr<GameState> state;
   PlayerControllerFake bot;
   for (int i = 0; i < 4; i++) {
-    state.players[i].controller = std::make_unique<PlayerControllerFake>();
-    ;
+    state->players[i].controller = std::make_unique<PlayerControllerFake>();
   }
   ASSERT_NO_THROW(state = RoundStart(std::move(state)));
-  EXPECT_EQ(state.walls.GetDoras().size(), 1);
+  EXPECT_EQ(state->walls.GetDoras().size(), 1);
 }
 
 TEST(Setup, Dealing) {
-  GameState state;
+  std::unique_ptr<GameState> state;
   for (int i = 0; i < 4; i++) {
-    state.players[i].controller = std::make_unique<PlayerControllerFake>();
+    state->players[i].controller = std::make_unique<PlayerControllerFake>();
   }
   ASSERT_NO_THROW(state = RoundStart(std::move(state)));
   for (int i = 0; i < 4; i++) {
-    EXPECT_EQ(state.hands[i].live.size(), 13);
+    EXPECT_EQ(state->hands[i].live.size(), 13);
   }
   state = Draw(std::move(state));
-  EXPECT_EQ(state.currentPlayer, 0);
+  EXPECT_EQ(state->currentPlayer, 0);
 }
 
 }  // namespace mahjong

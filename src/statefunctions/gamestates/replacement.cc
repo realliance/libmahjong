@@ -1,5 +1,6 @@
 #include <array>
 #include <cstdint>
+#include <memory>
 #include <utility>
 #include <vector>
 
@@ -12,22 +13,22 @@
 #include "types/walls.h"
 
 namespace mahjong {
-GameState&& Replacement(GameState&& state) {
-  Piece draw = state.walls.TakeReplacementTile();
-  state.hands.at(state.currentPlayer).live.push_back(draw);
-  state.hands.at(state.currentPlayer).sort();
-  state.pendingPiece = draw;
+std::unique_ptr<GameState> Replacement(std::unique_ptr<GameState> state) {
+  Piece draw = state->walls.TakeReplacementTile();
+  state->hands.at(state->currentPlayer).live.push_back(draw);
+  state->hands.at(state->currentPlayer).sort();
+  state->pendingPiece = draw;
 
-  AlertPlayers(state,
+  AlertPlayers(*state,
                Event{
                    .type = Event::kDora,  // type
                    .player = -1,          // player
                    .piece = static_cast<int16_t>(
-                       state.walls.GetDoras().back().toUint8_t()),  // piece
-                   .decision = false,                               // decision
+                       state->walls.GetDoras().back().toUint8_t()),  // piece
+                   .decision = false,                                // decision
                });
 
-  state.nextState = PlayerHand;
+  state->nextState = PlayerHand;
   return std::move(state);
 }
 
