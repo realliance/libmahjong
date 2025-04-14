@@ -4,7 +4,6 @@
 #include <iterator>
 #include <memory>
 #include <string>
-#include <utility>
 #include <vector>
 
 #include "piecetype.h"
@@ -18,19 +17,17 @@ class Node : public std::enable_shared_from_this<Node> {
   int id;
   Type type;
   Piece start;
-  Node* parent;
-  std::vector<Node*> leaves;
+  Node* parent = nullptr;  // not owned.
+  std::vector<std::unique_ptr<Node>> leaves;
   size_t leafPosInParent;
 
   bool operator!=(const Node& n) const;
 
-  Node(int id, Type type, Piece start, Node* parent, std::vector<Node*> leaves,
-       size_t leafPosInParent)
+  Node(int id, Type type, Piece start, Node* parent = nullptr, size_t leafPosInParent = 0)
       : id(id),
         type(type),
         start(start),
         parent(parent),
-        leaves(std::move(leaves)),
         leafPosInParent(leafPosInParent) {}
 
   ~Node();

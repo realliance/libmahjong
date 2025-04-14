@@ -6,7 +6,6 @@
 #include <random>
 // #include <ext/alloc_traits.h>
 #include <array>
-#include <utility>
 #include <vector>
 
 #include "analysis.h"
@@ -191,8 +190,8 @@ std::vector<Piece> GetPossibleStdFormHand() {
   return hand;
 }
 
-bool TestStdForm(std::vector<Piece> hand) {
-  auto root = breakdownHand(std::move(hand));
+bool TestStdForm(const std::vector<Piece>& hand) {
+  auto root = breakdownHand(hand);
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     bool complete = true;
     std::vector<const Node*> singles;

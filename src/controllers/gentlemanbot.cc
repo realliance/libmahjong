@@ -80,7 +80,7 @@ Piece GentlemanBot::getDiscard() {
       break;
     }
 
-    current_node = current_node->leaves[0];
+    current_node = current_node->leaves[0].get();
   }
 
   CountPieces(counts, free_pieces);

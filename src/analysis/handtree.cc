@@ -15,7 +15,7 @@
 namespace mahjong {
 
 struct Breakdown {
-  std::shared_ptr<Node> rootNode;
+  std::unique_ptr<Node> rootNode;
   Node* currentNode{};
   bool paired = false;
   int minPossible{};
@@ -82,16 +82,14 @@ void updatePossibilities(Breakdown* b) {
 }
 
 Node* addLeaf(Breakdown* b, Piece start, Node::Type type) {
-  std::vector<Node*> leaves;
-  b->currentNode->leaves.push_back(new Node(
+  b->currentNode->leaves.push_back(std::make_unique<Node>(
       b->id++,                       // id
       type,                          // type
       start,                         // Start
       b->currentNode,                // parent
-      leaves,                        // leaves
       b->currentNode->leaves.size()  // leafPosInParent
       ));
-  return b->currentNode->leaves.back();
+  return b->currentNode->leaves.back().get();
 }
 
 void breakdownForwardChi(Breakdown* b, int piecePos) {
@@ -281,24 +279,20 @@ void driver(Breakdown* b) {
 
 }  // namespace
 
-std::shared_ptr<Node> breakdownHand(std::vector<Piece> pieces) {
+std::unique_ptr<Node> breakdownHand(const std::vector<Piece>& pieces) {
   Breakdown b;
-  b.pieces = std::move(pieces);
+  b.rootNode = std::make_unique<Node>(b.id++,                     // id
+                                      Node::kRoot,                // type
+                                      Piece(Piece::Type::kError)  // Start
+  );
+  b.currentNode = b.rootNode.get();
+  b.pieces = pieces;
   countPieces(&b);
   std::sort(b.pieces.begin(), b.pieces.end());
   b.pieces.erase(std::unique(b.pieces.begin(), b.pieces.end()), b.pieces.end());
 
-  b.rootNode = std::make_shared<Node>(Node(b.id++,                      // id
-                                           Node::kRoot,                 // type
-                                           Piece(Piece::Type::kError),  // Start
-                                           {},  // parent
-                                           {},  // leaves
-                                           0    // leafPosInParent
-                                           ));
-  b.currentNode = b.rootNode.get();
-
   driver(&b);
 
-  return b.rootNode;
+  return std::move(b.rootNode);
 }
 }  // namespace mahjong

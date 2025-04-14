@@ -73,14 +73,11 @@ Node::~Node() {
       parent->leaves.at(i)->leafPosInParent = i;
     }
   }
-  for (Node* leaf : leaves) {
-    delete leaf;
-  }
 }
 
 Node::ConstIterator& Node::ConstIterator::operator++() {
   if (!root_->leaves.empty()) {
-    root_ = root_->leaves.front();
+    root_ = root_->leaves.front().get();
     return *this;
   }
   if (root_->parent == nullptr) {
@@ -100,8 +97,8 @@ Node::ConstIterator& Node::ConstIterator::operator++() {
   }
 
   if (traveler->parent->leaves.size() > leaf_pos_next &&
-      traveler->parent->leaves[leaf_pos_next] != root_) {
-    root_ = traveler->parent->leaves[leaf_pos_next];
+      traveler->parent->leaves[leaf_pos_next].get() != root_) {
+    root_ = traveler->parent->leaves[leaf_pos_next].get();
     return *this;
   }
   std::cerr << "FORWARD TRAVERSAL FAILED: Set to end." << '\n';
@@ -188,7 +185,7 @@ std::vector<std::vector<const Node*>> Node::AsBranchVectors(const Node* root) {
   nodeloc.push_back(root);
   while (!nodeloc.empty()) {
     if (!nodeloc.back()->leaves.empty()) {
-      nodeloc.push_back(nodeloc.back()->leaves[0]);
+      nodeloc.push_back(nodeloc.back()->leaves[0].get());
     } else {
       branches.push_back(nodeloc);
       size_t next = nodeloc.back()->leafPosInParent + 1;
@@ -201,7 +198,7 @@ std::vector<std::vector<const Node*>> Node::AsBranchVectors(const Node* root) {
         nodeloc.pop_back();
       } else {
         nodeloc.pop_back();
-        nodeloc.push_back(nodeloc.back()->leaves[next]);
+        nodeloc.push_back(nodeloc.back()->leaves[next].get());
       }
     }
   }

@@ -9,7 +9,7 @@ namespace mahjong {
 
 std::vector<Piece> GetPossibleStdFormHand();
 std::vector<Piece> GetPossibleTenpaiHand(bool replacement = false);
-bool TestStdForm(std::vector<Piece> hand);
-std::shared_ptr<Node> breakdownHand(std::vector<Piece> pieces);
+bool TestStdForm(const std::vector<Piece>& hand);
+std::unique_ptr<Node> breakdownHand(const std::vector<Piece>& pieces);
 
 }  // namespace mahjong

@@ -25,7 +25,7 @@ namespace mahjong {
 namespace {
 const int kMaxSingles = 15;
 
-int countSingles(std::vector<Piece> hand) {
+int countSingles(const std::vector<Piece>& hand) {
   auto root = breakdownHand(std::move(hand));
   int min_singles = kMaxSingles;
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
