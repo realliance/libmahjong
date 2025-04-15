@@ -1,4 +1,5 @@
 include(FetchContent)
+include(CTest)
 
 if(libmahjong_build_tests)
   FetchContent_Declare(
