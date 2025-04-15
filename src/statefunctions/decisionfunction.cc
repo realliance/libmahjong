@@ -36,7 +36,7 @@ bool CanRon(const GameState& state,
                   state.hands.at(player).live.end(), state.pendingPiece));
     return false;
   }
-  bool can_ron = isComplete(state, player);
+  const bool can_ron = isComplete(state, player);
   tmp_state.hands.at(player).live.erase(
       std::find(state.hands.at(player).live.begin(),
                 state.hands.at(player).live.end(), state.pendingPiece));

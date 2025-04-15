@@ -19,8 +19,8 @@ class AngryDiscardoBot : public PlayerController {
   }
 
   void GameStart(int _playerID) override {}
-  void RoundStart(std::vector<Piece> hand, Wind  /*seatWind*/,
-                  Wind  /*prevalentWind*/) override {
+  void RoundStart(std::vector<Piece> hand, Wind /*seatWind*/,
+                  Wind /*prevalentWind*/) override {
     hand_ = hand;
     lastEvent_.type = Event::kDiscard;
   }

@@ -42,7 +42,7 @@ std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
   }
   int payment = 0;
   for (int i = 0; i < 4; i++) {
-    int player = (state->roundNum + i) % 4;
+    const int player = (state->roundNum + i) % 4;
     if (state->hasRonned.at(player)) {
       state->scores.at(player) += 1000 * state->riichiSticks;
       state->riichiSticks = 0;

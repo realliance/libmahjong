@@ -93,7 +93,7 @@ Node* addLeaf(Breakdown* b, Piece start, Node::Type type) {
 }
 
 void breakdownForwardChi(Breakdown* b, int piecePos) {
-  Piece start = b->pieces[piecePos];
+  const Piece start = b->pieces[piecePos];
   for (int i = 0; i < 3; i++) {
     b->counts.at((start + i).toUint8_t())--;
     if (b->counts.at((start + i).toUint8_t()) == 0) {
@@ -106,7 +106,7 @@ void breakdownForwardChi(Breakdown* b, int piecePos) {
 }
 
 void breakdownPon(Breakdown* b, int piecePos) {
-  Piece start = b->pieces[piecePos];
+  const Piece start = b->pieces[piecePos];
   b->counts.at(b->pieces[piecePos].toUint8_t()) -= 3;
   if (b->counts.at(b->pieces[piecePos].toUint8_t()) == 0) {
     b->pieces.erase(
@@ -118,7 +118,7 @@ void breakdownPon(Breakdown* b, int piecePos) {
 
 void breakdownPair(Breakdown* b, int piecePos) {
   b->paired = true;
-  Piece start = b->pieces[piecePos];
+  const Piece start = b->pieces[piecePos];
   b->counts.at(b->pieces[piecePos].toUint8_t()) -= 2;
   if (b->counts.at(b->pieces[piecePos].toUint8_t()) == 0) {
     b->pieces.erase(
@@ -206,7 +206,7 @@ void resetCounts(Breakdown* b, const Node* target) {
 // NOLINTNEXTLINE(misc-no-recursion)
 void driver(Breakdown* b) {
   for (updatePossibilities(b); b->pieces.empty(); updatePossibilities(b)) {
-    int piece_pos = getNextPiece(b);
+    const int piece_pos = getNextPiece(b);
     if (b->possibilities[piece_pos] == 0) {
       breakdownSingle(b, piece_pos);
       continue;

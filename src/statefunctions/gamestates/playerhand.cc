@@ -18,7 +18,7 @@
 namespace mahjong {
 
 std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
-  std::vector<PossibleDecision> decisions = {
+  const std::vector<PossibleDecision> decisions = {
       PossibleDecision{.type = Event::kTsumo, .func = CanTsumo},
       PossibleDecision{.type = Event::kConcealedKan, .func = CanConcealedKan},
       PossibleDecision{.type = Event::kConvertedKan, .func = CanConvertedKan},

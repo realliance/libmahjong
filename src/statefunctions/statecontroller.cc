@@ -38,7 +38,7 @@ void mahjong::ExitGame(int game) {
 
 void mahjong::StateController(GameSettings settings) {
   std::unique_ptr<GameState> state;
-  int id = thread_index++;
+  const int id = thread_index++;
   should_halt[id] = false;
 
   for (int i = 0; i < 4; i++) {

@@ -151,12 +151,12 @@ std::vector<Piece> GetPossibleStdFormHand() {
 
   std::vector<bool> choose_pair = {false, false, false, false, true};
   std::shuffle(choose_pair.begin(), choose_pair.end(), g);
-  std::uniform_int_distribution<> pair_chance(0, 3);
+  const std::uniform_int_distribution<> pair_chance(0, 3);
   std::uniform_int_distribution<> triplet_selection(0, kTriplets.size());
   std::uniform_int_distribution<> pair_selection(0, kPairs.size());
 
   std::vector<Piece> hand;
-  for (bool choice : choose_pair) {
+  for (const bool choice : choose_pair) {
     if (choice) {
       int pair = pair_selection(g);
       while (piece_count.at(kPairs.at(pair)[0].toUint8_t()) < 2) {
@@ -194,7 +194,7 @@ bool TestStdForm(const std::vector<Piece>& hand) {
   auto root = breakdownHand(hand);
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     bool complete = true;
-    std::vector<const Node*> singles;
+    const std::vector<const Node*> singles;
     for (const auto& node : branch) {
       if (node->type == Node::kSingle) {
         complete = false;
@@ -216,7 +216,7 @@ std::vector<Piece> GetPossibleTenpaiHand(bool replacement) {
   std::shuffle(tenpaihand.begin(), tenpaihand.end(), g);
   std::uniform_int_distribution<> piece_index(0, 13);
   std::uniform_int_distribution<> piece_select(0, 33);
-  int ind = piece_index(g);
+  const int ind = piece_index(g);
   if (!replacement) {
     tenpaihand.erase(tenpaihand.begin() + ind);
     return tenpaihand;

@@ -30,7 +30,7 @@ TEST(GamePlay, Discard) {
   }
   state = RoundStart(std::move(state));
   state = Draw(std::move(state));
-  Event e = {
+  const Event e = {
       .type = Event::kDiscard,
       .player = 0,
       .piece = Piece(kSixBamboo).toUint8_t(),

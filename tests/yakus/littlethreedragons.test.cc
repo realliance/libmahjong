@@ -33,7 +33,7 @@ TEST(isLittleThreeDragons, 2Han) {
 }
 
 TEST(isLittleThreeDragons, WhenOpen) {
-  Meld meld = {
+  const Meld meld = {
       .type = Meld::kPon,
       .start = Piece(kWhiteDragon),
   };
@@ -55,7 +55,7 @@ TEST(isLittleThreeDragons, WhenOpen) {
 }
 
 TEST(isLittleThreeDragons, BadHand) {
-  Meld meld = {
+  const Meld meld = {
       .type = Meld::kPon,
       .start = Piece(kWhiteDragon),
   };

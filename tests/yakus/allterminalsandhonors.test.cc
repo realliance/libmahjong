@@ -49,7 +49,7 @@ TEST(isAllTerminalsAndHonors, BadHand) {
 }
 
 TEST(isAllTerminalsAndHonors, CanBeOpen) {
-  Meld meld = {
+  const Meld meld = {
       .type = Meld::kPon,
       .start = Piece(kNinePin),
   };

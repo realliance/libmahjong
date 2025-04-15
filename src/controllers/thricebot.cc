@@ -18,7 +18,7 @@ const float kNormalWeight = 1;
 REGISTER_PLAYER_CONTROLLER(ThriceBot);
 
 void ThriceBot::RoundStart(std::vector<Piece> _hand, Wind s, Wind p) {
-  for (Piece m : _hand) {
+  for (const Piece m : _hand) {
     HandTile h;
     h.piece = m;
     if (m.isHonor()) {

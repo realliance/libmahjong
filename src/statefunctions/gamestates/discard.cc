@@ -27,7 +27,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
                        });
   DiscardPiece(*state, state->currentPlayer, state->pendingPiece);
 
-  std::vector<PossibleDecision> decisions = {
+  const std::vector<PossibleDecision> decisions = {
       {.type = Event::kChi, .func = CanChi},
       {.type = Event::kPon, .func = CanPon},
       {.type = Event::kKan, .func = CanKan},

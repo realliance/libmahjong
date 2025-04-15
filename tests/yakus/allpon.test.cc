@@ -32,7 +32,7 @@ TEST(isAllPons, 2Han) {
 }
 
 TEST(isAllPons, WithKans) {
-  Meld meld = {
+  const Meld meld = {
       .type = Meld::kKan,
       .start = Piece(kFivePin),
   };
@@ -54,7 +54,7 @@ TEST(isAllPons, WithKans) {
 }
 
 TEST(isAllPons, ConcealedKan) {
-  Meld meld = {
+  const Meld meld = {
       .type = Meld::kConcealedKan,
       .start = Piece(kFivePin),
   };

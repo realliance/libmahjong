@@ -36,7 +36,7 @@ Piece GetChiStart(const GameState& state, int player) {
 std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
   // only gives a single one of the chis
   // ui oof
-  Piece chi_start = GetChiStart(*state, state->lastCaller);
+  const Piece chi_start = GetChiStart(*state, state->lastCaller);
   if (chi_start == kError) {
     std::cerr << "Failed to get start of Chi" << '\n';
     state->nextState = Error;

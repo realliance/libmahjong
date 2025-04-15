@@ -17,7 +17,7 @@
 namespace mahjong {
 
 TEST(isHalfFlush, 2Han) {
-  Meld meld = {
+  const Meld meld = {
       .type = Meld::kPon,
       .start = Piece(kSixCharacter),
   };
@@ -55,7 +55,7 @@ TEST(isHalfFlush, 3Han) {
 }
 
 TEST(isHalfFlush, BadHand) {
-  Meld meld = {
+  const Meld meld = {
       .type = Meld::kPon,
       .start = Piece(kSixCharacter),
   };
@@ -77,7 +77,7 @@ TEST(isHalfFlush, BadHand) {
 }
 
 TEST(isHalfFlush, FullFlushIncompatible) {
-  Meld meld = {
+  const Meld meld = {
       .type = Meld::kPon,
       .start = Piece(kSixCharacter),
   };

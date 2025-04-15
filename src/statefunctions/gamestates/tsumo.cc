@@ -21,7 +21,8 @@ std::unique_ptr<GameState> Tsumo(std::unique_ptr<GameState> state) {
                                state->pendingPiece.toUint8_t()),  // piece
                            .decision = false,                     // decision
                        });
-  int basic_points = getBasicPoints(scoreHand(*state, state->currentPlayer));
+  const int basic_points =
+      getBasicPoints(scoreHand(*state, state->currentPlayer));
   state->scores.at(state->currentPlayer) += state->riichiSticks * 1000;
   state->riichiSticks = 0;
   state->scores.at(state->currentPlayer) += state->counters * 300;

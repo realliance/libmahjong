@@ -21,7 +21,7 @@
 std::ostream& operator<<(std::ostream& os, const mahjong::Event& e) {
   os << "{type: " << e.typeToStr();
   os << " player: " << e.player;
-  uint8_t p = e.piece;
+  const uint8_t p = e.piece;
   os << " piece: " << mahjong::Piece(p).toStr();
   os << " decision: " << e.decision << "}";
   return os;

@@ -17,7 +17,7 @@
 namespace mahjong {
 
 TEST(isFullFlush, 5Han) {
-  Meld meld = {
+  const Meld meld = {
       .type = Meld::kPon,
       .start = Piece(kSixCharacter),
   };

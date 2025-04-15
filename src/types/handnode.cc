@@ -144,11 +144,11 @@ std::ostream& Node::DumpAsTGF(std::ostream& os) const {
                             std::to_string(leaf->id));
     }
   }
-  for (auto const& node : nodes) {
+  for (const auto& node : nodes) {
     os << node << '\n';
   }
   os << "#" << '\n';
-  for (auto const& connection : connections) {
+  for (const auto& connection : connections) {
     os << connection << '\n';
   }
   return os;
@@ -168,11 +168,11 @@ std::ostream& Node::DumpAsDot(std::ostream& os) const {
     }
   }
   os << "digraph {" << '\n';
-  for (auto const& node : nodes) {
+  for (const auto& node : nodes) {
     os << "  " << node << '\n';
   }
   os << '\n';
-  for (auto const& connection : connections) {
+  for (const auto& connection : connections) {
     os << "  " << connection << '\n';
   }
   os << "}" << '\n';

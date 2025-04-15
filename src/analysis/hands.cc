@@ -167,7 +167,7 @@ int getBasicPoints(Score s) {
       return kManganBasicPoints;
     }
   }
-  int p = s.fu * (2 << (1 + s.han));
+  const int p = s.fu * (2 << (1 + s.han));
   if (p > kLowHanBasicPoints) {
     return kLowHanBasicPoints;
   }
@@ -218,7 +218,7 @@ int getFu(const GameState& state, int player,
   } else {
     fu = kOpenOrSelfdraw;
   }
-  bool open = state.hands.at(player).open;
+  const bool open = state.hands.at(player).open;
   if (isOpenPinfu(state, player, branch)) {
     fu += kOpenpinfu;
   } else if (!state.hasRonned.at(player)) {
@@ -350,7 +350,7 @@ const std::vector<Piece> kPieceSet{
 // will revisit if necessary
 // assumption is 14 piece hand
 std::vector<Piece> isInTenpai13Pieces(std::vector<Piece> hand, bool allWaits) {
-  int min_singles = countSingles(hand);
+  const int min_singles = countSingles(hand);
   // These numbers were found by looking at a lot of handtrees and their single count
   if (min_singles > 5 || min_singles == 3 || min_singles == 0) {
     return {};
@@ -384,7 +384,7 @@ std::vector<Piece> isInTenpai(std::vector<Piece> hand, bool allWaits) {
   if (hand.empty()) {
     return {};
   }
-  int min_singles = countSingles(hand);
+  const int min_singles = countSingles(hand);
   // These numbers are the same as above except one more piece means 1 higher on the single count
   if (min_singles > 6 || min_singles == 1 || min_singles == 4 ||
       min_singles == 0) {
@@ -393,7 +393,7 @@ std::vector<Piece> isInTenpai(std::vector<Piece> hand, bool allWaits) {
   std::array<bool, Piece::kPiecesize> removedbefore = {};
   std::vector<Piece> waits;
   for (int i = 0; i < kPiecesinahand; i++) {
-    Piece removed = hand.front();
+    const Piece removed = hand.front();
     hand.erase(hand.begin());
     if (removedbefore.at(removed.toUint8_t())) {
       hand.push_back(removed);
@@ -424,7 +424,7 @@ std::vector<Piece> getRiichiDiscard(std::vector<Piece> hand) {
     counts.at(p.toUint8_t())++;
   }
   for (int i = 0; i < kPiecesinahand; i++) {
-    Piece removed = hand.front();
+    const Piece removed = hand.front();
     hand.erase(hand.begin());
     if (removedbefore.at(removed.toUint8_t())) {
       hand.push_back(removed);
@@ -638,7 +638,7 @@ int isPureStraight(const GameState& state, int player,
       }
     }
   }
-  int han = state.hands.at(player).open ? 1 : 2;
+  const int han = state.hands.at(player).open ? 1 : 2;
   if (bamboo_chi[0] && bamboo_chi[1] && bamboo_chi[2]) {
     return han;
   }
@@ -653,7 +653,7 @@ int isPureStraight(const GameState& state, int player,
 
 int isWindOrDragonPon(const GameState& state, int player,
                       const std::vector<const mahjong::Node*>& branch) {
-  std::vector<Piece> matches{
+  const std::vector<Piece> matches{
       kWhiteDragon, kGreenDragon, kRedDragon,
       Piece::fromWind(GetSeat(state.roundNum, player)),
       Piece::fromWind(state.roundNum > 3 ? kSouth : kEast)};
@@ -854,7 +854,7 @@ int isHalfFlush(const GameState& state, int player,
   if (isFullFlush(state, player, branch) != 0) {
     return 0;
   }
-  int suit = state.hands.at(player).live.front().getSuit();
+  const int suit = state.hands.at(player).live.front().getSuit();
   bool honors = false;
   for (const auto& piece : state.hands.at(player).live) {
     if (piece.isHonor()) {
@@ -1021,7 +1021,7 @@ int isBlessingOfMan(const GameState& state, int player,
 
 int isFullFlush(const GameState& state, int player,
                 const std::vector<const mahjong::Node*>& /*unused*/) {
-  int suit = state.hands.at(player).live.front().getSuit();
+  const int suit = state.hands.at(player).live.front().getSuit();
   for (const auto& piece : state.hands.at(player).live) {
     if (piece.getSuit() != suit) {
       return 0;
@@ -1341,8 +1341,8 @@ int isBigFourWinds(const GameState& state, int player,
 
 int isMaxBranches(const GameState& state, int player,
                   const std::vector<const mahjong::Node*>& /*unused*/) {
-  int start = state.hands.at(player).live[0].getPieceNum();
-  int suit = state.hands.at(player).live[0].getSuit();
+  const int start = state.hands.at(player).live[0].getPieceNum();
+  const int suit = state.hands.at(player).live[0].getSuit();
   std::array<int, 6> sets = {};
   const std::array<int, 6> final = {3, 3, 2, 2, 2, 2};
   for (const auto& piece : state.hands.at(player).live) {

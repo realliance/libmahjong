@@ -8,52 +8,52 @@
 namespace mahjong {
 
 TEST(HandFormer, HandFromNotationFormSet) {
-  std::vector<Piece> hand = {Piece(kOneBamboo), Piece(kTwoBamboo),
-                             Piece(kThreeBamboo)};
+  const std::vector<Piece> hand = {Piece(kOneBamboo), Piece(kTwoBamboo),
+                                   Piece(kThreeBamboo)};
   auto result = HandFromNotation("123s");
   EXPECT_EQ(result, hand);
 }
 
 TEST(HandFormer, HandFromNotationFormWithManySuits) {
-  std::vector<Piece> hand = {Piece(kOneBamboo), Piece(kTwoBamboo),
-                             Piece(kThreeBamboo), Piece(kFourCharacter)};
+  const std::vector<Piece> hand = {Piece(kOneBamboo), Piece(kTwoBamboo),
+                                   Piece(kThreeBamboo), Piece(kFourCharacter)};
   auto result = HandFromNotation("123s4m");
   EXPECT_EQ(result, hand);
 }
 
 TEST(HandFormer, HandFromNotationFormRedFives) {
-  std::vector<Piece> hand = {Piece(kRedFiveCharacter), Piece(kRedFiveBamboo),
-                             Piece(kRedFivePin)};
+  const std::vector<Piece> hand = {Piece(kRedFiveCharacter),
+                                   Piece(kRedFiveBamboo), Piece(kRedFivePin)};
   auto result = HandFromNotation("0m0s0p");
   EXPECT_EQ(result, hand);
 }
 
 TEST(HandFormer, HandFromNotationFormHonors) {
-  std::vector<Piece> hand = {Piece(kEastWind),    Piece(kSouthWind),
-                             Piece(kWestWind),    Piece(kNorthWind),
-                             Piece(kWhiteDragon), Piece(kGreenDragon),
-                             Piece(kRedDragon)};
+  const std::vector<Piece> hand = {Piece(kEastWind),    Piece(kSouthWind),
+                                   Piece(kWestWind),    Piece(kNorthWind),
+                                   Piece(kWhiteDragon), Piece(kGreenDragon),
+                                   Piece(kRedDragon)};
   auto result = HandFromNotation("1234567z");
   EXPECT_EQ(result, hand);
 }
 
 TEST(HandFormer, HandFromNotationFormTerminals) {
-  std::vector<Piece> hand = {Piece(kOneCharacter), Piece(kNineCharacter),
-                             Piece(kOneBamboo),    Piece(kNineBamboo),
-                             Piece(kOnePin),       Piece(kNinePin)};
+  const std::vector<Piece> hand = {Piece(kOneCharacter), Piece(kNineCharacter),
+                                   Piece(kOneBamboo),    Piece(kNineBamboo),
+                                   Piece(kOnePin),       Piece(kNinePin)};
   auto result = HandFromNotation("19m19s19p");
   EXPECT_EQ(result, hand);
 }
 
 TEST(HandFormer, HandFromNotationInvalidPiece) {
-  std::vector<Piece> hand = {Piece(Piece::kError)};
+  const std::vector<Piece> hand = {Piece(Piece::kError)};
   auto result = HandFromNotation("7g");
   EXPECT_EQ(result, hand);
 }
 
 TEST(HandFormer, HandFromNotationInvalidPieceSet) {
-  std::vector<Piece> hand = {Piece(Piece::kError), Piece(Piece::kError),
-                             Piece(Piece::kError)};
+  const std::vector<Piece> hand = {Piece(Piece::kError), Piece(Piece::kError),
+                                   Piece(Piece::kError)};
   auto result = HandFromNotation("799g");
   EXPECT_EQ(result, hand);
 }
@@ -78,13 +78,13 @@ TEST(HandFormer, IsValidNotationWithInvaildNotations) {
 }
 
 TEST(HandFormer, HandToNotationSingleSet) {
-  std::vector<Piece> hand = {Piece(kOneBamboo), Piece(kTwoBamboo),
-                             Piece(kThreeBamboo)};
+  const std::vector<Piece> hand = {Piece(kOneBamboo), Piece(kTwoBamboo),
+                                   Piece(kThreeBamboo)};
   EXPECT_EQ(HandToNotation(hand), "123s");
 }
 
 TEST(HandFormer, HandToNotationMultipleSets) {
-  std::vector<Piece> hand = {
+  const std::vector<Piece> hand = {
       Piece(kOneBamboo),     Piece(kTwoBamboo), Piece(kThreeBamboo),
       Piece(kFourPin),       Piece(kFivePin),   Piece(kSixPin),
       Piece(kNineCharacter), Piece(kEastWind),  Piece(kWestWind),
@@ -93,7 +93,7 @@ TEST(HandFormer, HandToNotationMultipleSets) {
 }
 
 TEST(HandFormer, HandToNotationSkipsErrorPieces) {
-  std::vector<Piece> hand = {
+  const std::vector<Piece> hand = {
       Piece(kOneBamboo),
       Piece(Piece::kError),
       Piece(kThreeBamboo),
@@ -102,7 +102,7 @@ TEST(HandFormer, HandToNotationSkipsErrorPieces) {
 }
 
 TEST(HandFormer, HandToNotationRedFives) {
-  std::vector<Piece> hand = {
+  const std::vector<Piece> hand = {
       Piece(kFiveBamboo),
       Piece(kRedFiveBamboo),
   };

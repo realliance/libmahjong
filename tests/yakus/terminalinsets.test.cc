@@ -17,7 +17,7 @@
 namespace mahjong {
 
 TEST(isTerminalsInAllSets, 2Han) {
-  Meld meld = {
+  const Meld meld = {
       .type = Meld::kChi,
       .start = Piece(kSevenPin),
   };
@@ -55,7 +55,7 @@ TEST(isTerminalsInAllSets, 3Han) {
 }
 
 TEST(isTerminalsInAllSets, BadHand) {
-  Meld meld = {
+  const Meld meld = {
       .type = Meld::kChi,
       .start = Piece(kSevenPin),
   };

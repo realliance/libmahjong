@@ -17,15 +17,15 @@
 namespace mahjong {
 
 TEST(isThreeKans, 2Han) {
-  Meld meld_a = {
+  const Meld meld_a = {
       .type = Meld::kConcealedKan,
       .start = Piece(kOneBamboo),
   };
-  Meld meld_b = {
+  const Meld meld_b = {
       .type = Meld::kKan,
       .start = Piece(kTwoBamboo),
   };
-  Meld meld_c = {
+  const Meld meld_c = {
       .type = Meld::kKan,
       .start = Piece(kFivePin),
   };
@@ -47,19 +47,19 @@ TEST(isThreeKans, 2Han) {
 }
 
 TEST(isThreeKans, WithOtherMelds) {
-  Meld meld_a = {
+  const Meld meld_a = {
       .type = Meld::kConcealedKan,
       .start = Piece(kOneBamboo),
   };
-  Meld meld_b = {
+  const Meld meld_b = {
       .type = Meld::kKan,
       .start = Piece(kTwoBamboo),
   };
-  Meld meld_c = {
+  const Meld meld_c = {
       .type = Meld::kKan,
       .start = Piece(kFivePin),
   };
-  Meld meld_d = {
+  const Meld meld_d = {
       .type = Meld::kChi,
       .start = Piece(kTwoBamboo),
   };
@@ -81,11 +81,11 @@ TEST(isThreeKans, WithOtherMelds) {
 }
 
 TEST(isThreeKans, BadHand) {
-  Meld meld_a = {
+  const Meld meld_a = {
       .type = Meld::kConcealedKan,
       .start = Piece(kOneBamboo),
   };
-  Meld meld_b = {
+  const Meld meld_b = {
       .type = Meld::kKan,
       .start = Piece(kTwoBamboo),
   };
@@ -107,15 +107,15 @@ TEST(isThreeKans, BadHand) {
 }
 
 TEST(isThreeKans, AllConcealed) {
-  Meld meld_a = {
+  const Meld meld_a = {
       .type = Meld::kConcealedKan,
       .start = Piece(kOneBamboo),
   };
-  Meld meld_b = {
+  const Meld meld_b = {
       .type = Meld::kConcealedKan,
       .start = Piece(kTwoBamboo),
   };
-  Meld meld_c = {
+  const Meld meld_c = {
       .type = Meld::kConcealedKan,
       .start = Piece(kFivePin),
   };

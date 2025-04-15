@@ -38,7 +38,7 @@ Walls::Walls() {
 }
 
 Walls::Walls(std::mt19937& g) {
-  std::vector<Piece> wall;
+  const std::vector<Piece> wall;
   for (int i = 0; i < 4; i++) {
     livingWalls.insert(livingWalls.end(), kPieceSet.begin(), kPieceSet.end());
   }
