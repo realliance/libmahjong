@@ -50,6 +50,12 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     find_program(clang_tidy_path NAMES clang-tidy REQUIRED)
     set_target_properties(libmahjong PROPERTIES CXX_CLANG_TIDY
                                                 "${clang_tidy_path}")
+    add_custom_target(
+      clang_tidy_fix
+      COMMAND clang-tidy --fix-errors -p=build ${project_sources}
+      DEPENDS libmahjong
+      WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
+      VERBATIM)
   endif()
 
   find_program(iwyu_path NAMES include-what-you-use iwyu)
@@ -60,12 +66,12 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
   find_program(iwyu_tool_path NAMES iwyu-tool)
   find_program(iwyu_fix_includes NAMES iwyu-fix-includes)
   if(iwyu_tool_path AND iwyu_fix_includes)
-  add_custom_target(
-    iwyu_fix
-    COMMAND ${CMAKE_SOURCE_DIR}/iwyu_fix.sh
-    DEPENDS libmahjong
-    WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
-    VERBATIM)
+    add_custom_target(
+      iwyu_fix
+      COMMAND ${CMAKE_SOURCE_DIR}/iwyu_fix.sh
+      DEPENDS libmahjong
+      WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
+      VERBATIM)
   endif()
 
   find_program(clang_format_path NAMES clang-format)

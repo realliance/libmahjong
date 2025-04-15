@@ -28,8 +28,8 @@ class PlayerControllerFake : public PlayerController {
   std::string Name() override { return "PlayerControllerFake"; };
 
  private:
-  std::vector<Event> queue;
-  std::vector<Event> events;
+  std::vector<Event> queue_;
+  std::vector<Event> events_;
 };
 
 }  // namespace mahjong

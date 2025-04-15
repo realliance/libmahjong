@@ -32,7 +32,7 @@ struct GameState {
   StateFunction prevState;
   StateFunction currState;
   StateFunction nextState;
-  Walls walls{};
+  Walls walls;
   std::array<int, kNumPlayers> scores = {};
   std::array<bool, kNumPlayers> hasRonned = {};
   std::array<Hand, kNumPlayers> hands = {};

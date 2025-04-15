@@ -6,25 +6,25 @@ namespace mahjong {
 REGISTER_PLAYER_CONTROLLER(PlayerControllerFake);
 
 void PlayerControllerFake::ReceiveEvent(Event e) {
-  events.push_back(e);
+  events_.push_back(e);
 }
 
 void PlayerControllerFake::AddEvents(std::vector<Event> e) {
-  events.insert(events.end(), e.begin(), e.end());
+  events_.insert(events_.end(), e.begin(), e.end());
 }
 
 std::vector<Event> PlayerControllerFake::GetEvents() {
   std::vector<Event> e;
-  std::swap(events, e);
+  std::swap(events_, e);
   return e;
 }
 
 Event PlayerControllerFake::RetrieveDecision() {
-  if (queue.empty()) {
-    throw "Not Enough Events";
+  if (queue_.empty()) {
+    throw "Not Enough events_";
   }
-  Event e = queue.back();
-  queue.pop_back();
+  Event e = queue_.back();
+  queue_.pop_back();
   return e;
 }
 

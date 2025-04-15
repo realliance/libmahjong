@@ -24,7 +24,7 @@ struct Meld {
     return start == other.start;
   }
 
-  std::string typeToStr() const {
+  [[nodiscard]] std::string typeToStr() const {
     switch (type) {
       case Meld::kChi:
         return "Chi";

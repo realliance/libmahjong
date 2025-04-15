@@ -32,7 +32,7 @@ struct Event {
   int16_t piece = {};
   bool decision = {};
 
-  std::string typeToStr() const {
+  [[nodiscard]] std::string typeToStr() const {
     switch (type) {
       case Event::kRon:
         return "Ron";
