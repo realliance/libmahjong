@@ -9,4 +9,5 @@ add_subdirectory(analysis)
 target_precompile_headers(libmahjong PRIVATE ${project_includes})
 
 install(TARGETS libmahjong DESTINATION lib)
-install(TARGETS libmahjong FILE_SET HEADERS)
+install(TARGETS libmahjong FILE_SET HEADERS
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libmahjong)
