@@ -1,18 +1,5 @@
-include(FetchContent)
 include(CTest)
-
-if(libmahjong_build_tests)
-  FetchContent_Declare(
-    googletest
-    GIT_TAG main
-    GIT_REPOSITORY https://github.com/google/googletest.git)
-  FetchContent_MakeAvailable(googletest)
-  set_target_properties(gmock PROPERTIES FOLDER libs/gtest)
-  set_target_properties(gmock_main PROPERTIES FOLDER libs/gtest)
-  set_target_properties(gtest PROPERTIES FOLDER libs/gtest)
-  set_target_properties(gtest_main PROPERTIES FOLDER libs/gtest)
-  include(GoogleTest)
-endif()
+find_package(GTest REQUIRED)
 
 function(package_add_test test_name)
   add_executable(${test_name})
