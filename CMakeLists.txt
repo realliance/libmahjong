@@ -44,6 +44,9 @@ target_include_directories(libmahjong PUBLIC "${libmahjong_SOURCE_DIR}/src")
 
 add_subdirectory(src)
 
+install(TARGETS libmahjong DESTINATION lib)
+install(FILES ${project_includes} DESTINATION include)
+
 if(libmahjong_build_tools)
   add_subdirectory(tools)
 endif()
