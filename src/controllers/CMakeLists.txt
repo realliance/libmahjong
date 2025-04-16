@@ -6,15 +6,17 @@ target_sources(
           "alphabeticalbot.cc"
           "totobot.cc"
           "gentlemanbot.cc"
-          "controllermanager.cc")
-target_precompile_headers(
-  libmahjong
-  PRIVATE
-  "angrydiscardobot.h"
-  "thricebot.h"
-  "fasttanyao.h"
-  "alphabeticalbot.h"
-  "totobot.h"
-  "gentlemanbot.h"
-  "playercontroller.h"
-  "controllermanager.h")
+          "controllermanager.cc"
+  PUBLIC FILE_SET
+         HEADERS
+         BASE_DIRS
+         .
+         FILES
+         "angrydiscardobot.h"
+         "thricebot.h"
+         "fasttanyao.h"
+         "alphabeticalbot.h"
+         "totobot.h"
+         "gentlemanbot.h"
+         "playercontroller.h"
+         "controllermanager.h")

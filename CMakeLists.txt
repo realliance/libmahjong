@@ -5,9 +5,9 @@ project(libmahjong)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  set(libmahjong_compile_options -pedantic -Wall -Wmost -Wextra -Werror)
+  add_compile_options(-pedantic -Wall -Wmost -Wextra -Werror)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  set(libmahjong_compile_options -pedantic -Wall -Wextra -Werror)
+  add_compile_options(-pedantic -Wall -Wextra -Werror)
 endif()
 
 include(ProcessorCount)
@@ -35,17 +35,7 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 endif()
 
 add_library(libmahjong SHARED)
-set_target_properties(libmahjong PROPERTIES PREFIX "")
-set_target_properties(libmahjong PROPERTIES OUTPUT_NAME "libmahjong")
-
-target_compile_options(libmahjong PRIVATE ${lib_mahjong_compile_options})
-target_link_libraries(libmahjong PRIVATE ${CMAKE_DL_LIBS})
-target_include_directories(libmahjong PUBLIC "${libmahjong_SOURCE_DIR}/src")
-
 add_subdirectory(src)
-
-install(TARGETS libmahjong DESTINATION lib)
-install(FILES ${project_includes} DESTINATION include)
 
 if(libmahjong_build_tools)
   add_subdirectory(tools)

@@ -9,7 +9,6 @@ function(package_add_test test_name)
   target_include_directories(
     ${test_name} PRIVATE ${libmahjong_SOURCE_DIR}/src
                          ${libmahjong_SOURCE_DIR}/tests)
-  target_compile_options(${test_name} PRIVATE ${lib_mahjong_compile_options})
   target_precompile_headers(${test_name} REUSE_FROM test_precompiled_headers)
   set_target_properties(${test_name} PROPERTIES FOLDER tests/${test_name})
   gtest_discover_tests(${test_name})
@@ -30,6 +29,7 @@ file(
 target_sources(test_precompiled_headers PRIVATE empty_pch.cc)
 target_include_directories(test_precompiled_headers
                            PRIVATE ${libmahjong_SOURCE_DIR}/src)
+set_target_properties(test_precompiled_headers PROPERTIES FOLDER tests)
 
 add_subdirectory(utils)
 
