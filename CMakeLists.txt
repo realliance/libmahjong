@@ -61,7 +61,7 @@ if(libmahjong_use_clang_utils)
     add_custom_target(
       fix
       COMMAND ${clang_apply_replacements_path} ${clang_apply_replacements_flags}
-              "${libmahjong_SOURCE_DIR}/build/fixes"
+              "${libmahjong_SOURCE_DIR}/build"
       WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
       VERBATIM)
     set_target_properties(fix PROPERTIES FOLDER code_utils)
