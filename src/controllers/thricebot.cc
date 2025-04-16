@@ -1,6 +1,7 @@
 #include "thricebot.h"
 
 #include <cstddef>
+#include <vector>
 
 #include "controllermanager.h"
 #include "types/event.h"

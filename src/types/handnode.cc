@@ -1,7 +1,12 @@
 #include "handnode.h"
 
 #include <algorithm>
+#include <cstddef>
 #include <cstdint>
+#include <iostream>
+#include <ostream>
+#include <string>
+#include <vector>
 
 #include "typeprinter.h"
 #include "types/piecetype.h"

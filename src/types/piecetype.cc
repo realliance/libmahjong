@@ -1,8 +1,8 @@
 #include "piecetype.h"
 
+#include <cstdint>
 #include <map>
 #include <string>
-#include <utility>
 
 #include "types/winds.h"
 

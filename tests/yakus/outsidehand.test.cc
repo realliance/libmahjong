@@ -2,7 +2,6 @@
 #include <array>
 #include <memory>
 #include <string>
-#include <vector>
 
 #include "analysis/analysis.h"
 #include "analysis/hands.h"

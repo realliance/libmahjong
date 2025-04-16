@@ -2,7 +2,6 @@
 
 #include <functional>
 
-#include "types/event.h"
 #include "types/gamestate.h"
 
 namespace mahjong {

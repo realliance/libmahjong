@@ -2,7 +2,6 @@
 #include <memory>
 
 #include "types/gamestate.h"
-#include "types/settings.h"
 
 namespace mahjong {
 

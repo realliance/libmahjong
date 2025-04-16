@@ -1,20 +1,16 @@
 #include <gtest/gtest.h>
 #include <array>
 #include <memory>
-#include <string>
 #include <utility>
 #include <vector>
 
 #include "analysis/hands.h"
-#include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
 #include "statefunctions/statefunctions.h"
 #include "types/event.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
-#include "types/player.h"
 #include "utils/playercontrollerfake.h"
 
 namespace mahjong {

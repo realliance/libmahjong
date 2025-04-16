@@ -1,7 +1,8 @@
 #include "alphabeticalbot.h"
 
-#include <compare>
 #include <cstddef>
+#include <string>
+#include <vector>
 
 #include "controllermanager.h"
 #include "types/event.h"

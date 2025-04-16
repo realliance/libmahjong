@@ -1,5 +1,7 @@
 #include "totobot.h"
 
+#include <vector>
+
 #include "controllermanager.h"
 #include "types/event.h"
 #include "types/piecetype.h"

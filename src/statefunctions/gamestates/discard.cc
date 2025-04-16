@@ -12,7 +12,6 @@
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"
-#include "types/player.h"
 #include "types/walls.h"
 
 namespace mahjong {

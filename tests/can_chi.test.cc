@@ -1,11 +1,9 @@
 #include <gtest/gtest.h>
 #include <array>
-#include <string>
 #include <vector>
 
 #include "statefunctions/decisionfunction.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 

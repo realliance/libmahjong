@@ -5,7 +5,6 @@
 #include "controllers/playercontroller.h"
 #include "statefunctions/statefunctions.h"
 #include "types/gamestate.h"
-#include "types/player.h"
 #include "types/settings.h"
 
 namespace mahjong {

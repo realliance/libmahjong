@@ -6,8 +6,6 @@
 #include "analysis/hands.h"
 #include "statefunctions/statefunctions.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
-#include "types/piecetype.h"
 
 namespace mahjong {
 

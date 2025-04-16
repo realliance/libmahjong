@@ -5,7 +5,6 @@
 
 #include "statefunctions/statefunctions.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/piecetype.h"
 #include "types/walls.h"
 

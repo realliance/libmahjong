@@ -6,17 +6,17 @@
 #include <cstdint>
 #include <map>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "analysis/analysis.h"
 #include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/handnode.h"
 #include "types/meld.h"
 #include "types/pieces.h"
+#include "types/piecetype.h"
+#include "types/score.h"
 #include "types/walls.h"
 #include "types/winds.h"
 
@@ -26,7 +26,7 @@ namespace {
 const int kMaxSingles = 15;
 
 int countSingles(const std::vector<Piece>& hand) {
-  auto root = breakdownHand(std::move(hand));
+  auto root = breakdownHand(hand);
   int min_singles = kMaxSingles;
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     int singles = 0;

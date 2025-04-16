@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <iterator>
 #include <random>
+#include <vector>
 
 #include "types/pieces.h"
 #include "types/piecetype.h"

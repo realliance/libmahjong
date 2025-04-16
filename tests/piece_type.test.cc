@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <string>
 
 #include "types/pieces.h"
 #include "types/piecetype.h"

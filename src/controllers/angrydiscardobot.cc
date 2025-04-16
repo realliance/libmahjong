@@ -2,7 +2,6 @@
 
 #include "controllermanager.h"
 #include "types/event.h"
-#include "types/piecetype.h"
 
 namespace mahjong {
 REGISTER_PLAYER_CONTROLLER(AngryDiscardoBot);

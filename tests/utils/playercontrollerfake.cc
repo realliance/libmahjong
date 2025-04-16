@@ -1,4 +1,8 @@
 #include "playercontrollerfake.h"
+
+#include <utility>
+#include <vector>
+
 #include "controllers/controllermanager.h"
 #include "types/event.h"
 

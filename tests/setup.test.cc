@@ -1,16 +1,12 @@
 #include <gtest/gtest.h>
 #include <array>
 #include <memory>
-#include <string>
 #include <utility>
 #include <vector>
 
-#include "controllers/playercontroller.h"
 #include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
-#include "types/player.h"
 #include "types/walls.h"
 #include "types/winds.h"
 #include "utils/playercontrollerfake.h"

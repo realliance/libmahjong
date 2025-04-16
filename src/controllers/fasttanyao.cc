@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <utility>
+#include <vector>
 
 #include "controllermanager.h"
 #include "types/event.h"

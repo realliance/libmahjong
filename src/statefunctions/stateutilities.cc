@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cstdint>
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -10,8 +11,9 @@
 #include "decisionfunction.h"
 #include "types/event.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
+#include "types/piecetype.h"
 #include "types/player.h"
+#include "types/winds.h"
 
 namespace mahjong {
 
