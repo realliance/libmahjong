@@ -28,7 +28,9 @@ function(package_add_test test_name)
 
   get_target_property(test_source ${test_name} SOURCES)
   list(TRANSFORM test_source PREPEND ${CMAKE_CURRENT_LIST_DIR}/)
-  set(test_sources ${test_sources} ${test_source} PARENT_SCOPE)
+  set(test_sources
+      ${test_sources} ${test_source}
+      PARENT_SCOPE)
 endfunction()
 
 add_subdirectory(utils)
@@ -71,6 +73,6 @@ package_add_test(
   "yakus/fullflush.test.cc"
   "yakus/blessingofman.test.cc")
 
-set(project_sources
-    ${project_sources} ${test_sources}
+set(test_sources
+    ${test_sources}
     PARENT_SCOPE)

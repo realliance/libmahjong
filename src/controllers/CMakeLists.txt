@@ -1,17 +1,20 @@
 target_sources(
   libmahjong
   PRIVATE "angrydiscardobot.cc"
-          "angrydiscardobot.h"
-          "thricebot.h"
           "thricebot.cc"
           "fasttanyao.cc"
-          "fasttanyao.h"
           "alphabeticalbot.cc"
-          "alphabeticalbot.h"
           "totobot.cc"
-          "totobot.h"
           "gentlemanbot.cc"
-          "gentlemanbot.h"
-          "playercontroller.h"
-          "controllermanager.cc"
-          "controllermanager.h")
+          "controllermanager.cc")
+target_precompile_headers(
+  libmahjong
+  PRIVATE
+  "angrydiscardobot.h"
+  "thricebot.h"
+  "fasttanyao.h"
+  "alphabeticalbot.h"
+  "totobot.h"
+  "gentlemanbot.h"
+  "playercontroller.h"
+  "controllermanager.h")

@@ -1,1 +1,6 @@
-target_sources(libmahjong PRIVATE "analysis.h" "handtree.cc" "possiblesets.cc" "hands.cc" "hands.h")
+target_sources(libmahjong PRIVATE  "handtree.cc" "possiblesets.cc" "hands.cc" )
+target_precompile_headers(
+  libmahjong
+  PRIVATE
+  "hands.h"
+"analysis.h")

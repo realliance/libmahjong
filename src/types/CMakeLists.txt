@@ -1,19 +1,18 @@
-target_sources(
+target_sources(libmahjong PRIVATE "handnode.cc" "piecetype.cc" "typeprinter.cc"
+                                  "walls.cc")
+target_precompile_headers(
   libmahjong
-  PRIVATE "event.h"
-          "gamestate.h"
-          "hand.h"
-          "handnode.cc"
-          "handnode.h"
-          "meld.h"
-          "pieces.h"
-          "piecetype.cc"
-          "piecetype.h"
-          "player.h"
-          "score.h"
-          "settings.h"
-          "typeprinter.cc"
-          "typeprinter.h"
-          "walls.cc"
-          "walls.h"
-          "winds.h")
+  PRIVATE
+  "event.h"
+  "gamestate.h"
+  "hand.h"
+  "handnode.h"
+  "meld.h"
+  "pieces.h"
+  "piecetype.h"
+  "player.h"
+  "score.h"
+  "settings.h"
+  "typeprinter.h"
+  "walls.h"
+  "winds.h")

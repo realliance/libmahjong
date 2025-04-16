@@ -4,10 +4,6 @@ project(libmahjong)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if(clang_tidy_path)
-  set(CMAKE_CXX_CLANG_TIDY "${clang_tidy_path}")
-endif()
-
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   set(libmahjong_compile_options -pedantic -Wall -Wmost -Wextra -Werror)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -21,6 +17,23 @@ if(NOT N EQUAL 0)
   set(ctest_test_args ${ctest_test_args} PARALLEL_LEVEL ${N})
 endif()
 
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  option(libmahjong_build_tools "whether or not examples should be built" ON)
+  option(libmahjong_build_tests "whether or not tests should be built" ON)
+  option(libmahjong_clang_tidy
+         "whether or not project is compiled with clang-tidy" ON)
+
+  if(libmahjong_clang_tidy)
+    find_program(clang_tidy_path NAMES clang-tidy REQUIRED)
+    find_program(clang_tidy_cache_path NAMES clang-tidy-cache)
+    if(clang_tidy_cache_path)
+      set(CMAKE_CXX_CLANG_TIDY "${clang_tidy_cache_path};${clang_tidy_path}")
+    else()
+      set(CMAKE_CXX_CLANG_TIDY "${clang_tidy_path}")
+    endif()
+  endif()
+endif()
+
 add_library(libmahjong SHARED)
 set_target_properties(libmahjong PROPERTIES PREFIX "")
 set_target_properties(libmahjong PROPERTIES OUTPUT_NAME "libmahjong")
@@ -31,54 +44,30 @@ target_include_directories(libmahjong PUBLIC "${libmahjong_SOURCE_DIR}/src")
 
 add_subdirectory(src)
 
+if(libmahjong_build_tools)
+  add_subdirectory(tools)
+endif()
+
+if(libmahjong_build_tests)
+  enable_testing()
+  add_subdirectory(tests)
+endif()
+
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-  option(libmahjong_build_tools "whether or not examples should be built" ON)
-  option(libmahjong_build_tests "whether or not tests should be built" ON)
-  option(libmahjong_clang_tidy
-         "whether or not project is compiled with clang-tidy" ON)
-
-  if(libmahjong_build_tools)
-    add_subdirectory(tools)
-  endif()
-
-  if(libmahjong_build_tests)
-    enable_testing()
-    add_subdirectory(tests)
-  endif()
-
-  if(libmahjong_clang_tidy)
-    find_program(clang_tidy_path NAMES clang-tidy REQUIRED)
-    set_target_properties(libmahjong PROPERTIES CXX_CLANG_TIDY
-                                                "${clang_tidy_path}")
-    add_custom_target(
-      fix
-      COMMAND clang-tidy --fix-errors -p=build ${project_sources}
-      WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
-      VERBATIM)
-    set_target_properties(fix PROPERTIES FOLDER code_utils)
-    add_custom_target(
-      tidy
-      COMMAND clang-tidy -p=build ${project_sources}
-      WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
-      VERBATIM)
-    set_target_properties(tidy PROPERTIES FOLDER code_utils)
-  endif()
-
-  find_program(iwyu_path NAMES include-what-you-use iwyu)
-  if(iwyu_path)
-    set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
-  endif()
-
-  find_program(iwyu_tool_path NAMES iwyu-tool)
-  find_program(iwyu_fix_includes NAMES iwyu-fix-includes)
-  if(iwyu_tool_path AND iwyu_fix_includes)
-    add_custom_target(
-      fix_includes
-      COMMAND ${CMAKE_SOURCE_DIR}/iwyu_fix.sh
-      WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
-      VERBATIM)
-    set_target_properties(fix_includes PROPERTIES FOLDER code_utils)
-  endif()
+  add_custom_target(
+    fix
+    COMMAND ${clang_tidy_cache_path} ${clang_tidy_path} --fix-errors -p=build
+            ${project_sources}
+    WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
+    VERBATIM)
+  set_target_properties(fix PROPERTIES FOLDER code_utils)
+  add_custom_target(
+    tidy
+    COMMAND ${clang_tidy_cache_path} ${clang_tidy_path} -p=build
+            ${project_sources}
+    WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
+    VERBATIM)
+  set_target_properties(tidy PROPERTIES FOLDER code_utils)
 
   find_program(clang_format_path NAMES clang-format)
   if(clang_format_path)
@@ -86,9 +75,9 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     add_custom_target(
       format ALL
       COMMAND ${clang_format_path} ${CLANG_FORMAT_FLAGS} ${project_sources}
+              ${project_includes} ${test_sources} ${tool_sources}
       WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
       VERBATIM)
     set_target_properties(format PROPERTIES FOLDER code_utils)
   endif()
-
 endif()
