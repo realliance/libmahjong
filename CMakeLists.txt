@@ -20,10 +20,9 @@ endif()
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
   option(libmahjong_build_tools "whether or not examples should be built" ON)
   option(libmahjong_build_tests "whether or not tests should be built" ON)
-  option(libmahjong_clang_tidy
+  option(libmahjong_use_clang_utils
          "whether or not project is compiled with clang-tidy" ON)
-
-  if(libmahjong_clang_tidy)
+  if(libmahjong_use_clang_utils)
     find_program(clang_tidy_path NAMES clang-tidy REQUIRED)
     find_program(clang_tidy_cache_path NAMES clang-tidy-cache)
     if(clang_tidy_cache_path)
@@ -31,6 +30,7 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     else()
       set(CMAKE_CXX_CLANG_TIDY "${clang_tidy_path}")
     endif()
+    set(CMAKE_CXX_CLANG_TIDY_EXPORT_FIXES_DIR "fixes")
   endif()
 endif()
 
@@ -53,29 +53,28 @@ if(libmahjong_build_tests)
   add_subdirectory(tests)
 endif()
 
-if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-  add_custom_target(
-    fix
-    COMMAND ${clang_tidy_cache_path} ${clang_tidy_path} --fix-errors -p=build
-            ${project_sources}
-    WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
-    VERBATIM)
-  set_target_properties(fix PROPERTIES FOLDER code_utils)
-  add_custom_target(
-    tidy
-    COMMAND ${clang_tidy_cache_path} ${clang_tidy_path} -p=build
-            ${project_sources}
-    WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
-    VERBATIM)
-  set_target_properties(tidy PROPERTIES FOLDER code_utils)
+if(libmahjong_use_clang_utils)
+  find_program(clang_apply_replacements_path NAMES clang-apply-replacements)
+  if(clang_apply_replacements_path)
+    set(clang_apply_replacements_flags "--style=file"
+                                       "--remove-change-desc-files")
+    add_custom_target(
+      fix
+      COMMAND ${clang_apply_replacements_path} ${clang_apply_replacements_flags}
+              "${libmahjong_SOURCE_DIR}/build/fixes"
+      WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
+      VERBATIM)
+    set_target_properties(fix PROPERTIES FOLDER code_utils)
+  endif()
 
   find_program(clang_format_path NAMES clang-format)
   if(clang_format_path)
-    set(CLANG_FORMAT_FLAGS -i;)
+    set(clang_format_flags -i)
+    set(format_files ${clang_format_flags} ${project_sources}
+                     ${project_includes} ${test_sources} ${tool_sources})
     add_custom_target(
       format ALL
-      COMMAND ${clang_format_path} ${CLANG_FORMAT_FLAGS} ${project_sources}
-              ${project_includes} ${test_sources} ${tool_sources}
+      COMMAND ${clang_format_path} ${format_files}
       WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
       VERBATIM)
     set_target_properties(format PROPERTIES FOLDER code_utils)
