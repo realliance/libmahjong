@@ -1,6 +1,5 @@
 #include <array>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "analysis/hands.h"
@@ -53,7 +52,7 @@ std::unique_ptr<GameState> Exhaust(std::unique_ptr<GameState> state) {
     }
   }
   state->nextState = RoundEnd;
-  return std::move(state);
+  return state;
 }
 
 }  // namespace mahjong

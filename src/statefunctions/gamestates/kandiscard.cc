@@ -1,7 +1,6 @@
 #include <array>
 #include <cstdint>
 #include <memory>
-#include <utility>
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
@@ -50,7 +49,7 @@ std::unique_ptr<GameState> KanDiscard(std::unique_ptr<GameState> state) {
     state->nextState = Replacement;
   }
 
-  return std::move(state);
+  return state;
 }
 
 }  // namespace mahjong

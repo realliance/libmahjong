@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "controllers/playercontroller.h"
@@ -72,7 +71,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
   if (decision.type == Event::kDecline &&
       state->walls.GetRemainingPieces() == 0) {
     state->nextState = Exhaust;
-    return std::move(state);
+    return state;
   }
 
   if (decision.type != Event::kDecline) {
@@ -102,7 +101,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
       break;
   }
 
-  return std::move(state);
+  return state;
 }
 
 }  // namespace mahjong

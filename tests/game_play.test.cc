@@ -18,7 +18,7 @@ namespace mahjong {
 TEST(GamePlay, Discard) {
   std::unique_ptr<GameState> state;
   state->overrideWall = {kSixBamboo};
-  PlayerControllerFake* bot_ptr;
+  PlayerControllerFake bot_ptr;
   std::unique_ptr<PlayerControllerFake> bot;
 
   for (int i = 0; i < 4; i++) {
@@ -32,9 +32,9 @@ TEST(GamePlay, Discard) {
       .piece = Piece(kSixBamboo).toUint8_t(),
       .decision = true,
   };
-  bot_ptr->AddEvents({e});
+  bot_ptr.AddEvents({e});
   ASSERT_NO_THROW(state = PlayerHand(std::move(state)));
-  EXPECT_EQ(e, bot_ptr->GetEvents()[0]);
+  EXPECT_EQ(e, bot_ptr.GetEvents()[0]);
   EXPECT_EQ(state->hands[0].discards[0], kSixBamboo);
 }
 

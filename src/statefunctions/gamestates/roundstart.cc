@@ -2,7 +2,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "controllers/playercontroller.h"
@@ -40,6 +39,6 @@ std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
                });
 
   state->nextState = Draw;
-  return std::move(state);
+  return state;
 }
 }  // namespace mahjong

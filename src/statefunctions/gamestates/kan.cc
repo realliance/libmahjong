@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "statefunctions/statefunctions.h"
@@ -41,13 +40,13 @@ std::unique_ptr<GameState> Kan(std::unique_ptr<GameState> state) {
                    /*count=*/4) != 4) {
     std::cerr << "Not Enough Pieces to remove in kan" << '\n';
     state->nextState = Error;
-    return std::move(state);
+    return state;
   }
   state->hands.at(state->lastCaller)
       .melds.push_back({Meld::kKan, state->pendingPiece});
 
   state->nextState = KanDiscard;
-  return std::move(state);
+  return state;
 }
 
 }  // namespace mahjong

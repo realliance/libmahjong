@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "controllers/playercontroller.h"
@@ -82,7 +81,7 @@ std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
       break;
   }
 
-  return std::move(state);
+  return state;
 }
 
 }  // namespace mahjong

@@ -1,6 +1,5 @@
 #include <array>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "statefunctions/statefunctions.h"
@@ -16,6 +15,6 @@ std::unique_ptr<GameState> Draw(std::unique_ptr<GameState> state) {
   state->hands.at(state->currentPlayer).live.push_back(state->pendingPiece);
   state->hands.at(state->currentPlayer).sort();
   state->nextState = PlayerHand;
-  return std::move(state);
+  return state;
 }
 }  // namespace mahjong

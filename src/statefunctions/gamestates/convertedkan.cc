@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <utility>
 
 #include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
@@ -24,18 +23,18 @@ std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
                    /*count=*/1) != 1) {
     std::cerr << "Not Enough pieces to remove in ConvertedKan" << '\n';
     state->nextState = Error;
-    return std::move(state);
+    return state;
   }
   state->concealedKan = false;
   for (auto& meld : state->hands.at(state->currentPlayer).melds) {
     if (meld.type == Meld::kPon && meld.start == state->pendingPiece) {
       meld.type = Meld::kKan;
       state->nextState = KanDiscard;
-      return std::move(state);
+      return state;
     }
   }
   std::cerr << "Could Not find matching pon" << '\n';
   state->nextState = Error;
-  return std::move(state);
+  return state;
 }
 }  // namespace mahjong

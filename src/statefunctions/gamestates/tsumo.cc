@@ -1,7 +1,6 @@
 #include <array>
 #include <cstdint>
 #include <memory>
-#include <utility>
 
 #include "analysis/hands.h"
 #include "statefunctions/statefunctions.h"
@@ -58,6 +57,6 @@ std::unique_ptr<GameState> Tsumo(std::unique_ptr<GameState> state) {
     state->counters = 0;
   }
   state->nextState = RoundEnd;
-  return std::move(state);
+  return state;
 }
 }  // namespace mahjong

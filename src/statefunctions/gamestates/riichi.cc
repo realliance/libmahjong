@@ -1,7 +1,6 @@
 #include <array>
 #include <cstdint>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "analysis/hands.h"
@@ -36,6 +35,6 @@ std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
   state->riichiSticks++;
 
   state->nextState = Discard;
-  return std::move(state);
+  return state;
 }
 }  // namespace mahjong

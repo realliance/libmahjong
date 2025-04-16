@@ -1,6 +1,5 @@
 #include <array>
 #include <memory>
-#include <utility>
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/statefunctions.h"
@@ -16,7 +15,7 @@ std::unique_ptr<GameState> GameStart(std::unique_ptr<GameState> state) {
   }
   state->g.seed(state->seed);
   state->nextState = RoundStart;
-  return std::move(state);
+  return state;
 }
 
 }  // namespace mahjong

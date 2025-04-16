@@ -126,10 +126,12 @@ void FastTanyao::ReceiveEvent(Event e) {
       break;
     case Event::kKan:
       IncrementPiece(event_piece, all_discards_, /*count=*/4);
+      break;
     case Event::kChi:
       IncrementPiece(event_piece, all_discards_);
       IncrementPiece(event_piece + 1, all_discards_);
       IncrementPiece(event_piece + 2, all_discards_);
+      break;
     case Event::kDiscard:
       if (e.decision) {
         ProcessNewPiece(event_piece);
@@ -137,8 +139,8 @@ void FastTanyao::ReceiveEvent(Event e) {
         IncrementPiece(event_piece, all_discards_);
       }
       break;
-    default:;
-      // doing nothing here on purpose -alice
+    default:
+      break;
   }
 }
 

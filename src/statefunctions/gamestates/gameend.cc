@@ -1,5 +1,4 @@
 #include <memory>
-#include <utility>
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/statefunctions.h"
@@ -14,7 +13,7 @@ std::unique_ptr<GameState> GameEnd(std::unique_ptr<GameState> state) {
     player.controller->ReceiveEvent(kEndEvent);
     player.controller.reset();
   }
-  return std::move(state);
+  return state;
 }
 
 }  // namespace mahjong

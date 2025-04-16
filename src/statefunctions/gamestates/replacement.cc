@@ -1,7 +1,6 @@
 #include <array>
 #include <cstdint>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "statefunctions/statefunctions.h"
@@ -28,7 +27,7 @@ std::unique_ptr<GameState> Replacement(std::unique_ptr<GameState> state) {
                });
 
   state->nextState = PlayerHand;
-  return std::move(state);
+  return state;
 }
 
 }  // namespace mahjong

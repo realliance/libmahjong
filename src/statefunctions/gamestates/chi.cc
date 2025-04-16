@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "statefunctions/statefunctions.h"
@@ -39,7 +38,7 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
   if (chi_start == kError) {
     std::cerr << "Failed to get start of Chi" << '\n';
     state->nextState = Error;
-    return std::move(state);
+    return state;
   }
 
   if (state->hands.at(state->currentPlayer).riichi &&
@@ -73,14 +72,14 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
           1) {
     std::cerr << "Not Enough Pieces to remove in Chi" << '\n';
     state->nextState = Error;
-    return std::move(state);
+    return state;
   }
   state->hands.at(state->lastCaller).melds.push_back({Meld::kChi, chi_start});
 
   state->pendingPiece = AskForDiscard(*state);
 
   state->nextState = Discard;
-  return std::move(state);
+  return state;
 }
 
 }  // namespace mahjong

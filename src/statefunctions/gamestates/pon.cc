@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "statefunctions/statefunctions.h"
@@ -42,7 +41,7 @@ std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
                    /*count=*/3) != 3) {
     std::cerr << "Not enough pieces to remove in Pon" << '\n';
     state->nextState = Error;
-    return std::move(state);
+    return state;
   }
   state->hands.at(state->lastCaller)
       .melds.push_back({Meld::kPon, state->pendingPiece});
@@ -50,7 +49,7 @@ std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
   state->pendingPiece = AskForDiscard(*state);
 
   state->nextState = Discard;
-  return std::move(state);
+  return state;
 }
 
 }  // namespace mahjong
