@@ -12,9 +12,8 @@
 namespace mahjong {
 REGISTER_PLAYER_CONTROLLER(AlphabeticalBot);
 
-void AlphabeticalBot::RoundStart(std::vector<Piece> hand,
-                                 /*seatWind=*/Wind,
-                                 /*prevalentWind=*/Wind) {
+void AlphabeticalBot::RoundStart(std::vector<Piece> hand, Wind /*seatWind*/,
+                                 Wind /*prevalentWind*/) {
   hand_ = hand;
   decisionToTake_.type = Event::kDiscard;
   decisionToTake_.player = id_;
