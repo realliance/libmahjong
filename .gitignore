@@ -64,6 +64,8 @@ release
 
 build/
 
+Testing/
+
 vgcore.*
 callgrind.out.*
 *.svg

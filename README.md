@@ -6,19 +6,19 @@
 
 ## Getting Started
 
-### On Linux
-
 Install the following dependencies:
 
 - `git`
 
 - `cmake`
 
-- `clang` (or [clang-11](https://packages.ubuntu.com/bionic/clang-11))
+- `clang` or `gcc`
 
-### On Windows
+Optionally:
 
-Windows requires Visual Studio 2019, which can be found [here](https://visualstudio.microsoft.com/downloads/), and CMake, which can be found [here](https://cmake.org/download/)
+- `gtest` (For testing support)
+
+- `ctcache` (For quicker compilation with clang-tidy enabled)
 
 Clone the repository:
 
@@ -26,17 +26,15 @@ Clone the repository:
 git clone git@github.com:realliance/libmahjong.git
 ```
 
-Run the following commands within the project directory (note that these commands are for ):
+Run the following commands within the project directory:
 ```
 # Bootstrap CMake Environment
 cmake -S . -B build
 
-# Or bootstrap CMake with tool building enabled
-cmake -S . -B build -DPACKAGE_TOOLS=ON
-
-# Or, if wanting to use Clang (Linux Only)
-
-C=clang CXX=clang++ cmake -S . -B build
+# CMake project opinions (default)
+ * libmahjong_build_tools: whether or not examples should be built (ON)
+ * libmahjong_build_tests: whether or not tests should be built (ON)
+ * libmahjong_use_clang_utils: whether or not project is compiled with clang-tidy (ON)
 
 # Build Project
 cmake --build build
@@ -44,8 +42,4 @@ cmake --build build
 
 ## Testing and Documentation
 
-The test suite is located in `tests/` and can be run with `make -C build check`
-
-## Attribution
-
-The Riichi Mahjong 2016 Ruleset is redistributed from the [European Mahjong Association](http://mahjong-europe.org/portal/images/docs/Riichi-rules-2016-EN.pdf) under the CC BY-NC-SA 4.0. Their ruleset forms the basis for libmahjong.
+The test suite is located in `tests/` and can be run with `ctest --test-dir build --output-on-failure`

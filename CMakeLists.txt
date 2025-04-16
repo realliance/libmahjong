@@ -74,7 +74,7 @@ if(libmahjong_use_clang_utils)
     set(format_files ${libmahjong_sources} ${libmahjong_includes}
                      ${test_sources} ${tool_sources})
     add_custom_target(
-      format ALL
+      format
       COMMAND ${clang_format_path} ${clang_format_flags} ${format_files}
       WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
       VERBATIM)
