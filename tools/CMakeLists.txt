@@ -1,5 +1,5 @@
 add_subdirectory(driver)
 
-set(tool_sources
-    ${tool_sources}
+set(project_sources
+    ${project_sources} ${tool_sources}
     PARENT_SCOPE)

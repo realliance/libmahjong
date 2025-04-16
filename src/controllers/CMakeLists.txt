@@ -10,13 +10,7 @@ target_sources(
   PUBLIC FILE_SET
          HEADERS
          BASE_DIRS
-         .
+         "${libmahjong_SOURCE_DIR}/src"
          FILES
-         "angrydiscardobot.h"
-         "thricebot.h"
-         "fasttanyao.h"
-         "alphabeticalbot.h"
-         "totobot.h"
-         "gentlemanbot.h"
          "playercontroller.h"
          "controllermanager.h")

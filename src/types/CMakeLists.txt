@@ -4,7 +4,7 @@ target_sources(
   PUBLIC FILE_SET
          HEADERS
          BASE_DIRS
-         .
+         "${libmahjong_SOURCE_DIR}/src"
          FILES
          "event.h"
          "gamestate.h"
