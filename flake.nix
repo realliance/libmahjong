@@ -32,7 +32,7 @@
 
             src = ./.;
 
-            cmakeFlags = flags ++ [
+            cmakeFlags = [
               "-Dlibmahjong_use_clang_utils=OFF"
               "-Dlibmahjong_build_tests=OFF"
               "-Dlibmahjong_build_tools=OFF"
