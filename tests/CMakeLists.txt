@@ -21,7 +21,9 @@ function(package_add_test test_name)
 endfunction()
 
 add_library(test_precompiled_headers STATIC)
-target_precompile_headers(test_precompiled_headers PRIVATE ${project_includes})
+get_target_property(libmahjong_includes libmahjong HEADER_SET)
+target_precompile_headers(test_precompiled_headers PRIVATE
+                          ${libmahjong_includes})
 file(
   GENERATE
   OUTPUT empty_pch.cc
@@ -71,6 +73,9 @@ package_add_test(
   "yakus/fullflush.test.cc"
   "yakus/blessingofman.test.cc")
 
+get_target_property(test_utils_sources test_utils SOURCES)
+list(TRANSFORM test_utils_sources PREPEND ${CMAKE_CURRENT_LIST_DIR}/utils/)
+get_target_property(test_utils_includes test_utils HEADER_SET)
 set(test_sources
-    ${test_sources}
+    ${test_sources} ${test_utils_sources} ${test_utils_includes}
     PARENT_SCOPE)

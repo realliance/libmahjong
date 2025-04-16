@@ -6,7 +6,8 @@ add_subdirectory(statefunctions)
 add_subdirectory(types)
 add_subdirectory(analysis)
 
-target_precompile_headers(libmahjong PRIVATE ${project_includes})
+get_target_property(libmahjong_includes libmahjong HEADER_SET)
+target_precompile_headers(libmahjong PRIVATE ${libmahjong_includes})
 
 install(TARGETS libmahjong DESTINATION lib)
 install(TARGETS libmahjong FILE_SET HEADERS
