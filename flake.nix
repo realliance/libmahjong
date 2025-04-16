@@ -16,16 +16,6 @@
           git
         ];
 
-        googletest = pkgs.fetchFromGitHub {
-          owner = "google";
-          repo = "googletest";
-          rev = "e90fe2485641bab0d6af4500192dc503384950d1";
-          sha256 = "ddvZed7VynQkorrBGPK3jIhf2orzb5eiZZlUrH+bYoQ=";
-        };
-
-        flags = [
-          "-DFETCHCONTENT_SOURCE_DIR_GOOGLETEST=${googletest}"
-        ];
       in
       {
         devShells = {
@@ -43,7 +33,9 @@
             src = ./.;
 
             cmakeFlags = flags ++ [
-              "-Dlibmahjong_clang_tidy=OFF"
+              "-Dlibmahjong_use_clang_utils=OFF"
+              "-Dlibmahjong_build_tests=OFF"
+              "-Dlibmahjong_build_tools=OFF"
               "-DCMAKE_INSTALL_LIBDIR=lib"
               "-DCMAKE_INSTALL_INCLUDEDIR=include"
             ];
