@@ -36,7 +36,6 @@ struct GameState {
   std::array<bool, kNumPlayers> hasRonned = {};
   std::array<Hand, kNumPlayers> hands = {};
   std::array<Player, kNumPlayers> players = {};
-  std::vector<Piece> overrideWall;
 };
 
 }  // namespace mahjong

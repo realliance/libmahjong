@@ -48,11 +48,6 @@ std::unique_ptr<GameState> InitGameState(const GameSettings& settings) {
     std::random_device rd;
     state->seed = rd();
   }
-  if (!settings.overrideWall.empty()) {
-    state->overrideWall = settings.overrideWall;
-    ;
-    state->seed = 0xBEEFBABE;
-  }
   state->currState = GameStart;
   return state;
 }

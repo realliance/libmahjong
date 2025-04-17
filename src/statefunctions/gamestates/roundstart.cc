@@ -16,11 +16,7 @@
 namespace mahjong {
 
 std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
-  if (state->overrideWall.empty()) {
-    state->walls = Walls(state->g);
-  } else {
-    state->walls = Walls(state->overrideWall);
-  }
+  state->walls = Walls(state->g);
   for (size_t i = 0; i < 4; i++) {
     auto hand = state->walls.TakeHand();
     state->players.at(i).controller->RoundStart(

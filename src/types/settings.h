@@ -11,7 +11,6 @@ constexpr int kStartingPoints = 25000;
 
 struct GameSettings {
   std::vector<std::string> seatControllers;
-  std::vector<Piece> overrideWall;
   uint64_t seed = 0;
 };
 
