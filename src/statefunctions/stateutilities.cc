@@ -98,9 +98,6 @@ Event GetValidDecisionOrThrow(const GameState& state, int player, bool inHand) {
       throw 0xBAD22222;
     }
     i++;
-    if (state.halt) {
-      throw 0xFACEFEED;
-    }
     decision = state.players.at(player).controller->RetrieveDecision();
     valid = ValidateDecision(state, player, decision, inHand);
   }

@@ -13,14 +13,16 @@
 #include "types/gamestate.h"
 #include "types/settings.h"
 
+namespace mahjong {
+
 namespace {
 int thread_index = 1;
 std::map<int, bool> should_halt;
 }  // namespace
 
-int mahjong::StartGame(const GameSettings& settings, bool async) {
+int StartGame(const GameSettings& settings, bool async) {
   if (async) {
-    std::thread gameloop(&mahjong::StateController, settings);
+    std::thread gameloop(&StateController, settings);
     gameloop.detach();
     return thread_index;
   }
@@ -28,18 +30,15 @@ int mahjong::StartGame(const GameSettings& settings, bool async) {
   return 0;
 }
 
-void mahjong::ExitGame(int game) {
+void ExitGame(int game) {
   if (should_halt.contains(game)) {
     // std::cerr << "Halting Game..." << std::endl;
     should_halt[game] = true;
   }
 }
 
-void mahjong::StateController(GameSettings settings) {
-  std::unique_ptr<GameState> state;
-  const int id = thread_index++;
-  should_halt[id] = false;
-
+std::unique_ptr<GameState> InitGameState(const GameSettings& settings) {
+  auto state = std::make_unique<GameState>();
   for (int i = 0; i < 4; i++) {
     ControllerManager::Instance().NewController(settings.seatControllers.at(i));
   }
@@ -50,30 +49,43 @@ void mahjong::StateController(GameSettings settings) {
     state->seed = rd();
   }
   if (!settings.overrideWall.empty()) {
-    std::swap(state->overrideWall, settings.overrideWall);
+    state->overrideWall = settings.overrideWall;
+    ;
     state->seed = 0xBEEFBABE;
   }
   state->currState = GameStart;
-  while (state->nextState != GameEnd && !should_halt[id]) {
-    try {
-      state->prevState = state->currState;
-      state->currState = state->nextState;
-      state = state->nextState(std::move(state));
-    } catch (const unsigned int e) {
-      switch (e) {
-        case 0xFACEFEED:  // Halted during controller decision
-          should_halt.erase(id);
-          return;
-        case 0xBAD22222:  // Asked for decision too many times.
-          std::cerr << "Asked for decision too many times" << '\n';
-          state->nextState = Error;
-          break;
-        default:
-          throw(e);
-      }
+  return state;
+}
+
+std::unique_ptr<GameState> AdvanceGameState(
+    std::unique_ptr<GameState> state) {
+  try {
+    state->prevState = state->currState;
+    state->currState = state->nextState;
+    return state->nextState(std::move(state));
+  } catch (const unsigned int e) {
+    switch (e) {
+      case 0xBAD22222:  // Asked for decision too many times.
+        std::cerr << "Asked for decision too many times" << '\n';
+        state->nextState = Error;
+        break;
+      default:
+        throw(e);
     }
+  }
+  return state;
+}
+
+void StateController(const GameSettings& settings) {
+  const int id = thread_index++;
+  should_halt[id] = false;
+  std::unique_ptr<GameState> state = InitGameState(settings);
+  while (state->nextState != GameEnd && !should_halt[id]) {
+    state = AdvanceGameState(std::move(state));
   }
   if (state->nextState == GameEnd) {
     state->nextState(std::move(state));
   }
 }
+
+}  // namespace mahjong
