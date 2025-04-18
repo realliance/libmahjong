@@ -1,5 +1,5 @@
 {
-  description = "Libmahjong Riichi Majong Game Engine";
+  description = "Libmahjong Riichi Mahjong Game Engine";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs";
@@ -11,80 +11,62 @@
       let
         pkgs = import nixpkgs { inherit system; };
 
-        packages = with pkgs; [
+        buildPackages = with pkgs; [
           cmake
           git
         ];
 
+        commonAttrs = {
+          pname = "libmahjong";
+          version = "0.1.0";
+          src = ./.;
+
+          cmakeFlags = [
+            "-DBUILD_SHARED_LIBS=ON"  # Explicitly build shared libraries
+            "-Dlibmahjong_use_clang_utils=OFF"
+            "-Dlibmahjong_build_tests=OFF"
+            "-Dlibmahjong_build_tools=OFF"
+            "-DCMAKE_INSTALL_LIBDIR=lib"
+            "-DCMAKE_INSTALL_INCLUDEDIR=include"
+          ];
+
+          # Let CMake handle installation
+          dontUseCmakeBuildDir = false;
+          
+          meta = with pkgs.lib; {
+            description = "Riichi Mahjong Game Engine Library";
+          };
+        };
       in
       {
-        devShells = {
-          default = pkgs.mkShell {
-            packages = packages ++ [ pkgs.git ];
-          };
+        devShells.default = pkgs.mkShell {
+          packages = buildPackages ++ [ pkgs.git ];
         };
 
         packages = rec {
-          gcc = pkgs.stdenv.mkDerivation rec {
-            name = "libmahjong";
-            pname = "libmahjong";
-            version = "0.1.0";
-
-            src = ./.;
-
-            cmakeFlags = [
-              "-Dlibmahjong_use_clang_utils=OFF"
-              "-Dlibmahjong_build_tests=OFF"
-              "-Dlibmahjong_build_tools=OFF"
-              "-DCMAKE_INSTALL_LIBDIR=lib"
-              "-DCMAKE_INSTALL_INCLUDEDIR=include"
+          gcc = pkgs.stdenv.mkDerivation (commonAttrs // {
+            nativeBuildInputs = buildPackages;
+            # Add any runtime dependencies your library needs
+            propagatedBuildInputs = with pkgs; [ 
+              # Add dependencies that users of your library will need
             ];
             
-            nativeBuildInputs = packages;
-            
-            # Ensure headers and library files are installed
-            postInstall = ''
-              mkdir -p $out/lib
-              cp libmahjong.so $out/lib/
+            # This ensures dependent packages can find your library
+            setupHook = pkgs.writeText "setup-hook.sh" ''
+              addLibmahjongLibs() {
+                addToSearchPath LD_LIBRARY_PATH $1/lib
+              }
+              addEnvHooks "$targetOffset" addLibmahjongLibs
             '';
-            
-            meta = with pkgs.lib; {
-              description = "Riichi Mahjong Game Engine Library";
-            };
-          };
+          });
           
-          clang = pkgs.clangStdenv.mkDerivation rec {
-            name = "libmahjong";
-            pname = "libmahjong";
-            version = "0.1.0";
-
-            src = ./.;
-
-            cmakeFlags = [
-              "-Dlibmahjong_use_clang_utils=OFF"
-              "-Dlibmahjong_build_tests=OFF"
-              "-Dlibmahjong_build_tools=OFF"
-              "-DCMAKE_INSTALL_LIBDIR=lib"
-              "-DCMAKE_INSTALL_INCLUDEDIR=include" 
-            ];
-            
-            nativeBuildInputs = packages ++ [ pkgs.clang ];
-            
-            # Ensure headers and library files are installed
-            postInstall = ''
-              mkdir -p $out/lib
-              cp libmahjong.so $out/lib/
-            '';
-            
-            meta = with pkgs.lib; {
-              description = "Riichi Mahjong Game Engine Library";
-            };
-          };
+          clang = pkgs.clangStdenv.mkDerivation (commonAttrs // {
+            nativeBuildInputs = buildPackages ++ [ pkgs.clang ];
+          });
 
           default = gcc;
         };
         
-        # Add library output for consumers
         lib = {
           libmahjong = self.packages.${system}.default;
         };
