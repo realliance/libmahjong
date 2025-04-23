@@ -40,7 +40,30 @@
       in
       {
         devShells.default = pkgs.mkShell {
-          packages = buildPackages ++ [ pkgs.git ];
+          packages = buildPackages ++ [
+            pkgs.git
+            pkgs.gtest
+            pkgs.clang_19
+            pkgs.clang-tools
+            pkgs.llvmPackages_19.libcxx
+          ];
+          
+          # Set Clang as the default compiler
+          shellHook = ''
+            CLANG_RESOURCE_DIR=$(${pkgs.clang_19}/bin/clang -print-resource-dir)
+            LIBCXX=${pkgs.llvmPackages_19.libcxx}
+            
+            # Set up clang-tidy cache
+            mkdir -p .cache
+            export CLANG_TIDY_USE_CACHE=1
+            export CLANG_TIDY_CACHE_DIR="$(pwd)/.cache"
+            
+          '';
+
+          stdenv = pkgs.clangStdenv.override {
+            cc = pkgs.llvmPackages_19.clang;
+            libcxx = pkgs.llvmPackages_19.libcxx;
+          };
         };
 
         packages = rec {
