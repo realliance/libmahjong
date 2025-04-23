@@ -21,6 +21,7 @@ class ControllerManager {
   std::unique_ptr<mahjong::PlayerController> NewController(
       const std::string& controller);
   bool RegisterController(newControllerInst newFunc, const std::string& Name);
+  bool UnregisterController(const std::string& Name);
 
  private:
   std::map<std::string, newControllerInst> available_controllers_;

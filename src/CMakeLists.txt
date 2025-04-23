@@ -5,6 +5,7 @@ add_subdirectory(controllers)
 add_subdirectory(statefunctions)
 add_subdirectory(types)
 add_subdirectory(analysis)
+add_subdirectory(capi)
 
 get_target_property(libmahjong_includes libmahjong HEADER_SET)
 target_precompile_headers(libmahjong PRIVATE ${libmahjong_includes})

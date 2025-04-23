@@ -35,4 +35,12 @@ bool ControllerManager::RegisterController(newControllerInst newFunc,
   return true;
 }
 
+bool ControllerManager::UnregisterController(const std::string& name) {
+  if (available_controllers_.contains(name)) {
+    available_controllers_.erase(name);
+    return true;
+  }
+  return false;
+}
+
 }  // namespace mahjong
