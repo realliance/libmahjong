@@ -40,7 +40,24 @@
       in
       {
         devShells.default = pkgs.mkShell {
-          packages = buildPackages ++ [ pkgs.git ];
+          nativeBuildInputs = buildPackages ++ (with pkgs.llvmPackages_latest; [
+            clang
+            libcxx
+            clang-tools  # Add clang-tools which includes clang-tidy
+          ]) ++ (with pkgs; [
+            gtest
+          ]);
+          
+          # Explicitly set C and C++ compilers to llvmPackages_latest.clang
+          shellHook = ''
+            export CC=${pkgs.llvmPackages_latest.clang}/bin/clang
+            export CXX=${pkgs.llvmPackages_latest.clang}/bin/clang++
+            export CXXFLAGS="-std=c++20 -stdlib=libc++ -I${pkgs.llvmPackages_latest.libcxx.dev}/include/c++/v1"
+            export LDFLAGS="-stdlib=libc++"
+            export CPLUS_INCLUDE_PATH="${pkgs.llvmPackages_latest.libcxx.dev}/include/c++/v1"
+            echo "${pkgs.llvmPackages_latest.libcxx}"
+
+          '';
         };
 
         packages = rec {
