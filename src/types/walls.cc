@@ -24,7 +24,7 @@ const std::vector<Piece> kPieceSet = {
 
 Walls::Walls() {
   std::random_device rd;
-  std::mt19937 g(rd());
+  std::mt19937_64 g(rd());
 
   for (int i = 0; i < 4; i++) {
     livingWalls.insert(livingWalls.end(), kPieceSet.begin(), kPieceSet.end());
@@ -38,7 +38,7 @@ Walls::Walls() {
   }
 }
 
-Walls::Walls(std::mt19937& g) {
+Walls::Walls(std::mt19937_64& g) {
   const std::vector<Piece> wall;
   for (int i = 0; i < 4; i++) {
     livingWalls.insert(livingWalls.end(), kPieceSet.begin(), kPieceSet.end());

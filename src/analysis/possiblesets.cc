@@ -139,7 +139,7 @@ std::vector<Piece> GetPossibleStdFormHand() {
   }
 
   std::random_device rd;
-  std::mt19937 g(rd());
+  std::mt19937_64 g(rd());
   std::shuffle(living_walls.begin(), living_walls.end(), g);
   std::move(living_walls.begin(), living_walls.begin() + 14,
             std::back_inserter(dead_wall));
@@ -212,7 +212,7 @@ bool TestStdForm(const std::vector<Piece>& hand) {
 std::vector<Piece> GetPossibleTenpaiHand(bool replacement) {
   std::vector<Piece> tenpaihand = GetPossibleStdFormHand();
   std::random_device rd;
-  std::mt19937 g(rd());
+  std::mt19937_64 g(rd());
   std::shuffle(tenpaihand.begin(), tenpaihand.end(), g);
   std::uniform_int_distribution<> piece_index(0, 13);
   std::uniform_int_distribution<> piece_select(0, 33);

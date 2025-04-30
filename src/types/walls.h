@@ -8,7 +8,7 @@ namespace mahjong {
 class Walls {
  public:
   explicit Walls();
-  explicit Walls(std::mt19937& g);
+  explicit Walls(std::mt19937_64& g);
   explicit Walls(std::vector<Piece> wall);
   std::vector<Piece> livingWalls;
   std::vector<Piece> deadWall;

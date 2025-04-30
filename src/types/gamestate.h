@@ -26,7 +26,7 @@ struct GameState {
   int lastCaller = -1;
   bool concealedKan = false;
   uint64_t seed = 0;
-  std::mt19937 g;
+  std::mt19937_64 g;
   Piece pendingPiece = Piece(Piece::Type::kError);
   StateFunction prevState;
   StateFunction currState;
