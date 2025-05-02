@@ -8,10 +8,6 @@ on:
     branches:
       - next
 
-permissions:
-  checks: write
-  pull-requests: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,6 +27,9 @@ jobs:
   test:
     name: Run ctests
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
