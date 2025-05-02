@@ -15,6 +15,7 @@ Checks: >
   -modernize-use-trailing-return-type,
   -modernize-avoid-c-arrays,
   -modernize-use-ranges,
+  -modernize-use-integer-sign-comparison,
   -performance-enum-size,
   -readability-identifier-length,
   -readability-magic-numbers,

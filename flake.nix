@@ -14,6 +14,7 @@
         buildPackages = with pkgs; [
           cmake
           git
+          ninja
         ];
 
         commonAttrs = {
@@ -37,27 +38,22 @@
             description = "Riichi Mahjong Game Engine Library";
           };
         };
+
+        llvmPackage = pkgs.llvmPackages_20;
+
+        clangNativeBuildInputs = buildPackages ++ (with llvmPackage; [
+          clang-tools  # Add clang-tools which includes clang-tidy
+          libcxx
+          clang
+        ]) ++ (with pkgs; [
+          gtest
+        ]);
       in
       {
-        devShells.default = pkgs.mkShell {
-          nativeBuildInputs = buildPackages ++ (with pkgs.llvmPackages_latest; [
-            clang
-            libcxx
-            clang-tools  # Add clang-tools which includes clang-tidy
-          ]) ++ (with pkgs; [
-            gtest
-          ]);
-          
-          # Explicitly set C and C++ compilers to llvmPackages_latest.clang
-          shellHook = ''
-            export CC=${pkgs.llvmPackages_latest.clang}/bin/clang
-            export CXX=${pkgs.llvmPackages_latest.clang}/bin/clang++
-            export CXXFLAGS="-std=c++20 -stdlib=libc++ -I${pkgs.llvmPackages_latest.libcxx.dev}/include/c++/v1"
-            export LDFLAGS="-stdlib=libc++"
-            export CPLUS_INCLUDE_PATH="${pkgs.llvmPackages_latest.libcxx.dev}/include/c++/v1"
-            echo "${pkgs.llvmPackages_latest.libcxx}"
+        devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.stdenv; } {
+          nativeBuildInputs = clangNativeBuildInputs;
 
-          '';
+          hardeningDisable = [ "all" ];
         };
 
         packages = rec {
@@ -77,8 +73,18 @@
             '';
           });
           
-          clang = pkgs.clangStdenv.mkDerivation (commonAttrs // {
-            nativeBuildInputs = buildPackages ++ [ pkgs.clang ];
+          clang = llvmPackage.stdenv.mkDerivation (commonAttrs // {
+            nativeBuildInputs = clangNativeBuildInputs;
+
+            hardeningDisable = [ "all" ];
+
+            # This ensures dependent packages can find your library
+            setupHook = pkgs.writeText "setup-hook.sh" ''
+              addLibmahjongLibs() {
+                addToSearchPath LD_LIBRARY_PATH $1/lib
+              }
+              addEnvHooks "$targetOffset" addLibmahjongLibs
+            '';
           });
 
           default = gcc;
