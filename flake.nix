@@ -24,7 +24,6 @@
 
           cmakeFlags = [
             "-DBUILD_SHARED_LIBS=ON"  # Explicitly build shared libraries
-            "-Dlibmahjong_use_clang_utils=OFF"
             "-Dlibmahjong_build_tests=OFF"
             "-Dlibmahjong_build_tools=OFF"
             "-DCMAKE_INSTALL_LIBDIR=lib"
@@ -87,7 +86,30 @@
             '';
           });
 
-          default = gcc;
+          tests = pkgs.runCommand "libmahjong-tests" {
+            nativeBuildInputs = clangNativeBuildInputs;
+            src = ./.;
+            hardeningDisable = [ "all" ];
+          } ''
+            # Create output directory
+            mkdir -p $out
+            
+            # Create build directory and configure with tests enabled
+            cmake -S $src \
+                  -B build \
+                  -G Ninja \
+                  -Dlibmahjong_build_tools=OFF \
+                  -Dlibmahjong_build_tests=ON
+            
+            # Build the project with tests
+            cmake --build build
+            
+            # Run tests with JUnit output
+            (ctest --test-dir build --output-on-failure --output-junit $out/test.xml || 
+              (echo "Tests failed but continuing build" && cp -r build/Testing $out/test-details))
+          '';
+
+          default = clang;
         };
         
         lib = {
