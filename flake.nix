@@ -14,6 +14,7 @@
         buildPackages = with pkgs; [
           cmake
           git
+          ninja
         ];
 
         commonAttrs = {
@@ -23,7 +24,6 @@
 
           cmakeFlags = [
             "-DBUILD_SHARED_LIBS=ON"  # Explicitly build shared libraries
-            "-Dlibmahjong_use_clang_utils=OFF"
             "-Dlibmahjong_build_tests=OFF"
             "-Dlibmahjong_build_tools=OFF"
             "-DCMAKE_INSTALL_LIBDIR=lib"
@@ -37,10 +37,22 @@
             description = "Riichi Mahjong Game Engine Library";
           };
         };
+
+        llvmPackage = pkgs.llvmPackages_20;
+
+        clangNativeBuildInputs = buildPackages ++ (with llvmPackage; [
+          clang-tools  # Add clang-tools which includes clang-tidy
+          libcxx
+          clang
+        ]) ++ (with pkgs; [
+          gtest
+        ]);
       in
       {
-        devShells.default = pkgs.mkShell {
-          packages = buildPackages ++ [ pkgs.git ];
+        devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.stdenv; } {
+          nativeBuildInputs = clangNativeBuildInputs;
+
+          hardeningDisable = [ "all" ];
         };
 
         packages = rec {
@@ -60,11 +72,44 @@
             '';
           });
           
-          clang = pkgs.clangStdenv.mkDerivation (commonAttrs // {
-            nativeBuildInputs = buildPackages ++ [ pkgs.clang ];
+          clang = llvmPackage.stdenv.mkDerivation (commonAttrs // {
+            nativeBuildInputs = clangNativeBuildInputs;
+
+            hardeningDisable = [ "all" ];
+
+            # This ensures dependent packages can find your library
+            setupHook = pkgs.writeText "setup-hook.sh" ''
+              addLibmahjongLibs() {
+                addToSearchPath LD_LIBRARY_PATH $1/lib
+              }
+              addEnvHooks "$targetOffset" addLibmahjongLibs
+            '';
           });
 
-          default = gcc;
+          tests = pkgs.runCommand "libmahjong-tests" {
+            nativeBuildInputs = clangNativeBuildInputs;
+            src = ./.;
+            hardeningDisable = [ "all" ];
+          } ''
+            # Create output directory
+            mkdir -p $out
+            
+            # Create build directory and configure with tests enabled
+            cmake -S $src \
+                  -B build \
+                  -G Ninja \
+                  -Dlibmahjong_build_tools=OFF \
+                  -Dlibmahjong_build_tests=ON
+            
+            # Build the project with tests
+            cmake --build build
+            
+            # Run tests with JUnit output
+            (ctest --test-dir build --output-on-failure --output-junit $out/test.xml || 
+              (echo "Tests failed but continuing build" && cp -r build/Testing $out/test-details))
+          '';
+
+          default = clang;
         };
         
         lib = {

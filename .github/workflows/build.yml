@@ -24,3 +24,24 @@ jobs:
       - name: Build using Nix
         run: |
           nix build -L '.#${{ matrix.toolchain }}'
+  test:
+    name: Run ctests
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v30
+      - name: Build using Nix
+        run: |
+          nix build -L '.#tests'
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        with:
+          report_paths: './result/test.xml'
+          # For now, don't fail the check
+          # since we have failing tests
+          fail_on_failure: false
+          comment: true
