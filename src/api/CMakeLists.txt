@@ -1,7 +1,5 @@
 target_sources(libmahjong
-    PRIVATE
-        "gamestate.cc"
-        "types.cc"
+    PRIVATE "gamestate.cc"
     PUBLIC
         FILE_SET
          HEADERS

@@ -16,15 +16,12 @@ extern "C" {
 
   typedef struct CGameSettings {
     unsigned int seed;
-    char** seatControllers; // Array of controller names
-    int numControllers;  // Number of controllers
-    char* overrideWall;     // Optional override wall
+    char** seatControllers;
+    int numControllers;
+    char* overrideWall;
   } GameSettings;
 
-  // Define CGameState struct instead of just declaring it
   typedef struct CGameState {
-    std::unique_ptr<mahjong::GameState> state;
-  } CGameState;
-  
-  typedef struct CPlayerController PlayerController;
+    std::unique_ptr<mahjong::GameState> wrapped_state;
+  } GameState;
 }

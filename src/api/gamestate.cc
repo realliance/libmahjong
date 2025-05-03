@@ -38,7 +38,7 @@ extern "C" {
   }
 
   CGameState* AdvanceGameState(CGameState* state) {
-    auto new_state = mahjong::AdvanceGameState(std::move(state->state));
+    auto new_state = mahjong::AdvanceGameState(std::move(state->wrapped_state));
     delete state;
     return new CGameState { std::move(new_state) };
   }
