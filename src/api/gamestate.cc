@@ -1,49 +1,50 @@
 #include "gamestate.h"
-#include "types.h"
-#include "../statefunctions/statecontroller.h"
-#include <vector>
 #include <utility>
+#include <vector>
+#include "../statefunctions/statecontroller.h"
+#include "types.h"
 
 mahjong::GameSettings convertGameSettings(const CGameSettings* settings) {
   mahjong::GameSettings cpp_settings;
-    
+
   cpp_settings.seed = settings->seed;
-    
+
   // Char arrays to vector
   if (settings->seatControllers && settings->numControllers > 0) {
     for (int i = 0; i < settings->numControllers; i++) {
       if (settings->seatControllers[i]) {
-          cpp_settings.seatControllers.emplace_back(settings->seatControllers[i]);
-        }
+        cpp_settings.seatControllers.emplace_back(settings->seatControllers[i]);
+      }
     }
   }
-          
+
   return cpp_settings;
 }
 
 extern "C" {
-  int StartGame(const CGameSettings* settings, int async) {
-    const mahjong::GameSettings cpp_settings = convertGameSettings(settings);
-    return mahjong::StartGame(cpp_settings, async != 0);
-  }
 
-  void ExitGame(int game) {
-    mahjong::ExitGame(game);
-  }
+int StartGame(const CGameSettings* settings, int async) {
+  const mahjong::GameSettings cpp_settings = convertGameSettings(settings);
+  return mahjong::StartGame(cpp_settings, async != 0);
+}
 
-  CGameState* InitGameState(const CGameSettings* settings) {
-    const mahjong::GameSettings cpp_settings = convertGameSettings(settings);
-    auto state = mahjong::InitGameState(cpp_settings);
-    return new CGameState { std::move(state) };
-  }
+void ExitGame(int game) {
+  mahjong::ExitGame(game);
+}
 
-  CGameState* AdvanceGameState(CGameState* state) {
-    auto new_state = mahjong::AdvanceGameState(std::move(state->wrapped_state));
-    delete state;
-    return new CGameState { std::move(new_state) };
-  }
+CGameState* InitGameState(const CGameSettings* settings) {
+  const mahjong::GameSettings cpp_settings = convertGameSettings(settings);
+  auto state = mahjong::InitGameState(cpp_settings);
+  return new CGameState{std::move(state)};
+}
 
-  void DestroyGameState(CGameState* state) {
-    delete state;
-  }
+CGameState* AdvanceGameState(CGameState* state) {
+  auto new_state = mahjong::AdvanceGameState(std::move(state->wrapped_state));
+  delete state;
+  return new CGameState{std::move(new_state)};
+}
+
+void DestroyGameState(CGameState* state) {
+  delete state;
+}
 }
