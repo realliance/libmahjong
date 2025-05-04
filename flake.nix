@@ -52,6 +52,8 @@
         devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.stdenv; } {
           nativeBuildInputs = clangNativeBuildInputs;
 
+          CMAKE_PATH = "${pkgs.cmake}";
+
           hardeningDisable = [ "all" ];
         };
 

@@ -19,7 +19,6 @@ typedef struct CGameSettings {
   unsigned int seed;
   char** seatControllers;
   int numControllers;
-  char* overrideWall;
 } GameSettings;
 
 typedef struct CGameState {
