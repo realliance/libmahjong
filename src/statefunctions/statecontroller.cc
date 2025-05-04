@@ -48,7 +48,7 @@ std::unique_ptr<GameState> InitGameState(const GameSettings& settings) {
     std::random_device rd;
     state->seed = rd();
   }
-  state->currState = GameStart;
+  state->nextState = GameStart;
   return state;
 }
 
