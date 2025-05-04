@@ -17,8 +17,8 @@ typedef struct CEvent {
 
 typedef struct CGameSettings {
   unsigned int seed;
-  char** seatControllers;
-  int numControllers;
+  const char* seat_controllers[4];
+  int num_controllers = 0;
 } GameSettings;
 
 typedef struct CGameState {

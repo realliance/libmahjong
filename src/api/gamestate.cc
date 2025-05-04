@@ -10,11 +10,9 @@ mahjong::GameSettings convertGameSettings(const CGameSettings* settings) {
   cpp_settings.seed = settings->seed;
 
   // Char arrays to vector
-  if (settings->seatControllers && settings->numControllers > 0) {
-    for (int i = 0; i < settings->numControllers; i++) {
-      if (settings->seatControllers[i]) {
-        cpp_settings.seatControllers.emplace_back(settings->seatControllers[i]);
-      }
+  for (int i = 0; i < settings->num_controllers; i++) {
+    if (settings->seat_controllers[i]) {
+      cpp_settings.seatControllers.emplace_back(settings->seat_controllers[i]);
     }
   }
 
