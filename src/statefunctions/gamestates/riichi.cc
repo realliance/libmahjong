@@ -36,7 +36,7 @@ std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
   state->hands.at(state->currentPlayer).riichi = true;
   state->riichiSticks++;
 
-  state->nextState = Discard;
+  state->nextState = StateFunctionType::kDiscard;
   return state;
 }
 

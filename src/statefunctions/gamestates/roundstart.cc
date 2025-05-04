@@ -36,7 +36,7 @@ std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
                    .decision = false,                            // decision
                });
 
-  state->nextState = Draw;
+  state->nextState = StateFunctionType::kDraw;
   return state;
 }
 

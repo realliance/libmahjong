@@ -72,7 +72,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
 
   if (decision.type == Event::kDecline &&
       state->walls.GetRemainingPieces() == 0) {
-    state->nextState = Exhaust;
+    state->nextState = StateFunctionType::kExhaust;
     return state;
   }
 
@@ -82,24 +82,24 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
 
   switch (decision.type) {
     case Event::kDecline:
-      state->nextState = Draw;
+      state->nextState = StateFunctionType::kDraw;
       break;
     case Event::kRon:
-      state->nextState = Ron;
+      state->nextState = StateFunctionType::kRon;
       break;
     case Event::kChi:
-      state->nextState = Chi;
+      state->nextState = StateFunctionType::kChi;
       break;
     case Event::kPon:
-      state->nextState = Pon;
+      state->nextState = StateFunctionType::kPon;
       break;
     case Event::kKan:
-      state->nextState = Kan;
+      state->nextState = StateFunctionType::kKan;
       break;
     default:
       std::cerr << "Invalid Decision Type in Discard: " << decision.type
                 << '\n';
-      state->nextState = Error;
+      state->nextState = StateFunctionType::kError;
       break;
   }
 

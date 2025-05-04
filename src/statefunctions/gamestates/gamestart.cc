@@ -16,7 +16,7 @@ std::unique_ptr<GameState> GameStart(std::unique_ptr<GameState> state) {
     state->players.at(i).controller->GameStart(i);
   }
   state->g.seed(state->seed);
-  state->nextState = RoundStart;
+  state->nextState = StateFunctionType::kRoundStart;
   return state;
 }
 

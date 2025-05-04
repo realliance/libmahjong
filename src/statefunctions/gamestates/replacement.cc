@@ -28,7 +28,7 @@ std::unique_ptr<GameState> Replacement(std::unique_ptr<GameState> state) {
                    .decision = false,                                // decision
                });
 
-  state->nextState = PlayerHand;
+  state->nextState = StateFunctionType::kPlayerHand;
   return state;
 }
 

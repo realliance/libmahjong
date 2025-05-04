@@ -24,6 +24,7 @@ Checks: >
   -bugprone-narrowing-conversions,
   -bugprone-easily-swappable-parameters,
   -bugprone-implicit-widening-of-multiplication-result,
+  -bugprone-use-after-move,
 
 # Turn all the warnings from the checks above into errors.
 WarningsAsErrors: "*"

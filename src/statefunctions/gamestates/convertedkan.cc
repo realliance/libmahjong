@@ -24,19 +24,19 @@ std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
   if (RemovePieces(*state, state->currentPlayer, state->pendingPiece,
                    /*count=*/1) != 1) {
     std::cerr << "Not Enough pieces to remove in ConvertedKan" << '\n';
-    state->nextState = Error;
+    state->nextState = StateFunctionType::kError;
     return state;
   }
   state->concealedKan = false;
   for (auto& meld : state->hands.at(state->currentPlayer).melds) {
     if (meld.type == Meld::kPon && meld.start == state->pendingPiece) {
       meld.type = Meld::kKan;
-      state->nextState = KanDiscard;
+      state->nextState = StateFunctionType::kKanDiscard;
       return state;
     }
   }
   std::cerr << "Could Not find matching pon" << '\n';
-  state->nextState = Error;
+  state->nextState = StateFunctionType::kError;
   return state;
 }
 

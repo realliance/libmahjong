@@ -39,7 +39,7 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
   const Piece chi_start = GetChiStart(*state, state->lastCaller);
   if (chi_start == kError) {
     std::cerr << "Failed to get start of Chi" << '\n';
-    state->nextState = Error;
+    state->nextState = StateFunctionType::kError;
     return state;
   }
 
@@ -73,14 +73,14 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
       RemovePieces(*state, state->lastCaller, chi_start + 2, /*count=*/1) !=
           1) {
     std::cerr << "Not Enough Pieces to remove in Chi" << '\n';
-    state->nextState = Error;
+    state->nextState = StateFunctionType::kError;
     return state;
   }
   state->hands.at(state->lastCaller).melds.push_back({Meld::kChi, chi_start});
 
   state->pendingPiece = AskForDiscard(*state);
 
-  state->nextState = Discard;
+  state->nextState = StateFunctionType::kDiscard;
   return state;
 }
 

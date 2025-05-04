@@ -10,13 +10,12 @@
 #include "piecetype.h"
 #include "player.h"
 #include "settings.h"
+#include "statefunction.h"
 #include "walls.h"
 
 namespace mahjong {
 
 struct GameState {
-  using StateFunction =
-      std::unique_ptr<GameState> (*)(std::unique_ptr<GameState>);
   int currentPlayer = -1;
   int turnNum = -1;
   int roundNum = 0;
@@ -28,9 +27,9 @@ struct GameState {
   uint64_t seed = 0;
   std::mt19937_64 g;
   Piece pendingPiece = Piece(Piece::Type::kError);
-  StateFunction prevState;
-  StateFunction currState;
-  StateFunction nextState;
+  StateFunctionType prevState;
+  StateFunctionType currState;
+  StateFunctionType nextState;
   Walls walls;
   std::array<int, kNumPlayers> scores = {};
   std::array<bool, kNumPlayers> hasRonned = {};

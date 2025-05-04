@@ -85,7 +85,7 @@ std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
     throw "oof";
   }
 
-  state->nextState = RoundEnd;
+  state->nextState = StateFunctionType::kRoundEnd;
   return state;
 }
 

@@ -53,7 +53,7 @@ std::unique_ptr<GameState> Exhaust(std::unique_ptr<GameState> state) {
       }
     }
   }
-  state->nextState = RoundEnd;
+  state->nextState = StateFunctionType::kRoundEnd;
   return state;
 }
 

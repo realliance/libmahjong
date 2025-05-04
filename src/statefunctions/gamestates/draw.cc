@@ -16,7 +16,7 @@ std::unique_ptr<GameState> Draw(std::unique_ptr<GameState> state) {
   state->pendingPiece = state->walls.TakePiece();
   state->hands.at(state->currentPlayer).live.push_back(state->pendingPiece);
   state->hands.at(state->currentPlayer).sort();
-  state->nextState = PlayerHand;
+  state->nextState = StateFunctionType::kPlayerHand;
   return state;
 }
 

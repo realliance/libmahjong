@@ -41,13 +41,13 @@ std::unique_ptr<GameState> Kan(std::unique_ptr<GameState> state) {
   if (RemovePieces(*state, state->lastCaller, state->pendingPiece,
                    /*count=*/4) != 4) {
     std::cerr << "Not Enough Pieces to remove in kan" << '\n';
-    state->nextState = Error;
+    state->nextState = StateFunctionType::kError;
     return state;
   }
   state->hands.at(state->lastCaller)
       .melds.push_back({Meld::kKan, state->pendingPiece});
 
-  state->nextState = KanDiscard;
+  state->nextState = StateFunctionType::kKanDiscard;
   return state;
 }
 

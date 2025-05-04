@@ -46,9 +46,9 @@ std::unique_ptr<GameState> KanDiscard(std::unique_ptr<GameState> state) {
   }
 
   if (have_ronned) {
-    state->nextState = Ron;
+    state->nextState = StateFunctionType::kRon;
   } else {
-    state->nextState = Replacement;
+    state->nextState = StateFunctionType::kReplacement;
   }
 
   return state;

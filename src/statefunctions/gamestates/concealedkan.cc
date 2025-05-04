@@ -26,13 +26,13 @@ std::unique_ptr<GameState> ConcealedKan(std::unique_ptr<GameState> state) {
   if (RemovePieces(*state, state->currentPlayer, state->pendingPiece,
                    /*count=*/4) != 4) {
     std::cerr << "Not Enough pieces to remove in ConcealedKan" << '\n';
-    state->nextState = Error;
+    state->nextState = StateFunctionType::kError;
     return state;
   }
   state->hands.at(state->currentPlayer)
       .melds.push_back({Meld::kConcealedKan, state->pendingPiece});
   state->concealedKan = true;
-  state->nextState = KanDiscard;
+  state->nextState = StateFunctionType::kKanDiscard;
   return state;
 }
 
