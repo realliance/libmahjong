@@ -3,6 +3,8 @@
 #include <memory>
 #include "../types/gamestate.h"
 
+namespace api {
+
 extern "C" {
 
 typedef int CPiece;
@@ -13,15 +15,12 @@ typedef struct CEvent {
   int player;
   CPiece piece;
   bool decision;
-} CEvent;
+};
 
 typedef struct CGameSettings {
   unsigned int seed;
   const char* seat_controllers[4];
   int num_controllers = 0;
-} GameSettings;
-
-typedef struct CGameState {
-  std::unique_ptr<mahjong::GameState> wrapped_state;
-} GameState;
+};
 }
+} // namespace api

@@ -1,8 +1,10 @@
 #include "gamestate.h"
-#include <utility>
 #include <vector>
+#include <memory>
 #include "../statefunctions/statecontroller.h"
 #include "types.h"
+
+namespace api {
 
 mahjong::GameSettings convertGameSettings(const CGameSettings* settings) {
   mahjong::GameSettings cpp_settings;
@@ -30,19 +32,19 @@ void ExitGame(int game) {
   mahjong::ExitGame(game);
 }
 
-CGameState* InitGameState(const CGameSettings* settings) {
+mahjong::GameState* InitGameState(const CGameSettings* settings) {
   const mahjong::GameSettings cpp_settings = convertGameSettings(settings);
   auto state = mahjong::InitGameState(cpp_settings);
-  return new CGameState{std::move(state)};
+  return state.release();
 }
 
-CGameState* AdvanceGameState(CGameState* state) {
-  auto new_state = mahjong::AdvanceGameState(std::move(state->wrapped_state));
-  delete state;
-  return new CGameState{std::move(new_state)};
+mahjong::GameState* AdvanceGameState(mahjong::GameState* state) {
+  auto new_state = mahjong::AdvanceGameState(std::unique_ptr<mahjong::GameState>(state));
+  return new_state.release();
 }
 
-void DestroyGameState(CGameState* state) {
+void DestroyGameState(mahjong::GameState* state) {
   delete state;
 }
 }
+} // namespace api
