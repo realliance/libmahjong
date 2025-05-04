@@ -2,9 +2,11 @@
 #include <memory>
 
 #include "controllers/playercontroller.h"
+#include "statefunctions/router.h"
 #include "statefunctions/statefunctions.h"
 #include "types/gamestate.h"
 #include "types/settings.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
@@ -18,4 +20,5 @@ std::unique_ptr<GameState> GameStart(std::unique_ptr<GameState> state) {
   return state;
 }
 
+REGISTER_ROUTE(GameStart, StateFunctionType::kGameStart);
 }  // namespace mahjong

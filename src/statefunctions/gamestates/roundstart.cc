@@ -5,11 +5,13 @@
 #include <vector>
 
 #include "controllers/playercontroller.h"
+#include "statefunctions/router.h"
 #include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
+#include "types/statefunction.h"
 #include "types/walls.h"
 #include "types/winds.h"
 
@@ -37,4 +39,6 @@ std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
   state->nextState = Draw;
   return state;
 }
+
+REGISTER_ROUTE(RoundStart, StateFunctionType::kRoundStart);
 }  // namespace mahjong

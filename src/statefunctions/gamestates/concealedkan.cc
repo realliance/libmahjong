@@ -4,12 +4,14 @@
 #include <memory>
 #include <vector>
 
+#include "statefunctions/router.h"
 #include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/meld.h"
 #include "types/piecetype.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
@@ -34,4 +36,5 @@ std::unique_ptr<GameState> ConcealedKan(std::unique_ptr<GameState> state) {
   return state;
 }
 
+REGISTER_ROUTE(ConcealedKan, StateFunctionType::kConcealedKan);
 }  // namespace mahjong

@@ -3,8 +3,10 @@
 #include <vector>
 
 #include "analysis/hands.h"
+#include "statefunctions/router.h"
 #include "statefunctions/statefunctions.h"
 #include "types/gamestate.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
@@ -55,4 +57,5 @@ std::unique_ptr<GameState> Exhaust(std::unique_ptr<GameState> state) {
   return state;
 }
 
+REGISTER_ROUTE(Exhaust, StateFunctionType::kExhaust);
 }  // namespace mahjong

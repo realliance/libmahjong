@@ -4,11 +4,13 @@
 #include <vector>
 
 #include "analysis/hands.h"
+#include "statefunctions/router.h"
 #include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
@@ -86,4 +88,6 @@ std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
   state->nextState = RoundEnd;
   return state;
 }
+
+REGISTER_ROUTE(Ron, StateFunctionType::kRon);
 }  // namespace mahjong

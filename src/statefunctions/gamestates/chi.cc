@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include "statefunctions/router.h"
 #include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
@@ -11,6 +12,7 @@
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 namespace {
@@ -82,4 +84,5 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
   return state;
 }
 
+REGISTER_ROUTE(Chi, StateFunctionType::kChi);
 }  // namespace mahjong
