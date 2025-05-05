@@ -53,6 +53,17 @@
           nativeBuildInputs = clangNativeBuildInputs;
 
           hardeningDisable = [ "all" ];
+
+          shellHook = ''
+            mkdir -p .vscode
+            echo "{" > .vscode/settings.json
+            echo '  "nixEnvSelector.nixFile": "''${workspaceFolder}/shell.nix",' >> .vscode/settings.json
+            echo "  \"cmake.cmakePath\": \"${pkgs.cmake}/bin/cmake\"," >> .vscode/settings.json
+            echo "  \"cmake.configureArgs\": [\"-DGTEST_LINKED_AS_SHARED_LIBRARY=1\",\"-DGTEST_MAIN_LIBRARY=${pkgs.gtest}/lib/libgtest_main.so\", \"-DGTEST_LIBRARY=${pkgs.gtest}/lib/libgtest.so\", \"-DGTEST_INCLUDE_DIR=${pkgs.gtest}/include\"]," >> .vscode/settings.json
+            echo "  \"cmake.configureEnvironment\": {\"CMAKE_MAKE_PROGRAM\": \"${pkgs.ninja}/bin/ninja\"}," >> .vscode/settings.json
+            echo "  \"C_Cpp.default.includePath\": [\"${pkgs.gtest}/include\"]" >> .vscode/settings.json
+            echo "}" >> .vscode/settings.json
+          '';
         };
 
         packages = rec {
