@@ -49,29 +49,33 @@
           clang-tools  # Add clang-tools which includes clang-tidy
           libcxx
           clang
-        ]) ++ [
+          lldb         # Use LLDB for debugging instead of GDB
+        ]) ++ (with pkgs; [
           clangGtest      # Use our clang-built GTest instead of pkgs.gtest
           clangGtest.dev  # Include the development headers
-        ];
+        ]);
       in
       {
         devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.stdenv; } {
           nativeBuildInputs = clangNativeBuildInputs;
 
+          # Disable all hardening
           hardeningDisable = [ "all" ];
-
+          
           shellHook = ''
             mkdir -p .vscode
             echo "{" > .vscode/settings.json
             echo '  "nixEnvSelector.nixFile": "''${workspaceFolder}/shell.nix",' >> .vscode/settings.json
             echo "  \"cmake.cmakePath\": \"${pkgs.cmake}/bin/cmake\"," >> .vscode/settings.json
-            echo "  \"cmake.configureArgs\": [\"-DGTEST_LINKED_AS_SHARED_LIBRARY=1\",\"-DGTEST_MAIN_LIBRARY=${clangGtest}/lib/libgtest_main.so\", \"-DGTEST_LIBRARY=${clangGtest}/lib/libgtest.so\", \"-DGTEST_INCLUDE_DIR=${clangGtest.dev}/include\"]," >> .vscode/settings.json
-            echo "  \"cmake.configureEnvironment\": {\"CMAKE_MAKE_PROGRAM\": \"${pkgs.ninja}/bin/ninja\"}," >> .vscode/settings.json
-            echo "  \"C_Cpp.default.includePath\": [\"${clangGtest.dev}/include\"]," >> .vscode/settings.json
-            echo "  \"cmake.ctestPath\": \"${pkgs.cmake}/bin/ctest\"" >> .vscode/settings.json
+            echo "  \"cmake.ctestPath\": \"${pkgs.cmake}/bin/ctest\"," >> .vscode/settings.json
+            echo "  \"cmake.skipConfigureIfCachePresent\": true," >> .vscode/settings.json
+            echo "  \"cmake.configureOnOpen\": false," >> .vscode/settings.json
+            echo "  \"cmake.configureOnEdit\": false," >> .vscode/settings.json
             echo "}" >> .vscode/settings.json
 
-            rm -f build/CMakeCache.txt && cmake -S . -B build -G Ninja
+            ${pkgs.cmake}/bin/cmake -S . -B build -G Ninja \
+              -Dlibmahjong_build_tests=ON \
+              -DCMAKE_CXX_FLAGS="-O1 -g -I${clangGtest.dev}/include -I${llvmPackage.libcxx}/include/c++/v1"
           '';
         };
 
