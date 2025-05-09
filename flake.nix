@@ -17,6 +17,13 @@
           ninja
         ];
 
+        llvmPackage = pkgs.llvmPackages_20;
+
+        # Override the existing gtest package to use clang
+        clangGtest = pkgs.gtest.override {
+          stdenv = llvmPackage.stdenv;
+        };
+
         commonAttrs = {
           pname = "libmahjong";
           version = "0.1.0";
@@ -38,15 +45,14 @@
           };
         };
 
-        llvmPackage = pkgs.llvmPackages_20;
-
         clangNativeBuildInputs = buildPackages ++ (with llvmPackage; [
           clang-tools  # Add clang-tools which includes clang-tidy
           libcxx
           clang
-        ]) ++ (with pkgs; [
-          gtest
-        ]);
+        ]) ++ [
+          clangGtest      # Use our clang-built GTest instead of pkgs.gtest
+          clangGtest.dev  # Include the development headers
+        ];
       in
       {
         devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.stdenv; } {
@@ -59,10 +65,13 @@
             echo "{" > .vscode/settings.json
             echo '  "nixEnvSelector.nixFile": "''${workspaceFolder}/shell.nix",' >> .vscode/settings.json
             echo "  \"cmake.cmakePath\": \"${pkgs.cmake}/bin/cmake\"," >> .vscode/settings.json
-            echo "  \"cmake.configureArgs\": [\"-DGTEST_LINKED_AS_SHARED_LIBRARY=1\",\"-DGTEST_MAIN_LIBRARY=${pkgs.gtest}/lib/libgtest_main.so\", \"-DGTEST_LIBRARY=${pkgs.gtest}/lib/libgtest.so\", \"-DGTEST_INCLUDE_DIR=${pkgs.gtest}/include\"]," >> .vscode/settings.json
+            echo "  \"cmake.configureArgs\": [\"-DGTEST_LINKED_AS_SHARED_LIBRARY=1\",\"-DGTEST_MAIN_LIBRARY=${clangGtest}/lib/libgtest_main.so\", \"-DGTEST_LIBRARY=${clangGtest}/lib/libgtest.so\", \"-DGTEST_INCLUDE_DIR=${clangGtest.dev}/include\"]," >> .vscode/settings.json
             echo "  \"cmake.configureEnvironment\": {\"CMAKE_MAKE_PROGRAM\": \"${pkgs.ninja}/bin/ninja\"}," >> .vscode/settings.json
-            echo "  \"C_Cpp.default.includePath\": [\"${pkgs.gtest}/include\"]" >> .vscode/settings.json
+            echo "  \"C_Cpp.default.includePath\": [\"${clangGtest.dev}/include\"]," >> .vscode/settings.json
+            echo "  \"cmake.ctestPath\": \"${pkgs.cmake}/bin/ctest\"" >> .vscode/settings.json
             echo "}" >> .vscode/settings.json
+
+            rm -f build/CMakeCache.txt && cmake -S . -B build -G Ninja
           '';
         };
 
