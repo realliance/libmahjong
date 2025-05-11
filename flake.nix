@@ -17,6 +17,13 @@
           ninja
         ];
 
+        llvmPackage = pkgs.llvmPackages_20;
+
+        # Override the existing gtest package to use clang
+        clangGtest = pkgs.gtest.override {
+          stdenv = llvmPackage.stdenv;
+        };
+
         commonAttrs = {
           pname = "libmahjong";
           version = "0.1.0";
@@ -38,21 +45,38 @@
           };
         };
 
-        llvmPackage = pkgs.llvmPackages_20;
-
         clangNativeBuildInputs = buildPackages ++ (with llvmPackage; [
           clang-tools  # Add clang-tools which includes clang-tidy
           libcxx
           clang
+          lldb         # Use LLDB for debugging instead of GDB
         ]) ++ (with pkgs; [
-          gtest
+          clangGtest      # Use our clang-built GTest instead of pkgs.gtest
+          clangGtest.dev  # Include the development headers
         ]);
       in
       {
         devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.stdenv; } {
           nativeBuildInputs = clangNativeBuildInputs;
 
+          # Disable all hardening
           hardeningDisable = [ "all" ];
+          
+          shellHook = ''
+            mkdir -p .vscode
+            echo "{" > .vscode/settings.json
+            echo '  "nixEnvSelector.nixFile": "''${workspaceFolder}/shell.nix",' >> .vscode/settings.json
+            echo "  \"cmake.cmakePath\": \"${pkgs.cmake}/bin/cmake\"," >> .vscode/settings.json
+            echo "  \"cmake.ctestPath\": \"${pkgs.cmake}/bin/ctest\"," >> .vscode/settings.json
+            echo "  \"cmake.skipConfigureIfCachePresent\": true," >> .vscode/settings.json
+            echo "  \"cmake.configureOnOpen\": false," >> .vscode/settings.json
+            echo "  \"cmake.configureOnEdit\": false," >> .vscode/settings.json
+            echo "}" >> .vscode/settings.json
+
+            ${pkgs.cmake}/bin/cmake -S . -B build -G Ninja \
+              -Dlibmahjong_build_tests=ON \
+              -DCMAKE_CXX_FLAGS="-O1 -g -I${clangGtest.dev}/include -I${llvmPackage.libcxx}/include/c++/v1"
+          '';
         };
 
         packages = rec {
