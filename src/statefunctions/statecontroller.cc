@@ -40,7 +40,7 @@ void ExitGame(int game) {
 std::unique_ptr<GameState> InitGameState(const GameSettings& settings) {
   auto state = std::make_unique<GameState>();
   for (int i = 0; i < 4; i++) {
-    ControllerManager::Instance().NewController(settings.seatControllers.at(i));
+    state->players.at(i).controller = ControllerManager::Instance().NewController(settings.seatControllers.at(i));
   }
   if (settings.seed != 0U) {
     state->seed = settings.seed;

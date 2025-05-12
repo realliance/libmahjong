@@ -44,7 +44,7 @@ TEST(Api, AdvanceGameState) {
   };
 
   mahjong::GameState* state = api::InitGameState(&settings);
-  EXPECT_NE(state, nullptr);
+  EXPECT_NE(state->seed, 0);
 
   mahjong::GameState* new_state = api::AdvanceGameState(state);
   EXPECT_NE(new_state, nullptr);
