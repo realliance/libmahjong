@@ -1,8 +1,8 @@
 #pragma once
 
 #include <memory>
-#include "types/gamestate.h"
 #include "stdint.h"
+#include "types/gamestate.h"
 
 namespace api {
 
