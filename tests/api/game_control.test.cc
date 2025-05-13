@@ -3,15 +3,17 @@
 #include "api/types.h"
 #include "types/gamestate.h"
 
-namespace mahjong {
+namespace {
+
+const api::CGameSettings kDefaultSettings{
+    .seed = 12345,
+    .seat_controllers = {"AngryDiscardoBot", "AngryDiscardoBot",
+                         "AngryDiscardoBot", "AngryDiscardoBot"},
+    .num_controllers = 4,
+};
 
 TEST(Api, SettingsConversion) {
-  const api::CGameSettings settings{
-      .seed = 12345,
-      .seat_controllers = {"AngryDiscardoBot", "AngryDiscardoBot",
-                          "AngryDiscardoBot", "AngryDiscardoBot"},
-      .num_controllers = 4,
-  };
+  const api::CGameSettings settings = kDefaultSettings;
 
   auto converted_settings = api::convertGameSettings(&settings);
 
@@ -24,24 +26,14 @@ TEST(Api, SettingsConversion) {
 }
 
 TEST(Api, InitGameState) {
-  const api::CGameSettings settings{
-      .seed = 12345,
-      .seat_controllers = {"AngryDiscardoBot", "AngryDiscardoBot",
-                          "AngryDiscardoBot", "AngryDiscardoBot"},
-      .num_controllers = 4,
-  };
+  const api::CGameSettings settings = kDefaultSettings;
 
   mahjong::GameState* state = api::InitGameState(&settings);
   EXPECT_NE(state, nullptr);
 }
 
 TEST(Api, AdvanceGameState) {
-  const api::CGameSettings settings{
-      .seed = 12345,
-      .seat_controllers = {"AngryDiscardoBot", "AngryDiscardoBot",
-                          "AngryDiscardoBot", "AngryDiscardoBot"},
-      .num_controllers = 4,
-  };
+  const api::CGameSettings settings = kDefaultSettings;
 
   mahjong::GameState* state = api::InitGameState(&settings);
   EXPECT_NE(state->seed, 0);
@@ -50,4 +42,4 @@ TEST(Api, AdvanceGameState) {
   EXPECT_NE(new_state, nullptr);
 }
 
-}  // namespace mahjong
+}  // namespace

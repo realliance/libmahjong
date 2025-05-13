@@ -23,9 +23,9 @@ mahjong::GameSettings convertGameSettings(const CGameSettings* settings) {
 
 extern "C" {
 
-int StartGame(const CGameSettings* settings, int async) {
+int StartGame(const CGameSettings* settings, bool async) {
   const mahjong::GameSettings cpp_settings = convertGameSettings(settings);
-  return mahjong::StartGame(cpp_settings, async != 0);
+  return mahjong::StartGame(cpp_settings, async);
 }
 
 void ExitGame(int game) {
@@ -43,7 +43,7 @@ mahjong::GameState* AdvanceGameState(mahjong::GameState* state) {
   return new_state.release();
 }
 
-void DestroyGameState(mahjong::GameState* state) {
+void FreeGameState(mahjong::GameState* state) {
   delete state;
 }
 }
