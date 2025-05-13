@@ -27,8 +27,7 @@ TEST(Setup, PrevalentWind) {
 }
 
 TEST(Setup, DoraIndicator) {
-  std::unique_ptr<GameState> state;
-  const PlayerControllerFake bot;
+  std::unique_ptr<GameState> state = std::make_unique<GameState>();
   for (int i = 0; i < 4; i++) {
     state->players[i].controller = std::make_unique<PlayerControllerFake>();
   }
@@ -37,7 +36,7 @@ TEST(Setup, DoraIndicator) {
 }
 
 TEST(Setup, Dealing) {
-  std::unique_ptr<GameState> state;
+  std::unique_ptr<GameState> state = std::make_unique<GameState>();
   for (int i = 0; i < 4; i++) {
     state->players[i].controller = std::make_unique<PlayerControllerFake>();
   }
