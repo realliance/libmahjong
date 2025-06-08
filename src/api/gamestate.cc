@@ -37,12 +37,12 @@ void ExitGame(int game) {
 
 mahjong::GameState* InitGameState(const CGameSettings* settings) {
   const mahjong::GameSettings cpp_settings = convertGameSettings(settings);
-  auto state = mahjong::InitGameState(cpp_settings);
+  std::unique_ptr<mahjong::GameState> state = mahjong::InitGameState(cpp_settings);
   return state.release();
 }
 
 mahjong::GameState* AdvanceGameState(mahjong::GameState* state) {
-  auto new_state = mahjong::AdvanceGameState(std::unique_ptr<mahjong::GameState>(state));
+  std::unique_ptr<mahjong::GameState> new_state = mahjong::AdvanceGameState(std::unique_ptr<mahjong::GameState>(state));
   return new_state.release();
 }
 
