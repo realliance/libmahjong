@@ -5,8 +5,6 @@
 
 namespace api {
 
-mahjong::GameSettings convertGameSettings(const CGameSettings* settings);
-
 extern "C" {
 
 int StartGame(const CGameSettings* settings, bool async);

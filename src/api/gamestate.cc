@@ -6,6 +6,8 @@
 
 namespace api {
 
+namespace {
+
 mahjong::GameSettings convertGameSettings(const CGameSettings* settings) {
   mahjong::GameSettings cpp_settings;
 
@@ -20,6 +22,7 @@ mahjong::GameSettings convertGameSettings(const CGameSettings* settings) {
 
   return cpp_settings;
 }
+} // namespace
 
 extern "C" {
 
