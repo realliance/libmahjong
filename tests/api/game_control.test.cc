@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <cstdint>
 #include "api/gamestate.h"
 #include "api/types.h"
 #include "types/gamestate.h"
@@ -12,25 +13,26 @@ const api::CGameSettings kDefaultSettings{
     .num_controllers = 4,
 };
 
-TEST(Api, SettingsConversion) {
-  const api::CGameSettings settings = kDefaultSettings;
-
-  auto converted_settings = api::convertGameSettings(&settings);
-
-  EXPECT_EQ(converted_settings.seed, settings.seed);
-  EXPECT_EQ(converted_settings.seatControllers.size(), settings.num_controllers);
-  for (int i = 0; i < settings.num_controllers; ++i) {
-    EXPECT_EQ(converted_settings.seatControllers[i],
-              settings.seat_controllers[i]);
-  }
-}
-
 TEST(Api, InitGameState) {
   const api::CGameSettings settings = kDefaultSettings;
 
   mahjong::GameState* state = api::InitGameState(&settings);
   EXPECT_NE(state, nullptr);
 }
+
+TEST(Api, SettingsConversion) {
+  const api::CGameSettings settings = kDefaultSettings;
+
+  mahjong::GameState* state = api::InitGameState(&settings);
+  EXPECT_NE(state, nullptr);
+  EXPECT_EQ(state->seed, settings.seed);
+  EXPECT_EQ(state->players.size(), settings.num_controllers);
+  for (uint64_t i = 0; i < state->players.size(); ++i) {
+    EXPECT_EQ(state->players[i].controller->Name(),
+              settings.seat_controllers[i]);
+  }
+}
+
 
 TEST(Api, AdvanceGameState) {
   const api::CGameSettings settings = kDefaultSettings;
