@@ -1,6 +1,7 @@
 #include "gamestate.h"
 #include <vector>
 #include <memory>
+#include <cstdlib>
 #include "../statefunctions/statecontroller.h"
 #include "types.h"
 
@@ -44,6 +45,79 @@ mahjong::GameState* InitGameState(const CGameSettings* settings) {
 mahjong::GameState* AdvanceGameState(mahjong::GameState* state) {
   std::unique_ptr<mahjong::GameState> new_state = mahjong::AdvanceGameState(std::unique_ptr<mahjong::GameState>(state));
   return new_state.release();
+}
+
+CObservedGameState ObserveGameState(mahjong::GameState* state) {
+  CObservedGameState observed = {};
+  
+  if (!state) {
+    return observed;
+  }
+  
+  // Straightforward copies
+  observed.currentPlayer = state->currentPlayer;
+  observed.turnNum = state->turnNum;
+  observed.roundNum = state->roundNum;
+  observed.riichiSticks = state->riichiSticks;
+  observed.counters = state->counters;
+  observed.lastCall = state->lastCall;
+  observed.lastCaller = state->lastCaller;
+  observed.concealedKan = state->concealedKan;
+  observed.seed = state->seed;
+  observed.pendingPiece = static_cast<CPiece>(state->pendingPiece.toUint8_t());
+  
+  // Static array copies per player
+  for (int i = 0; i < 4; i++) {
+    observed.scores[i] = state->scores[i];
+    observed.points[i] = state->players[i].points;
+    observed.hasRonned[i] = state->hasRonned[i];
+    
+    // Hands (up to max hand size)
+    const auto& hand = state->hands[i];
+    const int hand_size = static_cast<int>(hand.live.size());
+    for (int j = 0; j < 14; j++) {
+      if (j < hand_size) {
+        observed.hands[i][j] = static_cast<CPiece>(hand.live[j].toUint8_t());
+      } else {
+        // Fill rest of hand with error (may only be final piece ever?)
+        observed.hands[i][j] = static_cast<CPiece>(mahjong::Piece::Type::kError);
+      }
+    }
+    
+    // Discards
+    const auto& discards = state->hands[i].discards;
+    observed.playerDiscardCounts[i] = static_cast<int>(discards.size());
+    
+    if (discards.empty()) {
+      observed.players[i] = nullptr;
+    } else {
+      // Allocate memory for discards
+      observed.players[i] = static_cast<CPiece*>(malloc(discards.size() * sizeof(CPiece)));
+      if (observed.players[i] != nullptr) {
+        for (size_t j = 0; j < discards.size(); j++) {
+          observed.players[i][j] = static_cast<CPiece>(discards[j].toUint8_t());
+        }
+      } else {
+        // Mem allocation failed
+        observed.playerDiscardCounts[i] = 0;
+      }
+    }
+  }
+  
+  return observed;
+}
+
+void FreeObservedGameState(CObservedGameState* observed) {
+  if (!observed) {
+    return;
+  }
+  
+  for (auto & player : observed->players) {
+    if (player != nullptr) {
+      free(player);
+      player = nullptr;
+    }
+  }
 }
 
 void FreeGameState(mahjong::GameState* state) {
