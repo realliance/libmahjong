@@ -41,6 +41,9 @@ typedef struct CObservedGameState {
   CPiece hands[4][14];
   CPiece* players[4];  // Pointers to discard arrays for each player
   int playerDiscardCounts[4];  // Number of discards for each player
+  const char* prevState;  // Previous state function name
+  const char* currState;  // Current state function name
+  const char* nextState;  // Next state function name
 };
 }
 } // namespace api

@@ -2,12 +2,42 @@
 #include <vector>
 #include <memory>
 #include <cstdlib>
+#include <unordered_map>
 #include "../statefunctions/statecontroller.h"
+#include "../statefunctions/statefunctions.h"
 #include "types.h"
 
 namespace api {
 
 namespace {
+
+const std::unordered_map<mahjong::GameState::StateFunction, const char*> kStateFunctionNames = {
+    {mahjong::GameStart, "GameStart"},
+    {mahjong::RoundStart, "RoundStart"},
+    {mahjong::RoundEnd, "RoundEnd"},
+    {mahjong::Draw, "Draw"},
+    {mahjong::PlayerHand, "PlayerHand"},
+    {mahjong::Discard, "Discard"},
+    {mahjong::Chi, "Chi"},
+    {mahjong::Pon, "Pon"},
+    {mahjong::Kan, "Kan"},
+    {mahjong::ConcealedKan, "ConcealedKan"},
+    {mahjong::ConvertedKan, "ConvertedKan"},
+    {mahjong::KanDiscard, "KanDiscard"},
+    {mahjong::Replacement, "Replacement"},
+    {mahjong::Riichi, "Riichi"},
+    {mahjong::Tsumo, "Tsumo"},
+    {mahjong::Ron, "Ron"},
+    {mahjong::Exhaust, "Exhaust"},
+    {mahjong::GameEnd, "GameEnd"},
+    {mahjong::Error, "Error"},
+    {nullptr, "Unknown"}
+};
+
+const char* GetStateFunctionName(mahjong::GameState::StateFunction func) {
+  auto it = kStateFunctionNames.find(func);
+  return (it != kStateFunctionNames.end()) ? it->second : "Unknown";
+}
 
 mahjong::GameSettings convertGameSettings(const CGameSettings* settings) {
   mahjong::GameSettings cpp_settings;
@@ -65,6 +95,11 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
   observed.concealedKan = state->concealedKan;
   observed.seed = state->seed;
   observed.pendingPiece = static_cast<CPiece>(state->pendingPiece.toUint8_t());
+  
+  // State function names
+  observed.prevState = GetStateFunctionName(state->prevState);
+  observed.currState = GetStateFunctionName(state->currState);
+  observed.nextState = GetStateFunctionName(state->nextState);
   
   // Static array copies per player
   for (int i = 0; i < 4; i++) {
