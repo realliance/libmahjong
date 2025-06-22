@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <cstring>
+#include <cerrno>
 #include <new>
 #include "../statefunctions/statecontroller.h"
 #include "../statefunctions/statefunctions.h"
@@ -140,7 +141,7 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
                   << "bytes=" << (discards.size() * sizeof(CPiece))
                   << "error=" << e.what()
                   << "errno=" << errno << " (" << std::strerror(errno) << ")"
-                  << std::endl;
+                  << '\n';
         
         // Clean up any previously allocated arrays for this observation
         for (int cleanup_player = 0; cleanup_player < i; cleanup_player++) {
