@@ -3,6 +3,9 @@
 #include <memory>
 #include <cstdlib>
 #include <unordered_map>
+#include <iostream>
+#include <cstring>
+#include <new>
 #include "../statefunctions/statecontroller.h"
 #include "../statefunctions/statefunctions.h"
 #include "types.h"
@@ -126,15 +129,27 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
     if (discards.empty()) {
       observed.players[i] = nullptr;
     } else {
-      // Allocate memory for discards
-      observed.players[i] = static_cast<CPiece*>(malloc(discards.size() * sizeof(CPiece)));
-      if (observed.players[i] != nullptr) {
+      try {
+        observed.players[i] = new CPiece[discards.size()];
         for (size_t j = 0; j < discards.size(); j++) {
           observed.players[i][j] = static_cast<CPiece>(discards[j].toUint8_t());
         }
-      } else {
-        // Mem allocation failed
-        observed.playerDiscardCounts[i] = 0;
+      } catch (const std::bad_alloc& e) {
+        std::cerr << "Memory allocation failed for player " << i 
+                  << "discards: size=" << discards.size() 
+                  << "bytes=" << (discards.size() * sizeof(CPiece))
+                  << "error=" << e.what()
+                  << "errno=" << errno << " (" << std::strerror(errno) << ")"
+                  << std::endl;
+        
+        // Clean up any previously allocated arrays for this observation
+        for (int cleanup_player = 0; cleanup_player < i; cleanup_player++) {
+          delete[] observed.players[cleanup_player];
+          observed.players[cleanup_player] = nullptr;
+        }
+        
+        // Rethrow after cleanup
+        throw;
       }
     }
   }
@@ -147,9 +162,10 @@ void FreeObservedGameState(CObservedGameState* observed) {
     return;
   }
   
+  // Free discard arrays
   for (auto & player : observed->players) {
     if (player != nullptr) {
-      free(player);
+      delete[] player;
       player = nullptr;
     }
   }
