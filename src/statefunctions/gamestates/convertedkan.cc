@@ -40,5 +40,5 @@ std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
   return state;
 }
 
-REGISTER_ROUTE(ConcealedKan, StateFunctionType::kConcealedKan);
+REGISTER_ROUTE(ConvertedKan, StateFunctionType::kConvertedKan);
 }  // namespace mahjong

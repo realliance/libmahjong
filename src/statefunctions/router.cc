@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include <types/statefunction.h>
+#include "types/statefunction.h"
 
 namespace mahjong {
 StateFunctionFunc Router::Route(const StateFunctionType& type) {
