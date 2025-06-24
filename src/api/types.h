@@ -79,20 +79,20 @@ typedef struct CHand {
 };
 
 typedef struct CObservedGameState {
-  int currentPlayer;
-  int turnNum;
-  int roundNum;
-  int riichiSticks;
-  int counters;
-  int lastCall;
-  int lastCaller;
-  bool concealedKan;
-  uint64_t seed;
-  CPiece pendingPiece;
-  int scores[4];
-  int points[4];  // Player points
-  bool hasRonned[4];
-  CHand hands[4];        // Player hands with live pieces, melds, and discards
+  int currentPlayer;             // Whose turn it is
+  int turnNum;                   // Turn counter within current round
+  int roundNum;                  // Current round number
+  int riichiSticks;              // Number of riichi sticks on the table
+  int counters;                  // Honba counters
+  int lastCall;                  // Turn number when last call (chi/pon/kan) was made
+  int lastCaller;                // Player index who made the last call
+  bool concealedKan;             // Whether concealed kan was just performed (affects ron rules)
+  uint64_t seed;                 // Random seed used for wall generation and shuffling
+  CPiece pendingPiece;           // Current piece being processed
+  int scores[4];                 // Temporary round score changes
+  int points[4];                 // Player points
+  bool hasRonned[4];             // Which players have declared ron this turn
+  CHand hands[4];                // Player hands with live pieces, melds, and discards
   CStateFunctionType prevState;  // Previous state function
   CStateFunctionType currState;  // Current state function
   CStateFunctionType nextState;  // Next state function
