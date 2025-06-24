@@ -9,9 +9,11 @@
 #include <vector>
 
 #include "controllers/controllermanager.h"
-#include "statefunctions.h"
 #include "types/gamestate.h"
 #include "types/settings.h"
+
+#include "router.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
@@ -40,7 +42,9 @@ void ExitGame(int game) {
 std::unique_ptr<GameState> InitGameState(const GameSettings& settings) {
   auto state = std::make_unique<GameState>();
   for (int i = 0; i < 4; i++) {
-    state->players.at(i).controller = ControllerManager::Instance().NewController(settings.seatControllers.at(i));
+    state->players.at(i).controller =
+        ControllerManager::Instance().NewController(
+            settings.seatControllers.at(i));
   }
   if (settings.seed != 0U) {
     state->seed = settings.seed;
@@ -48,21 +52,20 @@ std::unique_ptr<GameState> InitGameState(const GameSettings& settings) {
     std::random_device rd;
     state->seed = rd();
   }
-  state->nextState = GameStart;
+  state->nextState = StateFunctionType::kGameStart;
   return state;
 }
 
-std::unique_ptr<GameState> AdvanceGameState(
-    std::unique_ptr<GameState> state) {
+std::unique_ptr<GameState> AdvanceGameState(std::unique_ptr<GameState> state) {
   try {
     state->prevState = state->currState;
     state->currState = state->nextState;
-    return state->nextState(std::move(state));
+    return Router::Instance().Route(state->nextState)(std::move(state));
   } catch (const unsigned int e) {
     switch (e) {
       case 0xBAD22222:  // Asked for decision too many times.
         std::cerr << "Asked for decision too many times" << '\n';
-        state->nextState = Error;
+        state->nextState = StateFunctionType::kError;
         break;
       default:
         throw(e);
@@ -75,11 +78,11 @@ void StateController(const GameSettings& settings) {
   const int id = thread_index++;
   should_halt[id] = false;
   std::unique_ptr<GameState> state = InitGameState(settings);
-  while (state->nextState != GameEnd && !should_halt[id]) {
+  while (state->nextState != StateFunctionType::kGameEnd && !should_halt[id]) {
     state = AdvanceGameState(std::move(state));
   }
-  if (state->nextState == GameEnd) {
-    state->nextState(std::move(state));
+  if (state->nextState == StateFunctionType::kGameEnd) {
+    Router::Instance().Route(state->nextState)(std::move(state));
   }
 }
 

@@ -4,9 +4,9 @@
 #include <utility>
 #include <vector>
 
-#include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
+#include "types/statefunction.h"
 #include "types/walls.h"
 #include "types/winds.h"
 #include "utils/playercontrollerfake.h"
@@ -31,7 +31,8 @@ TEST(Setup, DoraIndicator) {
   for (int i = 0; i < 4; i++) {
     state->players[i].controller = std::make_unique<PlayerControllerFake>();
   }
-  ASSERT_NO_THROW(state = RoundStart(std::move(state)));
+  ASSERT_NO_THROW(state = Router::Instance().Route(
+                      StateFunctionType::kRoundStart)(std::move(state)));
   EXPECT_EQ(state->walls.GetDoras().size(), 1);
 }
 
@@ -40,11 +41,12 @@ TEST(Setup, Dealing) {
   for (int i = 0; i < 4; i++) {
     state->players[i].controller = std::make_unique<PlayerControllerFake>();
   }
-  ASSERT_NO_THROW(state = RoundStart(std::move(state)));
+  ASSERT_NO_THROW(state = Router::Instance().Route(
+                      StateFunctionType::kRoundStart)(std::move(state)));
   for (int i = 0; i < 4; i++) {
     EXPECT_EQ(state->hands[i].live.size(), 13);
   }
-  state = Draw(std::move(state));
+  state = Router::Instance().Route(StateFunctionType::kDraw)(std::move(state));
   EXPECT_EQ(state->currentPlayer, 0);
 }
 

@@ -4,14 +4,16 @@
 #include <vector>
 
 #include "analysis/hands.h"
-#include "statefunctions/statefunctions.h"
+#include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
   state->hands.at(state->lastCaller).live.push_back(state->pendingPiece);
   state->hands.at(state->lastCaller).sort();
@@ -83,7 +85,10 @@ std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
     throw "oof";
   }
 
-  state->nextState = RoundEnd;
+  state->nextState = StateFunctionType::kRoundEnd;
   return state;
 }
+}  // namespace
+
+REGISTER_ROUTE(Ron, StateFunctionType::kRon);
 }  // namespace mahjong

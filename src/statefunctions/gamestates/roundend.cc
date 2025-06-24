@@ -3,14 +3,16 @@
 #include <memory>
 #include <vector>
 
-#include "statefunctions/statefunctions.h"
+#include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
   state->currentPlayer = -1;
   state->turnNum = -1;
@@ -53,11 +55,13 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
   state->scores = {};
 
   if (state->roundNum > last_round) {  // east only lmao
-    state->nextState = GameEnd;
+    state->nextState = StateFunctionType::kGameEnd;
   } else {
-    state->nextState = RoundStart;
+    state->nextState = StateFunctionType::kRoundStart;
   }
   return state;
 }
+}  // namespace
 
+REGISTER_ROUTE(RoundEnd, StateFunctionType::kRoundEnd);
 }  // namespace mahjong

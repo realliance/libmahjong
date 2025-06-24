@@ -4,15 +4,17 @@
 #include <memory>
 #include <vector>
 
-#include "statefunctions/statefunctions.h"
+#include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/meld.h"
 #include "types/piecetype.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
   state->hands.at(state->lastCaller).open = true;
 
@@ -40,7 +42,7 @@ std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
   if (RemovePieces(*state, state->lastCaller, state->pendingPiece,
                    /*count=*/3) != 3) {
     std::cerr << "Not enough pieces to remove in Pon" << '\n';
-    state->nextState = Error;
+    state->nextState = StateFunctionType::kError;
     return state;
   }
   state->hands.at(state->lastCaller)
@@ -48,8 +50,10 @@ std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
 
   state->pendingPiece = AskForDiscard(*state);
 
-  state->nextState = Discard;
+  state->nextState = StateFunctionType::kDiscard;
   return state;
 }
+}  // namespace
 
+REGISTER_ROUTE(Pon, StateFunctionType::kPon);
 }  // namespace mahjong

@@ -33,7 +33,6 @@ TEST(Api, SettingsConversion) {
   }
 }
 
-
 TEST(Api, AdvanceGameState) {
   const api::CGameSettings settings = kDefaultSettings;
 

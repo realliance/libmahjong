@@ -68,7 +68,7 @@ int main() {
   }
   std::cout << '\n';
   // GameState state;
-  // state->nextState = Discard;
+  // state->nextState = StateFunctionType::kDiscard;
   // state->seed = 0xBEEFBABE;
   // state->g.seed(state->seed);
   // state->walls = Walls(state->g);
