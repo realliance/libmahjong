@@ -32,8 +32,7 @@ typedef enum CMeldType {
   kMeldChi = 0,
   kMeldPon = 1,
   kMeldKan = 2,
-  kMeldConcealedKan = 3,
-  kMeldNone = 4 // Default value
+  kMeldConcealedKan = 3
 } CMeldType;
 
 // C API version of StateFunctionType enum
@@ -65,9 +64,9 @@ typedef struct CMeld {
 };
 
 typedef struct CHand {
-  CPiece live[kMaxLiveHandSize];           // Live pieces
-  int liveCount;                           // Number of live pieces
-  CMeld melds[kMaxMeldsPerHand];           // Melds
+  CPiece livePieces[kMaxLiveHandSize];     // Live pieces
+  int livePieceCount;                      // Number of live pieces
+  CMeld melds[kMaxMeldsPerHand];            // Melds
   int meldCount;                           // Number of melds
   CPiece discards[kMaxDiscardsPerPlayer];  // Discards
   int discardCount;                        // Number of discards

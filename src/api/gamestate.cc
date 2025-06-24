@@ -136,25 +136,18 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
     CHand& c_hand = observed.hands[i];
     
     // Live pieces
-    c_hand.liveCount = static_cast<int>(cpp_hand.live.size());
-    for (int j = 0; j < kMaxLiveHandSize; j++) {
-      if (j < c_hand.liveCount) {
-        c_hand.live[j] = static_cast<CPiece>(cpp_hand.live[j].toUint8_t());
-      } else {
-        c_hand.live[j] = static_cast<CPiece>(mahjong::Piece::Type::kError);
-      }
+    const int live_piece_count = static_cast<int>(cpp_hand.live.size());
+    c_hand.livePieceCount = std::min(live_piece_count, kMaxLiveHandSize);
+    for (int j = 0; j < c_hand.livePieceCount; j++) {
+      c_hand.livePieces[j] = static_cast<CPiece>(cpp_hand.live[j].toUint8_t());
     }
-    
+
     // Melds
-    c_hand.meldCount = static_cast<int>(cpp_hand.melds.size());
-    for (int j = 0; j < kMaxMeldsPerHand; j++) {
-      if (j < c_hand.meldCount) {
-        c_hand.melds[j].type = static_cast<CMeldType>(cpp_hand.melds[j].type);
-        c_hand.melds[j].start = static_cast<CPiece>(cpp_hand.melds[j].start.toUint8_t());
-      } else {
-        c_hand.melds[j].type = kMeldNone;
-        c_hand.melds[j].start = static_cast<CPiece>(mahjong::Piece::Type::kError);
-      }
+    const int meld_count = static_cast<int>(cpp_hand.melds.size());
+    c_hand.meldCount = std::min(meld_count, kMaxMeldsPerHand);
+    for (int j = 0; j < c_hand.meldCount; j++) {
+      c_hand.melds[j].type = static_cast<CMeldType>(cpp_hand.melds[j].type);
+      c_hand.melds[j].start = static_cast<CPiece>(cpp_hand.melds[j].start.toUint8_t());
     }
     
     // Discards
@@ -163,11 +156,6 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
     c_hand.discardCount = std::min(discards_size, kMaxDiscardsPerPlayer);
     for (auto j = 0; j < c_hand.discardCount; j++) {
       c_hand.discards[j] = static_cast<CPiece>(discards[j].toUint8_t());
-    }
-
-    // Fill remaining discards with error
-    for (auto j = c_hand.discardCount; j < kMaxDiscardsPerPlayer; j++) {
-      c_hand.discards[j] = static_cast<CPiece>(mahjong::Piece::Type::kError);
     }
     
     // Hand properties

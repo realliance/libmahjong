@@ -173,7 +173,6 @@ TEST(Api, ObserveGameStateHandsAndDiscards) {
     EXPECT_EQ(cHand.riichiRound, cppHand.riichiRound);
   }
   
-  // No need to free memory - CHand uses stack allocation
   api::FreeGameState(state);
 }
 
