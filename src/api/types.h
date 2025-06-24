@@ -10,7 +10,7 @@ extern "C" {
 
 // Mahjong game constants
 static const int kMaxLiveHandSize = 14;      // Maximum 14 pieces (13 + 1 drawn)
-static const int kMaxMeldsPerHand = 4;       // Maximum 4 melds possible in mahjong
+static const int kMaxMeldsPerHand = 4;       // Maximum 4 melds possible
 static const int kMaxDiscardsPerPlayer = 21; // Maximum 21 discards per player ((136 - 13*4 hands) / 4)
 
 typedef int CPiece;
@@ -66,16 +66,16 @@ typedef struct CMeld {
 };
 
 typedef struct CHand {
-  CPiece live[kMaxLiveHandSize];           // Maximum live pieces
+  CPiece live[kMaxLiveHandSize];           // Live pieces
   int liveCount;                           // Number of live pieces
-  CMeld melds[kMaxMeldsPerHand];           // Maximum melds possible
+  CMeld melds[kMaxMeldsPerHand];           // Melds
   int meldCount;                           // Number of melds
-  CPiece discards[kMaxDiscardsPerPlayer];  // Maximum discards per player
+  CPiece discards[kMaxDiscardsPerPlayer];  // Discards
   int discardCount;                        // Number of discards
   bool open;                               // Whether hand is open
   bool riichi;                             // Whether player declared riichi
-  int riichiPieceDiscard;                  // Index of riichi discard piece (-1 if none)
-  int riichiRound;                         // Round when riichi was declared (-1 if none)
+  int riichiPieceDiscard;                  // Index of riichi discard piece
+  int riichiRound;                         // Round when riichi was declared
 };
 
 typedef struct CObservedGameState {
