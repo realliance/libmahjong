@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "statefunctions/router.h"
-#include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
@@ -13,6 +12,7 @@
 #include "types/walls.h"
 
 namespace mahjong {
+namespace {
 std::unique_ptr<GameState> Replacement(std::unique_ptr<GameState> state) {
   const Piece draw = state->walls.TakeReplacementTile();
   state->hands.at(state->currentPlayer).live.push_back(draw);
@@ -31,6 +31,7 @@ std::unique_ptr<GameState> Replacement(std::unique_ptr<GameState> state) {
   state->nextState = StateFunctionType::kPlayerHand;
   return state;
 }
+}  // namespace
 
 REGISTER_ROUTE(Replacement, StateFunctionType::kReplacement);
 }  // namespace mahjong

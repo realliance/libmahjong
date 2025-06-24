@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "statefunctions/router.h"
-#include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
@@ -31,7 +30,6 @@ Piece GetChiStart(const GameState& state, int player) {
   }
   return kError;
 }
-}  // namespace
 
 std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
   // only gives a single one of the chis
@@ -83,6 +81,7 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
   state->nextState = StateFunctionType::kDiscard;
   return state;
 }
+}  // namespace
 
 REGISTER_ROUTE(Chi, StateFunctionType::kChi);
 }  // namespace mahjong

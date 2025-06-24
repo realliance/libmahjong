@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "statefunctions/router.h"
-#include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
@@ -15,6 +14,7 @@
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> ConcealedKan(std::unique_ptr<GameState> state) {
   AlertPlayers(*state, Event{
                            .type = Event::kConcealedKan,    // type
@@ -35,6 +35,7 @@ std::unique_ptr<GameState> ConcealedKan(std::unique_ptr<GameState> state) {
   state->nextState = StateFunctionType::kKanDiscard;
   return state;
 }
+}  // namespace
 
 REGISTER_ROUTE(ConcealedKan, StateFunctionType::kConcealedKan);
 }  // namespace mahjong

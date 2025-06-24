@@ -24,4 +24,4 @@ typedef struct CGameSettings {
   int num_controllers = 0;
 };
 }
-} // namespace api
+}  // namespace api

@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "statefunctions/router.h"
-#include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
@@ -13,6 +12,7 @@
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
   state->currentPlayer = -1;
   state->turnNum = -1;
@@ -61,6 +61,7 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
   }
   return state;
 }
+}  // namespace
 
 REGISTER_ROUTE(RoundEnd, StateFunctionType::kRoundEnd);
 }  // namespace mahjong

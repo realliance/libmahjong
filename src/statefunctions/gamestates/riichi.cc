@@ -5,7 +5,6 @@
 
 #include "analysis/hands.h"
 #include "statefunctions/router.h"
-#include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
@@ -14,6 +13,7 @@
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
   // we should ask the players but
   //  deadlines prevent this
@@ -39,6 +39,7 @@ std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
   state->nextState = StateFunctionType::kDiscard;
   return state;
 }
+}  // namespace
 
 REGISTER_ROUTE(Riichi, StateFunctionType::kRiichi);
 }  // namespace mahjong

@@ -7,7 +7,6 @@
 #include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
 #include "statefunctions/router.h"
-#include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
@@ -16,6 +15,7 @@
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
   const std::vector<PossibleDecision> decisions = {
       PossibleDecision{.type = Event::kTsumo, .func = CanTsumo},
@@ -85,6 +85,7 @@ std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
 
   return state;
 }
+}  // namespace
 
 REGISTER_ROUTE(PlayerHand, StateFunctionType::kPlayerHand);
 }  // namespace mahjong

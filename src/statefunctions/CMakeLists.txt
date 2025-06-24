@@ -11,7 +11,6 @@ target_sources(
          FILES
          "statecontroller.h"
          "router.h"
-         "statefunctions.h"
          "stateutilities.h"
          "decisionfunction.h")
 

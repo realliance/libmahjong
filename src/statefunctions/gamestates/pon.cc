@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "statefunctions/router.h"
-#include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
@@ -15,6 +14,7 @@
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
   state->hands.at(state->lastCaller).open = true;
 
@@ -53,6 +53,7 @@ std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
   state->nextState = StateFunctionType::kDiscard;
   return state;
 }
+}  // namespace
 
 REGISTER_ROUTE(Pon, StateFunctionType::kPon);
 }  // namespace mahjong

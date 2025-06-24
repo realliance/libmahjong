@@ -4,7 +4,6 @@
 #include <memory>
 
 #include "statefunctions/router.h"
-#include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
@@ -13,6 +12,7 @@
 #include "types/statefunction.h"
 
 namespace mahjong {
+namespace {
 std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
   AlertPlayers(*state, Event{
                            .type = Event::kConvertedKan,    // type
@@ -39,6 +39,7 @@ std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
   state->nextState = StateFunctionType::kError;
   return state;
 }
+}  // namespace
 
 REGISTER_ROUTE(ConvertedKan, StateFunctionType::kConvertedKan);
 }  // namespace mahjong

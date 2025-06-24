@@ -3,13 +3,13 @@
 #include <vector>
 
 #include "statefunctions/router.h"
-#include "statefunctions/statefunctions.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"
 #include "types/statefunction.h"
 #include "types/walls.h"
 
 namespace mahjong {
+namespace {
 std::unique_ptr<GameState> Draw(std::unique_ptr<GameState> state) {
   state->currentPlayer = (state->currentPlayer + 1) % 4;
   state->turnNum++;
@@ -19,6 +19,7 @@ std::unique_ptr<GameState> Draw(std::unique_ptr<GameState> state) {
   state->nextState = StateFunctionType::kPlayerHand;
   return state;
 }
+}  // namespace
 
 REGISTER_ROUTE(Draw, StateFunctionType::kDraw);
 }  // namespace mahjong

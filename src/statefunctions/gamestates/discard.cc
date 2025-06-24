@@ -7,7 +7,6 @@
 #include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
 #include "statefunctions/router.h"
-#include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
@@ -17,6 +16,7 @@
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
   AlertPlayers(*state, Event{
                            .type = Event::kDiscard,         // type
@@ -105,6 +105,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
 
   return state;
 }
+}  // namespace
 
 REGISTER_ROUTE(Discard, StateFunctionType::kDiscard);
 }  // namespace mahjong
