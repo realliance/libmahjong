@@ -118,7 +118,6 @@ TEST(Api, ObserveGameStateAfterAdvancement) {
     EXPECT_EQ(observed.points[i], state->players[i].points);
   }
   
-  // No need to free memory - CHand uses stack allocation
   api::FreeGameState(state);
 }
 
