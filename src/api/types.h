@@ -66,7 +66,7 @@ typedef struct CMeld {
 typedef struct CHand {
   CPiece livePieces[kMaxLiveHandSize];     // Live pieces
   int livePieceCount;                      // Number of live pieces
-  CMeld melds[kMaxMeldsPerHand];            // Melds
+  CMeld melds[kMaxMeldsPerHand];           // Melds
   int meldCount;                           // Number of melds
   CPiece discards[kMaxDiscardsPerPlayer];  // Discards
   int discardCount;                        // Number of discards
