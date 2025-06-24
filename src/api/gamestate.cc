@@ -15,50 +15,50 @@ namespace api {
 
 namespace {
 
-const char* GetStateFunctionName(mahjong::StateFunctionType func) {
+CStateFunctionType ConvertStateFunctionType(mahjong::StateFunctionType func) {
   switch (func) {
-    case mahjong::StateFunctionType::kGameStart:
-      return "GameStart";
-    case mahjong::StateFunctionType::kRoundStart:
-      return "RoundStart";
-    case mahjong::StateFunctionType::kRoundEnd:
-      return "RoundEnd";
-    case mahjong::StateFunctionType::kDraw:
-      return "Draw";
-    case mahjong::StateFunctionType::kPlayerHand:
-      return "PlayerHand";
-    case mahjong::StateFunctionType::kDiscard:
-      return "Discard";
-    case mahjong::StateFunctionType::kChi:
-      return "Chi";
-    case mahjong::StateFunctionType::kPon:
-      return "Pon";
-    case mahjong::StateFunctionType::kKan:
-      return "Kan";
-    case mahjong::StateFunctionType::kConcealedKan:
-      return "ConcealedKan";
-    case mahjong::StateFunctionType::kConvertedKan:
-      return "ConvertedKan";
-    case mahjong::StateFunctionType::kKanDiscard:
-      return "KanDiscard";
-    case mahjong::StateFunctionType::kReplacement:
-      return "Replacement";
-    case mahjong::StateFunctionType::kRiichi:
-      return "Riichi";
-    case mahjong::StateFunctionType::kTsumo:
-      return "Tsumo";
-    case mahjong::StateFunctionType::kRon:
-      return "Ron";
-    case mahjong::StateFunctionType::kExhaust:
-      return "Exhaust";
-    case mahjong::StateFunctionType::kGameEnd:
-      return "GameEnd";
     case mahjong::StateFunctionType::kError:
-      return "Error";
+      return kError;
+    case mahjong::StateFunctionType::kGameStart:
+      return kGameStart;
+    case mahjong::StateFunctionType::kRoundStart:
+      return kRoundStart;
+    case mahjong::StateFunctionType::kDraw:
+      return kDraw;
+    case mahjong::StateFunctionType::kPlayerHand:
+      return kPlayerHand;
+    case mahjong::StateFunctionType::kPon:
+      return kPon;
+    case mahjong::StateFunctionType::kChi:
+      return kChi;
+    case mahjong::StateFunctionType::kKan:
+      return kKan;
+    case mahjong::StateFunctionType::kConcealedKan:
+      return kConcealedKan;
+    case mahjong::StateFunctionType::kConvertedKan:
+      return kConvertedKan;
+    case mahjong::StateFunctionType::kKanDiscard:
+      return kKanDiscard;
+    case mahjong::StateFunctionType::kReplacement:
+      return kReplacement;
+    case mahjong::StateFunctionType::kRiichi:
+      return kRiichi;
+    case mahjong::StateFunctionType::kDiscard:
+      return kDiscard;
+    case mahjong::StateFunctionType::kExhaust:
+      return kExhaust;
+    case mahjong::StateFunctionType::kRon:
+      return kRon;
+    case mahjong::StateFunctionType::kTsumo:
+      return kTsumo;
+    case mahjong::StateFunctionType::kRoundEnd:
+      return kRoundEnd;
+    case mahjong::StateFunctionType::kGameEnd:
+      return kGameEnd;
   }
   
   // This should never be reached (unless we forget to add a new state function)
-  return "Unknown";
+  return kError;
 }
 
 mahjong::GameSettings convertGameSettings(const CGameSettings* settings) {
@@ -120,10 +120,10 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
   observed.seed = state->seed;
   observed.pendingPiece = static_cast<CPiece>(state->pendingPiece.toUint8_t());
   
-  // State function names
-  observed.prevState = GetStateFunctionName(state->prevState);
-  observed.currState = GetStateFunctionName(state->currState);
-  observed.nextState = GetStateFunctionName(state->nextState);
+  // State function enums
+  observed.prevState = ConvertStateFunctionType(state->prevState);
+  observed.currState = ConvertStateFunctionType(state->currState);
+  observed.nextState = ConvertStateFunctionType(state->nextState);
   
   // Player data
   for (int i = 0; i < 4; i++) {
@@ -152,7 +152,7 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
         c_hand.melds[j].type = static_cast<CMeldType>(cpp_hand.melds[j].type);
         c_hand.melds[j].start = static_cast<CPiece>(cpp_hand.melds[j].start.toUint8_t());
       } else {
-        c_hand.melds[j].type = kNone;
+        c_hand.melds[j].type = kMeldNone;
         c_hand.melds[j].start = static_cast<CPiece>(mahjong::Piece::Type::kError);
       }
     }

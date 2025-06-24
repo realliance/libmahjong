@@ -30,12 +30,35 @@ typedef struct CGameSettings {
 };
 
 typedef enum CMeldType {
-  kChi = 0,
-  kPon = 1,
-  kKan = 2,
-  kConcealedKan = 3,
-  kNone = 4 // Default value
+  kMeldChi = 0,
+  kMeldPon = 1,
+  kMeldKan = 2,
+  kMeldConcealedKan = 3,
+  kMeldNone = 4 // Default value
 } CMeldType;
+
+// C API version of StateFunctionType enum
+typedef enum CStateFunctionType {
+  kError = 0,
+  kGameStart = 1,
+  kRoundStart = 2,
+  kDraw = 3,
+  kPlayerHand = 4,
+  kPon = 5,
+  kChi = 6,
+  kKan = 7,
+  kConcealedKan = 8,
+  kConvertedKan = 9,
+  kKanDiscard = 10,
+  kReplacement = 11,
+  kRiichi = 12,
+  kDiscard = 13,
+  kExhaust = 14,
+  kRon = 15,
+  kTsumo = 16,
+  kRoundEnd = 17,
+  kGameEnd = 18
+} CStateFunctionType;
 
 typedef struct CMeld {
   CMeldType type;
@@ -70,9 +93,9 @@ typedef struct CObservedGameState {
   int points[4];  // Player points
   bool hasRonned[4];
   CHand hands[4];        // Player hands with live pieces, melds, and discards
-  const char* prevState;  // Previous state function name
-  const char* currState;  // Current state function name
-  const char* nextState;  // Next state function name
+  CStateFunctionType prevState;  // Previous state function
+  CStateFunctionType currState;  // Current state function
+  CStateFunctionType nextState;  // Next state function
 };
 }
 }  // namespace api
