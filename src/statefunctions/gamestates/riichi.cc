@@ -4,14 +4,16 @@
 #include <vector>
 
 #include "analysis/hands.h"
-#include "statefunctions/statefunctions.h"
+#include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
   // we should ask the players but
   //  deadlines prevent this
@@ -34,7 +36,10 @@ std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
   state->hands.at(state->currentPlayer).riichi = true;
   state->riichiSticks++;
 
-  state->nextState = Discard;
+  state->nextState = StateFunctionType::kDiscard;
   return state;
 }
+}  // namespace
+
+REGISTER_ROUTE(Riichi, StateFunctionType::kRiichi);
 }  // namespace mahjong

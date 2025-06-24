@@ -6,14 +6,16 @@
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
-#include "statefunctions/statefunctions.h"
+#include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
   const std::vector<PossibleDecision> decisions = {
       PossibleDecision{.type = Event::kTsumo, .func = CanTsumo},
@@ -46,7 +48,7 @@ std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
     decision.piece = static_cast<uint16_t>(state->pendingPiece.toUint8_t());
     decision.player = state->currentPlayer;
     decision.decision = true;
-    state->nextState = Discard;
+    state->nextState = StateFunctionType::kDiscard;
   } else {
     decision =
         GetValidDecisionOrThrow(*state, state->currentPlayer, /*inHand=*/true);
@@ -60,28 +62,30 @@ std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
 
   switch (decision.type) {
     case Event::kTsumo:
-      state->nextState = Tsumo;
+      state->nextState = StateFunctionType::kTsumo;
       break;
     case Event::kConcealedKan:
-      state->nextState = ConcealedKan;
+      state->nextState = StateFunctionType::kConcealedKan;
       break;
     case Event::kConvertedKan:
-      state->nextState = ConvertedKan;
+      state->nextState = StateFunctionType::kConvertedKan;
       break;
     case Event::kRiichi:
-      state->nextState = Riichi;
+      state->nextState = StateFunctionType::kRiichi;
       break;
     case Event::kDiscard:
-      state->nextState = Discard;
+      state->nextState = StateFunctionType::kDiscard;
       break;
     default:
       std::cerr << "Invalid Decision Type in playerhand: " << decision.type
                 << '\n';
-      state->nextState = Error;
+      state->nextState = StateFunctionType::kError;
       break;
   }
 
   return state;
 }
+}  // namespace
 
+REGISTER_ROUTE(PlayerHand, StateFunctionType::kPlayerHand);
 }  // namespace mahjong

@@ -16,6 +16,7 @@ target_sources(
          "player.h"
          "score.h"
          "settings.h"
+         "statefunction.h"
          "typeprinter.h"
          "walls.h"
          "winds.h")

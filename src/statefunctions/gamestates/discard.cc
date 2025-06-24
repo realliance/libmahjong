@@ -6,15 +6,17 @@
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
-#include "statefunctions/statefunctions.h"
+#include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"
+#include "types/statefunction.h"
 #include "types/walls.h"
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
   AlertPlayers(*state, Event{
                            .type = Event::kDiscard,         // type
@@ -70,7 +72,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
 
   if (decision.type == Event::kDecline &&
       state->walls.GetRemainingPieces() == 0) {
-    state->nextState = Exhaust;
+    state->nextState = StateFunctionType::kExhaust;
     return state;
   }
 
@@ -80,28 +82,30 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
 
   switch (decision.type) {
     case Event::kDecline:
-      state->nextState = Draw;
+      state->nextState = StateFunctionType::kDraw;
       break;
     case Event::kRon:
-      state->nextState = Ron;
+      state->nextState = StateFunctionType::kRon;
       break;
     case Event::kChi:
-      state->nextState = Chi;
+      state->nextState = StateFunctionType::kChi;
       break;
     case Event::kPon:
-      state->nextState = Pon;
+      state->nextState = StateFunctionType::kPon;
       break;
     case Event::kKan:
-      state->nextState = Kan;
+      state->nextState = StateFunctionType::kKan;
       break;
     default:
       std::cerr << "Invalid Decision Type in Discard: " << decision.type
                 << '\n';
-      state->nextState = Error;
+      state->nextState = StateFunctionType::kError;
       break;
   }
 
   return state;
 }
+}  // namespace
 
+REGISTER_ROUTE(Discard, StateFunctionType::kDiscard);
 }  // namespace mahjong

@@ -3,11 +3,13 @@
 #include <vector>
 
 #include "analysis/hands.h"
-#include "statefunctions/statefunctions.h"
+#include "statefunctions/router.h"
 #include "types/gamestate.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> Exhaust(std::unique_ptr<GameState> state) {
   std::array<int, 4> winning_players = {};
   int total_winners = 0;
@@ -51,8 +53,10 @@ std::unique_ptr<GameState> Exhaust(std::unique_ptr<GameState> state) {
       }
     }
   }
-  state->nextState = RoundEnd;
+  state->nextState = StateFunctionType::kRoundEnd;
   return state;
 }
+}  // namespace
 
+REGISTER_ROUTE(Exhaust, StateFunctionType::kExhaust);
 }  // namespace mahjong

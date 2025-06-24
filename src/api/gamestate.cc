@@ -7,8 +7,8 @@
 #include <cerrno>
 #include <new>
 #include "statefunctions/statecontroller.h"
-#include "statefunctions/statefunctions.h"
 #include "types/piecetype.h"
+#include "types/statefunction.h"
 #include "types.h"
 #include "gamestate.h"
 
@@ -16,32 +16,50 @@ namespace api {
 
 namespace {
 
-const std::unordered_map<mahjong::GameState::StateFunction, const char*> kStateFunctionNames = {
-    {mahjong::GameStart, "GameStart"},
-    {mahjong::RoundStart, "RoundStart"},
-    {mahjong::RoundEnd, "RoundEnd"},
-    {mahjong::Draw, "Draw"},
-    {mahjong::PlayerHand, "PlayerHand"},
-    {mahjong::Discard, "Discard"},
-    {mahjong::Chi, "Chi"},
-    {mahjong::Pon, "Pon"},
-    {mahjong::Kan, "Kan"},
-    {mahjong::ConcealedKan, "ConcealedKan"},
-    {mahjong::ConvertedKan, "ConvertedKan"},
-    {mahjong::KanDiscard, "KanDiscard"},
-    {mahjong::Replacement, "Replacement"},
-    {mahjong::Riichi, "Riichi"},
-    {mahjong::Tsumo, "Tsumo"},
-    {mahjong::Ron, "Ron"},
-    {mahjong::Exhaust, "Exhaust"},
-    {mahjong::GameEnd, "GameEnd"},
-    {mahjong::Error, "Error"},
-    {nullptr, "Unknown"}
-};
-
-const char* GetStateFunctionName(mahjong::GameState::StateFunction func) {
-  auto it = kStateFunctionNames.find(func);
-  return (it != kStateFunctionNames.end()) ? it->second : "Unknown";
+const char* GetStateFunctionName(mahjong::StateFunctionType func) {
+  switch (func) {
+    case mahjong::StateFunctionType::kGameStart:
+      return "GameStart";
+    case mahjong::StateFunctionType::kRoundStart:
+      return "RoundStart";
+    case mahjong::StateFunctionType::kRoundEnd:
+      return "RoundEnd";
+    case mahjong::StateFunctionType::kDraw:
+      return "Draw";
+    case mahjong::StateFunctionType::kPlayerHand:
+      return "PlayerHand";
+    case mahjong::StateFunctionType::kDiscard:
+      return "Discard";
+    case mahjong::StateFunctionType::kChi:
+      return "Chi";
+    case mahjong::StateFunctionType::kPon:
+      return "Pon";
+    case mahjong::StateFunctionType::kKan:
+      return "Kan";
+    case mahjong::StateFunctionType::kConcealedKan:
+      return "ConcealedKan";
+    case mahjong::StateFunctionType::kConvertedKan:
+      return "ConvertedKan";
+    case mahjong::StateFunctionType::kKanDiscard:
+      return "KanDiscard";
+    case mahjong::StateFunctionType::kReplacement:
+      return "Replacement";
+    case mahjong::StateFunctionType::kRiichi:
+      return "Riichi";
+    case mahjong::StateFunctionType::kTsumo:
+      return "Tsumo";
+    case mahjong::StateFunctionType::kRon:
+      return "Ron";
+    case mahjong::StateFunctionType::kExhaust:
+      return "Exhaust";
+    case mahjong::StateFunctionType::kGameEnd:
+      return "GameEnd";
+    case mahjong::StateFunctionType::kError:
+      return "Error";
+  }
+  
+  // This should never be reached (unless we forget to add a new state function)
+  return "Unknown";
 }
 
 mahjong::GameSettings convertGameSettings(const CGameSettings* settings) {
@@ -58,7 +76,7 @@ mahjong::GameSettings convertGameSettings(const CGameSettings* settings) {
 
   return cpp_settings;
 }
-} // namespace
+}  // namespace
 
 extern "C" {
 
@@ -73,12 +91,14 @@ void ExitGame(int game) {
 
 mahjong::GameState* InitGameState(const CGameSettings* settings) {
   const mahjong::GameSettings cpp_settings = convertGameSettings(settings);
-  std::unique_ptr<mahjong::GameState> state = mahjong::InitGameState(cpp_settings);
+  std::unique_ptr<mahjong::GameState> state =
+      mahjong::InitGameState(cpp_settings);
   return state.release();
 }
 
 mahjong::GameState* AdvanceGameState(mahjong::GameState* state) {
-  std::unique_ptr<mahjong::GameState> new_state = mahjong::AdvanceGameState(std::unique_ptr<mahjong::GameState>(state));
+  std::unique_ptr<mahjong::GameState> new_state =
+      mahjong::AdvanceGameState(std::unique_ptr<mahjong::GameState>(state));
   return new_state.release();
 }
 
@@ -165,4 +185,4 @@ void FreeGameState(mahjong::GameState* state) {
   delete state;
 }
 }
-} // namespace api
+}  // namespace api

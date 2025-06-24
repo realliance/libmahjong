@@ -4,14 +4,16 @@
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
-#include "statefunctions/statefunctions.h"
+#include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> KanDiscard(std::unique_ptr<GameState> state) {
   std::array<bool, 4> need_decision = {false, false, false, false};
   for (int player = 0; player < 4; player++) {
@@ -44,12 +46,14 @@ std::unique_ptr<GameState> KanDiscard(std::unique_ptr<GameState> state) {
   }
 
   if (have_ronned) {
-    state->nextState = Ron;
+    state->nextState = StateFunctionType::kRon;
   } else {
-    state->nextState = Replacement;
+    state->nextState = StateFunctionType::kReplacement;
   }
 
   return state;
 }
+}  // namespace
 
+REGISTER_ROUTE(KanDiscard, StateFunctionType::kKanDiscard);
 }  // namespace mahjong

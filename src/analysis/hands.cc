@@ -9,7 +9,6 @@
 #include <vector>
 
 #include "analysis/analysis.h"
-#include "statefunctions/statefunctions.h"
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
@@ -17,6 +16,7 @@
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/score.h"
+#include "types/statefunction.h"
 #include "types/walls.h"
 #include "types/winds.h"
 
@@ -723,7 +723,7 @@ int isAfterAKan(const GameState& state, int player,
   if (state.currentPlayer != player) {
     return 0;
   }
-  if (state.prevState == Replacement) {
+  if (state.prevState == StateFunctionType::kReplacement) {
     return 1;
   }
   return 0;
@@ -734,7 +734,7 @@ int isRobbingAKan(const GameState& state, int player,
   if (!state.hasRonned.at(player)) {
     return 0;
   }
-  if (state.nextState == KanDiscard) {
+  if (state.nextState == StateFunctionType::kKanDiscard) {
     return 1;
   }
   return 0;

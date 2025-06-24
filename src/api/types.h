@@ -75,4 +75,4 @@ typedef struct CObservedGameState {
   const char* nextState;  // Next state function name
 };
 }
-} // namespace api
+}  // namespace api

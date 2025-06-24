@@ -3,14 +3,16 @@
 #include <memory>
 
 #include "analysis/hands.h"
-#include "statefunctions/statefunctions.h"
+#include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 
+namespace {
 std::unique_ptr<GameState> Tsumo(std::unique_ptr<GameState> state) {
   AlertPlayers(*state, Event{
                            .type = Event::kTsumo,           // type
@@ -56,7 +58,10 @@ std::unique_ptr<GameState> Tsumo(std::unique_ptr<GameState> state) {
     state->roundNum++;
     state->counters = 0;
   }
-  state->nextState = RoundEnd;
+  state->nextState = StateFunctionType::kRoundEnd;
   return state;
 }
+}  // namespace
+
+REGISTER_ROUTE(Tsumo, StateFunctionType::kTsumo);
 }  // namespace mahjong
