@@ -79,8 +79,6 @@ TEST(Api, ObserveGameState) {
     EXPECT_EQ(observed.hasRonned[i], state->hasRonned[i]);
   }
   
-  // Clean up allocated memory
-  api::FreeObservedGameState(&observed);
   api::FreeGameState(state);
 }
 
@@ -120,8 +118,7 @@ TEST(Api, ObserveGameStateAfterAdvancement) {
     EXPECT_EQ(observed.points[i], state->players[i].points);
   }
   
-  // Clean up allocated memory
-  api::FreeObservedGameState(&observed);
+  // No need to free memory - CHand uses stack allocation
   api::FreeGameState(state);
 }
 
@@ -139,64 +136,44 @@ TEST(Api, ObserveGameStateHandsAndDiscards) {
   
   // Check that hands are copied (after round start, players should have hands)
   for (int player = 0; player < 4; player++) {
-    // Verify hand pieces are copied correctly
-    for (int piece = 0; piece < 14; piece++) {
-      if (piece < static_cast<int>(state->hands[player].live.size())) {
-        EXPECT_EQ(observed.hands[player][piece], 
-                  static_cast<api::CPiece>(state->hands[player].live[piece].toUint8_t()));
+    const api::CHand& cHand = observed.hands[player];
+    const mahjong::Hand& cppHand = state->hands[player];
+    
+    // Check live pieces
+    EXPECT_EQ(cHand.liveCount, static_cast<int>(cppHand.live.size()));
+    for (int piece = 0; piece < api::kMaxLiveHandSize; piece++) {
+      if (piece < cHand.liveCount) {
+        EXPECT_EQ(cHand.live[piece], 
+                  static_cast<api::CPiece>(cppHand.live[piece].toUint8_t()));
       } else {
         // Should be filled with error pieces
-        EXPECT_EQ(observed.hands[player][piece], 
+        EXPECT_EQ(cHand.live[piece], 
                   static_cast<api::CPiece>(mahjong::Piece::Type::kError));
       }
     }
     
-    // Check discards using pointer arrays
-    EXPECT_EQ(observed.playerDiscardCounts[player], static_cast<int>(state->hands[player].discards.size()));
-    
-    if (state->hands[player].discards.empty()) {
-      EXPECT_EQ(observed.players[player], nullptr);
-    } else {
-      EXPECT_NE(observed.players[player], nullptr);
-      // Verify each discard is copied correctly
-      for (int discard = 0; discard < observed.playerDiscardCounts[player]; discard++) {
-        EXPECT_EQ(observed.players[player][discard],
-                  static_cast<api::CPiece>(state->hands[player].discards[discard].toUint8_t()));
-      }
+    // Check melds
+    EXPECT_EQ(cHand.meldCount, static_cast<int>(cppHand.melds.size()));
+    for (int meld = 0; meld < cHand.meldCount; meld++) {
+      EXPECT_EQ(static_cast<int>(cHand.melds[meld].type), static_cast<int>(cppHand.melds[meld].type));
+      EXPECT_EQ(cHand.melds[meld].start, static_cast<api::CPiece>(cppHand.melds[meld].start.toUint8_t()));
     }
+    
+    // Check discards using CHand structure
+    EXPECT_EQ(cHand.discardCount, static_cast<int>(cppHand.discards.size()));
+    for (int discard = 0; discard < cHand.discardCount; discard++) {
+      EXPECT_EQ(cHand.discards[discard],
+                static_cast<api::CPiece>(cppHand.discards[discard].toUint8_t()));
+    }
+    
+    // Check hand properties
+    EXPECT_EQ(cHand.open, cppHand.open);
+    EXPECT_EQ(cHand.riichi, cppHand.riichi);
+    EXPECT_EQ(cHand.riichiPieceDiscard, static_cast<int>(cppHand.riichiPieceDiscard));
+    EXPECT_EQ(cHand.riichiRound, cppHand.riichiRound);
   }
   
-  // Clean up allocated memory
-  api::FreeObservedGameState(&observed);
-  api::FreeGameState(state);
-}
-
-TEST(Api, FreeObservedGameState) {
-  const api::CGameSettings settings = kDefaultSettings;
-  
-  mahjong::GameState* state = api::InitGameState(&settings);
-  EXPECT_NE(state, nullptr);
-  
-  // Advance to potentially get some discards
-  state = api::AdvanceGameState(state);
-  EXPECT_NE(state, nullptr);
-  
-  api::CObservedGameState observed = api::ObserveGameState(state);
-  
-  // Test that FreeObservedGameState doesn't crash and properly nulls pointers
-  api::FreeObservedGameState(&observed);
-  
-  // After freeing, all pointers should be null
-  for (auto & player : observed.players) {
-    EXPECT_EQ(player, nullptr);
-  }
-  
-  // Test that calling FreeObservedGameState again doesn't crash
-  api::FreeObservedGameState(&observed);
-  
-  // Test with nullptr
-  api::FreeObservedGameState(nullptr);
-  
+  // No need to free memory - CHand uses stack allocation
   api::FreeGameState(state);
 }
 
@@ -212,7 +189,6 @@ TEST(Api, ObserveGameStateStateFunctions) {
   EXPECT_STREQ(observed.nextState, "GameStart");
   
   // Advance and check state transitions
-  api::FreeObservedGameState(&observed);
   state = api::AdvanceGameState(state);
   observed = api::ObserveGameState(state);
   
@@ -221,7 +197,6 @@ TEST(Api, ObserveGameStateStateFunctions) {
   EXPECT_STREQ(observed.currState, "GameStart");
   
   // Clean up
-  api::FreeObservedGameState(&observed);
   api::FreeGameState(state);
 }
 

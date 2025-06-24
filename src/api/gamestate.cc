@@ -1,15 +1,16 @@
-#include "gamestate.h"
 #include <vector>
 #include <memory>
 #include <cstdlib>
 #include <unordered_map>
-#include <iostream>
+#include <algorithm>
 #include <cstring>
 #include <cerrno>
 #include <new>
-#include "../statefunctions/statecontroller.h"
-#include "../statefunctions/statefunctions.h"
+#include "statefunctions/statecontroller.h"
+#include "statefunctions/statefunctions.h"
+#include "types/piecetype.h"
 #include "types.h"
+#include "gamestate.h"
 
 namespace api {
 
@@ -105,71 +106,59 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
   observed.currState = GetStateFunctionName(state->currState);
   observed.nextState = GetStateFunctionName(state->nextState);
   
-  // Static array copies per player
+  // Player data
   for (int i = 0; i < 4; i++) {
     observed.scores[i] = state->scores[i];
     observed.points[i] = state->players[i].points;
     observed.hasRonned[i] = state->hasRonned[i];
     
-    // Hands (up to max hand size)
-    const auto& hand = state->hands[i];
-    const int hand_size = static_cast<int>(hand.live.size());
-    for (int j = 0; j < 14; j++) {
-      if (j < hand_size) {
-        observed.hands[i][j] = static_cast<CPiece>(hand.live[j].toUint8_t());
+    // Convert Hand to CHand
+    const auto& cpp_hand = state->hands[i];
+    CHand& c_hand = observed.hands[i];
+    
+    // Live pieces
+    c_hand.liveCount = static_cast<int>(cpp_hand.live.size());
+    for (int j = 0; j < kMaxLiveHandSize; j++) {
+      if (j < c_hand.liveCount) {
+        c_hand.live[j] = static_cast<CPiece>(cpp_hand.live[j].toUint8_t());
       } else {
-        // Fill rest of hand with error (may only be final piece ever?)
-        observed.hands[i][j] = static_cast<CPiece>(mahjong::Piece::Type::kError);
+        c_hand.live[j] = static_cast<CPiece>(mahjong::Piece::Type::kError);
+      }
+    }
+    
+    // Melds
+    c_hand.meldCount = static_cast<int>(cpp_hand.melds.size());
+    for (int j = 0; j < kMaxMeldsPerHand; j++) {
+      if (j < c_hand.meldCount) {
+        c_hand.melds[j].type = static_cast<CMeldType>(cpp_hand.melds[j].type);
+        c_hand.melds[j].start = static_cast<CPiece>(cpp_hand.melds[j].start.toUint8_t());
+      } else {
+        c_hand.melds[j].type = kNone;
+        c_hand.melds[j].start = static_cast<CPiece>(mahjong::Piece::Type::kError);
       }
     }
     
     // Discards
-    const auto& discards = state->hands[i].discards;
-    observed.playerDiscardCounts[i] = static_cast<int>(discards.size());
-    
-    if (discards.empty()) {
-      observed.players[i] = nullptr;
-    } else {
-      try {
-        observed.players[i] = new CPiece[discards.size()];
-        for (size_t j = 0; j < discards.size(); j++) {
-          observed.players[i][j] = static_cast<CPiece>(discards[j].toUint8_t());
-        }
-      } catch (const std::bad_alloc& e) {
-        std::cerr << "Memory allocation failed for player " << i 
-                  << "discards: size=" << discards.size() 
-                  << "bytes=" << (discards.size() * sizeof(CPiece))
-                  << "error=" << e.what()
-                  << "errno=" << errno << " (" << std::strerror(errno) << ")"
-                  << '\n';
-        
-        // Clean up any previously allocated arrays for this observation
-        for (int cleanup_player = 0; cleanup_player < i; cleanup_player++) {
-          delete[] observed.players[cleanup_player];
-          observed.players[cleanup_player] = nullptr;
-        }
-        
-        // Rethrow after cleanup
-        throw;
-      }
+    const auto& discards = cpp_hand.discards;
+    const int discards_size = static_cast<int>(discards.size());
+    c_hand.discardCount = std::min(discards_size, kMaxDiscardsPerPlayer);
+    for (auto j = 0; j < c_hand.discardCount; j++) {
+      c_hand.discards[j] = static_cast<CPiece>(discards[j].toUint8_t());
     }
+
+    // Fill remaining discards with error
+    for (auto j = c_hand.discardCount; j < kMaxDiscardsPerPlayer; j++) {
+      c_hand.discards[j] = static_cast<CPiece>(mahjong::Piece::Type::kError);
+    }
+    
+    // Hand properties
+    c_hand.open = cpp_hand.open;
+    c_hand.riichi = cpp_hand.riichi;
+    c_hand.riichiPieceDiscard = static_cast<int>(cpp_hand.riichiPieceDiscard);
+    c_hand.riichiRound = cpp_hand.riichiRound;
   }
   
   return observed;
-}
-
-void FreeObservedGameState(CObservedGameState* observed) {
-  if (!observed) {
-    return;
-  }
-  
-  // Free discard arrays
-  for (auto & player : observed->players) {
-    if (player != nullptr) {
-      delete[] player;
-      player = nullptr;
-    }
-  }
 }
 
 void FreeGameState(mahjong::GameState* state) {
