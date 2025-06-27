@@ -13,8 +13,9 @@
 
 namespace mahjong {
 
+// TODO(#18): "I really hate this" - alice
 bool CanRon(const GameState& state,
-            int player) {  // TODO(alice): I really hate this
+            int player) {
   for (const auto& piece : state.hands.at(player).discards) {
     if (state.pendingPiece == piece) {
       return false;
@@ -103,8 +104,9 @@ bool CanConcealedKan(const GameState& state, int player) {
   if (state.walls.GetRemainingPieces() == 0) {
     return false;
   }
+  // TODO(#19): Allow riichi concealed kan under the right conditions
   if (state.hands.at(player).riichi) {
-    return false;  // arguably this should be allowed sometimes
+    return false;
   }
   return CountPieces(state, player, state.pendingPiece) == 4;
 }

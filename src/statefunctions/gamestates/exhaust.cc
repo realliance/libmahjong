@@ -14,11 +14,7 @@ std::unique_ptr<GameState> Exhaust(std::unique_ptr<GameState> state) {
   std::array<int, 4> winning_players = {};
   int total_winners = 0;
   for (int i = 0; i < 4; i++) {
-    // im taking the liberty to ignore the rule
-    // that if your wait is a piece you have four
-    // of you're then not in tenpai
-    // shouldn't matter much
-    // message Alice for complains
+    // TODO(#21): Implement no tenpai if you have all pieces of your wait
     if (state->hands.at(i).riichi ||
         !isInTenpai13Pieces(state->hands.at(i).live).empty()) {
       winning_players.at(i) = 1;
