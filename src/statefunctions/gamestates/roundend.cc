@@ -54,6 +54,9 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
   }
   state->scores = {};
 
+  // TODO #14: for now naively increment the round number
+  state->roundNum++;
+
   if (state->roundNum > last_round) {  // east only lmao
     state->nextState = StateFunctionType::kGameEnd;
   } else {
