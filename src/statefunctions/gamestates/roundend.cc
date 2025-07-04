@@ -53,6 +53,9 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
     state->players.at(i).points += state->scores.at(i);
   }
   state->scores = {};
+  
+  // TODO (#14): for now naively increment the round number
+  state->roundNum++;
 
   // TODO (#16): East wind only for now
   if (state->roundNum > last_round) { 
