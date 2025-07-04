@@ -345,7 +345,7 @@ const std::vector<Piece> kPieceSet{
     kGreenDragon,  kRedDragon,      kEastWind,       kSouthWind,
     kNorthWind,    kWestWind};
 
-// this is an extrememly inefficient algorithm but it's probably good enough for
+// TODO(#20): This is an extremely inefficient algorithm but it's probably good enough for
 // the frequency it needs to be ran
 // will revisit if necessary
 // assumption is 14 piece hand

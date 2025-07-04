@@ -24,7 +24,8 @@ struct Event {
     // other game events
     kDora,
     kPointDiff,
-    kExhaustiveDraw,  // not used should be tho
+    // TODO(#23): Implement exhaustive draw events
+    kExhaustiveDraw,
     kEnd
   };
   Type type = {};

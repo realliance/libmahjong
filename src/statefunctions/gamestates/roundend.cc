@@ -43,7 +43,7 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
     }
   }
 
-  // TODO(alice): scoring
+  // TODO(#17): Scoring
   for (int i = 0; i < 4; i++) {
     AlertPlayers(*state,
                  Event{.type = Event::kPointDiff,
@@ -54,7 +54,8 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
   }
   state->scores = {};
 
-  if (state->roundNum > last_round) {  // east only lmao
+  // TODO (#16): East wind only for now
+  if (state->roundNum > last_round) { 
     state->nextState = StateFunctionType::kGameEnd;
   } else {
     state->nextState = StateFunctionType::kRoundStart;
