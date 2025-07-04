@@ -6,7 +6,9 @@
 
 namespace mahjong {
 
-constexpr int kNumPlayers = 4;  // Eventually will make this configurable (3/4).
+// TODO(#24): Support 3 player mahjong
+constexpr int kNumPlayers = 4;
+// TODO(#25): Support configuring parts of scoring
 constexpr int kStartingPoints = 25000;
 
 struct GameSettings {
