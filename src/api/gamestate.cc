@@ -1,9 +1,6 @@
 #include <vector>
 #include <memory>
-#include <cstdlib>
 #include <algorithm>
-#include <cstring>
-#include <cerrno>
 #include <new>
 #include "statefunctions/statecontroller.h"
 #include "types/piecetype.h"
