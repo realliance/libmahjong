@@ -1,12 +1,12 @@
-#include <vector>
-#include <memory>
+#include "gamestate.h"
 #include <algorithm>
+#include <memory>
 #include <new>
+#include <vector>
 #include "statefunctions/statecontroller.h"
+#include "types.h"
 #include "types/piecetype.h"
 #include "types/statefunction.h"
-#include "types.h"
-#include "gamestate.h"
 
 namespace api {
 
@@ -53,7 +53,7 @@ CStateFunctionType ConvertStateFunctionType(mahjong::StateFunctionType func) {
     case mahjong::StateFunctionType::kGameEnd:
       return kGameEnd;
   }
-  
+
   // This should never be reached (unless we forget to add a new state function)
   return kError;
 }
@@ -85,8 +85,22 @@ void ExitGame(int game) {
   mahjong::ExitGame(game);
 }
 
+bool IsValidGameController(const char* controller) {
+  return mahjong::ControllerManager::Instance()
+      .GetAvailableControllersMap()
+      .contains(controller);
+}
+
 mahjong::GameState* InitGameState(const CGameSettings* settings) {
   const mahjong::GameSettings cpp_settings = convertGameSettings(settings);
+  // Check controllers ahead of time as C++ throws will not be handled correctly by
+  // all library consumers (rust)
+  for (const auto& controller : cpp_settings.seatControllers) {
+    if (!IsValidGameController(controller.c_str())) {
+      return nullptr;
+    }
+  }
+
   std::unique_ptr<mahjong::GameState> state =
       mahjong::InitGameState(cpp_settings);
   return state.release();
@@ -100,11 +114,11 @@ mahjong::GameState* AdvanceGameState(mahjong::GameState* state) {
 
 CObservedGameState ObserveGameState(mahjong::GameState* state) {
   CObservedGameState observed = {};
-  
+
   if (!state) {
     return observed;
   }
-  
+
   // Straightforward copies
   observed.currentPlayer = state->currentPlayer;
   observed.turnNum = state->turnNum;
@@ -116,22 +130,22 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
   observed.concealedKan = state->concealedKan;
   observed.seed = state->seed;
   observed.pendingPiece = static_cast<CPiece>(state->pendingPiece.toUint8_t());
-  
+
   // State function enums
   observed.prevState = ConvertStateFunctionType(state->prevState);
   observed.currState = ConvertStateFunctionType(state->currState);
   observed.nextState = ConvertStateFunctionType(state->nextState);
-  
+
   // Player data
   for (int i = 0; i < 4; i++) {
     observed.scores[i] = state->scores[i];
     observed.points[i] = state->players[i].points;
     observed.hasRonned[i] = state->hasRonned[i];
-    
+
     // Convert Hand to CHand
     const auto& cpp_hand = state->hands[i];
     CHand& c_hand = observed.hands[i];
-    
+
     // Live pieces
     const int live_piece_count = static_cast<int>(cpp_hand.live.size());
     c_hand.livePieceCount = std::min(live_piece_count, kMaxLiveHandSize);
@@ -144,9 +158,10 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
     c_hand.meldCount = std::min(meld_count, kMaxMeldsPerHand);
     for (int j = 0; j < c_hand.meldCount; j++) {
       c_hand.melds[j].type = static_cast<CMeldType>(cpp_hand.melds[j].type);
-      c_hand.melds[j].start = static_cast<CPiece>(cpp_hand.melds[j].start.toUint8_t());
+      c_hand.melds[j].start =
+          static_cast<CPiece>(cpp_hand.melds[j].start.toUint8_t());
     }
-    
+
     // Discards
     const auto& discards = cpp_hand.discards;
     const int discards_size = static_cast<int>(discards.size());
@@ -154,14 +169,14 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
     for (auto j = 0; j < c_hand.discardCount; j++) {
       c_hand.discards[j] = static_cast<CPiece>(discards[j].toUint8_t());
     }
-    
+
     // Hand properties
     c_hand.open = cpp_hand.open;
     c_hand.riichi = cpp_hand.riichi;
     c_hand.riichiPieceDiscard = static_cast<int>(cpp_hand.riichiPieceDiscard);
     c_hand.riichiRound = cpp_hand.riichiRound;
   }
-  
+
   return observed;
 }
 

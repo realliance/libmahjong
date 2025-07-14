@@ -17,6 +17,9 @@ class ControllerManager {
     return controller_manager;
   }
 
+  std::map<std::string, newControllerInst> GetAvailableControllersMap() {
+    return available_controllers_;
+  }
   std::vector<std::string> GetAvailableControllers();
   std::unique_ptr<mahjong::PlayerController> NewController(
       const std::string& controller);
