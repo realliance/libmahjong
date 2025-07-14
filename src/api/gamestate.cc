@@ -1,12 +1,12 @@
-#include "gamestate.h"
-#include <algorithm>
-#include <memory>
-#include <new>
 #include <vector>
+#include <memory>
+#include <algorithm>
+#include <new>
 #include "statefunctions/statecontroller.h"
-#include "types.h"
 #include "types/piecetype.h"
 #include "types/statefunction.h"
+#include "types.h"
+#include "gamestate.h"
 
 namespace api {
 
