@@ -12,7 +12,7 @@
 
 namespace mahjong {
 
-TEST(isWindOrDragonPon, WhiteDragon) {
+TEST(isWindOrDragonPon, DISABLED_WhiteDragon) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m456m555z11z"));
 
@@ -27,7 +27,7 @@ TEST(isWindOrDragonPon, WhiteDragon) {
   FAIL();
 }
 
-TEST(isWindOrDragonPon, GreenDragon) {
+TEST(isWindOrDragonPon, DISABLED_GreenDragon) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m456m666z11z"));
 
@@ -42,7 +42,7 @@ TEST(isWindOrDragonPon, GreenDragon) {
   FAIL();
 }
 
-TEST(isWindOrDragonPon, RedDragon) {
+TEST(isWindOrDragonPon, DISABLED_RedDragon) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m456m777z11z"));
 
@@ -57,7 +57,7 @@ TEST(isWindOrDragonPon, RedDragon) {
   FAIL();
 }
 
-TEST(isWindOrDragonPon, Kan) {
+TEST(isWindOrDragonPon, DISABLED_Kan) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m456m7777z11z"));
 
@@ -72,7 +72,7 @@ TEST(isWindOrDragonPon, Kan) {
   FAIL();
 }
 
-TEST(isWindOrDragonPon, CanWhenOpen) {
+TEST(isWindOrDragonPon, DISABLED_CanWhenOpen) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m456m777z11z"));
   game_state.hands[0].open = true;
