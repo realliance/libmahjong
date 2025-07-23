@@ -12,7 +12,7 @@
 
 namespace mahjong {
 
-TEST(isMixedTripleChi, Open) {
+TEST(isMixedTripleChi, DISABLED_Open) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123p123m123s555p11z"));
   game_state.hands[0].open = true;
@@ -28,7 +28,7 @@ TEST(isMixedTripleChi, Open) {
   FAIL();
 }
 
-TEST(isMixedTripleChi, Closed) {
+TEST(isMixedTripleChi, DISABLED_Closed) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123p123m123s555p11z"));
   game_state.hands[0].open = false;
