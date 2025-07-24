@@ -206,4 +206,22 @@ TEST(Api, ObserveGameStateStateFunctions) {
   api::FreeGameState(state);
 }
 
+TEST(Api, GameControllerValidation) {
+  const api::CGameSettings settings = kDefaultSettings;
+
+  // Check valid controllers
+  for (const auto& controller : settings.seat_controllers) {
+    EXPECT_TRUE(api::IsValidGameController(controller));
+  }
+
+  // Check invalid controller
+  EXPECT_FALSE(api::IsValidGameController("InvalidController"));
+
+  // If an invalid controller is used, InitGameState should return nullptr
+  api::CGameSettings invalid_settings = settings;
+  invalid_settings.seat_controllers[0] = "InvalidController";
+  mahjong::GameState* state = api::InitGameState(&invalid_settings);
+  EXPECT_EQ(state, nullptr);
+}
+
 }  // namespace
