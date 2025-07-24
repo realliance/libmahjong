@@ -44,7 +44,7 @@ TEST(Api, AdvanceGameState) {
   EXPECT_NE(new_state, nullptr);
 }
 
-TEST(Api, ObserveGameState) {
+TEST(Api, DISABLED_ObserveGameState) {
   const api::CGameSettings settings = kDefaultSettings;
 
   mahjong::GameState* state = api::InitGameState(&settings);

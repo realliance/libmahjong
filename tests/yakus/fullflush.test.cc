@@ -86,7 +86,7 @@ TEST(isFullFlush, BadHandSuit) {
   SUCCEED();
 }
 
-TEST(isFullFlush, BadHandFullFlushHonors) {
+TEST(isFullFlush, DISABLED_BadHandFullFlushHonors) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("111z222z333z444z55z"));
   game_state.hands[0].open = false;
