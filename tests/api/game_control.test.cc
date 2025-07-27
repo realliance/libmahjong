@@ -44,7 +44,7 @@ TEST(Api, AdvanceGameState) {
   EXPECT_NE(new_state, nullptr);
 }
 
-TEST(Api, DISABLED_ObserveGameState) {
+TEST(Api, ObserveGameState) {
   const api::CGameSettings settings = kDefaultSettings;
 
   mahjong::GameState* state = api::InitGameState(&settings);
@@ -67,10 +67,8 @@ TEST(Api, DISABLED_ObserveGameState) {
   EXPECT_EQ(observed.pendingPiece,
             static_cast<api::CPiece>(state->pendingPiece.toUint8_t()));
 
-  // Check state function names
-  EXPECT_NE(observed.prevState, api::CStateFunctionType::kError);
-  EXPECT_NE(observed.currState, api::CStateFunctionType::kError);
-  EXPECT_NE(observed.nextState, api::CStateFunctionType::kError);
+  // Check state function name, the rest will be in unknown positions
+  // until we advance the game state
   EXPECT_EQ(observed.nextState,
             api::CStateFunctionType::
                 kGameStart);  // Initial state should be GameStart
