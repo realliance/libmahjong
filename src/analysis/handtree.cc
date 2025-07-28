@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <fstream>  // IWYU pragma: keep
 #include <iostream>
+#include <iterator>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -205,8 +206,9 @@ void resetCounts(Breakdown* b, const Node* target) {
 
 // NOLINTNEXTLINE(misc-no-recursion)
 void driver(Breakdown* b) {
-  for (updatePossibilities(b); b->pieces.empty(); updatePossibilities(b)) {
+  for (updatePossibilities(b); !b->pieces.empty(); updatePossibilities(b)) {
     const int piece_pos = getNextPiece(b);
+
     if (b->possibilities[piece_pos] == 0) {
       breakdownSingle(b, piece_pos);
       continue;
@@ -214,8 +216,14 @@ void driver(Breakdown* b) {
     if (b->possibilities[piece_pos] == 1) {
       if (anyPossibleChi(b->counts, b->pieces[piece_pos])) {
         for (int i = 0; i < 3; i++) {
-          if (possibleChiForward(b->counts, b->pieces[piece_pos] - i)) {
-            breakdownForwardChi(b, piece_pos - i);
+          const Piece chi_start = b->pieces[piece_pos] - i;
+          if (possibleChiForward(b->counts, chi_start)) {
+            // Find the position of chi_start in the pieces vector
+            auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
+            if (it != b->pieces.end()) {
+              const int chi_start_pos = std::distance(b->pieces.begin(), it);
+              breakdownForwardChi(b, chi_start_pos);
+            }
             break;
           }
         }
@@ -230,47 +238,58 @@ void driver(Breakdown* b) {
         continue;
       }
     }
-    if (b->possibilities[piece_pos] == 2) {
+    if (b->possibilities[piece_pos] >= 2) {
       auto* current = b->currentNode;
       int branch = 0;
       if (possibleChiForward(b->counts, b->pieces[piece_pos] - 0)) {
         branch++;
-        breakdownForwardChi(b, piece_pos - 0);
+        // piece_pos is already the correct position for a chi starting at this piece
+        breakdownForwardChi(b, piece_pos);
         driver(b);
         resetCounts(b, current);
       }
       if (possibleChiForward(b->counts, b->pieces[piece_pos] - 1)) {
         branch++;
-        breakdownForwardChi(b, piece_pos - 1);
-        if (branch == 2) {
-          continue;
+        // Find position of the piece that would start this chi
+        const Piece chi_start = b->pieces[piece_pos] - 1;
+        auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
+        if (it != b->pieces.end()) {
+          const int chi_start_pos = std::distance(b->pieces.begin(), it);
+          breakdownForwardChi(b, chi_start_pos);
+          driver(b);
+          if (branch < 2) {
+            resetCounts(b, current);
+          }
         }
-        driver(b);
-        resetCounts(b, current);
       }
       if (possibleChiForward(b->counts, b->pieces[piece_pos] - 2)) {
         branch++;
-        breakdownForwardChi(b, piece_pos - 2);
-        if (branch == 2) {
-          continue;
+        // Find position of the piece that would start this chi
+        const Piece chi_start = b->pieces[piece_pos] - 2;
+        auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
+        if (it != b->pieces.end()) {
+          const int chi_start_pos = std::distance(b->pieces.begin(), it);
+          breakdownForwardChi(b, chi_start_pos);
+          driver(b);
+          if (branch < 2) {
+            resetCounts(b, current);
+          }
         }
-        driver(b);
-        resetCounts(b, current);
       }
       if (possiblePon(b->counts, b->pieces[piece_pos])) {
         branch++;
         breakdownPon(b, piece_pos);
-        if (branch == 2) {
-          continue;
-        }
         driver(b);
-        resetCounts(b, current);
+        if (branch < 2) {
+          resetCounts(b, current);
+        }
       }
       if (possiblePair(b->counts, b->pieces[piece_pos])) {
         branch++;
         breakdownPair(b, piece_pos);
-        if (branch == 2) {
-          continue;
+        driver(b);
+        if (branch < 2) {
+          resetCounts(b, current);
         }
       }
     }
@@ -280,6 +299,7 @@ void driver(Breakdown* b) {
 }  // namespace
 
 std::unique_ptr<Node> breakdownHand(const std::vector<Piece>& pieces) {
+
   Breakdown b;
   b.rootNode = std::make_unique<Node>(b.id++,                     // id
                                       Node::kRoot,                // type
