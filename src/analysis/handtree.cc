@@ -243,7 +243,6 @@ void driver(Breakdown* b) {
       int branch = 0;
       if (possibleChiForward(b->counts, b->pieces[piece_pos] - 0)) {
         branch++;
-        // piece_pos is already the correct position for a chi starting at this piece
         breakdownForwardChi(b, piece_pos);
         driver(b);
         resetCounts(b, current);
