@@ -206,17 +206,29 @@ void resetCounts(Breakdown* b, const Node* target) {
 
 // NOLINTNEXTLINE(misc-no-recursion)
 void driver(Breakdown* b) {
+  // - Always process the tile into the fewest groupings first
+  // - If a tile has only one way to be grouped, use it
+  // - If a tile has multiple ways, try each possibility
+  // - Continue until all tiles are in groups
+
+  // While there are ungrouped pieces
   for (updatePossibilities(b); !b->pieces.empty(); updatePossibilities(b)) {
+    // Get the piece with minimum possibilities
     const int piece_pos = getNextPiece(b);
 
     if (b->possibilities[piece_pos] == 0) {
+      // No valid grouping possible, single piece
       breakdownSingle(b, piece_pos);
       continue;
     }
+
     if (b->possibilities[piece_pos] == 1) {
+      // One way to be grouped, use it
       if (anyPossibleChi(b->counts, b->pieces[piece_pos])) {
+        // A chi is possible, determine how it can be a part of one
         for (int i = 0; i < 3; i++) {
           const Piece chi_start = b->pieces[piece_pos] - i;
+          // Check if we can start a chi with this piece
           if (possibleChiForward(b->counts, chi_start)) {
             // Find the position of chi_start in the pieces vector
             auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
@@ -230,66 +242,71 @@ void driver(Breakdown* b) {
         continue;
       }
       if (possiblePon(b->counts, b->pieces[piece_pos])) {
+        // A pon is possible
         breakdownPon(b, piece_pos);
         continue;
       }
       if (possiblePair(b->counts, b->pieces[piece_pos])) {
+        // A pair is possible
         breakdownPair(b, piece_pos);
         continue;
       }
     }
     if (b->possibilities[piece_pos] >= 2) {
+      // Tile has multiple groups, we need to check branches
+
+      // Save current position in tree so we can backtrack
       auto* current = b->currentNode;
       int branch = 0;
+
       if (possibleChiForward(b->counts, b->pieces[piece_pos] - 0)) {
+        // Can be the begining of a chi
         branch++;
         breakdownForwardChi(b, piece_pos);
         driver(b);
         resetCounts(b, current);
       }
+
       if (possibleChiForward(b->counts, b->pieces[piece_pos] - 1)) {
+        // Can be the middle of a chi
         branch++;
-        // Find position of the piece that would start this chi
         const Piece chi_start = b->pieces[piece_pos] - 1;
         auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
         if (it != b->pieces.end()) {
           const int chi_start_pos = std::distance(b->pieces.begin(), it);
           breakdownForwardChi(b, chi_start_pos);
           driver(b);
-          if (branch < 2) {
-            resetCounts(b, current);
-          }
+          resetCounts(b, current);
         }
       }
+
       if (possibleChiForward(b->counts, b->pieces[piece_pos] - 2)) {
+        // Can be the end of a chi
         branch++;
-        // Find position of the piece that would start this chi
         const Piece chi_start = b->pieces[piece_pos] - 2;
         auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
         if (it != b->pieces.end()) {
           const int chi_start_pos = std::distance(b->pieces.begin(), it);
           breakdownForwardChi(b, chi_start_pos);
           driver(b);
-          if (branch < 2) {
-            resetCounts(b, current);
-          }
+          resetCounts(b, current);
         }
       }
+
       if (possiblePon(b->counts, b->pieces[piece_pos])) {
+        // Can be a pon
         branch++;
         breakdownPon(b, piece_pos);
         driver(b);
-        if (branch < 2) {
-          resetCounts(b, current);
-        }
+        resetCounts(b, current);
       }
+
       if (possiblePair(b->counts, b->pieces[piece_pos])) {
+        // Can be a pair
         branch++;
         breakdownPair(b, piece_pos);
         driver(b);
-        if (branch < 2) {
-          resetCounts(b, current);
-        }
+        resetCounts(b, current);
       }
     }
   }
