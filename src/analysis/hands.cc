@@ -987,7 +987,8 @@ int isTwicePureDoubleChi(const GameState& state, int player,
       continue;
     }
     for (size_t j = i + 1; j < branch.size(); j++) {
-      if (i == j) {
+      if (branch.at(j)->type == Node::kChiSet &&
+          branch.at(i)->start == branch.at(j)->start) {
         pairs++;
       }
     }
