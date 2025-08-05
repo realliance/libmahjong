@@ -298,7 +298,6 @@ void driver(Breakdown* b) {
 }  // namespace
 
 std::unique_ptr<Node> breakdownHand(const std::vector<Piece>& pieces) {
-
   Breakdown b;
   b.rootNode = std::make_unique<Node>(b.id++,                     // id
                                       Node::kRoot,                // type
