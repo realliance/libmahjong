@@ -15,7 +15,7 @@ namespace mahjong {
 
 // TODO(#18): "I really hate this" - alice
 bool CanRon(const GameState& state, int player) {
-  // If the pending piece is your disables, you can't Ron
+  // If the pending piece is your discard, you can't Ron
   for (const auto& piece : state.hands.at(player).discards) {
     if (state.pendingPiece == piece) {
       return false;
