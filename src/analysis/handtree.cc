@@ -257,56 +257,105 @@ void driver(Breakdown* b) {
 
       // Save current position in tree so we can backtrack
       auto* current = b->currentNode;
-      int branch = 0;
 
-      if (possibleChiForward(b->counts, b->pieces[piece_pos] - 0)) {
-        // Can be the begining of a chi
-        branch++;
-        breakdownForwardChi(b, piece_pos);
-        driver(b);
-        resetCounts(b, current);
-      }
+      // Check grouping possibilities
+      const bool can_chi_start =
+          possibleChiForward(b->counts, b->pieces[piece_pos] - 0);
 
+      bool can_chi_middle = false;
+      int chi_middle_pos = -1;
       if (possibleChiForward(b->counts, b->pieces[piece_pos] - 1)) {
-        // Can be the middle of a chi
-        branch++;
         const Piece chi_start = b->pieces[piece_pos] - 1;
         auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
         if (it != b->pieces.end()) {
-          const int chi_start_pos = std::distance(b->pieces.begin(), it);
-          breakdownForwardChi(b, chi_start_pos);
-          driver(b);
-          resetCounts(b, current);
+          can_chi_middle = true;
+          chi_middle_pos = std::distance(b->pieces.begin(), it);
         }
       }
 
+      bool can_chi_end = false;
+      int chi_end_pos = -1;
       if (possibleChiForward(b->counts, b->pieces[piece_pos] - 2)) {
-        // Can be the end of a chi
-        branch++;
         const Piece chi_start = b->pieces[piece_pos] - 2;
         auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
         if (it != b->pieces.end()) {
-          const int chi_start_pos = std::distance(b->pieces.begin(), it);
-          breakdownForwardChi(b, chi_start_pos);
-          driver(b);
+          can_chi_end = true;
+          chi_end_pos = std::distance(b->pieces.begin(), it);
+        }
+      }
+
+      const bool can_pon = possiblePon(b->counts, b->pieces[piece_pos]);
+      const bool can_pair = possiblePair(b->counts, b->pieces[piece_pos]);
+
+      // Count total branches that will actually execute
+      int total_branches = 0;
+      if (can_chi_start) {
+        total_branches++;
+      }
+      if (can_chi_middle) {
+        total_branches++;
+      }
+      if (can_chi_end) {
+        total_branches++;
+      }
+      if (can_pon) {
+        total_branches++;
+      }
+      if (can_pair) {
+        total_branches++;
+      }
+
+      // Execute branches
+      int current_branch = 0;
+
+      if (can_chi_start) {
+        // Can be the beginning of a chi
+        current_branch++;
+        breakdownForwardChi(b, piece_pos);
+        driver(b);
+        if (current_branch < total_branches) {
           resetCounts(b, current);
         }
       }
 
-      if (possiblePon(b->counts, b->pieces[piece_pos])) {
-        // Can be a pon
-        branch++;
-        breakdownPon(b, piece_pos);
+      if (can_chi_middle) {
+        // Can be the middle of a chi
+        current_branch++;
+        breakdownForwardChi(b, chi_middle_pos);
         driver(b);
-        resetCounts(b, current);
+        if (current_branch < total_branches) {
+          resetCounts(b, current);
+        }
       }
 
-      if (possiblePair(b->counts, b->pieces[piece_pos])) {
+      if (can_chi_end) {
+        // Can be the end of a chi
+        current_branch++;
+        breakdownForwardChi(b, chi_end_pos);
+        driver(b);
+        if (current_branch < total_branches) {
+          resetCounts(b, current);
+        }
+      }
+
+      if (can_pon) {
+        // Can be a pon
+        current_branch++;
+        breakdownPon(b, piece_pos);
+        driver(b);
+        if (current_branch < total_branches) {
+          resetCounts(b, current);
+        }
+      }
+
+      if (can_pair) {
         // Can be a pair
-        branch++;
+        current_branch++;
         breakdownPair(b, piece_pos);
         driver(b);
-        resetCounts(b, current);
+        if (current_branch < total_branches) {
+          resetCounts(b, current);
+        }
       }
     }
   }
