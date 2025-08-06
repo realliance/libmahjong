@@ -151,7 +151,7 @@ Piece ThriceBot::popDiscard() {
       index_of_lowest = i;
     }
   }
-  Piece p = hand_[index_of_lowest].piece;
+  const Piece p = hand_[index_of_lowest].piece;
   hand_.erase(hand_.begin() + index_of_lowest);
   discarded_.at(p.toUint8_t())++;
   return p;

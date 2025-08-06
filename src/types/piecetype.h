@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <functional>
 #include <string>
 
 #include "winds.h"
@@ -10,6 +11,7 @@ class Piece {
  public:
   Piece() = default;
   constexpr explicit Piece(uint8_t p) : p_(p) {}
+  constexpr Piece(const Piece& p) = default;
 
   // TERMINAL_BIT, SUIT_2, RED_FIVE, PIECE_4
   enum Type : std::uint8_t {
@@ -127,3 +129,11 @@ class Piece {
 };
 
 }  // namespace mahjong
+
+// Custom specialization of std::hash can be injected in namespace std.
+template <>
+struct std::hash<mahjong::Piece> {
+  std::size_t operator()(const mahjong::Piece& p) const noexcept {
+    return std::hash<uint8_t>{}(p.raw_value());
+  }
+};

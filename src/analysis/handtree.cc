@@ -1,16 +1,14 @@
 #include <algorithm>
-#include <array>
-#include <cstddef>
-#include <cstdint>
-#include <fstream>  // IWYU pragma: keep
+#include <fstream>
 #include <iostream>
-#include <iterator>
+#include <map>
 #include <memory>
 #include <utility>
 #include <vector>
 
 #include "analysis.h"
 #include "types/handnode.h"
+#include "types/pieces.h"
 #include "types/piecetype.h"
 
 namespace mahjong {
@@ -19,138 +17,107 @@ struct Breakdown {
   std::unique_ptr<Node> rootNode;
   Node* currentNode{};
   bool paired = false;
-  int minPossible{};
   int id = 0;
-  std::array<int8_t, Piece::kPiecesize> counts = {};
-  std::vector<int> possibilities;
+  std::map<Piece, int> counts;
+  std::map<Piece, int> possibilities;
   std::vector<Piece> pieces;
 };
 
 namespace {
 
 const int kMaxPossible = 14;
-
-bool possibleChiForward(const std::array<int8_t, Piece::kPiecesize> counts,
-                        Piece p) {
-  if (p.isHonor()) {
+bool possibleChiForward(const std::map<Piece, int>& counts, Piece p) {
+  if (p.isHonor() || !counts.contains(p) || !counts.contains(p + 1) ||
+      !counts.contains(p + 2)) {
     return false;
   }
-  return counts.at((p).toUint8_t()) > 0 && counts.at((p + 1).toUint8_t()) > 0 &&
-         counts.at((p + 2).toUint8_t()) > 0;
+  return counts.at(p) > 0 && counts.at(p + 1) > 0 && counts.at(p + 2) > 0;
 }
 
-int possibleChis(const std::array<int8_t, Piece::kPiecesize> counts, Piece p) {
-  return p.isHonor() ? 0
-                     : ((static_cast<int>(possibleChiForward(counts, p)) +
-                         static_cast<int>(possibleChiForward(counts, p - 1)) +
-                         static_cast<int>(possibleChiForward(counts, p - 2))));
+int possibleChis(const std::map<Piece, int>& counts, Piece p) {
+  int chi_count = possibleChiForward(counts, p) ? 1 : 0;
+  chi_count += possibleChiForward(counts, p - 1) ? 1 : 0;
+  chi_count += possibleChiForward(counts, p - 2) ? 1 : 0;
+  return chi_count;
 }
 
-bool anyPossibleChi(const std::array<int8_t, Piece::kPiecesize> counts,
-                    Piece p) {
+bool anyPossibleChi(const std::map<Piece, int>& counts, Piece p) {
   return possibleChis(counts, p) > 0;
 }
 
-bool possiblePair(const std::array<int8_t, Piece::kPiecesize> counts, Piece p) {
-  return (counts.at(p.toUint8_t()) == 2);
+bool possiblePair(const std::map<Piece, int>& counts, Piece p) {
+  return counts.contains(p) && counts.at(p) == 2;
 }
 
-bool possiblePon(const std::array<int8_t, Piece::kPiecesize> counts, Piece p) {
-  return counts.at(p.toUint8_t()) == 3;
+bool possiblePon(const std::map<Piece, int>& counts, Piece p) {
+  return counts.contains(p) && counts.at(p) == 3;
 }
 
 void countPieces(Breakdown* b) {
   for (const auto& p : b->pieces) {
-    b->counts.at(p.toUint8_t())++;
+    b->counts[p]++;
   }
 }
 
-void updatePossibilities(Breakdown* b) {
-  b->possibilities.resize(b->pieces.size());
-  b->minPossible = kMaxPossible;
-  for (size_t i = 0; i < b->pieces.size(); i++) {
-    b->possibilities.at(i) = 0;
-    b->possibilities.at(i) += possibleChis(b->counts, b->pieces.at(i));
-    b->possibilities.at(i) +=
-        b->paired ? 0
-                  : static_cast<int>(possiblePair(b->counts, b->pieces.at(i)));
-    b->possibilities.at(i) +=
-        static_cast<int>(possiblePon(b->counts, b->pieces.at(i)));
-    b->minPossible = b->possibilities.at(i) < b->minPossible
-                         ? b->possibilities.at(i)
-                         : b->minPossible;
+Piece updatePossibilities(Breakdown* b) {
+  b->possibilities.clear();
+  int min_possible = kMaxPossible;
+  Piece min_possible_piece = kError;
+  for (const auto& piece : b->pieces) {
+    b->possibilities[piece] += possibleChis(b->counts, piece);
+    if (!b->paired && possiblePair(b->counts, piece)) {
+      b->possibilities[piece]++;
+    }
+    if (possiblePon(b->counts, piece)) {
+      b->possibilities[piece]++;
+    }
+    if (b->possibilities[piece] < min_possible) {
+      min_possible = b->possibilities[piece];
+      min_possible_piece = piece;
+    }
   }
+  return min_possible_piece;
 }
 
-Node* addLeaf(Breakdown* b, Piece start, Node::Type type) {
-  b->currentNode->leaves.push_back(std::make_unique<Node>(
-      b->id++,                       // id
-      type,                          // type
-      start,                         // Start
-      b->currentNode,                // parent
-      b->currentNode->leaves.size()  // leafPosInParent
-      ));
-  return b->currentNode->leaves.back().get();
-}
-
-void breakdownForwardChi(Breakdown* b, int piecePos) {
-  const Piece start = b->pieces[piecePos];
+void breakdownForwardChi(Breakdown* b, Piece piece) {
   for (int i = 0; i < 3; i++) {
-    b->counts.at((start + i).toUint8_t())--;
-    if (b->counts.at((start + i).toUint8_t()) == 0) {
+    b->counts[piece + i]--;
+    if (b->counts[piece + i] == 0) {
       b->pieces.erase(
-          std::remove(b->pieces.begin(), b->pieces.end(), (start + i)),
+          std::remove(b->pieces.begin(), b->pieces.end(), piece + i),
           b->pieces.end());
     }
   }
-  b->currentNode = addLeaf(b, start, Node::kChiSet);
+  b->currentNode = b->currentNode->addLeaf(piece, Node::kChiSet, b->id++);
 }
 
-void breakdownPon(Breakdown* b, int piecePos) {
-  const Piece start = b->pieces[piecePos];
-  b->counts.at(b->pieces[piecePos].toUint8_t()) -= 3;
-  if (b->counts.at(b->pieces[piecePos].toUint8_t()) == 0) {
-    b->pieces.erase(
-        std::remove(b->pieces.begin(), b->pieces.end(), b->pieces[piecePos]),
-        b->pieces.end());
+void breakdownPon(Breakdown* b, Piece piece) {
+  b->counts[piece] -= 3;
+  if (b->counts[piece] == 0) {
+    b->pieces.erase(std::remove(b->pieces.begin(), b->pieces.end(), piece),
+                    b->pieces.end());
   }
-  b->currentNode = addLeaf(b, start, Node::kPonSet);
+  b->currentNode = b->currentNode->addLeaf(piece, Node::kPonSet, b->id++);
 }
 
-void breakdownPair(Breakdown* b, int piecePos) {
+void breakdownPair(Breakdown* b, Piece piece) {
   b->paired = true;
-  const Piece start = b->pieces[piecePos];
-  b->counts.at(b->pieces[piecePos].toUint8_t()) -= 2;
-  if (b->counts.at(b->pieces[piecePos].toUint8_t()) == 0) {
-    b->pieces.erase(
-        std::remove(b->pieces.begin(), b->pieces.end(), b->pieces[piecePos]),
-        b->pieces.end());
+  b->counts[piece] -= 2;
+  if (b->counts[piece] == 0) {
+    b->pieces.erase(std::remove(b->pieces.begin(), b->pieces.end(), piece),
+                    b->pieces.end());
   }
-  b->currentNode = addLeaf(b, start, Node::kPair);
+  b->currentNode = b->currentNode->addLeaf(piece, Node::kPair, b->id++);
 }
 
-void breakdownSingle(Breakdown* b, int piecePos) {
-  b->currentNode = addLeaf(b, b->pieces[piecePos], Node::kSingle);
+void breakdownSingle(Breakdown* b, Piece piece) {
+  b->currentNode = b->currentNode->addLeaf(piece, Node::kSingle, b->id++);
 
-  b->counts.at(b->pieces[piecePos].toUint8_t())--;
-  if (b->counts.at(b->pieces[piecePos].toUint8_t()) == 0) {
-    b->pieces.erase(
-        std::remove(b->pieces.begin(), b->pieces.end(), b->pieces[piecePos]),
-        b->pieces.end());
+  b->counts[piece]--;
+  if (b->counts[piece] == 0) {
+    b->pieces.erase(std::remove(b->pieces.begin(), b->pieces.end(), piece),
+                    b->pieces.end());
   }
-}
-
-int getNextPiece(Breakdown* b) {
-  int piece_pos = 0;
-  for (size_t i = 0; i < b->pieces.size(); i++) {
-    if (b->possibilities.at(i) <= b->possibilities[piece_pos]) {
-      piece_pos = i;
-      if (b->possibilities.at(i) == b->minPossible) {
-        break;
-      }
-    }
-  }
-  return piece_pos;
 }
 
 void resetCounts(Breakdown* b, const Node* target) {
@@ -162,45 +129,45 @@ void resetCounts(Breakdown* b, const Node* target) {
     throw -1;
   }
   while (b->currentNode != target) {
-    if (b->currentNode->parent == nullptr) {
+    if (b->currentNode->parent() == nullptr) {
       std::cerr << "reset Failure: parent node nullptr." << '\n';
       std::ofstream os("error.gv");
       b->rootNode->DumpAsDot(os);
       os.close();
       throw -2;
     }
-    if (b->currentNode->parent->type == Node::kError) {
+    if (b->currentNode->parent()->type() == Node::kError) {
       std::cerr << "reset Failure: reset up to an error." << '\n';
       std::ofstream os("error.gv");
       b->rootNode->DumpAsDot(os);
       os.close();
       throw -4;
     }
-    if (b->currentNode->type == Node::kChiSet) {
+    if (b->currentNode->type() == Node::kChiSet) {
       for (int i = 0; i < 3; i++) {
-        if (b->counts.at((b->currentNode->start + i).toUint8_t()) == 0) {
-          b->pieces.push_back(Piece{b->currentNode->start + i});
+        if (b->counts[b->currentNode->start() + i] == 0) {
+          b->pieces.push_back(Piece{b->currentNode->start() + i});
           std::sort(b->pieces.begin(), b->pieces.end());
         }
-        b->counts.at((b->currentNode->start + i).toUint8_t())++;
+        b->counts[b->currentNode->start() + i]++;
       }
     } else {
-      if (b->counts.at(b->currentNode->start.toUint8_t()) == 0) {
-        b->pieces.emplace_back(b->currentNode->start);
+      if (b->counts[b->currentNode->start()] == 0) {
+        b->pieces.emplace_back(b->currentNode->start());
         std::sort(b->pieces.begin(), b->pieces.end());
       }
-      if (b->currentNode->type == Node::kSingle) {
-        b->counts.at(b->currentNode->start.toUint8_t())++;
+      if (b->currentNode->type() == Node::kSingle) {
+        b->counts[b->currentNode->start()]++;
       }
-      if (b->currentNode->type == Node::kPair) {
+      if (b->currentNode->type() == Node::kPair) {
         b->paired = false;
-        b->counts.at(b->currentNode->start.toUint8_t()) += 2;
+        b->counts[b->currentNode->start()] += 2;
       }
-      if (b->currentNode->type == Node::kPonSet) {
-        b->counts.at(b->currentNode->start.toUint8_t()) += 3;
+      if (b->currentNode->type() == Node::kPonSet) {
+        b->counts[b->currentNode->start()] += 3;
       }
     }
-    b->currentNode = b->currentNode->parent;
+    b->currentNode = b->currentNode->parent();
   }
 }
 
@@ -211,81 +178,78 @@ void driver(Breakdown* b) {
   // - If a tile has multiple ways, try each possibility
   // - Continue until all tiles are in groups
 
-  // While there are ungrouped pieces
-  for (updatePossibilities(b); !b->pieces.empty(); updatePossibilities(b)) {
-    // Get the piece with minimum possibilities
-    const int piece_pos = getNextPiece(b);
-
-    if (b->possibilities[piece_pos] == 0) {
+  // While there are ungrouped pieces, get the piece with minimum possibilities
+  for (Piece current_piece = updatePossibilities(b); !b->pieces.empty();
+       current_piece = updatePossibilities(b)) {
+    if (b->possibilities[current_piece] == 0) {
       // No valid grouping possible, single piece
-      breakdownSingle(b, piece_pos);
+      breakdownSingle(b, current_piece);
       continue;
     }
 
-    if (b->possibilities[piece_pos] == 1) {
+    if (b->possibilities[current_piece] == 1) {
       // One way to be grouped, use it
-      if (anyPossibleChi(b->counts, b->pieces[piece_pos])) {
+      if (anyPossibleChi(b->counts, current_piece)) {
         // A chi is possible, determine how it can be a part of one
         for (int i = 0; i < 3; i++) {
-          const Piece chi_start = b->pieces[piece_pos] - i;
+          const Piece chi_start = current_piece - i;
           // Check if we can start a chi with this piece
           if (possibleChiForward(b->counts, chi_start)) {
             // Find the position of chi_start in the pieces vector
-            auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
-            if (it != b->pieces.end()) {
-              const int chi_start_pos = std::distance(b->pieces.begin(), it);
-              breakdownForwardChi(b, chi_start_pos);
+            auto piece_itr =
+                std::find(b->pieces.begin(), b->pieces.end(), chi_start);
+            if (piece_itr != b->pieces.end()) {
+              breakdownForwardChi(b, *piece_itr);
             }
             break;
           }
         }
         continue;
       }
-      if (possiblePon(b->counts, b->pieces[piece_pos])) {
+      if (possiblePon(b->counts, current_piece)) {
         // A pon is possible
-        breakdownPon(b, piece_pos);
+        breakdownPon(b, current_piece);
         continue;
       }
-      if (possiblePair(b->counts, b->pieces[piece_pos])) {
+      if (possiblePair(b->counts, current_piece)) {
         // A pair is possible
-        breakdownPair(b, piece_pos);
+        breakdownPair(b, current_piece);
         continue;
       }
     }
-    if (b->possibilities[piece_pos] >= 2) {
+    if (b->possibilities[current_piece] >= 2) {
       // Tile has multiple groups, we need to check branches
 
       // Save current position in tree so we can backtrack
       auto* current = b->currentNode;
 
       // Check grouping possibilities
-      const bool can_chi_start =
-          possibleChiForward(b->counts, b->pieces[piece_pos] - 0);
+      const bool can_chi_start = possibleChiForward(b->counts, current_piece);
 
       bool can_chi_middle = false;
-      int chi_middle_pos = -1;
-      if (possibleChiForward(b->counts, b->pieces[piece_pos] - 1)) {
-        const Piece chi_start = b->pieces[piece_pos] - 1;
+      Piece chi_middle_piece;
+      if (possibleChiForward(b->counts, current_piece - 1)) {
+        const Piece chi_start = current_piece - 1;
         auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
         if (it != b->pieces.end()) {
           can_chi_middle = true;
-          chi_middle_pos = std::distance(b->pieces.begin(), it);
+          chi_middle_piece = *it;
         }
       }
 
       bool can_chi_end = false;
-      int chi_end_pos = -1;
-      if (possibleChiForward(b->counts, b->pieces[piece_pos] - 2)) {
-        const Piece chi_start = b->pieces[piece_pos] - 2;
+      Piece chi_end_piece;
+      if (possibleChiForward(b->counts, current_piece - 2)) {
+        const Piece chi_start = current_piece - 2;
         auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
         if (it != b->pieces.end()) {
           can_chi_end = true;
-          chi_end_pos = std::distance(b->pieces.begin(), it);
+          chi_end_piece = *it;
         }
       }
 
-      const bool can_pon = possiblePon(b->counts, b->pieces[piece_pos]);
-      const bool can_pair = possiblePair(b->counts, b->pieces[piece_pos]);
+      const bool can_pon = possiblePon(b->counts, current_piece);
+      const bool can_pair = possiblePair(b->counts, current_piece);
 
       // Count total branches that will actually execute
       int total_branches = 0;
@@ -311,7 +275,7 @@ void driver(Breakdown* b) {
       if (can_chi_start) {
         // Can be the beginning of a chi
         current_branch++;
-        breakdownForwardChi(b, piece_pos);
+        breakdownForwardChi(b, current_piece);
         driver(b);
         if (current_branch < total_branches) {
           resetCounts(b, current);
@@ -321,7 +285,7 @@ void driver(Breakdown* b) {
       if (can_chi_middle) {
         // Can be the middle of a chi
         current_branch++;
-        breakdownForwardChi(b, chi_middle_pos);
+        breakdownForwardChi(b, chi_middle_piece);
         driver(b);
         if (current_branch < total_branches) {
           resetCounts(b, current);
@@ -331,7 +295,7 @@ void driver(Breakdown* b) {
       if (can_chi_end) {
         // Can be the end of a chi
         current_branch++;
-        breakdownForwardChi(b, chi_end_pos);
+        breakdownForwardChi(b, chi_end_piece);
         driver(b);
         if (current_branch < total_branches) {
           resetCounts(b, current);
@@ -341,7 +305,7 @@ void driver(Breakdown* b) {
       if (can_pon) {
         // Can be a pon
         current_branch++;
-        breakdownPon(b, piece_pos);
+        breakdownPon(b, current_piece);
         driver(b);
         if (current_branch < total_branches) {
           resetCounts(b, current);
@@ -351,7 +315,7 @@ void driver(Breakdown* b) {
       if (can_pair) {
         // Can be a pair
         current_branch++;
-        breakdownPair(b, piece_pos);
+        breakdownPair(b, current_piece);
         driver(b);
         if (current_branch < total_branches) {
           resetCounts(b, current);

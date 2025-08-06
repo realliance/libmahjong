@@ -70,18 +70,12 @@ Piece GentlemanBot::getDiscard() {
   std::vector<Piece> third_tier_discards;
 
   std::array<int8_t, Piece::kPiecesize> counts = {};
-  auto symbolic_hand = breakdownHand(hand_);
-  auto* current_node = symbolic_hand.get();
+  const std::unique_ptr<Node> symbolic_hand = breakdownHand(hand_);
 
-  while (true) {
-    if (current_node->type == Node::kSingle) {
-      free_pieces.push_back(current_node->start);
+  for (const auto& leaf : *symbolic_hand) {
+    if (leaf.type() == Node::kSingle) {
+      free_pieces.push_back(leaf.start());
     }
-    if (current_node->leaves.empty()) {
-      break;
-    }
-
-    current_node = current_node->leaves[0].get();
   }
 
   CountPieces(counts, free_pieces);
