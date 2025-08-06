@@ -715,7 +715,7 @@ int isOutsideHand(const GameState& state, int player,
   if (!chi) {
     return 0;
   }
-  return state.hands.at(state.currentPlayer).open ? 1 : 2;
+  return state.hands.at(player).open ? 1 : 2;
 }
 
 int isAfterAKan(const GameState& state, int player,
@@ -836,17 +836,22 @@ int isThreeKans(const GameState& state, int player,
 
 int isAllPons(const GameState& state, int player,
               const std::vector<const mahjong::Node*>& branch) {
+  int pons = 0;
   for (const auto& node : branch) {
-    if (node->type() != Node::kPonSet) {
-      return 0;
+    if (node->type() == Node::kPonSet) {
+      pons++;
     }
   }
   for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type == Meld::kChi) {
-      return 0;
+    if (meld.type == Meld::kKan || meld.type == Meld::kPon ||
+        meld.type == Meld::kConcealedKan) {
+      pons++;
     }
   }
-  return 2;
+  if (pons == 4) {
+    return 2;
+  }
+  return 0;
 }
 
 int isHalfFlush(const GameState& state, int player,

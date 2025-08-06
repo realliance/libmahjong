@@ -16,7 +16,7 @@
 
 namespace mahjong {
 
-TEST(isAllPons, DISABLED_2Han) {
+TEST(isAllPons, 2Han) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("111m222p888s666z44m"));
 
@@ -31,7 +31,7 @@ TEST(isAllPons, DISABLED_2Han) {
   FAIL();
 }
 
-TEST(isAllPons, DISABLED_WithKans) {
+TEST(isAllPons, WithKans) {
   const Meld meld = {
       .type = Meld::kKan,
       .start = Piece(kFivePin),
@@ -53,7 +53,7 @@ TEST(isAllPons, DISABLED_WithKans) {
   FAIL();
 }
 
-TEST(isAllPons, DISABLED_ConcealedKan) {
+TEST(isAllPons, ConcealedKan) {
   const Meld meld = {
       .type = Meld::kConcealedKan,
       .start = Piece(kFivePin),
