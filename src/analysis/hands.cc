@@ -981,22 +981,19 @@ int isTwicePureDoubleChi(const GameState& state, int player,
   if (state.hands.at(player).open) {
     return 0;
   }
-  int twice = 0;
+  int pairs = 0;
   for (size_t i = 0; i < branch.size(); i++) {
     if (branch.at(i)->type != Node::kChiSet) {
       continue;
     }
-    for (size_t j = 0; j < branch.size(); j++) {
-      if (i == j) {
-        continue;
-      }
-      if (branch.at(i)->type == branch[j]->type &&
-          branch.at(i)->start == branch[j]->start) {
-        twice++;
+    for (size_t j = i + 1; j < branch.size(); j++) {
+      if (branch.at(j)->type == Node::kChiSet &&
+          branch.at(i)->start == branch.at(j)->start) {
+        pairs++;
       }
     }
   }
-  if (twice == 2) {
+  if (pairs == 2) {
     return 3;
   }
   return 0;

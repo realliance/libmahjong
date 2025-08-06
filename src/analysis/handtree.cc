@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <fstream>  // IWYU pragma: keep
 #include <iostream>
+#include <iterator>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -205,72 +206,155 @@ void resetCounts(Breakdown* b, const Node* target) {
 
 // NOLINTNEXTLINE(misc-no-recursion)
 void driver(Breakdown* b) {
-  for (updatePossibilities(b); b->pieces.empty(); updatePossibilities(b)) {
+  // - Always process the tile into the fewest groupings first
+  // - If a tile has only one way to be grouped, use it
+  // - If a tile has multiple ways, try each possibility
+  // - Continue until all tiles are in groups
+
+  // While there are ungrouped pieces
+  for (updatePossibilities(b); !b->pieces.empty(); updatePossibilities(b)) {
+    // Get the piece with minimum possibilities
     const int piece_pos = getNextPiece(b);
+
     if (b->possibilities[piece_pos] == 0) {
+      // No valid grouping possible, single piece
       breakdownSingle(b, piece_pos);
       continue;
     }
+
     if (b->possibilities[piece_pos] == 1) {
+      // One way to be grouped, use it
       if (anyPossibleChi(b->counts, b->pieces[piece_pos])) {
+        // A chi is possible, determine how it can be a part of one
         for (int i = 0; i < 3; i++) {
-          if (possibleChiForward(b->counts, b->pieces[piece_pos] - i)) {
-            breakdownForwardChi(b, piece_pos - i);
+          const Piece chi_start = b->pieces[piece_pos] - i;
+          // Check if we can start a chi with this piece
+          if (possibleChiForward(b->counts, chi_start)) {
+            // Find the position of chi_start in the pieces vector
+            auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
+            if (it != b->pieces.end()) {
+              const int chi_start_pos = std::distance(b->pieces.begin(), it);
+              breakdownForwardChi(b, chi_start_pos);
+            }
             break;
           }
         }
         continue;
       }
       if (possiblePon(b->counts, b->pieces[piece_pos])) {
+        // A pon is possible
         breakdownPon(b, piece_pos);
         continue;
       }
       if (possiblePair(b->counts, b->pieces[piece_pos])) {
+        // A pair is possible
         breakdownPair(b, piece_pos);
         continue;
       }
     }
-    if (b->possibilities[piece_pos] == 2) {
+    if (b->possibilities[piece_pos] >= 2) {
+      // Tile has multiple groups, we need to check branches
+
+      // Save current position in tree so we can backtrack
       auto* current = b->currentNode;
-      int branch = 0;
-      if (possibleChiForward(b->counts, b->pieces[piece_pos] - 0)) {
-        branch++;
-        breakdownForwardChi(b, piece_pos - 0);
-        driver(b);
-        resetCounts(b, current);
-      }
+
+      // Check grouping possibilities
+      const bool can_chi_start =
+          possibleChiForward(b->counts, b->pieces[piece_pos] - 0);
+
+      bool can_chi_middle = false;
+      int chi_middle_pos = -1;
       if (possibleChiForward(b->counts, b->pieces[piece_pos] - 1)) {
-        branch++;
-        breakdownForwardChi(b, piece_pos - 1);
-        if (branch == 2) {
-          continue;
+        const Piece chi_start = b->pieces[piece_pos] - 1;
+        auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
+        if (it != b->pieces.end()) {
+          can_chi_middle = true;
+          chi_middle_pos = std::distance(b->pieces.begin(), it);
         }
-        driver(b);
-        resetCounts(b, current);
       }
+
+      bool can_chi_end = false;
+      int chi_end_pos = -1;
       if (possibleChiForward(b->counts, b->pieces[piece_pos] - 2)) {
-        branch++;
-        breakdownForwardChi(b, piece_pos - 2);
-        if (branch == 2) {
-          continue;
+        const Piece chi_start = b->pieces[piece_pos] - 2;
+        auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
+        if (it != b->pieces.end()) {
+          can_chi_end = true;
+          chi_end_pos = std::distance(b->pieces.begin(), it);
         }
-        driver(b);
-        resetCounts(b, current);
       }
-      if (possiblePon(b->counts, b->pieces[piece_pos])) {
-        branch++;
+
+      const bool can_pon = possiblePon(b->counts, b->pieces[piece_pos]);
+      const bool can_pair = possiblePair(b->counts, b->pieces[piece_pos]);
+
+      // Count total branches that will actually execute
+      int total_branches = 0;
+      if (can_chi_start) {
+        total_branches++;
+      }
+      if (can_chi_middle) {
+        total_branches++;
+      }
+      if (can_chi_end) {
+        total_branches++;
+      }
+      if (can_pon) {
+        total_branches++;
+      }
+      if (can_pair) {
+        total_branches++;
+      }
+
+      // Execute branches
+      int current_branch = 0;
+
+      if (can_chi_start) {
+        // Can be the beginning of a chi
+        current_branch++;
+        breakdownForwardChi(b, piece_pos);
+        driver(b);
+        if (current_branch < total_branches) {
+          resetCounts(b, current);
+        }
+      }
+
+      if (can_chi_middle) {
+        // Can be the middle of a chi
+        current_branch++;
+        breakdownForwardChi(b, chi_middle_pos);
+        driver(b);
+        if (current_branch < total_branches) {
+          resetCounts(b, current);
+        }
+      }
+
+      if (can_chi_end) {
+        // Can be the end of a chi
+        current_branch++;
+        breakdownForwardChi(b, chi_end_pos);
+        driver(b);
+        if (current_branch < total_branches) {
+          resetCounts(b, current);
+        }
+      }
+
+      if (can_pon) {
+        // Can be a pon
+        current_branch++;
         breakdownPon(b, piece_pos);
-        if (branch == 2) {
-          continue;
-        }
         driver(b);
-        resetCounts(b, current);
+        if (current_branch < total_branches) {
+          resetCounts(b, current);
+        }
       }
-      if (possiblePair(b->counts, b->pieces[piece_pos])) {
-        branch++;
+
+      if (can_pair) {
+        // Can be a pair
+        current_branch++;
         breakdownPair(b, piece_pos);
-        if (branch == 2) {
-          continue;
+        driver(b);
+        if (current_branch < total_branches) {
+          resetCounts(b, current);
         }
       }
     }

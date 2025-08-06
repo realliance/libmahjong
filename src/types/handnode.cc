@@ -71,14 +71,8 @@ bool Node::operator!=(const Node& n) const {
          leafPosInParent == n.leafPosInParent;
 }
 
-Node::~Node() {
-  if (parent != nullptr) {
-    parent->leaves.erase(parent->leaves.begin() + leafPosInParent);
-    for (size_t i = 0; i < parent->leaves.size(); i++) {
-      parent->leaves.at(i)->leafPosInParent = i;
-    }
-  }
-}
+// dont free parent, its not owned
+Node::~Node() = default;
 
 Node::ConstIterator& Node::ConstIterator::operator++() {
   if (!root_->leaves.empty()) {
@@ -185,25 +179,55 @@ std::ostream& Node::DumpAsDot(std::ostream& os) const {
 }
 
 std::vector<std::vector<const Node*>> Node::AsBranchVectors(const Node* root) {
+  if (!root) {
+    std::cerr << "ERROR: AsBranchVectors called with null root\n";
+    return {};
+  }
+
   std::vector<std::vector<const Node*>> branches;
   std::vector<const Node*> nodeloc;
   nodeloc.push_back(root);
+
   while (!nodeloc.empty()) {
-    if (!nodeloc.back()->leaves.empty()) {
-      nodeloc.push_back(nodeloc.back()->leaves[0].get());
+    if (nodeloc.empty()) {
+      std::cerr << "ERROR: AsBranchVectors nodeloc became empty unexpectedly\n";
+      break;
+    }
+
+    const Node* current = nodeloc.back();
+    if (!current) {
+      std::cerr << "ERROR: AsBranchVectors null node in nodeloc\n";
+      nodeloc.pop_back();
+      continue;
+    }
+
+    if (!current->leaves.empty()) {
+      nodeloc.push_back(current->leaves[0].get());
     } else {
       branches.push_back(nodeloc);
-      size_t next = nodeloc.back()->leafPosInParent + 1;
-      while ((nodeloc.back()->parent != nullptr) &&
-             nodeloc.back()->parent->leaves.size() <= next) {
+      size_t next = current->leafPosInParent + 1;
+
+      while ((current->parent != nullptr) &&
+             current->parent->leaves.size() <= next) {
         nodeloc.pop_back();
-        next = nodeloc.back()->leafPosInParent + 1;
+        if (nodeloc.empty()) {
+          break;
+        }
+        current = nodeloc.back();
+        next = current->leafPosInParent + 1;
       }
-      if (nodeloc.back()->parent == nullptr) {
+
+      if (nodeloc.empty() || current->parent == nullptr) {
         nodeloc.pop_back();
       } else {
         nodeloc.pop_back();
-        nodeloc.push_back(nodeloc.back()->leaves[next].get());
+        if (!nodeloc.empty() && next < nodeloc.back()->leaves.size()) {
+          nodeloc.push_back(nodeloc.back()->leaves[next].get());
+        } else {
+          std::cerr << "ERROR: AsBranchVectors next index " << next
+                    << " out of bounds\n";
+          break;
+        }
       }
     }
   }

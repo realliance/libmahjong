@@ -12,23 +12,26 @@
 
 namespace mahjong {
 
-TEST(isWindOrDragonPon, DISABLED_SeatWind) {
+TEST(isWindOrDragonPon, SeatWind) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m456m444z55z"));
   game_state.roundNum = 1;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
 
-  for (const auto& branch : Node::AsBranchVectors(root.get())) {
+  auto branches = Node::AsBranchVectors(root.get());
+
+  for (const auto& branch : branches) {
     if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 1) {
       SUCCEED();
       return;
     }
   }
+
   FAIL();
 }
 
-TEST(isWindOrDragonPon, DISABLED_SeatWindKan) {
+TEST(isWindOrDragonPon, SeatWindKan) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m456m4444z55z"));
   game_state.roundNum = 1;
@@ -44,7 +47,7 @@ TEST(isWindOrDragonPon, DISABLED_SeatWindKan) {
   FAIL();
 }
 
-TEST(isWindOrDragonPon, DISABLED_PrevalentWind) {
+TEST(isWindOrDragonPon, PrevalentWind) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m456m111z55z"));
   game_state.roundNum = 1;
@@ -60,7 +63,7 @@ TEST(isWindOrDragonPon, DISABLED_PrevalentWind) {
   FAIL();
 }
 
-TEST(isWindOrDragonPon, DISABLED_PrevalentWindKan) {
+TEST(isWindOrDragonPon, PrevalentWindKan) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m456m1111z55z"));
   game_state.roundNum = 1;
@@ -76,7 +79,7 @@ TEST(isWindOrDragonPon, DISABLED_PrevalentWindKan) {
   FAIL();
 }
 
-TEST(isWindOrDragonPon, DISABLED_Dealer2Han) {
+TEST(isWindOrDragonPon, Dealer2Han) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m456m111z55z"));
   game_state.roundNum = 0;
@@ -92,7 +95,7 @@ TEST(isWindOrDragonPon, DISABLED_Dealer2Han) {
   FAIL();
 }
 
-TEST(isWindOrDragonPon, DISABLED_Dealer2HanKan) {
+TEST(isWindOrDragonPon, Dealer2HanKan) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m456m1111z55z"));
   game_state.roundNum = 0;
