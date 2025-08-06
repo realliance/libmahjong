@@ -16,7 +16,7 @@
 
 namespace mahjong {
 
-TEST(isLittleThreeDragons, DISABLED_2Han) {
+TEST(isLittleThreeDragons, 2Han) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("555z666z111m222p77z"));
   game_state.hands[0].open = false;
@@ -32,7 +32,7 @@ TEST(isLittleThreeDragons, DISABLED_2Han) {
   FAIL();
 }
 
-TEST(isLittleThreeDragons, DISABLED_WhenOpen) {
+TEST(isLittleThreeDragons, WhenOpen) {
   const Meld meld = {
       .type = Meld::kPon,
       .start = Piece(kWhiteDragon),

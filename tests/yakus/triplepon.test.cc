@@ -12,7 +12,7 @@
 
 namespace mahjong {
 
-TEST(isTriplePon, DISABLED_2Han) {
+TEST(isTriplePon, 2Han) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("111m111p111s666z44m"));
 

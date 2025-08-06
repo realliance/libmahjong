@@ -12,7 +12,7 @@
 
 namespace mahjong {
 
-TEST(isPureDoubleChi, DISABLED_1Han) {
+TEST(isPureDoubleChi, 1Han) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("234m234m555p888s88p"));
   game_state.hands[0].open = false;
