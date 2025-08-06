@@ -74,6 +74,9 @@ class Node : public std::enable_shared_from_this<Node> {
   [[nodiscard]] Iterator end();
 
   size_t leafPosInParent() const {
+    if(!parent_){
+      return 0;
+    }
     auto leaf_it = std::find_if(
         parent_->leaves_.begin(), parent_->leaves_.end(),
         [id = this->id_](const auto& leaf) { return leaf->id_ == id; });
