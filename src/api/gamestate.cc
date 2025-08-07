@@ -2,7 +2,10 @@
 
 #include <algorithm>
 #include <memory>
-#include <new>
+#include <array>
+#include <map>
+#include <string>
+#include <vector>
 
 #include "api/types.h"
 #include "controllers/controllermanager.h"
@@ -10,6 +13,8 @@
 #include "types/gamestate.h"
 #include "types/settings.h"
 #include "types/statefunction.h"
+#include "types/hand.h"
+#include "types/piecetype.h"
 
 namespace api {
 
