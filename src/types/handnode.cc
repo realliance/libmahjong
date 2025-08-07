@@ -148,12 +148,12 @@ std::ostream& Node::DumpAsTGF(std::ostream& os) const {
   std::vector<std::string> nodes;
   std::vector<std::string> connections;
   for (const auto& node : *this) {
-    nodes.push_back(std::to_string(node.id()) + " Piece: " +
-                    (node.type() != kRoot ? node.start().toStr() : "Root") +
+    nodes.push_back(std::to_string(node.id_) + " Piece: " +
+                    (node.type() != kRoot ? node.start_.toStr() : "Root") +
                     " Type: " + node.typeToStr());
     for (const auto& leaf : node.leaves_) {
-      connections.push_back(std::to_string(node.id()) + " " +
-                            std::to_string(leaf->id()));
+      connections.push_back(std::to_string(node.id_) + " " +
+                            std::to_string(leaf->id_));
     }
   }
   for (const auto& node : nodes) {
@@ -170,14 +170,14 @@ std::ostream& Node::DumpAsDot(std::ostream& os) const {
   std::vector<std::string> nodes;
   std::vector<std::string> connections;
   for (const auto& node : *this) {
-    nodes.push_back(std::to_string(node.id()) + " [label=\"" +
+    nodes.push_back(std::to_string(node.id_) + " [label=\"" +
                     node.typeToStr() + ": " +
-                    (node.type() != kRoot ? node.start().toStr() : "Root") +
-                    "\"" + ",shape=" + NodeTypeToShapeStr(node.type()) +
-                    ",color=" + NodeTypeToColorStr(node.type()) + "];");
+                    (node.type_ != kRoot ? node.start_.toStr() : "Root") +
+                    "\"" + ",shape=" + NodeTypeToShapeStr(node.type_) +
+                    ",color=" + NodeTypeToColorStr(node.type_) + "];");
     for (const auto& leaf : node.leaves_) {
-      connections.push_back(std::to_string(node.id()) + " -> " +
-                            std::to_string(leaf->id()) + ";");
+      connections.push_back(std::to_string(node.id_) + " -> " +
+                            std::to_string(leaf->id_) + ";");
     }
   }
   os << "digraph {" << '\n';
@@ -252,7 +252,7 @@ bool Node::IsComplete() const {
   auto branches = AsBranchVectors(this);
   return std::ranges::any_of(branches, [](auto branch) {
     return std::none_of(branch.begin(), branch.end(), [](auto node) {
-      return node->type() == Node::kSingle;
+      return node->type_ == Node::kSingle;
     });
   });
 }
