@@ -108,8 +108,8 @@ Node::ConstIterator& Node::ConstIterator::operator++() {
     return *this;
   }
 
-  if (traveler->parent()->leaves_.size() > leaf_pos_next &&
-      traveler->parent()->leaves_[leaf_pos_next].get() != root_) {
+  if (traveler->parent_->leaves_.size() > leaf_pos_next &&
+      traveler->parent_->leaves_[leaf_pos_next].get() != root_) {
     root_ = traveler->parent_->leaves_[leaf_pos_next].get();
     return *this;
   }
@@ -215,14 +215,14 @@ std::vector<std::vector<const Node*>> Node::AsBranchVectors(const Node* root) {
       continue;
     }
 
-    if (!current->leaves().empty()) {
-      nodeloc.push_back(current->leaves()[0].get());
+    if (!current->leaves_.empty()) {
+      nodeloc.push_back(current->leaves_[0].get());
     } else {
       branches.push_back(nodeloc);
       size_t next = current->leafPosInParent() + 1;
 
-      while ((current->parent() != nullptr) &&
-             current->parent()->leaves().size() <= next) {
+      while ((current->parent_ != nullptr) &&
+             current->parent_->leaves_.size() <= next) {
         nodeloc.pop_back();
         if (nodeloc.empty()) {
           break;
@@ -231,12 +231,12 @@ std::vector<std::vector<const Node*>> Node::AsBranchVectors(const Node* root) {
         next = current->leafPosInParent() + 1;
       }
 
-      if (nodeloc.empty() || current->parent() == nullptr) {
+      if (nodeloc.empty() || current->parent_ == nullptr) {
         nodeloc.pop_back();
       } else {
         nodeloc.pop_back();
-        if (!nodeloc.empty() && next < nodeloc.back()->leaves().size()) {
-          nodeloc.push_back(nodeloc.back()->leaves()[next].get());
+        if (!nodeloc.empty() && next < nodeloc.back()->leaves_.size()) {
+          nodeloc.push_back(nodeloc.back()->leaves_[next].get());
         } else {
           std::cerr << "ERROR: AsBranchVectors next index " << next
                     << " out of bounds\n";
