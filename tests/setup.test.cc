@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
+#include <utility>
 #include <array>
 #include <memory>
-#include <utility>
 #include <vector>
 
+#include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
 #include "types/statefunction.h"

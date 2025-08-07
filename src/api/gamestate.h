@@ -1,11 +1,16 @@
 #pragma once
 
-#include "stdbool.h"
 #include "types.h"
+
+namespace mahjong {
+struct GameState;
+}  // namespace mahjong
 
 namespace api {
 
 extern "C" {
+
+#include "stdbool.h"
 
 int StartGame(const CGameSettings* settings, bool async);
 void ExitGame(int game);

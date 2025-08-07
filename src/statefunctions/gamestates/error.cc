@@ -3,6 +3,7 @@
 
 #include "statefunctions/router.h"
 #include "types/statefunction.h"
+#include "types/gamestate.h"
 
 namespace mahjong {
 struct GameState;
