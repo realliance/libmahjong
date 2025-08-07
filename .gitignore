@@ -69,3 +69,4 @@ Testing/
 vgcore.*
 callgrind.out.*
 *.svg
+.cache

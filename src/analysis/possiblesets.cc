@@ -196,7 +196,7 @@ bool TestStdForm(const std::vector<Piece>& hand) {
     bool complete = true;
     const std::vector<const Node*> singles;
     for (const auto& node : branch) {
-      if (node->type == Node::kSingle) {
+      if (node->type() == Node::kSingle) {
         complete = false;
         break;
       }

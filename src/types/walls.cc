@@ -63,7 +63,7 @@ Walls::Walls(std::vector<Piece> wall) {
 
 Piece Walls::TakePiece() {
   if (!livingWalls.empty()) {
-    Piece p = livingWalls.front();
+    const Piece p = livingWalls.front();
     livingWalls.erase(livingWalls.begin());
     return p;
   }
@@ -91,7 +91,7 @@ Piece Walls::TakeReplacementTile() {
     return kError;
   }
   replacements--;
-  Piece p = deadWall.front();
+  const Piece p = deadWall.front();
   deadWall.erase(deadWall.begin());
   deadWall.push_back(livingWalls.back());
   doraCount++;

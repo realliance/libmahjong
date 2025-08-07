@@ -31,7 +31,7 @@ int countSingles(const std::vector<Piece>& hand) {
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     int singles = 0;
     for (const auto& node : branch) {
-      if (node->type == Node::kSingle) {
+      if (node->type() == Node::kSingle) {
         singles++;
       }
     }
@@ -95,7 +95,7 @@ Score scoreHand(const GameState& state, int player) {
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     Score branchscore;
     for (const auto& node : branch) {
-      if (node->type == Node::kSingle) {
+      if (node->type() == Node::kSingle) {
         continue;
       }
     }
@@ -234,8 +234,8 @@ int getFu(const GameState& state, int player,
     }
   }
   for (const auto& node : branch) {
-    if (node->type == Node::kPonSet) {
-      if (!node->start.isHonor() && !node->start.isTerminal()) {
+    if (node->type() == Node::kPonSet) {
+      if (!node->start().isHonor() && !node->start().isTerminal()) {
         fu += open ? kSimplepon : kCsimplepon;
       } else {
         fu += open ? kTermHonorpon : kCtermHonorpon;
@@ -244,29 +244,29 @@ int getFu(const GameState& state, int player,
     if (open) {
       continue;
     }
-    if (node->type == Node::kPair) {
-      if (node->start.isHonor()) {
-        if (node->start == kGreenDragon || node->start == kRedDragon ||
-            node->start == kWhiteDragon ||
-            node->start == (state.roundNum > 3 ? kSouthWind : kEastWind)) {
+    if (node->type() == Node::kPair) {
+      if (node->start().isHonor()) {
+        if (node->start() == kGreenDragon || node->start() == kRedDragon ||
+            node->start() == kWhiteDragon ||
+            node->start() == (state.roundNum > 3 ? kSouthWind : kEastWind)) {
           fu += kDragonseatprevalentwind;
         }
       }
-      if (node->start == state.pendingPiece) {
+      if (node->start() == state.pendingPiece) {
         fu += kEdgeclosedpairwait;
       }
     }
-    if (node->type == Node::kChiSet) {
-      if (node->start + 1 == state.pendingPiece) {
+    if (node->type() == Node::kChiSet) {
+      if (node->start() + 1 == state.pendingPiece) {
         fu += kEdgeclosedpairwait;
       }
-      if (node->start.getPieceNum() == 1 &&
+      if (node->start().getPieceNum() == 1 &&
           state.pendingPiece.getPieceNum() == kLowedgewait &&
-          node->start.getSuit() == state.pendingPiece.getSuit()) {
+          node->start().getSuit() == state.pendingPiece.getSuit()) {
         fu += kEdgeclosedpairwait;
       }
-      if (node->start.getPieceNum() == kHighedgewait &&
-          state.pendingPiece == node->start) {
+      if (node->start().getPieceNum() == kHighedgewait &&
+          state.pendingPiece == node->start()) {
         fu += kEdgeclosedpairwait;
       }
     }
@@ -281,18 +281,18 @@ int getFu(const GameState& state, int player,
 bool isOpenPinfu(const GameState& state, int player,
                  const std::vector<const mahjong::Node*>& branch) {
   for (const auto& node : branch) {
-    if (node->type == Node::kPonSet) {
+    if (node->type() == Node::kPonSet) {
       return false;
     }
-    if (node->type == Node::kPair) {
-      if (node->start == kRedDragon || node->start == kWhiteDragon ||
-          node->start == kGreenDragon) {
+    if (node->type() == Node::kPair) {
+      if (node->start() == kRedDragon || node->start() == kWhiteDragon ||
+          node->start() == kGreenDragon) {
         return false;
       }
-      if (node->start == kSouthWind && state.roundNum > 3) {
+      if (node->start() == kSouthWind && state.roundNum > 3) {
         return false;
       }
-      if (node->start == kEastWind && state.roundNum < 4) {
+      if (node->start() == kEastWind && state.roundNum < 4) {
         return false;
       }
     }
@@ -314,7 +314,7 @@ bool isComplete(const GameState& state, int player) {
   }
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     for (const auto& node : branch) {
-      if (node->type == Node::kSingle) {
+      if (node->type() == Node::kSingle) {
         continue;
       }
     }
@@ -481,18 +481,18 @@ int isPinfu(const GameState& state, int player,
     return 0;
   }
   for (const auto& node : branch) {
-    if (node->type == Node::kPonSet) {
+    if (node->type() == Node::kPonSet) {
       return 0;
     }
-    if (node->type == Node::kPair) {
-      if (node->start == kRedDragon || node->start == kWhiteDragon ||
-          node->start == kGreenDragon) {
+    if (node->type() == Node::kPair) {
+      if (node->start() == kRedDragon || node->start() == kWhiteDragon ||
+          node->start() == kGreenDragon) {
         return 0;
       }
-      if (node->start == kSouthWind && state.roundNum > 3) {
+      if (node->start() == kSouthWind && state.roundNum > 3) {
         return 0;
       }
-      if (node->start == kEastWind && state.roundNum < 4) {
+      if (node->start() == kEastWind && state.roundNum < 4) {
         return 0;
       }
     }
@@ -513,15 +513,15 @@ int isPureDoubleChi(const GameState& state, int player,
     return 0;
   }
   for (size_t i = 0; i < branch.size(); i++) {
-    if (branch.at(i)->type != Node::kChiSet) {
+    if (branch.at(i)->type() != Node::kChiSet) {
       continue;
     }
     for (size_t j = 0; j < branch.size(); j++) {
       if (i == j) {
         continue;
       }
-      if (branch.at(i)->type == branch[j]->type &&
-          branch.at(i)->start == branch[j]->start) {
+      if (branch.at(i)->type() == branch[j]->type() &&
+          branch.at(i)->start() == branch[j]->start()) {
         return 1;
       }
     }
@@ -551,15 +551,15 @@ int isMixedTripleChi(const GameState& state, int player,
   std::array<bool, kPiecesinasuit> char_chi = {};
   std::array<bool, kPiecesinasuit> pin_chi = {};
   for (const auto& node : branch) {
-    if (node->type == Node::kChiSet) {
-      if (node->start.getSuit() == Piece::Type::kBambooSuit) {
-        bamboo_chi.at(node->start.getPieceNum()) = true;
+    if (node->type() == Node::kChiSet) {
+      if (node->start().getSuit() == Piece::Type::kBambooSuit) {
+        bamboo_chi.at(node->start().getPieceNum()) = true;
       }
-      if (node->start.getSuit() == Piece::Type::kCharacterSuit) {
-        char_chi.at(node->start.getPieceNum()) = true;
+      if (node->start().getSuit() == Piece::Type::kCharacterSuit) {
+        char_chi.at(node->start().getPieceNum()) = true;
       }
-      if (node->start.getSuit() == Piece::Type::kPinSuit) {
-        pin_chi.at(node->start.getPieceNum()) = true;
+      if (node->start().getSuit() == Piece::Type::kPinSuit) {
+        pin_chi.at(node->start().getPieceNum()) = true;
       }
     }
   }
@@ -593,24 +593,24 @@ int isPureStraight(const GameState& state, int player,
   std::array<bool, 3> char_chi = {};
   std::array<bool, 3> pin_chi = {};
   for (const auto& node : branch) {
-    if (node->type == Node::kChiSet) {
+    if (node->type() == Node::kChiSet) {
       int ind = 0;
-      if (node->start.getPieceNum() == kFirstchistart) {
+      if (node->start().getPieceNum() == kFirstchistart) {
         ind = 0;
-      } else if (node->start.getPieceNum() == kSecondchistart) {
+      } else if (node->start().getPieceNum() == kSecondchistart) {
         ind = 1;
-      } else if (node->start.getPieceNum() == kThirdchistart) {
+      } else if (node->start().getPieceNum() == kThirdchistart) {
         ind = 2;
       } else {
         continue;
       }
-      if (node->start.getSuit() == Piece::Type::kBambooSuit) {
+      if (node->start().getSuit() == Piece::Type::kBambooSuit) {
         bamboo_chi.at(ind) = true;
       }
-      if (node->start.getSuit() == Piece::Type::kCharacterSuit) {
+      if (node->start().getSuit() == Piece::Type::kCharacterSuit) {
         char_chi.at(ind) = true;
       }
-      if (node->start.getSuit() == Piece::Type::kPinSuit) {
+      if (node->start().getSuit() == Piece::Type::kPinSuit) {
         pin_chi.at(ind) = true;
       }
     }
@@ -661,7 +661,7 @@ int isWindOrDragonPon(const GameState& state, int player,
   for (const auto& match : matches) {
     bool is_match = false;
     for (const auto& node : branch) {
-      if (node->type == Node::kPonSet && node->start == match) {
+      if (node->type() == Node::kPonSet && node->start() == match) {
         is_match = true;
         break;
       }
@@ -687,14 +687,14 @@ int isOutsideHand(const GameState& state, int player,
   }
   bool chi = false;
   for (const auto& node : branch) {
-    if (node->type == Node::kChiSet) {
-      if (node->start.isTerminal() || (node->start + 2).isTerminal()) {
+    if (node->type() == Node::kChiSet) {
+      if (node->start().isTerminal() || (node->start() + 2).isTerminal()) {
         chi = true;
       } else {
         return 0;
       }
     } else {
-      if (!node->start.isTerminal() && !node->start.isHonor()) {
+      if (!node->start().isTerminal() && !node->start().isHonor()) {
         return 0;
       }
     }
@@ -715,7 +715,7 @@ int isOutsideHand(const GameState& state, int player,
   if (!chi) {
     return 0;
   }
-  return state.hands.at(state.currentPlayer).open ? 1 : 2;
+  return state.hands.at(player).open ? 1 : 2;
 }
 
 int isAfterAKan(const GameState& state, int player,
@@ -768,15 +768,15 @@ int isTriplePon(const GameState& state, int player,
   std::array<bool, kPiecesinasuit> char_pon = {};
   std::array<bool, kPiecesinasuit> pin_pon = {};
   for (const auto& node : branch) {
-    if (node->type == Node::kPonSet) {
-      if (node->start.getSuit() == Piece::Type::kBambooSuit) {
-        bamboo_pon.at(node->start.getPieceNum() - 1) = true;
+    if (node->type() == Node::kPonSet) {
+      if (node->start().getSuit() == Piece::Type::kBambooSuit) {
+        bamboo_pon.at(node->start().getPieceNum() - 1) = true;
       }
-      if (node->start.getSuit() == Piece::Type::kCharacterSuit) {
-        char_pon.at(node->start.getPieceNum() - 1) = true;
+      if (node->start().getSuit() == Piece::Type::kCharacterSuit) {
+        char_pon.at(node->start().getPieceNum() - 1) = true;
       }
-      if (node->start.getSuit() == Piece::Type::kPinSuit) {
-        pin_pon.at(node->start.getPieceNum() - 1) = true;
+      if (node->start().getSuit() == Piece::Type::kPinSuit) {
+        pin_pon.at(node->start().getPieceNum() - 1) = true;
       }
     }
   }
@@ -805,7 +805,7 @@ int isThreeConcealedPons(const GameState& state, int player,
                          const std::vector<const mahjong::Node*>& branch) {
   int concealed_pons = 0;
   for (const auto& node : branch) {
-    if (node->type == Node::kPonSet) {
+    if (node->type() == Node::kPonSet) {
       concealed_pons++;
     }
   }
@@ -836,17 +836,22 @@ int isThreeKans(const GameState& state, int player,
 
 int isAllPons(const GameState& state, int player,
               const std::vector<const mahjong::Node*>& branch) {
+  int pons = 0;
   for (const auto& node : branch) {
-    if (node->type != Node::kPonSet) {
-      return 0;
+    if (node->type() == Node::kPonSet) {
+      pons++;
     }
   }
   for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type == Meld::kChi) {
-      return 0;
+    if (meld.type == Meld::kKan || meld.type == Meld::kPon ||
+        meld.type == Meld::kConcealedKan) {
+      pons++;
     }
   }
-  return 2;
+  if (pons == 4) {
+    return 2;
+  }
+  return 0;
 }
 
 int isHalfFlush(const GameState& state, int player,
@@ -885,7 +890,7 @@ int isLittleThreeDragons(const GameState& state, int player,
   bool pair = false;
   int pons = 0;
   for (const auto& node : branch) {
-    switch (node->start.toUint8_t()) {
+    switch (node->start().toUint8_t()) {
       case Piece::Type::kRedDragon:
       case Piece::Type::kGreenDragon:
       case Piece::Type::kWhiteDragon:
@@ -893,7 +898,7 @@ int isLittleThreeDragons(const GameState& state, int player,
       default:
         continue;
     }
-    if (node->type != Node::kPair) {
+    if (node->type() != Node::kPair) {
       pons++;
     } else {
       if (pair) {
@@ -945,14 +950,14 @@ int isTerminalsInAllSets(const GameState& state, int player,
   }
   bool chi = false;
   for (const auto& node : branch) {
-    if (node->type == Node::kChiSet) {
-      if (node->start.isTerminal() || (node->start + 2).isTerminal()) {
+    if (node->type() == Node::kChiSet) {
+      if (node->start().isTerminal() || (node->start() + 2).isTerminal()) {
         chi = true;
       } else {
         return 0;
       }
     } else {
-      if (!node->start.isTerminal()) {
+      if (!node->start().isTerminal()) {
         return 0;
       }
     }
@@ -983,12 +988,12 @@ int isTwicePureDoubleChi(const GameState& state, int player,
   }
   int pairs = 0;
   for (size_t i = 0; i < branch.size(); i++) {
-    if (branch.at(i)->type != Node::kChiSet) {
+    if (branch.at(i)->type() != Node::kChiSet) {
       continue;
     }
     for (size_t j = i + 1; j < branch.size(); j++) {
-      if (branch.at(j)->type == Node::kChiSet &&
-          branch.at(i)->start == branch.at(j)->start) {
+      if (branch.at(j)->type() == Node::kChiSet &&
+          branch.at(i)->start() == branch.at(j)->start()) {
         pairs++;
       }
     }
@@ -1148,7 +1153,7 @@ int isFourConcealedPon(const GameState& state, int player,
   }
   int concealed_pons = 0;
   for (const auto& node : branch) {
-    if (node->type == Node::kPonSet) {
+    if (node->type() == Node::kPonSet) {
       concealed_pons++;
     }
   }
@@ -1226,7 +1231,7 @@ int isBigThreeDragons(const GameState& state, int player,
                       const std::vector<const mahjong::Node*>& branch) {
   int pons = 0;
   for (const auto& node : branch) {
-    switch (node->start.toUint8_t()) {
+    switch (node->start().toUint8_t()) {
       case Piece::Type::kRedDragon:
       case Piece::Type::kGreenDragon:
       case Piece::Type::kWhiteDragon:
@@ -1234,7 +1239,7 @@ int isBigThreeDragons(const GameState& state, int player,
       default:
         continue;
     }
-    if (node->type == Node::kPair) {
+    if (node->type() == Node::kPair) {
       return 0;
     }
     pons++;
@@ -1261,7 +1266,7 @@ int isLittleFourWinds(const GameState& state, int player,
   bool pair = false;
   int pons = 0;
   for (const auto& node : branch) {
-    switch (node->start.toUint8_t()) {
+    switch (node->start().toUint8_t()) {
       case Piece::Type::kEastWind:
       case Piece::Type::kSouthWind:
       case Piece::Type::kWestWind:
@@ -1270,7 +1275,7 @@ int isLittleFourWinds(const GameState& state, int player,
       default:
         continue;
     }
-    if (node->type != Node::kPair) {
+    if (node->type() != Node::kPair) {
       pons++;
     } else {
       if (pair) {
@@ -1304,7 +1309,7 @@ int isBigFourWinds(const GameState& state, int player,
                    const std::vector<const mahjong::Node*>& branch) {
   int pons = 0;
   for (const auto& node : branch) {
-    switch (node->start.toUint8_t()) {
+    switch (node->start().toUint8_t()) {
       case Piece::Type::kEastWind:
       case Piece::Type::kSouthWind:
       case Piece::Type::kWestWind:
@@ -1313,7 +1318,7 @@ int isBigFourWinds(const GameState& state, int player,
       default:
         continue;
     }
-    if (node->type == Node::kPair) {
+    if (node->type() == Node::kPair) {
       return 0;
     }
     pons++;

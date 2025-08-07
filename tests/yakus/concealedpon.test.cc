@@ -15,7 +15,7 @@
 #include "utils/handformer.h"
 
 namespace mahjong {
-TEST(isThreeConcealedPons, DISABLED_2Han) {
+TEST(isThreeConcealedPons, 2Han) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("111m111p111s666z44m"));
   game_state.hands[0].open = false;
@@ -31,7 +31,7 @@ TEST(isThreeConcealedPons, DISABLED_2Han) {
   FAIL();
 }
 
-TEST(isThreeConcealedPons, DISABLED_PonsMustBeConcealed) {
+TEST(isThreeConcealedPons, PonsMustBeConcealed) {
   auto meld = Meld();
   meld.type = Meld::kChi;
   meld.start = Piece(kTwoBamboo);
@@ -52,7 +52,7 @@ TEST(isThreeConcealedPons, DISABLED_PonsMustBeConcealed) {
   FAIL();
 }
 
-TEST(isThreeConcealedPons, DISABLED_CanHaveAdditionalOpenPon) {
+TEST(isThreeConcealedPons, CanHaveAdditionalOpenPon) {
   auto meld = Meld();
   meld.type = Meld::kPon;
   meld.start = Piece(kTwoBamboo);

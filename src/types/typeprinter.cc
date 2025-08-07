@@ -78,17 +78,17 @@ std::ostream& operator<<(std::ostream& os, const mahjong::Hand& hand) {
 }
 
 std::ostream& operator<<(std::ostream& os, const mahjong::Node& node) {
-  os << "{ id: " << node.id << ", type:" << node.typeToStr();
-  os << ", start:" << node.start.toStr();
+  os << "{ id: " << node.id() << ", type:" << node.typeToStr();
+  os << ", start:" << node.start().toStr();
   os << ", parent: "
-     << (node.parent != nullptr ? std::to_string(node.parent->id)
-                                : "No Parent");
+     << (node.parent() != nullptr ? std::to_string(node.parent()->id())
+                                  : "No Parent");
   os << ", leaves: [ ";
-  for (const auto& leaf : node.leaves) {
-    os << "id: " << leaf->id << ", ";
+  for (const auto& leaf : node.leaves()) {
+    os << "id: " << leaf->id() << ", ";
   }
   os << " ], "
-     << "leafPosInParent: " << node.leafPosInParent << " },";
+     << "leafPosInParent: " << node.leafPosInParent() << " },";
   os << '\n';
   return os;
 }

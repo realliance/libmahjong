@@ -49,6 +49,23 @@ std::string NodeTypeToShapeStr(uint8_t nodetype) {
 }
 }  // namespace
 
+std::string Node::typeToStr() const {
+  switch (type_) {
+    case kChiSet:
+      return "Chi";
+    case kPonSet:
+      return "Pon";
+    case kPair:
+      return "Pair";
+    case kSingle:
+      return "Single";
+    case kRoot:
+      return "RootNode";
+    default:
+      return "Invalid Type";
+  }
+}
+
 Node::ConstIterator Node::begin() const {
   return ConstIterator(this, /*end=*/false);
 }
@@ -66,44 +83,40 @@ Node::Iterator Node::end() {
 }
 
 bool Node::operator!=(const Node& n) const {
-  return id == n.id && type == n.type && start == n.start &&
-         parent == n.parent && leaves == n.leaves &&
-         leafPosInParent == n.leafPosInParent;
+  return id_ == n.id_ && type_ == n.type_ && start_ == n.start_ &&
+         parent_ == n.parent_ && leaves_ == n.leaves_;
 }
 
-// dont free parent, its not owned
-Node::~Node() = default;
-
 Node::ConstIterator& Node::ConstIterator::operator++() {
-  if (!root_->leaves.empty()) {
-    root_ = root_->leaves.front().get();
+  if (!root_->leaves_.empty()) {
+    root_ = root_->leaves_.front().get();
     return *this;
   }
-  if (root_->parent == nullptr) {
+  if (root_->parent_ == nullptr) {
     end_ = true;
     return *this;
   }
   const Node* traveler = root_;
-  size_t leaf_pos_next = traveler->leafPosInParent + 1;
-  while ((traveler->parent != nullptr) &&
-         traveler->parent->leaves.size() <= leaf_pos_next) {
-    traveler = traveler->parent;
-    leaf_pos_next = traveler->leafPosInParent + 1;
+  size_t leaf_pos_next = traveler->leafPosInParent() + 1;
+  while ((traveler->parent_ != nullptr) &&
+         traveler->parent_->leaves_.size() <= leaf_pos_next) {
+    traveler = traveler->parent_;
+    leaf_pos_next = traveler->leafPosInParent() + 1;
   }
-  if (traveler->parent == nullptr) {
+  if (traveler->parent_ == nullptr) {
     end_ = true;
     return *this;
   }
 
-  if (traveler->parent->leaves.size() > leaf_pos_next &&
-      traveler->parent->leaves[leaf_pos_next].get() != root_) {
-    root_ = traveler->parent->leaves[leaf_pos_next].get();
+  if (traveler->parent_->leaves_.size() > leaf_pos_next &&
+      traveler->parent_->leaves_[leaf_pos_next].get() != root_) {
+    root_ = traveler->parent_->leaves_[leaf_pos_next].get();
     return *this;
   }
   std::cerr << "FORWARD TRAVERSAL FAILED: Set to end." << '\n';
   std::cerr << "ROOT: " << root_ << '\n';
-  if (traveler->parent != nullptr) {
-    std::cerr << "PARENT: " << traveler->parent << '\n';
+  if (traveler->parent_ != nullptr) {
+    std::cerr << "PARENT: " << traveler->parent_ << '\n';
   }
   std::cerr << "TRAVELER: " << *traveler << '\n';
   end_ = true;
@@ -135,12 +148,12 @@ std::ostream& Node::DumpAsTGF(std::ostream& os) const {
   std::vector<std::string> nodes;
   std::vector<std::string> connections;
   for (const auto& node : *this) {
-    nodes.push_back(std::to_string(node.id) + " Piece: " +
-                    (node.type != kRoot ? node.start.toStr() : "Root") +
+    nodes.push_back(std::to_string(node.id_) + " Piece: " +
+                    (node.type() != kRoot ? node.start_.toStr() : "Root") +
                     " Type: " + node.typeToStr());
-    for (const auto& leaf : node.leaves) {
-      connections.push_back(std::to_string(node.id) + " " +
-                            std::to_string(leaf->id));
+    for (const auto& leaf : node.leaves_) {
+      connections.push_back(std::to_string(node.id_) + " " +
+                            std::to_string(leaf->id_));
     }
   }
   for (const auto& node : nodes) {
@@ -157,13 +170,14 @@ std::ostream& Node::DumpAsDot(std::ostream& os) const {
   std::vector<std::string> nodes;
   std::vector<std::string> connections;
   for (const auto& node : *this) {
-    nodes.push_back(std::to_string(node.id) + " [label=\"" + node.typeToStr() +
-                    ": " + (node.type != kRoot ? node.start.toStr() : "Root") +
-                    "\"" + ",shape=" + NodeTypeToShapeStr(node.type) +
-                    ",color=" + NodeTypeToColorStr(node.type) + "];");
-    for (const auto& leaf : node.leaves) {
-      connections.push_back(std::to_string(node.id) + " -> " +
-                            std::to_string(leaf->id) + ";");
+    nodes.push_back(std::to_string(node.id_) + " [label=\"" +
+                    node.typeToStr() + ": " +
+                    (node.type_ != kRoot ? node.start_.toStr() : "Root") +
+                    "\"" + ",shape=" + NodeTypeToShapeStr(node.type_) +
+                    ",color=" + NodeTypeToColorStr(node.type_) + "];");
+    for (const auto& leaf : node.leaves_) {
+      connections.push_back(std::to_string(node.id_) + " -> " +
+                            std::to_string(leaf->id_) + ";");
     }
   }
   os << "digraph {" << '\n';
@@ -201,28 +215,28 @@ std::vector<std::vector<const Node*>> Node::AsBranchVectors(const Node* root) {
       continue;
     }
 
-    if (!current->leaves.empty()) {
-      nodeloc.push_back(current->leaves[0].get());
+    if (!current->leaves_.empty()) {
+      nodeloc.push_back(current->leaves_[0].get());
     } else {
       branches.push_back(nodeloc);
-      size_t next = current->leafPosInParent + 1;
+      size_t next = current->leafPosInParent() + 1;
 
-      while ((current->parent != nullptr) &&
-             current->parent->leaves.size() <= next) {
+      while ((current->parent_ != nullptr) &&
+             current->parent_->leaves_.size() <= next) {
         nodeloc.pop_back();
         if (nodeloc.empty()) {
           break;
         }
         current = nodeloc.back();
-        next = current->leafPosInParent + 1;
+        next = current->leafPosInParent() + 1;
       }
 
-      if (nodeloc.empty() || current->parent == nullptr) {
+      if (nodeloc.empty() || current->parent_ == nullptr) {
         nodeloc.pop_back();
       } else {
         nodeloc.pop_back();
-        if (!nodeloc.empty() && next < nodeloc.back()->leaves.size()) {
-          nodeloc.push_back(nodeloc.back()->leaves[next].get());
+        if (!nodeloc.empty() && next < nodeloc.back()->leaves_.size()) {
+          nodeloc.push_back(nodeloc.back()->leaves_[next].get());
         } else {
           std::cerr << "ERROR: AsBranchVectors next index " << next
                     << " out of bounds\n";
@@ -237,8 +251,9 @@ std::vector<std::vector<const Node*>> Node::AsBranchVectors(const Node* root) {
 bool Node::IsComplete() const {
   auto branches = AsBranchVectors(this);
   return std::ranges::any_of(branches, [](auto branch) {
-    return std::none_of(branch.begin(), branch.end(),
-                        [](auto node) { return node->type == Node::kSingle; });
+    return std::none_of(branch.begin(), branch.end(), [](auto node) {
+      return node->type_ == Node::kSingle;
+    });
   });
 }
 }  // namespace mahjong

@@ -12,7 +12,7 @@
 
 namespace mahjong {
 
-TEST(isOutsideHand, DISABLED_Open) {
+TEST(isOutsideHand, Open) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m789m111z999s55z"));
   game_state.hands[0].open = true;
@@ -28,7 +28,7 @@ TEST(isOutsideHand, DISABLED_Open) {
   FAIL();
 }
 
-TEST(isOutsideHand, DISABLED_Closed) {
+TEST(isOutsideHand, Closed) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m789m111z999s55z"));
   game_state.hands[0].open = false;
