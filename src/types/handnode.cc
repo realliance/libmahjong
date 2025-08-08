@@ -169,8 +169,8 @@ std::ostream& Node::DumpAsDot(std::ostream& os) const {
   std::vector<std::string> nodes;
   std::vector<std::string> connections;
   for (const auto& node : *this) {
-    nodes.push_back(std::to_string(node.id_) + " [label=\"" +
-                    node.typeToStr() + ": " +
+    nodes.push_back(std::to_string(node.id_) + " [label=\"" + node.typeToStr() +
+                    ": " +
                     (node.type_ != kRoot ? node.start_.toStr() : "Root") +
                     "\"" + ",shape=" + NodeTypeToShapeStr(node.type_) +
                     ",color=" + NodeTypeToColorStr(node.type_) + "];");
@@ -251,12 +251,14 @@ bool Node::IsComplete() const {
   auto branches = AsBranchVectors(this);
   return std::ranges::any_of(branches, [](auto branch) {
     int pair_count = 0;
-    return std::none_of(branch.begin(), branch.end(), [&pair_count](auto node) {
-      if(node->type_ == Node::kPair){
-        pair_count += 1;
-      }
-      return node->type_ == Node::kSingle;
-    }) && (pair_count == 1 || pair_count == 7);
+    return std::none_of(branch.begin(), branch.end(),
+                        [&pair_count](auto node) {
+                          if (node->type_ == Node::kPair) {
+                            pair_count += 1;
+                          }
+                          return node->type_ == Node::kSingle;
+                        }) &&
+           (pair_count == 1 || pair_count == 7);
   });
 }
 }  // namespace mahjong

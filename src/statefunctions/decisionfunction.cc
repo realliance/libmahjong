@@ -4,7 +4,10 @@
 #include <array>
 #include <vector>
 
-#include "analysis/hands.h"
+#include "analysis/scoring.h"
+#include "analysis/util.h"
+#include "analysis/yakus.h"
+
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
 #include "types/meld.h"
@@ -128,6 +131,6 @@ bool CanRiichi(const GameState& state, int player) {
   if (state.hands.at(player).open) {
     return false;
   }
-  return !isInTenpai(state.hands.at(player).live).empty();
+  return !isInTenpai(state.hands.at(player).live, /*allWaits=*/false).empty();
 }
 }  // namespace mahjong

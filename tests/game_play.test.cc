@@ -2,7 +2,7 @@
 #include <array>
 #include <vector>
 
-#include "analysis/hands.h"
+#include "analysis/scoring.h"
 #include "statefunctions/decisionfunction.h"
 #include "types/gamestate.h"
 #include "types/hand.h"

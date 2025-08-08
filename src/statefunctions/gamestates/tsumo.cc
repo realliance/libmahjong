@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <memory>
 
-#include "analysis/hands.h"
+#include "analysis/scoring.h"
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
