@@ -2,7 +2,6 @@
 #include <array>
 #include <memory>
 #include <string>
-#include <iostream>
 
 #include "analysis/analysis.h"
 #include "analysis/hands.h"
@@ -22,7 +21,7 @@ TEST(isPinfu, 1Han) {
   game_state.pendingPiece = Piece(kFourPin);
 
   auto root = breakdownHand(game_state.hands.at(0).live);
-  root->DumpAsDot(std::cerr);
+
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (mahjong::isPinfu(game_state, 0, branch) == 1) {
       SUCCEED();
@@ -39,7 +38,7 @@ TEST(isPinfu, BadHand) {
   game_state.pendingPiece = Piece(kTwoBamboo);
 
   auto root = breakdownHand(game_state.hands.at(0).live);
-  root->DumpAsDot(std::cerr);
+
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (mahjong::isPinfu(game_state, 0, branch) == 1) {
       FAIL();
@@ -56,7 +55,7 @@ TEST(isPinfu, CantBeOpen) {
   game_state.pendingPiece = Piece(kFourPin);
 
   auto root = breakdownHand(game_state.hands.at(0).live);
-  root->DumpAsDot(std::cerr);
+
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (mahjong::isPinfu(game_state, 0, branch) == 1) {
       FAIL();
@@ -66,14 +65,14 @@ TEST(isPinfu, CantBeOpen) {
   SUCCEED();
 }
 
-TEST(isPinfu, DISABLED_NeedTwoWait) {
+TEST(isPinfu, NeedTwoWait) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m456p234678s44m"));
   game_state.hands[0].open = false;
   game_state.pendingPiece = Piece(kFivePin);
 
   auto root = breakdownHand(game_state.hands.at(0).live);
-  root->DumpAsDot(std::cerr);
+
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (mahjong::isPinfu(game_state, 0, branch) == 1) {
       FAIL();

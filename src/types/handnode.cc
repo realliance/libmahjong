@@ -251,9 +251,13 @@ std::vector<std::vector<const Node*>> Node::AsBranchVectors(const Node* root) {
 bool Node::IsComplete() const {
   auto branches = AsBranchVectors(this);
   return std::ranges::any_of(branches, [](auto branch) {
-    return std::none_of(branch.begin(), branch.end(), [](auto node) {
+    int pair_count = 0;
+    return std::none_of(branch.begin(), branch.end(), [&pair_count](auto node) {
+      if(node->type_ == Node::kPair){
+        pair_count += 1;
+      }
       return node->type_ == Node::kSingle;
-    });
+    }) && (pair_count == 1 || pair_count == 7);
   });
 }
 }  // namespace mahjong
