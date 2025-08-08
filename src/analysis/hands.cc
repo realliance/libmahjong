@@ -510,7 +510,7 @@ int isPinfu(const GameState& state, int player,
   }
   std::vector<Piece> hand = state.hands.at(player).live;
   hand.erase(std::find(hand.begin(), hand.end(), state.pendingPiece));
-  return isInTenpai13Pieces(hand, /*allWaits=*/true) > 1 ? 1 : 0;
+  return isInTenpai13Pieces(hand, /*allWaits=*/true).size() > 1 ? 1 : 0;
 }
 
 int isPureDoubleChi(const GameState& state, int player,
@@ -757,8 +757,11 @@ int isBottomOfTheSea(const GameState& state, int /*player*/,
   return 0;
 }
 
-int isSevenPairs(const GameState& /*state*/, int /*player*/,
+int isSevenPairs(const GameState& state, int player,
                  const std::vector<const mahjong::Node*>& branch) {
+  if(state.hands[player].open){
+    return 0;
+  }          
   std::set<Piece> pairs;
   for (const auto& node : branch) {
     switch (node->type()) {
