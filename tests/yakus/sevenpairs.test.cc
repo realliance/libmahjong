@@ -20,7 +20,7 @@ TEST(isSevenPairs, 2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isSevenPairs(game_state, 0, branch) == 2) {
+    if (mahjong::isSevenPairs(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -36,7 +36,7 @@ TEST(isSevenPairs, MustBeConcealed) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isSevenPairs(game_state, 0, branch) == 2) {
+    if (mahjong::isSevenPairs(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -52,7 +52,7 @@ TEST(isSevenPairs, UniquePairsOnly) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isSevenPairs(game_state, 0, branch) == 2) {
+    if (mahjong::isSevenPairs(game_state, 0, branch)) {
       FAIL();
       return;
     }

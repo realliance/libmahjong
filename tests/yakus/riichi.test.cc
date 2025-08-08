@@ -9,7 +9,7 @@
 
 namespace mahjong {
 
-TEST(isRiichi, 1Han) {
+TEST(isRiichi, Riichi) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
   game_state.hands[0].riichi = true;
@@ -18,7 +18,7 @@ TEST(isRiichi, 1Han) {
   game_state.turnNum = 15;
   game_state.lastCall = 2;
 
-  EXPECT_EQ(isRiichi(game_state, 0), 1);
+  EXPECT_TRUE(isRiichi(game_state, 0));
 }
 
 TEST(isRiichi, Ippatsu) {
@@ -30,7 +30,7 @@ TEST(isRiichi, Ippatsu) {
   game_state.turnNum = 15;
   game_state.lastCall = 2;
 
-  EXPECT_EQ(isRiichi(game_state, 0), 2);
+  EXPECT_TRUE(isIppatsu(game_state, 0));
 }
 
 TEST(isRiichi, DoubleRiichi) {
@@ -42,7 +42,7 @@ TEST(isRiichi, DoubleRiichi) {
   game_state.turnNum = 2;
   game_state.lastCall = -1;
 
-  EXPECT_EQ(isRiichi(game_state, 0), 3);
+  EXPECT_TRUE(isDoubleRiichi(game_state, 0));
 }
 
 TEST(isRiichi, NoRiichi) {
@@ -53,6 +53,6 @@ TEST(isRiichi, NoRiichi) {
   game_state.turnNum = 2;
   game_state.lastCall = -1;
 
-  EXPECT_EQ(isRiichi(game_state, 0), 0);
+  EXPECT_FALSE(isRiichi(game_state, 0));
 }
 }  // namespace mahjong

@@ -23,7 +23,7 @@ TEST(isAfterAKan, 1Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAfterAKan(game_state, 0, branch) == 1) {
+    if (isAfterAKan(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -41,7 +41,7 @@ TEST(isAfterAKan, DoesntApply) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAfterAKan(game_state, 0, branch) > 0) {
+    if (isAfterAKan(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -59,7 +59,7 @@ TEST(isAfterAKan, WrongPlayer) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAfterAKan(game_state, 0, branch) > 0) {
+    if (isAfterAKan(game_state, 0, branch)) {
       FAIL();
       return;
     }

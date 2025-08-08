@@ -23,7 +23,7 @@ TEST(isThreeConcealedPons, 2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeConcealedPons(game_state, 0, branch) == 2) {
+    if (mahjong::isThreeConcealedPons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -44,7 +44,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealed) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeConcealedPons(game_state, 0, branch) == 2) {
+    if (mahjong::isThreeConcealedPons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -65,7 +65,7 @@ TEST(isThreeConcealedPons, CanHaveAdditionalOpenPon) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeConcealedPons(game_state, 0, branch) == 2) {
+    if (mahjong::isThreeConcealedPons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -86,7 +86,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealedNegative) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeConcealedPons(game_state, 0, branch) == 2) {
+    if (mahjong::isThreeConcealedPons(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -102,7 +102,7 @@ TEST(isThreeConcealedPons, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeConcealedPons(game_state, 0, branch) == 2) {
+    if (mahjong::isThreeConcealedPons(game_state, 0, branch)) {
       FAIL();
       return;
     }
