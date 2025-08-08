@@ -24,7 +24,7 @@ TEST(isAllTerminalsAndHonors, 2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllTerminalsAndHonors(game_state, 0, branch) == 2) {
+    if (mahjong::isAllTerminalsAndHonors(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -40,7 +40,7 @@ TEST(isAllTerminalsAndHonors, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllTerminalsAndHonors(game_state, 0, branch) == 2) {
+    if (mahjong::isAllTerminalsAndHonors(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -62,7 +62,7 @@ TEST(isAllTerminalsAndHonors, CanBeOpen) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllTerminalsAndHonors(game_state, 0, branch) == 2) {
+    if (mahjong::isAllTerminalsAndHonors(game_state, 0, branch)) {
       SUCCEED();
       return;
     }

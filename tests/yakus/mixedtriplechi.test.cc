@@ -20,7 +20,7 @@ TEST(isMixedTripleChi, Open) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isMixedTripleChi(game_state, 0, branch) == 1) {
+    if (mahjong::isMixedTripleChi(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -36,7 +36,7 @@ TEST(isMixedTripleChi, Closed) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isMixedTripleChi(game_state, 0, branch) == 2) {
+    if (mahjong::isMixedTripleChi(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -52,7 +52,7 @@ TEST(isMixedTripleChi, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isMixedTripleChi(game_state, 0, branch) > 0) {
+    if (mahjong::isMixedTripleChi(game_state, 0, branch)) {
       FAIL();
       return;
     }

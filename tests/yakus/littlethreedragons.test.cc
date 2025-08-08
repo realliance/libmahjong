@@ -24,7 +24,7 @@ TEST(isLittleThreeDragons, 2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isLittleThreeDragons(game_state, 0, branch) == 2) {
+    if (mahjong::isLittleThreeDragons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -46,7 +46,7 @@ TEST(isLittleThreeDragons, WhenOpen) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isLittleThreeDragons(game_state, 0, branch) == 2) {
+    if (mahjong::isLittleThreeDragons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -68,7 +68,7 @@ TEST(isLittleThreeDragons, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isLittleThreeDragons(game_state, 0, branch) == 2) {
+    if (mahjong::isLittleThreeDragons(game_state, 0, branch)) {
       FAIL();
       return;
     }

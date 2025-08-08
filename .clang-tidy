@@ -21,6 +21,7 @@ Checks: >
   -readability-magic-numbers,
   -readability-avoid-return-with-void-value,
   -readability-function-cognitive-complexity,
+  -readability-use-anyofallof,
   -bugprone-narrowing-conversions,
   -bugprone-easily-swappable-parameters,
   -bugprone-implicit-widening-of-multiplication-result,

@@ -19,7 +19,7 @@ TEST(isWindOrDragonPon, WhiteDragon) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 1) {
+    if (mahjong::isWhiteDragon(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -34,7 +34,7 @@ TEST(isWindOrDragonPon, GreenDragon) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 1) {
+    if (mahjong::isGreenDragon(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -49,7 +49,7 @@ TEST(isWindOrDragonPon, RedDragon) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 1) {
+    if (mahjong::isRedDragon(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -64,7 +64,7 @@ TEST(isWindOrDragonPon, Kan) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 1) {
+    if (mahjong::isRedDragon(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -80,7 +80,7 @@ TEST(isWindOrDragonPon, CanWhenOpen) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 1) {
+    if (mahjong::isRedDragon(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -95,7 +95,7 @@ TEST(isWindOrDragonPon, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 1) {
+    if (mahjong::isGreenDragon(game_state, 0, branch)) {
       FAIL();
       return;
     }
