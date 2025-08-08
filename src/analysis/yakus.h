@@ -4,42 +4,20 @@
 
 #include "types/gamestate.h"
 #include "types/handnode.h"
-#include "types/piecetype.h"
-#include "types/score.h"
 
 namespace mahjong {
 
 using yakuFunc = std::function<int(const GameState&, int,
                                    const std::vector<const mahjong::Node*>&)>;
 
-Score scoreHand(const GameState& state, int player);
-
-int getBasicPoints(Score s);
-
-int getFu(const GameState& state, int player,
-          const std::vector<const mahjong::Node*>& branch);
-
-bool isOpenPinfu(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch);
-
-int countPiece(const GameState& state, int player, Piece p);
-
-bool isComplete(const GameState& state, int player);
-
-std::vector<Piece> isInTenpai(std::vector<Piece> hand, bool allWaits = false);
-std::vector<Piece> isInTenpai13Pieces(std::vector<Piece> hand,
-                                      bool allWaits = false);
-
-std::vector<Piece> getRiichiDiscard(std::vector<Piece> hand);
-
 bool isRiichi(const GameState& state, int player,
               const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
 bool isDoubleRiichi(const GameState& state, int player,
-              const std::vector<const mahjong::Node*>& /*unused*/ = {});
+                    const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
 bool isIppatsu(const GameState& state, int player,
-              const std::vector<const mahjong::Node*>& /*unused*/ = {});
+               const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
 bool isFullyConcealedHand(
     const GameState& state, int player,
@@ -63,7 +41,7 @@ bool isPureStraight(const GameState& state, int player,
 bool isSeatWind(const GameState& state, int player,
                 const std::vector<const mahjong::Node*>& branch);
 bool isPrevalentWind(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch);
+                     const std::vector<const mahjong::Node*>& branch);
 bool isWhiteDragon(const GameState& state, int player,
                    const std::vector<const mahjong::Node*>& branch);
 bool isGreenDragon(const GameState& state, int player,

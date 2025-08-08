@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "analysis/hands.h"
+#include "analysis/util.h"
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"

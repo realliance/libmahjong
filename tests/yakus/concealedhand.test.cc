@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "analysis/hands.h"
+#include "analysis/yakus.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/walls.h"
