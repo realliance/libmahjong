@@ -9,7 +9,9 @@ function(package_add_test test_name)
   target_include_directories(
     ${test_name} PRIVATE ${libmahjong_SOURCE_DIR}/src
                          ${libmahjong_SOURCE_DIR}/tests)
-  target_precompile_headers(${test_name} REUSE_FROM test_precompiled_headers)
+  if(libmahjong_use_precompiled_headers)
+    target_precompile_headers(${test_name} REUSE_FROM test_precompiled_headers)
+  endif()
   set_target_properties(${test_name} PROPERTIES FOLDER tests/${test_name})
   gtest_discover_tests(${test_name})
 
@@ -20,18 +22,20 @@ function(package_add_test test_name)
       PARENT_SCOPE)
 endfunction()
 
-add_library(test_precompiled_headers STATIC)
-get_target_property(libmahjong_includes libmahjong HEADER_SET)
-target_precompile_headers(test_precompiled_headers PRIVATE
-                          ${libmahjong_includes})
-file(
-  GENERATE
-  OUTPUT empty_pch.cc
-  CONTENT "/*dummy pch file*/")
-target_sources(test_precompiled_headers PRIVATE empty_pch.cc)
-target_include_directories(test_precompiled_headers
-                           PRIVATE ${libmahjong_SOURCE_DIR}/src)
-set_target_properties(test_precompiled_headers PROPERTIES FOLDER tests)
+if(libmahjong_use_precompiled_headers)
+  add_library(test_precompiled_headers STATIC)
+  get_target_property(libmahjong_includes libmahjong HEADER_SET)
+  target_precompile_headers(test_precompiled_headers PRIVATE
+                            ${libmahjong_includes})
+  file(
+    GENERATE
+    OUTPUT empty_pch.cc
+    CONTENT "/*dummy pch file*/")
+  target_sources(test_precompiled_headers PRIVATE empty_pch.cc)
+  target_include_directories(test_precompiled_headers
+                             PRIVATE ${libmahjong_SOURCE_DIR}/src)
+  set_target_properties(test_precompiled_headers PROPERTIES FOLDER tests)
+endif()
 
 add_subdirectory(utils)
 
@@ -73,9 +77,7 @@ package_add_test(
   "yakus/fullflush.test.cc"
   "yakus/blessingofman.test.cc")
 
-package_add_test(
-  api
-  "api/game_control.test.cc")
+package_add_test(api "api/game_control.test.cc")
 
 get_target_property(test_utils_sources test_utils SOURCES)
 list(TRANSFORM test_utils_sources PREPEND ${CMAKE_CURRENT_LIST_DIR}/utils/)
