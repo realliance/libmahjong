@@ -16,7 +16,7 @@
 
 namespace mahjong {
 
-TEST(isTerminalsInAllSets, DISABLED_2Han) {
+TEST(isTerminalsInAllSets, 2Han) {
   const Meld meld = {
       .type = Meld::kChi,
       .start = Piece(kSevenPin),
@@ -38,7 +38,7 @@ TEST(isTerminalsInAllSets, DISABLED_2Han) {
   FAIL();
 }
 
-TEST(isTerminalsInAllSets, DISABLED_3Han) {
+TEST(isTerminalsInAllSets, 3Han) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m789m111p789p11s"));
   game_state.hands[0].open = false;
