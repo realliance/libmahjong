@@ -1,3 +1,5 @@
+#include "analysis/util.h"
+
 #include <algorithm>
 #include <array>
 #include <cstdint>

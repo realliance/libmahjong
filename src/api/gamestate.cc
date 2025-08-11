@@ -4,6 +4,8 @@
 #include <memory>
 #include <new>
 #include <vector>
+#include "api/types.h"
+#include "controllers/controllermanager.h"
 #include "statefunctions/statecontroller.h"
 #include "types/gamestate.h"
 #include "types/settings.h"
