@@ -16,7 +16,6 @@ namespace mahjong {
 struct Breakdown {
   std::unique_ptr<Node> rootNode;
   Node* currentNode{};
-  bool paired = false;
   int id = 0;
   std::map<Piece, int> counts;
   std::map<Piece, int> possibilities;
@@ -46,11 +45,11 @@ bool anyPossibleChi(const std::map<Piece, int>& counts, Piece p) {
 }
 
 bool possiblePair(const std::map<Piece, int>& counts, Piece p) {
-  return counts.contains(p) && counts.at(p) == 2;
+  return counts.contains(p) && counts.at(p) >= 2;
 }
 
 bool possiblePon(const std::map<Piece, int>& counts, Piece p) {
-  return counts.contains(p) && counts.at(p) == 3;
+  return counts.contains(p) && counts.at(p) >= 3;
 }
 
 void countPieces(Breakdown* b) {
@@ -65,7 +64,7 @@ Piece updatePossibilities(Breakdown* b) {
   Piece min_possible_piece = kError;
   for (const auto& piece : b->pieces) {
     b->possibilities[piece] += possibleChis(b->counts, piece);
-    if (!b->paired && possiblePair(b->counts, piece)) {
+    if (possiblePair(b->counts, piece)) {
       b->possibilities[piece]++;
     }
     if (possiblePon(b->counts, piece)) {
@@ -101,7 +100,6 @@ void breakdownPon(Breakdown* b, Piece piece) {
 }
 
 void breakdownPair(Breakdown* b, Piece piece) {
-  b->paired = true;
   b->counts[piece] -= 2;
   if (b->counts[piece] == 0) {
     b->pieces.erase(std::remove(b->pieces.begin(), b->pieces.end(), piece),
@@ -160,7 +158,6 @@ void resetCounts(Breakdown* b, const Node* target) {
         b->counts[b->currentNode->start()]++;
       }
       if (b->currentNode->type() == Node::kPair) {
-        b->paired = false;
         b->counts[b->currentNode->start()] += 2;
       }
       if (b->currentNode->type() == Node::kPonSet) {

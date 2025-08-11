@@ -1,6 +1,4 @@
 #pragma once
-#include <iosfwd>
-#include <ostream>
 #include <string>
 
 #include "piecetype.h"

@@ -5,19 +5,21 @@
 #include "analysis/hands.h"
 #include "statefunctions/decisionfunction.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "utils/handformer.h"
 
 namespace mahjong {
 
 TEST(GamePlay, Furiten) {
-  GameState state;
-  state.pendingPiece = kRedDragon;
-  state.hands[0].live = {kRedDragon, kRedDragon, kRedDragon};
-  ASSERT_TRUE(isComplete(state, 0));
-  // Place Red Dragon in Discard Pile
-  state.hands[0].discards = {kRedDragon};
-  state.hands[0].live = {kRedDragon, kRedDragon};
+  auto state = GameState();
+  state.hands[0] = Hand(HandFromNotation("123m456p234678s44m"));
+  state.hands[0].open = false;
+  EXPECT_TRUE(isComplete(state, 0));
+  state.pendingPiece = Piece(kFourPin);
+  // Place Four Pin in Discard Pile
+  state.hands[0].discards = {kFourPin};
   EXPECT_FALSE(CanRon(state, 0));
 }
 
