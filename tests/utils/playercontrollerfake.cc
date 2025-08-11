@@ -11,10 +11,24 @@ REGISTER_PLAYER_CONTROLLER(PlayerControllerFake);
 
 void PlayerControllerFake::ReceiveEvent(Event e) {
   events_.push_back(e);
+  if (e.decision) {
+    if (e.type <= lastEvent_.type) {
+      // Use pre-loaded decision if available, otherwise use the received event
+      if (!queue_.empty()) {
+        Event preloaded_decision = queue_.front();
+        queue_.erase(queue_.begin());
+        // Copy relevant info from received event
+        preloaded_decision.player = e.player;
+        lastEvent_ = preloaded_decision;
+      } else {
+        lastEvent_ = e;
+      }
+    }
+  }
 }
 
 void PlayerControllerFake::AddEvents(std::vector<Event> e) {
-  events_.insert(events_.end(), e.begin(), e.end());
+  queue_.insert(queue_.end(), e.begin(), e.end());
 }
 
 std::vector<Event> PlayerControllerFake::GetEvents() {
@@ -24,11 +38,11 @@ std::vector<Event> PlayerControllerFake::GetEvents() {
 }
 
 Event PlayerControllerFake::RetrieveDecision() {
-  if (queue_.empty()) {
-    throw "Not Enough events_";
+  if (lastEvent_.type != Event::kDiscard) {
+    lastEvent_.type = Event::kDecline;
   }
-  Event e = queue_.back();
-  queue_.pop_back();
+  Event e = lastEvent_;
+  lastEvent_.type = Event::kDiscard;  // Reset for next decision
   return e;
 }
 

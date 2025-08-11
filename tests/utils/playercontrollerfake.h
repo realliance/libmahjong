@@ -30,6 +30,10 @@ class PlayerControllerFake : public PlayerController {
  private:
   std::vector<Event> queue_;
   std::vector<Event> events_;
+  Event lastEvent_{.type = Event::kDiscard,
+                   .player = 0,
+                   .piece = 0,
+                   .decision = false};
 };
 
 }  // namespace mahjong

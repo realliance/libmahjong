@@ -5,11 +5,12 @@ target_include_directories(test_utils PUBLIC "${libmahjong_SOURCE_DIR}/src")
 
 target_sources(
   test_utils
-  PRIVATE "handformer.cc" "playercontrollerfake.cc"
+  PRIVATE "handformer.cc" "playercontrollerfake.cc" "gamestate_utils.cc"
   PUBLIC FILE_SET
          HEADERS
          BASE_DIRS
          "${libmahjong_SOURCE_DIR}/tests"
          FILES
          "playercontrollerfake.h"
-         "handformer.h")
+         "handformer.h"
+         "gamestate_utils.h")

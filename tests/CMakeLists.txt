@@ -77,6 +77,11 @@ package_add_test(
   api
   "api/game_control.test.cc")
 
+package_add_test(
+  rules
+  "rules/basic_rules.test.cc"
+)
+
 get_target_property(test_utils_sources test_utils SOURCES)
 list(TRANSFORM test_utils_sources PREPEND ${CMAKE_CURRENT_LIST_DIR}/utils/)
 get_target_property(test_utils_includes test_utils HEADER_SET)

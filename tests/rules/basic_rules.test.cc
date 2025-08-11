@@ -1,28 +1,170 @@
 #include <gtest/gtest.h>
+#include <memory>
+#include <utility>
+#include <vector>
 
-#include "gamestate.h"
-#include "statefunctions.h"
+#include "statefunctions/statecontroller.h"
+#include "types/gamestate.h"
 #include "types/settings.h"
+#include "types/statefunction.h"
+#include "utils/gamestate_utils.h"
 
 namespace mahjong {
 
 TEST(GameSetup, playerCount) {
-  GameState state = GameStart(GameState{});
-  EXPECT_EQ(state.players, kNumPlayers);
+  auto state = CreateTestGameState();
+  state = AdvanceGameState(std::move(state));
+  // We just ran game start
+  EXPECT_EQ(state->currState, StateFunctionType::kGameStart);
+  // Number of players is as expected
+  EXPECT_EQ(state->players.size(), kNumPlayers);
 }
 
 TEST(GameSetup, playerScore) {
-  GameState state = GameStart(GameState{});
-  for (const auto& score : state.scores) {
-    EXPECT_EQ(score, kStartingPoints);
+  auto state = CreateTestGameState();
+  state = AdvanceGameState(std::move(state));
+  // We just ran game start
+  EXPECT_EQ(state->currState, StateFunctionType::kGameStart);
+  // All players have the expected starting points
+  for (int i = 0; i < kNumPlayers; i++) {
+    EXPECT_EQ(state->players[i].points, kStartingPoints);
   }
 }
 
 TEST(RoundSetup, playerHands) {
-  GameState state = RoundStart(GameStart(GameState{}));
-  for(const auto& hand : state.hands){
-    
+  auto state = CreateTestGameState();
+  // Advance up to and through Round Start
+  state = AdvanceUntilState(std::move(state), StateFunctionType::kRoundStart);
+  state = AdvanceGameState(std::move(state));
+  EXPECT_EQ(state->currState, StateFunctionType::kRoundStart);
+
+  // Each player should have 13 tiles
+  for (int i = 0; i < kNumPlayers; i++) {
+    EXPECT_EQ(state->hands[i].live.size(), 13)
+        << "Player " << i << " should have 13 tiles";
   }
+}
+
+TEST(RoundSetup, wall) {
+  auto state = CreateTestGameState(12345);
+  // Advance up to and through round start
+  state = AdvanceUntilState(std::move(state), StateFunctionType::kRoundStart);
+  state = AdvanceGameState(std::move(state));
+  EXPECT_EQ(state->currState, StateFunctionType::kRoundStart);
+
+  // Verify the seed was used
+  EXPECT_EQ(state->seed, 12345);
+
+  // Check that walls were initialized correctly
+  EXPECT_EQ(state->walls.livingWalls.size(), 70);
+  EXPECT_EQ(state->walls.deadWall.size(), 14);
+
+  // Check that dora indicator is set
+  EXPECT_EQ(state->walls.GetDoras().size(), 1);
+}
+
+TEST(TurnOrder, initialPlayer) {
+  auto state = CreateTestGameState();
+  // Advance up to and through round start
+  state = AdvanceUntilState(std::move(state), StateFunctionType::kRoundStart);
+  state = AdvanceGameState(std::move(state));
+  EXPECT_EQ(state->currState, StateFunctionType::kRoundStart);
+
+  // Before first draw, currentPlayer should be -1
+  EXPECT_EQ(state->currentPlayer, -1);
+
+  // After first draw, player 0 (East) should start
+  state = AdvanceGameState(std::move(state));
+  EXPECT_EQ(state->currState, StateFunctionType::kDraw);
+  EXPECT_EQ(state->currentPlayer, 0);
+  EXPECT_EQ(state->turnNum, 0);
+}
+
+TEST(TurnOrder, playerRotation) {
+  auto state = InitializeTestGame();
+
+  // Simulate multiple turns to verify rotation
+  for (int turn = 0; turn < 8; turn++) {
+    const int expected_player = turn % kNumPlayers;
+    EXPECT_EQ(state->currentPlayer, expected_player) << "Turn " << turn;
+    EXPECT_EQ(state->turnNum, turn);
+
+    state = AdvanceGameState(std::move(state));
+    EXPECT_EQ(state->currState, StateFunctionType::kPlayerHand);
+    state = AdvanceGameState(std::move(state));
+    EXPECT_EQ(state->currState, StateFunctionType::kDiscard);
+    state = AdvanceGameState(std::move(state));
+    EXPECT_EQ(state->currState, StateFunctionType::kDraw);
+  }
+}
+
+TEST(DrawMechanics, drawIncreasesTileCount) {
+  auto state = CreateTestGameState();
+  // Advance up and through round start
+  state = AdvanceUntilState(std::move(state), StateFunctionType::kRoundStart);
+  state = AdvanceGameState(std::move(state));
+  EXPECT_EQ(state->currState, StateFunctionType::kRoundStart);
+
+  // All players start with 13 tiles
+  for (int i = 0; i < kNumPlayers; i++) {
+    EXPECT_EQ(state->hands[i].live.size(), 13);
+  }
+
+  const int walls_before = state->walls.GetRemainingPieces();
+
+  // First player draws
+  state = AdvanceGameState(std::move(state));
+  EXPECT_EQ(state->currState, StateFunctionType::kDraw);
+
+  // Player 0 should now have 14 tiles
+  EXPECT_EQ(state->hands[0].live.size(), 14);
+
+  // Other players still have 13
+  for (int i = 1; i < kNumPlayers; i++) {
+    EXPECT_EQ(state->hands[i].live.size(), 13);
+  }
+
+  // Wall should have one less tile
+  EXPECT_EQ(state->walls.GetRemainingPieces(), walls_before - 1);
+}
+
+TEST(DrawMechanics, drawStateTransition) {
+  auto state = CreateTestGameState();
+  // Advance up and through Round Start
+  state = AdvanceUntilState(std::move(state), StateFunctionType::kRoundStart);
+  state = AdvanceGameState(std::move(state));
+  EXPECT_EQ(state->currState, StateFunctionType::kRoundStart);
+
+  // After round start, next state should be draw
+  EXPECT_EQ(state->nextState, StateFunctionType::kDraw);
+  state = AdvanceGameState(std::move(state));
+  EXPECT_EQ(state->currState, StateFunctionType::kDraw);
+
+  // After draw, next state should be player hand
+  EXPECT_EQ(state->nextState, StateFunctionType::kPlayerHand);
+}
+
+TEST(DiscardMechanics, discardDecreasesTileCount) {
+  auto state = InitializeTestGame();
+  EXPECT_EQ(state->currState, StateFunctionType::kDraw);
+
+  // Player 0 has 14 tiles after draw
+  EXPECT_EQ(state->hands[0].live.size(), 14);
+
+  // Move through player hand to discard
+  state = AdvanceGameState(std::move(state));
+  EXPECT_EQ(state->currState, StateFunctionType::kPlayerHand);
+  EXPECT_EQ(state->nextState, StateFunctionType::kDiscard);
+
+  const int discards_before = state->hands[0].discards.size();
+  state = AdvanceGameState(std::move(state));
+  EXPECT_EQ(state->currState, StateFunctionType::kDiscard);
+
+  // Player should be back to 13 tiles
+  EXPECT_EQ(state->hands[0].live.size(), 13);
+
+  // Discard pile should have increased
+  EXPECT_EQ(state->hands[0].discards.size(), discards_before + 1);
 }
 
 }  // namespace mahjong
