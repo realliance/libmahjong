@@ -21,7 +21,7 @@ class Router {
 
 #define REGISTER_ROUTE(func, type)                                   \
   namespace {                                                        \
-  bool __registered = Router::Instance().RegisterRoute(&func, type); \
+  bool __registered = Router::Instance().RegisterRoute(&(func), type); \
   }
 
 }  // namespace mahjong

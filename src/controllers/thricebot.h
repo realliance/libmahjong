@@ -34,9 +34,9 @@ class ThriceBot : public PlayerController {
  private:
   void assignweights();
   Piece popDiscard();
-  HandTile assignTileWeight(HandTile);
+  HandTile assignTileWeight(HandTile h1);
   void checkDiscard();
-  bool checkTile(Piece);
+  bool checkTile(Piece p);
 
   std::vector<HandTile> hand_;
   std::array<uint8_t, Piece::kPiecesize> discarded_ = {};
