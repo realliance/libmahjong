@@ -9,6 +9,7 @@
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/score.h"
+#include "types/yaku.h"
 
 namespace mahjong {
 
