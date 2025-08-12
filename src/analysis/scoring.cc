@@ -95,16 +95,15 @@ Score scoreHand(const GameState& state, int player) {
   s.han = 0;
   s.yakuman = 0;
   s.fu = 0;
-  if (!root->IsComplete() && !isThirteenOrphans(state, player) &&
-      !isSevenPairs(state, player)) {
+  if (!root->IsComplete() && !isThirteenOrphans(state, player)) {
     return s;
   }
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     Score branchscore;
-    for (const auto& node : branch) {
-      if (node->type() == Node::kSingle) {
-        continue;
-      }
+    if (std::ranges::any_of(branch, [](const auto& node) {
+          return node->type() == Node::kSingle;
+        })) {
+      continue;
     }
 
     for (const auto& yaku_function : kYakuFunctions) {
