@@ -1,10 +1,10 @@
 target_sources(
   libmahjong
-  PRIVATE "handtree.cc" "possiblesets.cc" "util.cc"
+  PRIVATE "yakus.cc" "scoring.cc"
   PUBLIC FILE_SET
          HEADERS
          BASE_DIRS
          "${libmahjong_SOURCE_DIR}/src"
          FILES
-         "analysis.h"
-         "util.h")
+         "yakus.h"
+         "scoring.h")

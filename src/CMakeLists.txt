@@ -6,6 +6,7 @@ add_subdirectory(controllers)
 add_subdirectory(statefunctions)
 add_subdirectory(types)
 add_subdirectory(analysis)
+add_subdirectory(scoring)
 
 get_target_property(libmahjong_includes libmahjong HEADER_SET)
 if(libmahjong_use_precompiled_headers)

@@ -2,7 +2,7 @@
 #include <array>
 #include <string>
 
-#include "analysis/yakus.h"
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "utils/handformer.h"
