@@ -21,18 +21,19 @@
 namespace mahjong {
 bool isRiichi(const GameState& state, int player,
               const std::vector<const mahjong::Node*>& /*branch*/) {
-  return state.hands.at(player).riichi && !state.hands.at(player).open;
+  return state.hands.at(player).riichi && !state.hands.at(player).open &&
+         (state.turnNum > 4 || state.lastCall < 0);
 }
 
 bool isDoubleRiichi(const GameState& state, int player,
-                    const std::vector<const mahjong::Node*>& branch) {
-  return isRiichi(state, player, branch) &&
+                    const std::vector<const mahjong::Node*>& /*branch*/) {
+  return state.hands.at(player).riichi && !state.hands.at(player).open &&
          (state.turnNum < 4 && state.lastCall < 0);
 }
 
 bool isIppatsu(const GameState& state, int player,
-               const std::vector<const mahjong::Node*>& branch) {
-  return isRiichi(state, player, branch) &&
+               const std::vector<const mahjong::Node*>& /*branch*/) {
+  return (isRiichi(state, player) || isDoubleRiichi(state, player)) &&
          (state.turnNum - state.hands.at(player).riichiRound <= 4 &&
           state.lastCall < state.hands.at(player).riichiRound);
 }
@@ -299,7 +300,9 @@ bool isOutsideHand(const GameState& state, int player,
       }
     }
   }
-  return chi;
+  // Terminals in all Sets and All Terminals and Honors are more valuable and score instead of Outside Hand.
+  return chi && !isTerminalsInAllSets(state, player, branch) &&
+         !isAllTerminalsAndHonors(state, player);
 }
 
 bool isAfterAKan(const GameState& state, int player,
@@ -456,7 +459,8 @@ bool isHalfFlush(const GameState& state, int player,
       return false;
     }
   }
-  return honors;
+  // Full Flush scores instead of Half Flush.
+  return honors && !isFullFlush(state, player);
 }
 
 bool isLittleThreeDragons(const GameState& state, int player,
