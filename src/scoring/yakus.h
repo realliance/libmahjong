@@ -6,8 +6,7 @@
 
 namespace mahjong {
 
-using yakuFunc = std::function<int(const mahjong::GameState&, int,
-                                   const std::vector<const mahjong::Node*>&)>;
+enum class YakuId {};
 
 bool isRiichi(const GameState& state, int player,
               const std::vector<const mahjong::Node*>& /*unused*/ = {});
