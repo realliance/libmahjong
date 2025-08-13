@@ -5,7 +5,7 @@
 #include "types/gamestate.h"
 #include "types/handnode.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isLittleFourWinds(const GameState& state, int player,
                        const std::vector<const mahjong::Node*>& branch) {
   bool pair = false;
@@ -47,4 +47,4 @@ bool isLittleFourWinds(const GameState& state, int player,
   return pons == 3 && pair;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

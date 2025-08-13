@@ -7,7 +7,7 @@
 #include "types/gamestate.h"
 #include "types/handnode.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isOutsideHand(const GameState& state, int player,
                    const std::vector<const mahjong::Node*>& branch) {
   bool chi = false;
@@ -42,4 +42,4 @@ bool isOutsideHand(const GameState& state, int player,
          !isAllTerminalsAndHonors(state, player);
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

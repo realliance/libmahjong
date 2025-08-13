@@ -6,7 +6,7 @@
 #include "types/gamestate.h"
 #include "types/handnode.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isPureStraight(const GameState& state, int player,
                     const std::vector<const mahjong::Node*>& branch) {
   const int k_firstchistart = 1;
@@ -73,4 +73,4 @@ bool isPureStraight(const GameState& state, int player,
   return false;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

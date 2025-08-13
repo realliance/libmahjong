@@ -5,7 +5,7 @@
 #include "types/gamestate.h"
 #include "types/handnode.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isBlessingOfHeaven(const GameState& state, int player,
                         const std::vector<const mahjong::Node*>& /*branch*/) {
   if (state.hands.at(player).open) {
@@ -23,4 +23,4 @@ bool isBlessingOfHeaven(const GameState& state, int player,
   return true;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

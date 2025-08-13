@@ -8,7 +8,7 @@
 #include "types/pieces.h"
 #include "types/piecetype.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isThirteenOrphans(const GameState& state, int player,
                        const std::vector<const mahjong::Node*>& /*branch*/) {
   if (state.hands.at(player).open) {
@@ -41,4 +41,4 @@ bool isThirteenOrphans(const GameState& state, int player,
   return true;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

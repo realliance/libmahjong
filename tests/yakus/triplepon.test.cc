@@ -11,7 +11,7 @@
 #include "types/handnode.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 
 TEST(isTriplePon, 2Han) {
   auto game_state = GameState();
@@ -42,4 +42,4 @@ TEST(isTriplePon, BadHand) {
   }
   SUCCEED();
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

@@ -6,7 +6,7 @@
 #include "types/handnode.h"
 #include "types/statefunction.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isAfterAKan(const GameState& state, int player,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
   if (state.currentPlayer != player) {
@@ -18,4 +18,4 @@ bool isAfterAKan(const GameState& state, int player,
   return false;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

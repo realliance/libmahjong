@@ -9,7 +9,7 @@
 #include "types/walls.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 TEST(isFullyConcealedHand, 1Han) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
@@ -48,4 +48,4 @@ TEST(isFullyConcealedHand, MustHavePiecesRemainingInWall) {
 
   EXPECT_FALSE(isFullyConcealedHand(game_state, 0));
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

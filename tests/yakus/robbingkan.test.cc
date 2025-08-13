@@ -12,7 +12,7 @@
 #include "types/statefunction.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 
 TEST(isRobbingAKan, 1Han) {
   auto game_state = GameState();
@@ -47,4 +47,4 @@ TEST(isRobbingAKan, DoesntApply) {
   }
   SUCCEED();
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

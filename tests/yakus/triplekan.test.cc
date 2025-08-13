@@ -15,7 +15,7 @@
 #include "types/piecetype.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 
 TEST(isThreeKans, 2Han) {
   const Meld meld_a = {
@@ -136,4 +136,4 @@ TEST(isThreeKans, AllConcealed) {
   }
   FAIL();
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

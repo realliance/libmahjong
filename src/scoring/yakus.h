@@ -38,7 +38,7 @@
 #include "scoring/yakus/triplepon.h"
 #include "scoring/yakus/twicepuredoublechi.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 constexpr int kNumYakus = 27;
 const std::array<yakuFunc, kNumYakus> kYakuFunctions{
     isFullyConcealedHand,
@@ -77,4 +77,4 @@ const std::array<yakuFunc, kNumYakuman> kYakumanFunctions = {
     isBigThreeDragons, isLittleFourWinds,  isBigFourWinds,
 };
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

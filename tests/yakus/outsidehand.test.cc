@@ -11,7 +11,7 @@
 #include "types/handnode.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 
 TEST(isOutsideHand, Open) {
   auto game_state = GameState();
@@ -74,4 +74,4 @@ TEST(isOutsideHand, BadHand) {
   }
   SUCCEED();
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

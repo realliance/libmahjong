@@ -11,7 +11,7 @@
 #include "types/handnode.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 
 TEST(isWindOrDragonPon, WhiteDragon) {
   auto game_state = GameState();
@@ -103,4 +103,4 @@ TEST(isWindOrDragonPon, BadHand) {
   }
   SUCCEED();
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

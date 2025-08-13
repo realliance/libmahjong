@@ -13,7 +13,7 @@
 #include "types/walls.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 
 TEST(isBottomOfTheSea, 1Han) {
   auto game_state = GameState();
@@ -62,4 +62,4 @@ TEST(isBottomOfTheSea, DoesntApply) {
   }
   SUCCEED();
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

@@ -15,7 +15,7 @@
 #include "types/piecetype.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 
 TEST(isHalfFlush, 2Han) {
   const Meld meld = {
@@ -98,4 +98,4 @@ TEST(isHalfFlush, FullFlushIncompatible) {
   }
   SUCCEED();
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

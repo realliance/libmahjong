@@ -7,7 +7,7 @@
 #include "types/gamestate.h"
 #include "types/handnode.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isNineGates(const GameState& state, int player,
                  const std::vector<const mahjong::Node*>& branch) {
   if (state.hands.at(player).open) {
@@ -51,4 +51,4 @@ bool isNineGates(const GameState& state, int player,
   return true;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku
