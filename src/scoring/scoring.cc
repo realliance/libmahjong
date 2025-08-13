@@ -5,11 +5,13 @@
 #include "analysis/analysis.h"
 #include "analysis/util.h"
 #include "scoring/yakus.h"
+#include "scoring/yakus/pinfu.h"
+#include "scoring/yakus/sevenpairs.h"
+#include "scoring/yakus/thirteenorphans.h"
 #include "types/gamestate.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/score.h"
-#include "types/yaku.h"
 
 namespace mahjong {
 
@@ -51,43 +53,6 @@ const int kHighedgewait = 7;
 
 const int kFuRounding = 10;
 
-const std::vector<mahjong::yakuFunc> kYakuFunctions = {
-    isFullyConcealedHand,
-    isPinfu,
-    isPureDoubleChi,
-    isAllSimples,
-    isMixedTripleChi,
-    isPureStraight,
-    isPrevalentWind,
-    isSeatWind,
-    isGreenDragon,
-    isWhiteDragon,
-    isRedDragon,
-    isOutsideHand,
-    isAfterAKan,
-    isRobbingAKan,
-    isBottomOfTheSea,
-    isSevenPairs,
-    isTriplePon,
-    isThreeConcealedPons,
-    isThreeKans,
-    isAllPons,
-    isHalfFlush,
-    isLittleThreeDragons,
-    isAllTerminalsAndHonors,
-    isTerminalsInAllSets,
-    isTwicePureDoubleChi,
-    isBlessingOfMan,
-    isFullFlush,
-};
-const std::vector<yakuFunc> kYakumanFunctions = {
-    isThirteenOrphans, isNineGates,        isBlessingOfHeaven,
-    isBlessingOfEarth, isFourConcealedPon, isFourKans,
-    isAllGreen,        isAllTerminals,     isAllHonors,
-    isBigThreeDragons, isLittleFourWinds,  isBigFourWinds,
-    isMaxBranches,
-};
-
 }  // namespace
 
 Score scoreHand(const GameState& state, int player) {
@@ -96,7 +61,7 @@ Score scoreHand(const GameState& state, int player) {
   s.han = 0;
   s.yakuman = 0;
   s.fu = 0;
-  if (!root->IsComplete() && !isThirteenOrphans(state, player)) {
+  if (!root->IsComplete() && !yakus::isThirteenOrphans(state, player)) {
     return s;
   }
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
@@ -107,10 +72,10 @@ Score scoreHand(const GameState& state, int player) {
       continue;
     }
 
-    for (const auto& yaku_function : kYakuFunctions) {
+    for (const auto& yaku_function : yakus::kYakuFunctions) {
       branchscore.han += yaku_function(state, player, branch);
     }
-    for (const auto& yaku_function : kYakumanFunctions) {
+    for (const auto& yaku_function : yakus::kYakumanFunctions) {
       branchscore.yakuman += yaku_function(state, player, branch);
     }
     for (const auto& dora : state.walls.GetDoras()) {
@@ -174,10 +139,10 @@ const int kSevenpairs = 25;
 
 int getFu(const GameState& state, int player,
           const std::vector<const mahjong::Node*>& branch) {
-  if (isSevenPairs(state, player, branch)) {
+  if (yakus::isSevenPairs(state, player, branch)) {
     return kSevenpairs;
   }
-  if (isPinfu(state, player, branch)) {
+  if (yakus::isPinfu(state, player, branch)) {
     if (state.hasRonned.at(player)) {
       return kPinfuDiscard;
     }
@@ -279,7 +244,7 @@ bool isOpenPinfu(const GameState& state, int player,
 
 bool isComplete(const GameState& state, int player) {
   auto root = breakdownHand(state.hands.at(player).live);
-  if (!root->IsComplete() && !isThirteenOrphans(state, player)) {
+  if (!root->IsComplete() && !yakus::isThirteenOrphans(state, player)) {
     return false;
   }
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
@@ -289,12 +254,12 @@ bool isComplete(const GameState& state, int player) {
       continue;
     }
 
-    for (const auto& yaku_function : kYakuFunctions) {
+    for (const auto& yaku_function : yakus::kYakuFunctions) {
       if (yaku_function(state, player, branch) > 0) {
         return true;
       }
     }
-    for (const auto& yaku_function : kYakumanFunctions) {
+    for (const auto& yaku_function : yakus::kYakumanFunctions) {
       if (yaku_function(state, player, branch) > 0) {
         return true;
       }

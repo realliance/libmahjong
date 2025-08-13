@@ -4,14 +4,58 @@
 #include "types/gamestate.h"
 #include "types/handnode.h"
 
-#include "scoring/yakus.h"
-
 namespace mahjong {
 
 using yakuFunc = std::function<int(const mahjong::GameState&, int,
                                    const std::vector<const mahjong::Node*>&)>;
 
-struct Yaku { // add yakus for exclusions, name, and enum possibly
+enum class YakuId {
+  kRiichi,
+  kDoubleRiichi,
+  kIppatsu,
+  kFullyConcealedHand,
+  kPinfu,
+  kPureDoubleChi,
+  kAllSimples,
+  kMixedTripleChi,
+  kPureStraight,
+  kSeatWind,
+  kPrevalentWind,
+  kWhiteDragon,
+  kGreenDragon,
+  kRedDragon,
+  kOutsideHand,
+  kAfterAKan,
+  kRobbingAKan,
+  kBottomofTheSea,
+  kSevenPairs,
+  kTriplePon,
+  kThreeConcealedPons,
+  kThreeKans,
+  kAllPons,
+  kHalfFlush,
+  kLittleThreeDragons,
+  kAllTerminalsAndHonors,
+  kTerminalsInAllSets,
+  kTwicePureDoubleChi,
+  kFullFlush,
+  kThirteenOrphans,
+  kNineGates,
+  kBlessingOfHeaven,
+  kBlessingofMan,
+  kBlessingOfEarth,
+  kFourConcealedPon,
+  kFourKans,
+  kAllGreen,
+  kAllTerminals,
+  kAllHonors,
+  kBigThreeDragons,
+  kLittleFourWinds,
+  kBigFourWinds,
+  kMaxBranches,
+};
+
+struct Yaku {  // add yakus for exclusions, name, and enum possibly
   const YakuId id;
   const std::string name;
   const yakuFunc is_yaku_func;

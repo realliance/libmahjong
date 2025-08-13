@@ -4,15 +4,15 @@
 #include <string>
 
 #include "analysis/analysis.h"
-#include "scoring/yakus.h"
 
+#include "scoring/yakus/afterakan.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "types/statefunction.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yakus {
 
 TEST(isAfterAKan, 1Han) {
   auto game_state = GameState();
@@ -67,4 +67,4 @@ TEST(isAfterAKan, WrongPlayer) {
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yakus
