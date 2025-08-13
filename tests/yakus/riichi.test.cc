@@ -9,7 +9,7 @@
 #include "types/hand.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 
 TEST(isRiichi, Riichi) {
   auto game_state = GameState();
@@ -57,4 +57,4 @@ TEST(isRiichi, NoRiichi) {
 
   EXPECT_FALSE(isRiichi(game_state, 0));
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

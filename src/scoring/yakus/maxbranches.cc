@@ -6,7 +6,7 @@
 #include "types/gamestate.h"
 #include "types/handnode.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isMaxBranches(const GameState& state, int player,
                    const std::vector<const mahjong::Node*>& /*branch*/) {
   const int start = state.hands.at(player).live[0].getPieceNum();
@@ -54,4 +54,4 @@ bool isMaxBranches(const GameState& state, int player,
   return true;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

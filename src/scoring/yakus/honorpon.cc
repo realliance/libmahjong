@@ -9,7 +9,7 @@
 #include "types/piecetype.h"
 #include "types/winds.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 namespace {
 bool findPon(const GameState& state, int player,
              const std::vector<const mahjong::Node*>& branch,
@@ -56,4 +56,4 @@ bool isWhiteDragon(const GameState& state, int player,
   return findPon(state, player, branch, kWhiteDragon);
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

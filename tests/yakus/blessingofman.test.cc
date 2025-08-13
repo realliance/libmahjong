@@ -11,7 +11,7 @@
 #include "types/handnode.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 TEST(isBlessingOfMan, 5Han) {
   auto game_state = GameState();
   game_state.hands[3] = Hand(HandFromNotation("123m123p444m111z55m"));
@@ -102,4 +102,4 @@ TEST(isBlessingOfMan, NoCalledMustHaveOccured) {
   }
   SUCCEED();
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

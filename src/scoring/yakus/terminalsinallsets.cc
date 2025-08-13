@@ -5,7 +5,7 @@
 #include "types/gamestate.h"
 #include "types/handnode.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isTerminalsInAllSets(const GameState& state, int player,
                           const std::vector<const mahjong::Node*>& branch) {
   for (const auto& node : branch) {
@@ -47,4 +47,4 @@ bool isTerminalsInAllSets(const GameState& state, int player,
   return true;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

@@ -61,7 +61,7 @@ Score scoreHand(const GameState& state, int player) {
   s.han = 0;
   s.yakuman = 0;
   s.fu = 0;
-  if (!root->IsComplete() && !yakus::isThirteenOrphans(state, player)) {
+  if (!root->IsComplete() && !yaku::isThirteenOrphans(state, player)) {
     return s;
   }
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
@@ -72,10 +72,10 @@ Score scoreHand(const GameState& state, int player) {
       continue;
     }
 
-    for (const auto& yaku_function : yakus::kYakuFunctions) {
+    for (const auto& yaku_function : yaku::kYakuFunctions) {
       branchscore.han += yaku_function(state, player, branch);
     }
-    for (const auto& yaku_function : yakus::kYakumanFunctions) {
+    for (const auto& yaku_function : yaku::kYakumanFunctions) {
       branchscore.yakuman += yaku_function(state, player, branch);
     }
     for (const auto& dora : state.walls.GetDoras()) {
@@ -139,10 +139,10 @@ const int kSevenpairs = 25;
 
 int getFu(const GameState& state, int player,
           const std::vector<const mahjong::Node*>& branch) {
-  if (yakus::isSevenPairs(state, player, branch)) {
+  if (yaku::isSevenPairs(state, player, branch)) {
     return kSevenpairs;
   }
-  if (yakus::isPinfu(state, player, branch)) {
+  if (yaku::isPinfu(state, player, branch)) {
     if (state.hasRonned.at(player)) {
       return kPinfuDiscard;
     }
@@ -244,7 +244,7 @@ bool isOpenPinfu(const GameState& state, int player,
 
 bool isComplete(const GameState& state, int player) {
   auto root = breakdownHand(state.hands.at(player).live);
-  if (!root->IsComplete() && !yakus::isThirteenOrphans(state, player)) {
+  if (!root->IsComplete() && !yaku::isThirteenOrphans(state, player)) {
     return false;
   }
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
@@ -254,12 +254,12 @@ bool isComplete(const GameState& state, int player) {
       continue;
     }
 
-    for (const auto& yaku_function : yakus::kYakuFunctions) {
+    for (const auto& yaku_function : yaku::kYakuFunctions) {
       if (yaku_function(state, player, branch) > 0) {
         return true;
       }
     }
-    for (const auto& yaku_function : yakus::kYakumanFunctions) {
+    for (const auto& yaku_function : yaku::kYakumanFunctions) {
       if (yaku_function(state, player, branch) > 0) {
         return true;
       }

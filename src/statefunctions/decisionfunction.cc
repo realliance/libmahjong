@@ -34,7 +34,7 @@ bool CanRon(const GameState& state, int player) {
   if (state.concealedKan) {
     // If it happens to be a ron for a thirteen orphans,
     // it's allowed and you can ron
-    if (yakus::isThirteenOrphans(state, player)) {
+    if (yaku::isThirteenOrphans(state, player)) {
       tmp_state.hands.at(player).live.erase(
           std::find(state.hands.at(player).live.begin(),
                     state.hands.at(player).live.end(), state.pendingPiece));

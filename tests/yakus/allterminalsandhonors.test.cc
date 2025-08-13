@@ -15,7 +15,7 @@
 #include "types/piecetype.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 
 TEST(isAllTerminalsAndHonors, 2Han) {
   auto game_state = GameState();
@@ -70,4 +70,4 @@ TEST(isAllTerminalsAndHonors, CanBeOpen) {
   }
   FAIL();
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

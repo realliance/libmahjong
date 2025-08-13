@@ -11,7 +11,7 @@
 #include "types/handnode.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 
 TEST(isAllSimples, 1Han) {
   auto game_state = GameState();
@@ -57,4 +57,4 @@ TEST(isAllSimples, BadHandTerminals) {
   }
   SUCCEED();
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

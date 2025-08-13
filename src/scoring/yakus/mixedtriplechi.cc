@@ -6,7 +6,7 @@
 #include "types/gamestate.h"
 #include "types/handnode.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isMixedTripleChi(const GameState& state, int player,
                       const std::vector<const mahjong::Node*>& branch) {
   const int k_piecesinasuit = 9;
@@ -47,4 +47,4 @@ bool isMixedTripleChi(const GameState& state, int player,
   return false;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

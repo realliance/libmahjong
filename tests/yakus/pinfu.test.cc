@@ -12,7 +12,7 @@
 #include "types/piecetype.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 
 TEST(isPinfu, 1Han) {
   auto game_state = GameState();
@@ -81,4 +81,4 @@ TEST(isPinfu, NeedTwoWait) {
   }
   SUCCEED();
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

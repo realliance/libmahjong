@@ -9,7 +9,7 @@
 #include "types/handnode.h"
 #include "types/pieces.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isPinfu(const GameState& state, int player,
              const std::vector<const mahjong::Node*>& branch) {
   if (state.hands.at(player).open) {
@@ -47,4 +47,4 @@ bool isPinfu(const GameState& state, int player,
   return isInTenpai13Pieces(hand, /*allWaits=*/true).size() > 1;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

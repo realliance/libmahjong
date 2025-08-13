@@ -15,7 +15,7 @@
 #include "types/piecetype.h"
 #include "utils/handformer.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 TEST(isThreeConcealedPons, 2Han) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("111m111p111s666z44m"));
@@ -110,4 +110,4 @@ TEST(isThreeConcealedPons, BadHand) {
   }
   SUCCEED();
 }
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

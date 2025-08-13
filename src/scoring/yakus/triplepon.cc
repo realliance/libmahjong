@@ -6,7 +6,7 @@
 #include "types/gamestate.h"
 #include "types/handnode.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isTriplePon(const GameState& state, int player,
                  const std::vector<const mahjong::Node*>& branch) {
   std::array<bool, 9> bamboo_pon = {};
@@ -46,4 +46,4 @@ bool isTriplePon(const GameState& state, int player,
   return false;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

@@ -7,7 +7,7 @@
 #include "types/handnode.h"
 #include "types/piecetype.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isSevenPairs(const GameState& state, int player,
                   const std::vector<const mahjong::Node*>& branch) {
   if (state.hands[player].open) {
@@ -30,4 +30,4 @@ bool isSevenPairs(const GameState& state, int player,
   return pairs.size() == 7;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku

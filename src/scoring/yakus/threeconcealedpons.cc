@@ -5,7 +5,7 @@
 #include "types/gamestate.h"
 #include "types/handnode.h"
 
-namespace mahjong::yakus {
+namespace mahjong::yaku {
 bool isThreeConcealedPons(const GameState& state, int player,
                           const std::vector<const mahjong::Node*>& branch) {
   int concealed_pons = 0;
@@ -22,4 +22,4 @@ bool isThreeConcealedPons(const GameState& state, int player,
   return concealed_pons >= 3;
 }
 
-}  // namespace mahjong::yakus
+}  // namespace mahjong::yaku
