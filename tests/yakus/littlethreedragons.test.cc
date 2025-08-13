@@ -1,3 +1,4 @@
+#include "scoring/yakus/littlethreedragons.h"
 #include <gtest/gtest.h>
 #include <array>
 #include <memory>
@@ -5,7 +6,6 @@
 #include <vector>
 
 #include "analysis/analysis.h"
-#include "scoring/yakus.h"
 
 #include "types/gamestate.h"
 #include "types/hand.h"
@@ -15,7 +15,7 @@
 #include "types/piecetype.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yakus {
 
 TEST(isLittleThreeDragons, 2Han) {
   auto game_state = GameState();
@@ -25,7 +25,7 @@ TEST(isLittleThreeDragons, 2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isLittleThreeDragons(game_state, 0, branch)) {
+    if (isLittleThreeDragons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -47,7 +47,7 @@ TEST(isLittleThreeDragons, WhenOpen) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isLittleThreeDragons(game_state, 0, branch)) {
+    if (isLittleThreeDragons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -69,11 +69,11 @@ TEST(isLittleThreeDragons, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isLittleThreeDragons(game_state, 0, branch)) {
+    if (isLittleThreeDragons(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yakus

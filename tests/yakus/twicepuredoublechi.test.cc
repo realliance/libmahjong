@@ -1,17 +1,17 @@
+#include "scoring/yakus/twicepuredoublechi.h"
 #include <gtest/gtest.h>
 #include <array>
 #include <memory>
 #include <string>
 
 #include "analysis/analysis.h"
-#include "scoring/yakus.h"
 
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yakus {
 
 TEST(isTwicePureDoubleChi, 3Han) {
   auto game_state = GameState();
@@ -21,7 +21,7 @@ TEST(isTwicePureDoubleChi, 3Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isTwicePureDoubleChi(game_state, 0, branch)) {
+    if (isTwicePureDoubleChi(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -37,7 +37,7 @@ TEST(isTwicePureDoubleChi, MustBeConcealed) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isTwicePureDoubleChi(game_state, 0, branch)) {
+    if (isTwicePureDoubleChi(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -53,11 +53,11 @@ TEST(isTwicePureDoubleChi, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isTwicePureDoubleChi(game_state, 0, branch)) {
+    if (isTwicePureDoubleChi(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yakus

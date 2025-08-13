@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "analysis/analysis.h"
-#include "scoring/yakus.h"
 
+#include "scoring/yakus/threeconcealedpons.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
@@ -15,7 +15,7 @@
 #include "types/piecetype.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yakus {
 TEST(isThreeConcealedPons, 2Han) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("111m111p111s666z44m"));
@@ -24,7 +24,7 @@ TEST(isThreeConcealedPons, 2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeConcealedPons(game_state, 0, branch)) {
+    if (isThreeConcealedPons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -45,7 +45,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealed) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeConcealedPons(game_state, 0, branch)) {
+    if (isThreeConcealedPons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -66,7 +66,7 @@ TEST(isThreeConcealedPons, CanHaveAdditionalOpenPon) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeConcealedPons(game_state, 0, branch)) {
+    if (isThreeConcealedPons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -87,7 +87,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealedNegative) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeConcealedPons(game_state, 0, branch)) {
+    if (isThreeConcealedPons(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -103,11 +103,11 @@ TEST(isThreeConcealedPons, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeConcealedPons(game_state, 0, branch)) {
+    if (isThreeConcealedPons(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yakus

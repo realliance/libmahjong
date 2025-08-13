@@ -5,15 +5,15 @@
 #include <vector>
 
 #include "analysis/analysis.h"
-#include "scoring/yakus.h"
 
+#include "scoring/yakus/bottomofthesea.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "types/walls.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yakus {
 
 TEST(isBottomOfTheSea, 1Han) {
   auto game_state = GameState();
@@ -23,7 +23,7 @@ TEST(isBottomOfTheSea, 1Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isBottomOfTheSea(game_state, 0, branch)) {
+    if (isBottomOfTheSea(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -40,7 +40,7 @@ TEST(isBottomOfTheSea, 1HanRonned) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isBottomOfTheSea(game_state, 0, branch)) {
+    if (isBottomOfTheSea(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -55,11 +55,11 @@ TEST(isBottomOfTheSea, DoesntApply) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isBottomOfTheSea(game_state, 0, branch)) {
+    if (isBottomOfTheSea(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yakus

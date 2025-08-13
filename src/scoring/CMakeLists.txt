@@ -1,6 +1,8 @@
+add_subdirectory(yakus)
+
 target_sources(
   libmahjong
-  PRIVATE "yakus.cc" "scoring.cc"
+  PRIVATE "scoring.cc"
   PUBLIC FILE_SET
          HEADERS
          BASE_DIRS
