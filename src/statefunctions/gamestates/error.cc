@@ -2,8 +2,8 @@
 #include <memory>
 
 #include "statefunctions/router.h"
-#include "types/statefunction.h"
 #include "types/gamestate.h"
+#include "types/statefunction.h"
 
 namespace mahjong {
 struct GameState;

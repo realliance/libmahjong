@@ -1,8 +1,8 @@
 #pragma once
+#include <cstddef>
 #include <cstdint>
 #include <functional>
 #include <string>
-#include <cstddef>
 
 #include "winds.h"
 
@@ -12,7 +12,7 @@ class Piece {
  public:
   Piece() = default;
   constexpr explicit Piece(uint8_t p) : p_(p) {}
-  
+
   constexpr Piece(const Piece& p) = default;
   Piece& operator=(Piece&& p) = default;
   Piece& operator=(const Piece& p) = default;
