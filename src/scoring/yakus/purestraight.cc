@@ -3,8 +3,10 @@
 #include <array>
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isPureStraight(const GameState& state, int player,
@@ -73,4 +75,11 @@ bool isPureStraight(const GameState& state, int player,
   return false;
 }
 
+REGISTER_YAKU({
+    .id = "purestraight",
+    .name = "Pure Straight",
+    .type = Yaku::kBonusWhenClosed,
+    .value = 1,
+    .is_yaku_func = yaku::isPureStraight,
+});
 }  // namespace mahjong::yaku

@@ -3,8 +3,11 @@
 #include <cstddef>
 #include <vector>
 
+#include "scoring/yakus.h"
+#include "scoring/yakus/twicepuredoublechi.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isPureDoubleChi(const GameState& state, int player,
@@ -22,11 +25,18 @@ bool isPureDoubleChi(const GameState& state, int player,
       }
       if (branch.at(i)->type() == branch[j]->type() &&
           branch.at(i)->start() == branch[j]->start()) {
-        return true;
+        return !isTwicePureDoubleChi(state, player, branch);
       }
     }
   }
   return false;
 }
 
+REGISTER_YAKU({
+    .id = "puredoublechi",
+    .name = "PureDoubleChi",
+    .type = Yaku::kClosed,
+    .value = 1,
+    .is_yaku_func = yaku::isPureDoubleChi,
+});
 }  // namespace mahjong::yaku

@@ -2,8 +2,10 @@
 
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isAllSimples(const GameState& state, int player,
@@ -22,4 +24,11 @@ bool isAllSimples(const GameState& state, int player,
   return true;
 }
 
+REGISTER_YAKU({
+    .id = "allsimples",
+    .name = "All Simples",
+    .type = Yaku::kOpen,
+    .value = 1,
+    .is_yaku_func = yaku::isAllSimples,
+});
 }  // namespace mahjong::yaku

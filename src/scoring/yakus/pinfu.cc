@@ -4,10 +4,12 @@
 #include <vector>
 
 #include "analysis/util.h"
+#include "scoring/yakus.h"
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
 #include "types/pieces.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isPinfu(const GameState& state, int player,
@@ -47,4 +49,11 @@ bool isPinfu(const GameState& state, int player,
   return isInTenpai13Pieces(hand, /*allWaits=*/true).size() > 1;
 }
 
+REGISTER_YAKU({
+    .id = "pinfu",
+    .name = "Pinfu",
+    .type = Yaku::kClosed,
+    .value = 1,
+    .is_yaku_func = yaku::isPinfu,
+});
 }  // namespace mahjong::yaku

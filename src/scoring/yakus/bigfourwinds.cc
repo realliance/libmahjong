@@ -2,8 +2,10 @@
 
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isBigFourWinds(const GameState& state, int player,
@@ -39,4 +41,11 @@ bool isBigFourWinds(const GameState& state, int player,
   return pons == 4;
 }
 
+REGISTER_YAKU({
+    .id = "bigfourwinds",
+    .name = "Big Four Winds",
+    .type = Yaku::kYakuman,
+    .value = 13,
+    .is_yaku_func = yaku::isBigFourWinds,
+});
 }  // namespace mahjong::yaku

@@ -2,8 +2,10 @@
 
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isLittleThreeDragons(const GameState& state, int player,
@@ -43,4 +45,11 @@ bool isLittleThreeDragons(const GameState& state, int player,
   return pons == 2 && pair;
 }
 
+REGISTER_YAKU({
+    .id = "littlethreedragons",
+    .name = "Little Three Dragons",
+    .type = Yaku::kOpen,
+    .value = 2,
+    .is_yaku_func = yaku::isLittleThreeDragons,
+});
 }  // namespace mahjong::yaku

@@ -3,10 +3,12 @@
 #include <map>
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isThirteenOrphans(const GameState& state, int player,
@@ -41,4 +43,11 @@ bool isThirteenOrphans(const GameState& state, int player,
   return true;
 }
 
+REGISTER_YAKU({
+    .id = "thirteenorphans",
+    .name = "Thirteen Orphans",
+    .type = Yaku::kYakuman,
+    .value = 1,
+    .is_yaku_func = yaku::isThirteenOrphans,
+});
 }  // namespace mahjong::yaku
