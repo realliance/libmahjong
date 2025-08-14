@@ -1,7 +1,6 @@
 #include "playercontrollerfake.h"
 
 #include <utility>
-#include <vector>
 
 #include "controllers/controllermanager.h"
 #include "types/event.h"
@@ -9,41 +8,44 @@
 namespace mahjong {
 REGISTER_PLAYER_CONTROLLER(PlayerControllerFake);
 
-void PlayerControllerFake::ReceiveEvent(Event e) {
-  events_.push_back(e);
-  if (e.decision) {
-    if (e.type <= lastEvent_.type) {
-      // Use pre-loaded decision if available, otherwise use the received event
-      if (!queue_.empty()) {
-        Event preloaded_decision = queue_.front();
-        queue_.erase(queue_.begin());
-        // Copy relevant info from received event
-        preloaded_decision.player = e.player;
-        lastEvent_ = preloaded_decision;
-      } else {
-        lastEvent_ = e;
-      }
-    }
+Event PlayerControllerFake::DefaultDecisionCallback(const Event& e) {
+  Event decision = e;
+  // For discard events, keep them as is
+  // For all other events (like calls), decline them
+  if (e.type != Event::kDiscard) {
+    decision.type = Event::kDecline;
+    decision.decision = false;
   }
+  return decision;
 }
 
-void PlayerControllerFake::AddEvents(std::vector<Event> e) {
-  queue_.insert(queue_.end(), e.begin(), e.end());
-}
+PlayerControllerFake::PlayerControllerFake()
+    : decisionCallback_(DefaultDecisionCallback), lastEvent_{} {}
 
-std::vector<Event> PlayerControllerFake::GetEvents() {
-  std::vector<Event> e;
-  std::swap(events_, e);
-  return e;
+PlayerControllerFake::PlayerControllerFake(DecisionCallback callback)
+    : decisionCallback_(std::move(callback)), lastEvent_{} {}
+
+void PlayerControllerFake::ReceiveEvent(Event e) {
+  lastEvent_ = e;
 }
 
 Event PlayerControllerFake::RetrieveDecision() {
-  if (lastEvent_.type != Event::kDiscard) {
-    lastEvent_.type = Event::kDecline;
+  if (lastEvent_.decision) {
+    // Call the callback with the last seen event
+    if (decisionCallback_) {
+      Event decision = decisionCallback_(lastEvent_);
+      decision.player = lastEvent_.player;
+      return decision;
+    }
+    // Or default decision
+    Event decision = DefaultDecisionCallback(lastEvent_);
+    decision.player = lastEvent_.player;
+    return decision;
   }
-  Event e = lastEvent_;
-  lastEvent_.type = Event::kDiscard;  // Reset for next decision
-  return e;
+
+  // No decision event stored, just decline
+  return Event{
+      .type = Event::kDecline, .player = 0, .piece = 0, .decision = false};
 }
 
 }  // namespace mahjong

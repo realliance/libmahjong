@@ -33,10 +33,8 @@ TEST(GameSetup, playerScore) {
 
 TEST(RoundSetup, playerHands) {
   auto state = CreateTestGameState();
-  // Advance up to and through Round Start
-  state = AdvanceUntilState(std::move(state), StateFunctionType::kRoundStart);
-  state = AdvanceGameState(std::move(state));
-  EXPECT_EQ(state->currState, StateFunctionType::kRoundStart);
+  // Advance through Round Start
+  state = AdvanceThroughState(std::move(state), StateFunctionType::kRoundStart);
 
   // Each player should have 13 tiles
   for (int i = 0; i < kNumPlayers; i++) {
@@ -47,10 +45,8 @@ TEST(RoundSetup, playerHands) {
 
 TEST(RoundSetup, wall) {
   auto state = CreateTestGameState(12345);
-  // Advance up to and through round start
-  state = AdvanceUntilState(std::move(state), StateFunctionType::kRoundStart);
-  state = AdvanceGameState(std::move(state));
-  EXPECT_EQ(state->currState, StateFunctionType::kRoundStart);
+  // Advance through round start
+  state = AdvanceThroughState(std::move(state), StateFunctionType::kRoundStart);
 
   // Verify the seed was used
   EXPECT_EQ(state->seed, 12345);
@@ -65,10 +61,8 @@ TEST(RoundSetup, wall) {
 
 TEST(TurnOrder, initialPlayer) {
   auto state = CreateTestGameState();
-  // Advance up to and through round start
-  state = AdvanceUntilState(std::move(state), StateFunctionType::kRoundStart);
-  state = AdvanceGameState(std::move(state));
-  EXPECT_EQ(state->currState, StateFunctionType::kRoundStart);
+  // Advance through round start
+  state = AdvanceThroughState(std::move(state), StateFunctionType::kRoundStart);
 
   // Before first draw, currentPlayer should be -1
   EXPECT_EQ(state->currentPlayer, -1);
@@ -81,7 +75,7 @@ TEST(TurnOrder, initialPlayer) {
 }
 
 TEST(TurnOrder, playerRotation) {
-  auto state = InitializeTestGame();
+  auto state = InitializeTestRound();
 
   // Simulate multiple turns to verify rotation
   for (int turn = 0; turn < 8; turn++) {
@@ -100,10 +94,8 @@ TEST(TurnOrder, playerRotation) {
 
 TEST(DrawMechanics, drawIncreasesTileCount) {
   auto state = CreateTestGameState();
-  // Advance up and through round start
-  state = AdvanceUntilState(std::move(state), StateFunctionType::kRoundStart);
-  state = AdvanceGameState(std::move(state));
-  EXPECT_EQ(state->currState, StateFunctionType::kRoundStart);
+  // Advance through round start
+  state = AdvanceThroughState(std::move(state), StateFunctionType::kRoundStart);
 
   // All players start with 13 tiles
   for (int i = 0; i < kNumPlayers; i++) {
@@ -128,13 +120,12 @@ TEST(DrawMechanics, drawIncreasesTileCount) {
   EXPECT_EQ(state->walls.GetRemainingPieces(), walls_before - 1);
 }
 
-TEST(DrawMechanics, drawStateTransition) {
+TEST(StateMachine, earlyGameTransitions) {
   auto state = CreateTestGameState();
-  // Advance up and through Round Start
-  state = AdvanceUntilState(std::move(state), StateFunctionType::kRoundStart);
-  state = AdvanceGameState(std::move(state));
-  EXPECT_EQ(state->currState, StateFunctionType::kRoundStart);
+  // Advance through Round Start
+  state = AdvanceThroughState(std::move(state), StateFunctionType::kRoundStart);
 
+  // Verify early game transitions (RoundStart -> Draw -> PlayerHand)
   // After round start, next state should be draw
   EXPECT_EQ(state->nextState, StateFunctionType::kDraw);
   state = AdvanceGameState(std::move(state));
@@ -145,7 +136,7 @@ TEST(DrawMechanics, drawStateTransition) {
 }
 
 TEST(DiscardMechanics, discardDecreasesTileCount) {
-  auto state = InitializeTestGame();
+  auto state = InitializeTestRound();
   EXPECT_EQ(state->currState, StateFunctionType::kDraw);
 
   // Player 0 has 14 tiles after draw

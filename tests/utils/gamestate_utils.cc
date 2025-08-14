@@ -1,15 +1,20 @@
 #include "gamestate_utils.h"
 
+#include <algorithm>
+#include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
+#include <gtest/gtest.h>
+
+#include "controllers/playercontroller.h"
 #include "playercontrollerfake.h"
 #include "statefunctions/router.h"
 #include "statefunctions/statecontroller.h"
-#include "types/event.h"
 #include "types/gamestate.h"
 #include "types/settings.h"
 #include "types/statefunction.h"
@@ -34,6 +39,21 @@ std::unique_ptr<GameState> AdvanceUntilState(std::unique_ptr<GameState> state,
   return state;
 }
 
+std::unique_ptr<GameState> AdvanceThroughState(std::unique_ptr<GameState> state,
+                                               StateFunctionType targetState,
+                                               int maxIterations) {
+  // First advance until we reach the target state
+  state = AdvanceUntilState(std::move(state), targetState, maxIterations);
+
+  // Then advance once more through that state
+  state = AdvanceGameState(std::move(state));
+
+  // Verify we made it the target state
+  EXPECT_EQ(state->currState, targetState);
+
+  return state;
+}
+
 std::unique_ptr<GameState> CreateTestGameState(uint64_t seed) {
   auto state = std::make_unique<GameState>();
   state->seed = seed;
@@ -44,42 +64,38 @@ std::unique_ptr<GameState> CreateTestGameState(uint64_t seed) {
   return state;
 }
 
-std::unique_ptr<GameState> InitializeTestGame(
-    uint64_t seed, const std::vector<Event>& playerDecisions) {
-  auto state = CreateTestGameState(seed);
+std::unique_ptr<GameState> InitializeTestRound(
+    uint64_t seed,
+    std::vector<std::unique_ptr<PlayerController>> playerControllers) {
+  auto state = std::make_unique<GameState>();
+  state->seed = seed;
 
-  // GameStart
-  state = AdvanceGameState(std::move(state));
-
-  // RoundStart
-  state = AdvanceGameState(std::move(state));
-
-  // Pre-load each player's fake controller with decisions BEFORE first draw
-  // because the draw will trigger player decisions
-  if (!playerDecisions.empty()) {
+  // Use provided controllers or default to PlayerControllerFake
+  if (!playerControllers.empty()) {
+    const size_t num_players =
+        std::min(playerControllers.size(), static_cast<size_t>(kNumPlayers));
+    for (size_t i = 0; i < num_players; i++) {
+      if (playerControllers[i]) {
+        state->players[i].controller = std::move(playerControllers[i]);
+      } else {
+        state->players[i].controller = std::make_unique<PlayerControllerFake>();
+      }
+    }
+    // Fill remaining players with default controllers
+    for (size_t i = num_players; i < kNumPlayers; i++) {
+      state->players[i].controller = std::make_unique<PlayerControllerFake>();
+    }
+  } else {
+    // All players get default fake controllers
     for (int i = 0; i < kNumPlayers; i++) {
-      auto* fake_controller = static_cast<PlayerControllerFake*>(
-          state->players[i].controller.get());
-      fake_controller->AddEvents(playerDecisions);
+      state->players[i].controller = std::make_unique<PlayerControllerFake>();
     }
   }
 
-  // First Draw
-  state = AdvanceGameState(std::move(state));
+  state->nextState = StateFunctionType::kGameStart;
 
-  return state;
-}
-
-std::unique_ptr<GameState> InitializeTestGameToRoundStart(uint64_t seed) {
-  auto state = CreateTestGameState(seed);
-
-  // GameStart
-  state =
-      Router::Instance().Route(StateFunctionType::kGameStart)(std::move(state));
-
-  // RoundStart
-  state = Router::Instance().Route(StateFunctionType::kRoundStart)(
-      std::move(state));
+  // Advance through GameStart and through first draw
+  state = AdvanceThroughState(std::move(state), StateFunctionType::kDraw);
 
   return state;
 }
