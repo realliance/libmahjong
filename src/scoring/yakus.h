@@ -5,7 +5,8 @@ namespace mahjong {
 class Yakus {
  public:
   static const std::vector<Yaku>& GetYakus();
-  static void RegisterYaku(Yaku&& yaku);
+  static bool RegisterYaku(const Yaku& yaku);
+  static bool RegisterYakus(const std::vector<Yaku>& yakus);
 
  private:
   Yakus() = default;
@@ -17,9 +18,14 @@ class Yakus {
   std::vector<Yaku> yakus_;
 };
 
-#define REGISTER_YAKU(yaku)     \
-  namespace {                   \
-  Yakus::RegisterYaku(&(yaku)); \
+#define REGISTER_YAKU(...)                                     \
+  namespace {                                                  \
+  bool __registered = Yakus::RegisterYaku((Yaku __VA_ARGS__)); \
+  }
+
+#define REGISTER_YAKUS(...)                                                 \
+  namespace {                                                               \
+  bool __registered = Yakus::RegisterYakus(std::vector<Yaku>(__VA_ARGS__)); \
   }
 
 }  // namespace mahjong

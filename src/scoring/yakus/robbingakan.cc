@@ -2,9 +2,11 @@
 
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
 #include "types/statefunction.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isRobbingAKan(const GameState& state, int player,
@@ -18,4 +20,11 @@ bool isRobbingAKan(const GameState& state, int player,
   return false;
 }
 
+REGISTER_YAKU({
+    .id = "robbingakan",
+    .name = "Robbing a Kan",
+    .type = Yaku::kOpen,
+    .value = 1,
+    .is_yaku_func = yaku::isRobbingAKan,
+});
 }  // namespace mahjong::yaku

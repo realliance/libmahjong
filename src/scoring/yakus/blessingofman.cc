@@ -2,8 +2,10 @@
 
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isBlessingOfMan(const GameState& state, int player,
@@ -23,4 +25,11 @@ bool isBlessingOfMan(const GameState& state, int player,
   return false;
 }
 
+REGISTER_YAKU({
+    .id = "blessingofman",
+    .name = "Blessing of Man",
+    .type = Yaku::kYakuman,
+    .value = 13,
+    .is_yaku_func = yaku::isBlessingOfMan,
+});
 }  // namespace mahjong::yaku

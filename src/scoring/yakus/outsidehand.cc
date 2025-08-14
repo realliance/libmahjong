@@ -2,10 +2,12 @@
 
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "scoring/yakus/allterminalsandhonors.h"
 #include "scoring/yakus/terminalsinallsets.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isOutsideHand(const GameState& state, int player,
@@ -42,4 +44,11 @@ bool isOutsideHand(const GameState& state, int player,
          !isAllTerminalsAndHonors(state, player);
 }
 
+REGISTER_YAKU({
+    .id = "outsidehand",
+    .name = "Outside Hand",
+    .type = Yaku::kBonusWhenClosed,
+    .value = 1,
+    .is_yaku_func = yaku::isOutsideHand,
+});
 }  // namespace mahjong::yaku
