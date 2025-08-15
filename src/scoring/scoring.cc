@@ -72,7 +72,7 @@ Score scoreHand(const GameState& state, int player) {
       continue;
     }
 
-    for (const auto& yaku : Yakus::GetYakus()) {
+    for (const auto& yaku : Yakus::Instance().GetYakus()) {
       if (yaku.type == Yaku::kClosed && state.hands[player].open) {
         continue;
       }
@@ -268,7 +268,7 @@ bool isComplete(const GameState& state, int player) {
         })) {
       continue;
     }
-    if (std::ranges::any_of(Yakus::GetYakus(),
+    if (std::ranges::any_of(Yakus::Instance().GetYakus(),
                             [&state, player, &branch](const auto& yaku) {
                               return yaku.is_yaku_func(state, player, branch);
                             })) {
