@@ -48,6 +48,7 @@ package_add_test(remove_pieces "remove_pieces.test.cc")
 package_add_test(setup "setup.test.cc")
 
 package_add_test(handformer "utils/handformer.test.cc")
+package_add_test(gamestate_utils "utils/gamestate_utils.test.cc")
 
 package_add_test(
   yakus

@@ -9,8 +9,6 @@
 #include <utility>
 #include <vector>
 
-#include <gtest/gtest.h>
-
 #include "controllers/playercontroller.h"
 #include "playercontrollerfake.h"
 #include "statefunctions/router.h"
@@ -47,9 +45,6 @@ std::unique_ptr<GameState> AdvanceThroughState(std::unique_ptr<GameState> state,
 
   // Then advance once more through that state
   state = AdvanceGameState(std::move(state));
-
-  // Verify we made it the target state
-  EXPECT_EQ(state->currState, targetState);
 
   return state;
 }
