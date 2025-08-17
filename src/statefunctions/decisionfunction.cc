@@ -4,9 +4,9 @@
 #include <array>
 #include <vector>
 
-#include "analysis/scoring.h"
+#include "scoring/scoring.h"
 #include "analysis/util.h"
-#include "analysis/yakus.h"
+#include "scoring/yakus.h"
 
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"

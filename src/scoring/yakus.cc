@@ -1,4 +1,4 @@
-#include "analysis/yakus.h"
+#include "scoring/yakus.h"
 #include "analysis/util.h"
 
 #include <algorithm>

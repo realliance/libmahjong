@@ -1,5 +1,4 @@
 #pragma once
-#include <functional>
 #include <vector>
 
 #include "types/gamestate.h"
@@ -7,7 +6,7 @@
 
 namespace mahjong {
 
-using yakuFunc = std::function<int(const GameState&, int,
+using yakuFunc = std::function<int(const mahjong::GameState&, int,
                                    const std::vector<const mahjong::Node*>&)>;
 
 bool isRiichi(const GameState& state, int player,

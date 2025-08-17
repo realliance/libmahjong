@@ -1,10 +1,10 @@
-#include "analysis/scoring.h"
+#include "scoring/scoring.h"
 #include <algorithm>
 #include <vector>
 
 #include "analysis/analysis.h"
 #include "analysis/util.h"
-#include "analysis/yakus.h"
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
