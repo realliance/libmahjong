@@ -3,8 +3,10 @@
 #include <array>
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isMixedTripleChi(const GameState& state, int player,
@@ -47,4 +49,11 @@ bool isMixedTripleChi(const GameState& state, int player,
   return false;
 }
 
+REGISTER_YAKU({
+    .id = "mixedtriplechi",
+    .name = "Mixed Triple Chi",
+    .type = Yaku::kBonusWhenClosed,
+    .value = 1,
+    .is_yaku_func = yaku::isMixedTripleChi,
+});
 }  // namespace mahjong::yaku

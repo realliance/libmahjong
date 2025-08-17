@@ -2,8 +2,10 @@
 
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isFullyConcealedHand(const GameState& state, int player,
@@ -12,4 +14,11 @@ bool isFullyConcealedHand(const GameState& state, int player,
          state.walls.GetRemainingPieces() > 0;
 }
 
+REGISTER_YAKU({
+    .id = "fullyconcealedhand",
+    .name = "Fully Concealed Hand",
+    .type = Yaku::kClosed,
+    .value = 1,
+    .is_yaku_func = yaku::isFullyConcealedHand,
+});
 }  // namespace mahjong::yaku

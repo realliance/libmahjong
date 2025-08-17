@@ -2,12 +2,14 @@
 
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/winds.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 namespace {
@@ -56,4 +58,41 @@ bool isWhiteDragon(const GameState& state, int player,
   return findPon(state, player, branch, kWhiteDragon);
 }
 
+REGISTER_YAKUS({
+    {
+        .id = "seatwind",
+        .name = "Seat Wind Pon",
+        .type = Yaku::kOpen,
+        .value = 1,
+        .is_yaku_func = yaku::isSeatWind,
+    },
+    {
+        .id = "prevalentwind",
+        .name = "Prevalent Wind Pon",
+        .type = Yaku::kOpen,
+        .value = 1,
+        .is_yaku_func = yaku::isPrevalentWind,
+    },
+    {
+        .id = "greendragon",
+        .name = "Green Dragon Pon",
+        .type = Yaku::kOpen,
+        .value = 1,
+        .is_yaku_func = yaku::isGreenDragon,
+    },
+    {
+        .id = "reddragon",
+        .name = "Red Dragon Pon",
+        .type = Yaku::kOpen,
+        .value = 1,
+        .is_yaku_func = yaku::isRedDragon,
+    },
+    {
+        .id = "whitedragon",
+        .name = "White Dragon Pon",
+        .type = Yaku::kOpen,
+        .value = 1,
+        .is_yaku_func = yaku::isWhiteDragon,
+    },
+});
 }  // namespace mahjong::yaku

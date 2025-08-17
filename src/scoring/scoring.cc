@@ -72,12 +72,27 @@ Score scoreHand(const GameState& state, int player) {
       continue;
     }
 
-    for (const auto& yaku_function : yaku::kYakuFunctions) {
-      branchscore.han += yaku_function(state, player, branch);
+    for (const auto& yaku : Yakus::Instance().GetYakus()) {
+      if (yaku.type == Yaku::kClosed && state.hands[player].open) {
+        continue;
+      }
+      if (!yaku.is_yaku_func(state, player, branch)) {
+        continue;
+      }
+      switch (yaku.type) {
+        case Yaku::kOpen:
+        case Yaku::kClosed:
+          branchscore.han += yaku.value;
+          break;
+        case Yaku::kBonusWhenClosed:
+          branchscore.han += yaku.value + (state.hands[player].open ? 0 : 1);
+          break;
+        case Yaku::kYakuman:
+          branchscore.yakuman++;
+          break;
+      }
     }
-    for (const auto& yaku_function : yaku::kYakumanFunctions) {
-      branchscore.yakuman += yaku_function(state, player, branch);
-    }
+
     for (const auto& dora : state.walls.GetDoras()) {
       for (const auto& p : state.hands.at(player).live) {
         if (p == dora) {
@@ -253,16 +268,11 @@ bool isComplete(const GameState& state, int player) {
         })) {
       continue;
     }
-
-    for (const auto& yaku_function : yaku::kYakuFunctions) {
-      if (yaku_function(state, player, branch) > 0) {
-        return true;
-      }
-    }
-    for (const auto& yaku_function : yaku::kYakumanFunctions) {
-      if (yaku_function(state, player, branch) > 0) {
-        return true;
-      }
+    if (std::ranges::any_of(Yakus::Instance().GetYakus(),
+                            [&state, player, &branch](const auto& yaku) {
+                              return yaku.is_yaku_func(state, player, branch);
+                            })) {
+      return true;
     }
   }
 

@@ -2,8 +2,10 @@
 
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isAllTerminalsAndHonors(
@@ -22,4 +24,11 @@ bool isAllTerminalsAndHonors(
   return true;
 }
 
+REGISTER_YAKU({
+    .id = "allterminalsandhonors",
+    .name = "All Terminals and Honors",
+    .type = Yaku::kOpen,
+    .value = 2,
+    .is_yaku_func = yaku::isAllTerminalsAndHonors,
+});
 }  // namespace mahjong::yaku

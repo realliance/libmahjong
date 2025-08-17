@@ -3,8 +3,10 @@
 #include <cstddef>
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isTwicePureDoubleChi(const GameState& state, int player,
@@ -27,4 +29,11 @@ bool isTwicePureDoubleChi(const GameState& state, int player,
   return pairs == 2;
 }
 
+REGISTER_YAKU({
+    .id = "twicepuredoublechi",
+    .name = "Twice Pure Double Chi",
+    .type = Yaku::kClosed,
+    .value = 3,
+    .is_yaku_func = yaku::isTwicePureDoubleChi,
+});
 }  // namespace mahjong::yaku

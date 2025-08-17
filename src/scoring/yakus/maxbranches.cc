@@ -54,4 +54,11 @@ bool isMaxBranches(const GameState& state, int player,
   return true;
 }
 
+// REGISTER_YAKU({
+//     .id = "maxbranches",
+//     .name = "Max Branches",
+//     .type = Yaku::kYakuman,
+//     .value = 13,
+//     .is_yaku_func = yaku::isMaxBranches,
+// });
 }  // namespace mahjong::yaku

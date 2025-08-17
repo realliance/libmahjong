@@ -3,9 +3,11 @@
 #include <map>
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "scoring/yakus/fullflush.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isNineGates(const GameState& state, int player,
@@ -51,4 +53,11 @@ bool isNineGates(const GameState& state, int player,
   return true;
 }
 
+REGISTER_YAKU({
+    .id = "ninegates",
+    .name = "Nine Gates",
+    .type = Yaku::kYakuman,
+    .value = 1,
+    .is_yaku_func = yaku::isNineGates,
+});
 }  // namespace mahjong::yaku

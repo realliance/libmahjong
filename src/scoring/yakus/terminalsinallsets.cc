@@ -2,8 +2,10 @@
 
 #include <vector>
 
+#include "scoring/yakus.h"
 #include "types/gamestate.h"
 #include "types/handnode.h"
+#include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isTerminalsInAllSets(const GameState& state, int player,
@@ -47,4 +49,11 @@ bool isTerminalsInAllSets(const GameState& state, int player,
   return true;
 }
 
+REGISTER_YAKU({
+    .id = "terminalsinallsets",
+    .name = "Terminals in all Sets",
+    .type = Yaku::kBonusWhenClosed,
+    .value = 2,
+    .is_yaku_func = yaku::isTerminalsInAllSets,
+});
 }  // namespace mahjong::yaku
