@@ -16,7 +16,7 @@ TEST(isFullyConcealedHand, 1Han) {
   game_state.hands[0].open = false;
   game_state.currentPlayer = 0;
 
-  EXPECT_EQ(isFullyConcealedHand(game_state, 0), 1);
+  EXPECT_TRUE(isFullyConcealedHand(game_state, 0));
 }
 
 TEST(isFullyConcealedHand, MustTsumo) {
@@ -25,7 +25,7 @@ TEST(isFullyConcealedHand, MustTsumo) {
   game_state.hands[0].open = false;
   game_state.currentPlayer = 1;
 
-  EXPECT_EQ(isFullyConcealedHand(game_state, 0), 0);
+  EXPECT_FALSE(isFullyConcealedHand(game_state, 0));
 }
 
 TEST(isFullyConcealedHand, MustBeClosedHand) {
@@ -34,7 +34,7 @@ TEST(isFullyConcealedHand, MustBeClosedHand) {
   game_state.hands[0].open = true;
   game_state.currentPlayer = 0;
 
-  EXPECT_EQ(isFullyConcealedHand(game_state, 0), 0);
+  EXPECT_FALSE(isFullyConcealedHand(game_state, 0));
 }
 
 TEST(isFullyConcealedHand, MustHavePiecesRemainingInWall) {
@@ -46,6 +46,6 @@ TEST(isFullyConcealedHand, MustHavePiecesRemainingInWall) {
   // Empty the Wall
   game_state.walls.livingWalls.clear();
 
-  EXPECT_EQ(isFullyConcealedHand(game_state, 0), 0);
+  EXPECT_FALSE(isFullyConcealedHand(game_state, 0));
 }
 }  // namespace mahjong

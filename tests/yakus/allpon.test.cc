@@ -23,7 +23,7 @@ TEST(isAllPons, 2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllPons(game_state, 0, branch) == 2) {
+    if (mahjong::isAllPons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -45,7 +45,7 @@ TEST(isAllPons, WithKans) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllPons(game_state, 0, branch) == 2) {
+    if (mahjong::isAllPons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -67,7 +67,7 @@ TEST(isAllPons, ConcealedKan) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllPons(game_state, 0, branch) == 2) {
+    if (mahjong::isAllPons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -83,7 +83,7 @@ TEST(isAllPons, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllPons(game_state, 0, branch) == 2) {
+    if (mahjong::isAllPons(game_state, 0, branch)) {
       FAIL();
       return;
     }

@@ -20,7 +20,7 @@ TEST(isPureDoubleChi, 1Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isPureDoubleChi(game_state, 0, branch) == 1) {
+    if (mahjong::isPureDoubleChi(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -36,7 +36,7 @@ TEST(isPureDoubleChi, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isPureDoubleChi(game_state, 0, branch) == 1) {
+    if (mahjong::isPureDoubleChi(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -52,7 +52,7 @@ TEST(isPureDoubleChi, MustBeConcealed) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isPureDoubleChi(game_state, 0, branch) == 1) {
+    if (mahjong::isPureDoubleChi(game_state, 0, branch)) {
       FAIL();
       return;
     }

@@ -38,7 +38,7 @@ TEST(isThreeKans, 2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeKans(game_state, 0, branch) == 2) {
+    if (mahjong::isThreeKans(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -72,7 +72,7 @@ TEST(isThreeKans, WithOtherMelds) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeKans(game_state, 0, branch) == 2) {
+    if (mahjong::isThreeKans(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -98,7 +98,7 @@ TEST(isThreeKans, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeKans(game_state, 0, branch) == 2) {
+    if (mahjong::isThreeKans(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -128,7 +128,7 @@ TEST(isThreeKans, AllConcealed) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeKans(game_state, 0, branch) == 2) {
+    if (mahjong::isThreeKans(game_state, 0, branch)) {
       SUCCEED();
       return;
     }

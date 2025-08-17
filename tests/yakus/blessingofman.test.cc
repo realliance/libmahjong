@@ -26,7 +26,7 @@ TEST(isBlessingOfMan, 5Han) {
   auto root = breakdownHand(game_state.hands.at(3).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isBlessingOfMan(game_state, 3, branch) == 5) {
+    if (mahjong::isBlessingOfMan(game_state, 3, branch)) {
       SUCCEED();
       return;
     }
@@ -49,7 +49,7 @@ TEST(isBlessingOfMan, MustBeARon) {
   auto root = breakdownHand(game_state.hands.at(3).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isBlessingOfMan(game_state, 3, branch) == 5) {
+    if (mahjong::isBlessingOfMan(game_state, 3, branch)) {
       FAIL();
       return;
     }
@@ -72,7 +72,7 @@ TEST(isBlessingOfMan, MustBeBeforePlayerFirstTurn) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isBlessingOfMan(game_state, 0, branch) == 5) {
+    if (mahjong::isBlessingOfMan(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -94,7 +94,7 @@ TEST(isBlessingOfMan, NoCalledMustHaveOccured) {
   auto root = breakdownHand(game_state.hands.at(3).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isBlessingOfMan(game_state, 3, branch) == 5) {
+    if (mahjong::isBlessingOfMan(game_state, 3, branch)) {
       FAIL();
       return;
     }

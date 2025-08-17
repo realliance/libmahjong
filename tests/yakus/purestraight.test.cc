@@ -20,7 +20,7 @@ TEST(isPureStraight, Open) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isPureStraight(game_state, 0, branch) == 1) {
+    if (mahjong::isPureStraight(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -36,7 +36,7 @@ TEST(isPureStraight, Closed) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isPureStraight(game_state, 0, branch) == 2) {
+    if (mahjong::isPureStraight(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -52,7 +52,7 @@ TEST(isPureStraight, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isPureStraight(game_state, 0, branch) > 0) {
+    if (mahjong::isPureStraight(game_state, 0, branch)) {
       FAIL();
       return;
     }
