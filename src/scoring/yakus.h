@@ -1,141 +1,80 @@
 #pragma once
-#include <vector>
+#include <array>
+#include "types/yaku.h"
 
-#include "types/gamestate.h"
-#include "types/handnode.h"
+#include "scoring/yakus/afterakan.h"
+#include "scoring/yakus/allgreen.h"
+#include "scoring/yakus/allhonors.h"
+#include "scoring/yakus/allpons.h"
+#include "scoring/yakus/allsimples.h"
+#include "scoring/yakus/allterminals.h"
+#include "scoring/yakus/allterminalsandhonors.h"
+#include "scoring/yakus/bigfourwinds.h"
+#include "scoring/yakus/bigthreedragons.h"
+#include "scoring/yakus/blessingofearth.h"
+#include "scoring/yakus/blessingofheaven.h"
+#include "scoring/yakus/blessingofman.h"
+#include "scoring/yakus/bottomofthesea.h"
+#include "scoring/yakus/fourconcealedpon.h"
+#include "scoring/yakus/fourkans.h"
+#include "scoring/yakus/fullflush.h"
+#include "scoring/yakus/fullyconcealedhand.h"
+#include "scoring/yakus/halfflush.h"
+#include "scoring/yakus/honorpon.h"
+#include "scoring/yakus/littlefourwinds.h"
+#include "scoring/yakus/littlethreedragons.h"
+#include "scoring/yakus/mixedtriplechi.h"
+#include "scoring/yakus/ninegates.h"
+#include "scoring/yakus/outsidehand.h"
+#include "scoring/yakus/pinfu.h"
+#include "scoring/yakus/puredoublechi.h"
+#include "scoring/yakus/purestraight.h"
+#include "scoring/yakus/robbingakan.h"
+#include "scoring/yakus/sevenpairs.h"
+#include "scoring/yakus/terminalsinallsets.h"
+#include "scoring/yakus/thirteenorphans.h"
+#include "scoring/yakus/threeconcealedpons.h"
+#include "scoring/yakus/threekans.h"
+#include "scoring/yakus/triplepon.h"
+#include "scoring/yakus/twicepuredoublechi.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
+constexpr int kNumYakus = 27;
+const std::array<yakuFunc, kNumYakus> kYakuFunctions{
+    isFullyConcealedHand,
+    isPinfu,
+    isPureDoubleChi,
+    isAllSimples,
+    isMixedTripleChi,
+    isPureStraight,
+    isPrevalentWind,
+    isSeatWind,
+    isGreenDragon,
+    isWhiteDragon,
+    isRedDragon,
+    isOutsideHand,
+    isAfterAKan,
+    isRobbingAKan,
+    isBottomOfTheSea,
+    isSevenPairs,
+    isTriplePon,
+    isThreeConcealedPons,
+    isThreeKans,
+    isAllPons,
+    isHalfFlush,
+    isLittleThreeDragons,
+    isAllTerminalsAndHonors,
+    isTerminalsInAllSets,
+    isTwicePureDoubleChi,
+    isBlessingOfMan,
+    isFullFlush,
+};
+constexpr int kNumYakuman = 12;
+const std::array<yakuFunc, kNumYakuman> kYakumanFunctions = {
+    isThirteenOrphans, isNineGates,        isBlessingOfHeaven,
+    isBlessingOfEarth, isFourConcealedPon, isFourKans,
+    isAllGreen,        isAllTerminals,     isAllHonors,
+    isBigThreeDragons, isLittleFourWinds,  isBigFourWinds,
+};
 
-using yakuFunc = std::function<int(const mahjong::GameState&, int,
-                                   const std::vector<const mahjong::Node*>&)>;
-
-bool isRiichi(const GameState& state, int player,
-              const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isDoubleRiichi(const GameState& state, int player,
-                    const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isIppatsu(const GameState& state, int player,
-               const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isFullyConcealedHand(
-    const GameState& state, int player,
-    const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isPinfu(const GameState& state, int player,
-             const std::vector<const mahjong::Node*>& branch);
-
-bool isPureDoubleChi(const GameState& state, int player,
-                     const std::vector<const mahjong::Node*>& branch);
-
-bool isAllSimples(const GameState& state, int player,
-                  const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isMixedTripleChi(const GameState& state, int player,
-                      const std::vector<const mahjong::Node*>& branch);
-
-bool isPureStraight(const GameState& state, int player,
-                    const std::vector<const mahjong::Node*>& branch);
-
-bool isSeatWind(const GameState& state, int player,
-                const std::vector<const mahjong::Node*>& branch);
-bool isPrevalentWind(const GameState& state, int player,
-                     const std::vector<const mahjong::Node*>& branch);
-bool isWhiteDragon(const GameState& state, int player,
-                   const std::vector<const mahjong::Node*>& branch);
-bool isGreenDragon(const GameState& state, int player,
-                   const std::vector<const mahjong::Node*>& branch);
-bool isRedDragon(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch);
-
-bool isOutsideHand(const GameState& state, int player,
-                   const std::vector<const mahjong::Node*>& branch);
-
-bool isAfterAKan(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isRobbingAKan(const GameState& state, int player,
-                   const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isBottomOfTheSea(const GameState& state, int player,
-                      const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isSevenPairs(const GameState& state, int player,
-                  const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isTriplePon(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch);
-
-bool isThreeConcealedPons(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& branch);
-
-bool isThreeKans(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isAllPons(const GameState& state, int player,
-               const std::vector<const mahjong::Node*>& branch);
-
-bool isHalfFlush(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch);
-
-bool isLittleThreeDragons(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& branch);
-
-bool isAllTerminalsAndHonors(
-    const GameState& state, int player,
-    const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isTerminalsInAllSets(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& branch);
-
-bool isTwicePureDoubleChi(const GameState& state, int player,
-                          const std::vector<const mahjong::Node*>& branch);
-
-bool isBlessingOfMan(const GameState& state, int player,
-                     const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isFullFlush(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isThirteenOrphans(
-    const GameState& state, int player,
-    const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isNineGates(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& branch);
-
-bool isBlessingOfHeaven(
-    const GameState& state, int player,
-    const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isBlessingOfEarth(
-    const GameState& state, int player,
-    const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isFourConcealedPon(const GameState& state, int player,
-                        const std::vector<const mahjong::Node*>& branch);
-
-bool isFourKans(const GameState& state, int player,
-                const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isAllGreen(const GameState& state, int player,
-                const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isAllTerminals(const GameState& state, int player,
-                    const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isAllHonors(const GameState& state, int player,
-                 const std::vector<const mahjong::Node*>& /*unused*/ = {});
-
-bool isBigThreeDragons(const GameState& state, int player,
-                       const std::vector<const mahjong::Node*>& branch);
-
-bool isLittleFourWinds(const GameState& state, int player,
-                       const std::vector<const mahjong::Node*>& branch);
-
-bool isBigFourWinds(const GameState& state, int player,
-                    const std::vector<const mahjong::Node*>& branch);
-
-bool isMaxBranches(const GameState& state, int player,
-                   const std::vector<const mahjong::Node*>& /*unused*/ = {});
-}  // namespace mahjong
+}  // namespace mahjong::yaku

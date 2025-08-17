@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "analysis/analysis.h"
-#include "scoring/yakus.h"
 
+#include "scoring/yakus/allpons.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
@@ -15,7 +15,7 @@
 #include "types/piecetype.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isAllPons, 2Han) {
   auto game_state = GameState();
@@ -24,7 +24,7 @@ TEST(isAllPons, 2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllPons(game_state, 0, branch)) {
+    if (isAllPons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -46,7 +46,7 @@ TEST(isAllPons, WithKans) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllPons(game_state, 0, branch)) {
+    if (isAllPons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -68,7 +68,7 @@ TEST(isAllPons, ConcealedKan) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllPons(game_state, 0, branch)) {
+    if (isAllPons(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -84,11 +84,11 @@ TEST(isAllPons, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllPons(game_state, 0, branch)) {
+    if (isAllPons(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yaku

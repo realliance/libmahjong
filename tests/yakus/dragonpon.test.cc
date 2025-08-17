@@ -4,14 +4,14 @@
 #include <string>
 
 #include "analysis/analysis.h"
-#include "scoring/yakus.h"
 
+#include "scoring/yakus/honorpon.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isWindOrDragonPon, WhiteDragon) {
   auto game_state = GameState();
@@ -20,7 +20,7 @@ TEST(isWindOrDragonPon, WhiteDragon) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWhiteDragon(game_state, 0, branch)) {
+    if (isWhiteDragon(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -35,7 +35,7 @@ TEST(isWindOrDragonPon, GreenDragon) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isGreenDragon(game_state, 0, branch)) {
+    if (isGreenDragon(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -50,7 +50,7 @@ TEST(isWindOrDragonPon, RedDragon) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isRedDragon(game_state, 0, branch)) {
+    if (isRedDragon(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -65,7 +65,7 @@ TEST(isWindOrDragonPon, Kan) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isRedDragon(game_state, 0, branch)) {
+    if (isRedDragon(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -81,7 +81,7 @@ TEST(isWindOrDragonPon, CanWhenOpen) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isRedDragon(game_state, 0, branch)) {
+    if (isRedDragon(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -96,11 +96,11 @@ TEST(isWindOrDragonPon, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isGreenDragon(game_state, 0, branch)) {
+    if (isGreenDragon(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yaku

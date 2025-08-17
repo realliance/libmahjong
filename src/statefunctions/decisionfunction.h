@@ -2,8 +2,8 @@
 
 #include <functional>
 
-#include "types/gamestate.h"
 #include "types/event.h"
+#include "types/gamestate.h"
 
 namespace mahjong {
 using DecisionFunction =

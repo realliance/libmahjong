@@ -19,4 +19,5 @@ target_sources(
          "statefunction.h"
          "typeprinter.h"
          "walls.h"
-         "winds.h")
+         "winds.h"
+         "yaku.h")

@@ -1,17 +1,17 @@
+#include "scoring/yakus/purestraight.h"
 #include <gtest/gtest.h>
 #include <array>
 #include <memory>
 #include <string>
 
 #include "analysis/analysis.h"
-#include "scoring/yakus.h"
 
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isPureStraight, Open) {
   auto game_state = GameState();
@@ -21,7 +21,7 @@ TEST(isPureStraight, Open) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isPureStraight(game_state, 0, branch)) {
+    if (isPureStraight(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -37,7 +37,7 @@ TEST(isPureStraight, Closed) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isPureStraight(game_state, 0, branch)) {
+    if (isPureStraight(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -53,11 +53,11 @@ TEST(isPureStraight, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isPureStraight(game_state, 0, branch)) {
+    if (isPureStraight(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yaku

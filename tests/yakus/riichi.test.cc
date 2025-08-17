@@ -1,13 +1,15 @@
+#include "scoring/yakus/riichi.h"
 #include <gtest/gtest.h>
 #include <array>
 #include <string>
 
-#include "scoring/yakus.h"
+#include "scoring/yakus/doubleriichi.h"
+#include "scoring/yakus/ippatsu.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isRiichi, Riichi) {
   auto game_state = GameState();
@@ -55,4 +57,4 @@ TEST(isRiichi, NoRiichi) {
 
   EXPECT_FALSE(isRiichi(game_state, 0));
 }
-}  // namespace mahjong
+}  // namespace mahjong::yaku

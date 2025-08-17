@@ -1,5 +1,6 @@
 #include "statecontroller.h"
 
+#include <array>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -7,12 +8,11 @@
 #include <thread>
 #include <utility>
 #include <vector>
-#include <array>
 
 #include "controllers/controllermanager.h"
+#include "router.h"
 #include "types/gamestate.h"
 #include "types/settings.h"
-#include "router.h"
 #include "types/statefunction.h"
 
 namespace mahjong {

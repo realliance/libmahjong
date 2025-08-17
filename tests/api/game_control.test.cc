@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
-#include <cstdint>
 #include <array>
+#include <cstdint>
 #include <memory>
 #include <vector>
 
 #include "api/gamestate.h"
 #include "api/types.h"
+#include "controllers/playercontroller.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
-#include "controllers/playercontroller.h"
 #include "types/piecetype.h"
 
 namespace {
