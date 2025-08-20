@@ -24,8 +24,15 @@ jobs:
 
       - name: Run coverage on ${{ matrix.target.name }} branch
         run: |
-          nix build .#coverage
-          jq '.data[0].files |= map({filename, summary})' result/coverage.json > coverage-${{ matrix.target.name }}.json
+          # Try to build coverage, fallback to empty if package doesn't exist
+          # This will be useful while we have previous branches without the coverage derivations
+          # and this will be evenutally removed
+          if nix build .#coverage 2>/dev/null; then
+            jq '.data[0].files |= map({filename, summary})' result/coverage.json > coverage-${{ matrix.target.name }}.json
+          else
+            echo "Coverage package not available on ${{ matrix.target.name }} branch, creating empty coverage data"
+            echo '{"data":[{"files":[]}]}' > coverage-${{ matrix.target.name }}.json
+          fi
 
       - uses: actions/upload-artifact@v4
         with:

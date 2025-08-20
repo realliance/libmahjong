@@ -48,7 +48,9 @@ function generateMarkdownReport(baseCov, headCov) {
   const report = [];
   report.push("## Coverage Report\n");
   
-  const allFiles = new Set([...Object.keys(baseCov), ...Object.keys(headCov)]);
+  const baseFiles = Object.keys(baseCov);
+  const headFiles = Object.keys(headCov);
+  const allFiles = new Set([...baseFiles, ...headFiles]);
   
   if (allFiles.size === 0) {
     report.push("*No coverage data available.*");
