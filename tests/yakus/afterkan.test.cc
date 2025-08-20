@@ -4,14 +4,15 @@
 #include <string>
 
 #include "analysis/analysis.h"
-#include "analysis/hands.h"
+
+#include "scoring/yakus/afterakan.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "types/statefunction.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isAfterAKan, 1Han) {
   auto game_state = GameState();
@@ -23,7 +24,7 @@ TEST(isAfterAKan, 1Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAfterAKan(game_state, 0, branch) == 1) {
+    if (isAfterAKan(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -41,7 +42,7 @@ TEST(isAfterAKan, DoesntApply) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAfterAKan(game_state, 0, branch) > 0) {
+    if (isAfterAKan(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -59,11 +60,11 @@ TEST(isAfterAKan, WrongPlayer) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAfterAKan(game_state, 0, branch) > 0) {
+    if (isAfterAKan(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yaku

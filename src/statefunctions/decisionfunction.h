@@ -2,6 +2,7 @@
 
 #include <functional>
 
+#include "types/event.h"
 #include "types/gamestate.h"
 #include "types/event.h"
 

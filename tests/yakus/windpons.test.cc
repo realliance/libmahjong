@@ -4,13 +4,14 @@
 #include <string>
 
 #include "analysis/analysis.h"
-#include "analysis/hands.h"
+
+#include "scoring/yakus/honorpon.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isWindOrDragonPon, SeatWind) {
   auto game_state = GameState();
@@ -22,7 +23,7 @@ TEST(isWindOrDragonPon, SeatWind) {
   auto branches = Node::AsBranchVectors(root.get());
 
   for (const auto& branch : branches) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 1) {
+    if (isSeatWind(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -39,7 +40,7 @@ TEST(isWindOrDragonPon, SeatWindKan) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 1) {
+    if (isSeatWind(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -55,7 +56,7 @@ TEST(isWindOrDragonPon, PrevalentWind) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 1) {
+    if (isPrevalentWind(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -71,7 +72,7 @@ TEST(isWindOrDragonPon, PrevalentWindKan) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 1) {
+    if (isPrevalentWind(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -87,7 +88,8 @@ TEST(isWindOrDragonPon, Dealer2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 2) {
+    if (isSeatWind(game_state, 0, branch) &&
+        isPrevalentWind(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -103,7 +105,8 @@ TEST(isWindOrDragonPon, Dealer2HanKan) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) == 2) {
+    if (isSeatWind(game_state, 0, branch) &&
+        isPrevalentWind(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -119,7 +122,8 @@ TEST(isWindOrDragonPon, NotSeatOrPrevalent) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) > 0) {
+    if (isSeatWind(game_state, 0, branch) ||
+        isPrevalentWind(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -135,7 +139,8 @@ TEST(isWindOrDragonPon, NoWind) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isWindOrDragonPon(game_state, 0, branch) > 0) {
+    if (isSeatWind(game_state, 0, branch) ||
+        isPrevalentWind(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -143,4 +148,4 @@ TEST(isWindOrDragonPon, NoWind) {
   SUCCEED();
 }
 
-}  // namespace mahjong
+}  // namespace mahjong::yaku

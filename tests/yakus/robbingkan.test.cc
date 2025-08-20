@@ -4,14 +4,15 @@
 #include <string>
 
 #include "analysis/analysis.h"
-#include "analysis/hands.h"
+
+#include "scoring/yakus/robbingakan.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "types/statefunction.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isRobbingAKan, 1Han) {
   auto game_state = GameState();
@@ -22,7 +23,7 @@ TEST(isRobbingAKan, 1Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isRobbingAKan(game_state, 0, branch) == 1) {
+    if (isRobbingAKan(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -39,11 +40,11 @@ TEST(isRobbingAKan, DoesntApply) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isRobbingAKan(game_state, 0, branch) == 1) {
+    if (isRobbingAKan(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yaku

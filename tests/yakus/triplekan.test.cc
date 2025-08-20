@@ -5,7 +5,8 @@
 #include <vector>
 
 #include "analysis/analysis.h"
-#include "analysis/hands.h"
+
+#include "scoring/yakus/threekans.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
@@ -14,7 +15,7 @@
 #include "types/piecetype.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isThreeKans, 2Han) {
   const Meld meld_a = {
@@ -38,7 +39,7 @@ TEST(isThreeKans, 2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeKans(game_state, 0, branch) == 2) {
+    if (isThreeKans(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -72,7 +73,7 @@ TEST(isThreeKans, WithOtherMelds) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeKans(game_state, 0, branch) == 2) {
+    if (isThreeKans(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -98,7 +99,7 @@ TEST(isThreeKans, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeKans(game_state, 0, branch) == 2) {
+    if (isThreeKans(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -128,11 +129,11 @@ TEST(isThreeKans, AllConcealed) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isThreeKans(game_state, 0, branch) == 2) {
+    if (isThreeKans(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
   }
   FAIL();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yaku

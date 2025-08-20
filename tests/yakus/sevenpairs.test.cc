@@ -1,16 +1,17 @@
+#include "scoring/yakus/sevenpairs.h"
 #include <gtest/gtest.h>
 #include <array>
 #include <memory>
 #include <string>
 
 #include "analysis/analysis.h"
-#include "analysis/hands.h"
+
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isSevenPairs, 2Han) {
   auto game_state = GameState();
@@ -20,7 +21,7 @@ TEST(isSevenPairs, 2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isSevenPairs(game_state, 0, branch) == 2) {
+    if (isSevenPairs(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -36,7 +37,7 @@ TEST(isSevenPairs, MustBeConcealed) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isSevenPairs(game_state, 0, branch) == 2) {
+    if (isSevenPairs(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -52,11 +53,11 @@ TEST(isSevenPairs, UniquePairsOnly) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isSevenPairs(game_state, 0, branch) == 2) {
+    if (isSevenPairs(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yaku

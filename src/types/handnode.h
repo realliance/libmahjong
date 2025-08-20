@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <cstddef>
 #include <iostream>
 #include <iterator>
@@ -75,7 +76,7 @@ class Node : public std::enable_shared_from_this<Node> {
   [[nodiscard]] Iterator end();
 
   size_t leafPosInParent() const {
-    if(!parent_){
+    if (!parent_) {
       return 0;
     }
     auto leaf_it = std::find_if(

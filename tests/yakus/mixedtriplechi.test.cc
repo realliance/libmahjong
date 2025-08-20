@@ -1,16 +1,17 @@
+#include "scoring/yakus/mixedtriplechi.h"
 #include <gtest/gtest.h>
 #include <array>
 #include <memory>
 #include <string>
 
 #include "analysis/analysis.h"
-#include "analysis/hands.h"
+
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isMixedTripleChi, Open) {
   auto game_state = GameState();
@@ -20,7 +21,7 @@ TEST(isMixedTripleChi, Open) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isMixedTripleChi(game_state, 0, branch) == 1) {
+    if (isMixedTripleChi(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -36,7 +37,7 @@ TEST(isMixedTripleChi, Closed) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isMixedTripleChi(game_state, 0, branch) == 2) {
+    if (isMixedTripleChi(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -52,11 +53,11 @@ TEST(isMixedTripleChi, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isMixedTripleChi(game_state, 0, branch) > 0) {
+    if (isMixedTripleChi(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yaku

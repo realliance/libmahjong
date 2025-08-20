@@ -5,6 +5,7 @@
 #include <array>
 #include <map>
 #include <string>
+#include <new>
 #include <vector>
 
 #include "api/types.h"

@@ -1,16 +1,17 @@
+#include "scoring/yakus/allsimples.h"
 #include <gtest/gtest.h>
 #include <array>
 #include <memory>
 #include <string>
 
 #include "analysis/analysis.h"
-#include "analysis/hands.h"
+
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isAllSimples, 1Han) {
   auto game_state = GameState();
@@ -19,7 +20,7 @@ TEST(isAllSimples, 1Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllSimples(game_state, 0, branch) == 1) {
+    if (isAllSimples(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -34,7 +35,7 @@ TEST(isAllSimples, BadHandHonors) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllSimples(game_state, 0, branch) == 1) {
+    if (isAllSimples(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -49,11 +50,11 @@ TEST(isAllSimples, BadHandTerminals) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isAllSimples(game_state, 0, branch) == 1) {
+    if (isAllSimples(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yaku

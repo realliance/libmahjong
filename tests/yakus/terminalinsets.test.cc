@@ -5,7 +5,8 @@
 #include <vector>
 
 #include "analysis/analysis.h"
-#include "analysis/hands.h"
+
+#include "scoring/yakus/terminalsinallsets.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
@@ -14,7 +15,7 @@
 #include "types/piecetype.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isTerminalsInAllSets, 2Han) {
   const Meld meld = {
@@ -30,7 +31,7 @@ TEST(isTerminalsInAllSets, 2Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isTerminalsInAllSets(game_state, 0, branch) == 2) {
+    if (isTerminalsInAllSets(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -46,7 +47,7 @@ TEST(isTerminalsInAllSets, 3Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isTerminalsInAllSets(game_state, 0, branch) == 3) {
+    if (isTerminalsInAllSets(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -68,11 +69,11 @@ TEST(isTerminalsInAllSets, BadHand) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isTerminalsInAllSets(game_state, 0, branch) == 2) {
+    if (isTerminalsInAllSets(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yaku

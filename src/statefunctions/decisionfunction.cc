@@ -4,7 +4,10 @@
 #include <array>
 #include <vector>
 
-#include "analysis/hands.h"
+#include "analysis/util.h"
+#include "scoring/scoring.h"
+#include "scoring/yakus/thirteenorphans.h"
+
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
 #include "types/meld.h"
@@ -31,7 +34,7 @@ bool CanRon(const GameState& state, int player) {
   if (state.concealedKan) {
     // If it happens to be a ron for a thirteen orphans,
     // it's allowed and you can ron
-    if (isThirteenOrphans(state, player) != 0) {
+    if (yaku::isThirteenOrphans(state, player)) {
       tmp_state.hands.at(player).live.erase(
           std::find(state.hands.at(player).live.begin(),
                     state.hands.at(player).live.end(), state.pendingPiece));
@@ -128,6 +131,6 @@ bool CanRiichi(const GameState& state, int player) {
   if (state.hands.at(player).open) {
     return false;
   }
-  return !isInTenpai(state.hands.at(player).live).empty();
+  return !isInTenpai(state.hands.at(player).live, /*allWaits=*/false).empty();
 }
 }  // namespace mahjong

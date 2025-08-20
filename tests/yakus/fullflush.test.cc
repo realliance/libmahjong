@@ -1,3 +1,4 @@
+#include "scoring/yakus/fullflush.h"
 #include <gtest/gtest.h>
 #include <array>
 #include <memory>
@@ -5,7 +6,7 @@
 #include <vector>
 
 #include "analysis/analysis.h"
-#include "analysis/hands.h"
+
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/handnode.h"
@@ -14,7 +15,7 @@
 #include "types/piecetype.h"
 #include "utils/handformer.h"
 
-namespace mahjong {
+namespace mahjong::yaku {
 
 TEST(isFullFlush, 5Han) {
   const Meld meld = {
@@ -30,7 +31,7 @@ TEST(isFullFlush, 5Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isFullFlush(game_state, 0, branch) == 5) {
+    if (isFullFlush(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -46,7 +47,7 @@ TEST(isFullFlush, 6Han) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isFullFlush(game_state, 0, branch) == 6) {
+    if (isFullFlush(game_state, 0, branch)) {
       SUCCEED();
       return;
     }
@@ -62,7 +63,7 @@ TEST(isFullFlush, BadHandHonors) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isFullFlush(game_state, 0, branch) > 0) {
+    if (isFullFlush(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -78,7 +79,7 @@ TEST(isFullFlush, BadHandSuit) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isFullFlush(game_state, 0, branch) > 0) {
+    if (isFullFlush(game_state, 0, branch)) {
       FAIL();
       return;
     }
@@ -94,11 +95,11 @@ TEST(isFullFlush, BadHandFullFlushHonors) {
   auto root = breakdownHand(game_state.hands.at(0).live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (mahjong::isFullFlush(game_state, 0, branch) > 0) {
+    if (isFullFlush(game_state, 0, branch)) {
       FAIL();
       return;
     }
   }
   SUCCEED();
 }
-}  // namespace mahjong
+}  // namespace mahjong::yaku

@@ -2,7 +2,7 @@
 #include <memory>
 #include <vector>
 
-#include "analysis/hands.h"
+#include "analysis/util.h"
 #include "statefunctions/router.h"
 #include "types/gamestate.h"
 #include "types/statefunction.h"
@@ -16,7 +16,8 @@ std::unique_ptr<GameState> Exhaust(std::unique_ptr<GameState> state) {
   for (int i = 0; i < 4; i++) {
     // TODO(#21): Implement no tenpai if you have all pieces of your wait
     if (state->hands.at(i).riichi ||
-        !isInTenpai13Pieces(state->hands.at(i).live).empty()) {
+        !isInTenpai13Pieces(state->hands.at(i).live, /*allWaits=*/false)
+             .empty()) {
       winning_players.at(i) = 1;
       total_winners++;
     }

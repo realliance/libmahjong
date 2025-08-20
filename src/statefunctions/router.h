@@ -1,6 +1,5 @@
 #pragma once
 #include <map>
-#include <memory>
 
 #include "types/statefunction.h"
 
@@ -19,8 +18,8 @@ class Router {
   std::map<StateFunctionType, StateFunctionFunc> routes_;
 };
 
-#define REGISTER_ROUTE(func, type)                                   \
-  namespace {                                                        \
+#define REGISTER_ROUTE(func, type)                                     \
+  namespace {                                                          \
   bool __registered = Router::Instance().RegisterRoute(&(func), type); \
   }
 

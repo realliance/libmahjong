@@ -1,0 +1,23 @@
+#include "scoring/yakus/bottomofthesea.h"
+
+#include <vector>
+
+#include "scoring/yakus.h"
+#include "types/gamestate.h"
+#include "types/handnode.h"
+#include "types/yaku.h"
+
+namespace mahjong::yaku {
+bool isBottomOfTheSea(const GameState& state, int /*player*/,
+                      const std::vector<const mahjong::Node*>& /*branch*/) {
+  return state.walls.GetRemainingPieces() == 0;
+}
+
+REGISTER_YAKU({
+    .id = "bottomofthesea",
+    .name = "Bottom of the Sea",
+    .type = Yaku::kOpen,
+    .value = 1,
+    .is_yaku_func = yaku::isBottomOfTheSea,
+});
+}  // namespace mahjong::yaku
