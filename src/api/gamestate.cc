@@ -2,9 +2,6 @@
 
 #include <algorithm>
 #include <memory>
-#include <array>
-#include <map>
-#include <string>
 #include <new>
 #include <vector>
 
@@ -14,8 +11,6 @@
 #include "types/gamestate.h"
 #include "types/settings.h"
 #include "types/statefunction.h"
-#include "types/hand.h"
-#include "types/piecetype.h"
 
 namespace api {
 

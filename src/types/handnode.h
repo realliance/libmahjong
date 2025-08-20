@@ -4,7 +4,6 @@
 #include <iostream>
 #include <iterator>
 #include <memory>
-#include <algorithm>
 #include <string>
 #include <vector>
 
