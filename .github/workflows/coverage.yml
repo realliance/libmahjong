@@ -71,7 +71,7 @@ jobs:
           {
             echo 'report<<EOF'
             cat coverage_report.md
-            echo EOF
+            echo 'EOF'
           } >> $GITHUB_OUTPUT
 
       - name: Find existing comment
