@@ -26,7 +26,7 @@ jobs:
         run: |
           # Try to build coverage, fallback to empty if package doesn't exist
           # This will be useful while we have previous branches without the coverage derivations
-          # and this will be evenutally removed
+          # and this will be eventually removed
           if nix build .#coverage 2>/dev/null; then
             jq '.data[0].files |= map({filename, summary})' result/coverage.json > coverage-${{ matrix.target.name }}.json
           else
