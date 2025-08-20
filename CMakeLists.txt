@@ -26,6 +26,19 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
   option(libmahjong_use_clang_utils
          "whether or not project is compiled with clang-tidy" ON)
   option(libmahjong_use_precompiled_headers "whether or not to build with precompiled_headers, incompatible with clang-tidy" OFF)
+  option(libmahjong_enable_coverage "Enable coverage reporting" OFF)
+endif()
+
+# Code Coverage Configuration
+add_library(coverage_config INTERFACE)
+
+if(libmahjong_enable_coverage AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  target_compile_options(coverage_config INTERFACE
+    -O0        # no optimization
+    -g         # generate debug info
+    --coverage # sets all required flags
+  )
+  target_link_options(coverage_config INTERFACE --coverage)
 endif()
 
 if(libmahjong_use_clang_utils AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
