@@ -65,7 +65,7 @@ jobs:
       - name: Compare coverage
         id: compare
         run: |
-          # Run the JavaScript comparison script
+          # Comparison script, outputs coverage_report.md
           node .github/workflows/scripts/compare-coverage.js
 
           {
