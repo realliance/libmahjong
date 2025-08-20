@@ -154,15 +154,13 @@
           coverage =
             pkgs.runCommand "libmahjong-coverage"
               {
-                nativeBuildInputs = clangNativeBuildInputs ++ [ pkgs.lcov ];
+                nativeBuildInputs = clangNativeBuildInputs;
                 src = ./.;
                 hardeningDisable = [ "all" ];
               }
               ''
-                # Create output directory
                 mkdir -p $out
 
-                # Create build directory and configure with tests and coverage enabled
                 cmake -S $src \
                       -B build \
                       -G Ninja \
@@ -171,28 +169,56 @@
                       -Dlibmahjong_build_tests=ON \
                       -Dlibmahjong_enable_coverage=ON
 
-                # Build the project with tests
                 cmake --build build
 
-                # Run tests to generate coverage data
-                ctest --test-dir build --output-on-failure
+                mkdir -p build/coverage
+                LLVM_PROFILE_FILE="$PWD/build/coverage/coverage-%p.profraw" ctest --test-dir build --output-on-failure
 
-                # Capture coverage data
-                lcov --directory build --capture --output-file $out/coverage.info
+                # Find all test executables
+                TEST_BINARIES=$(find build/tests -type f -executable ! -name "*.so" 2>/dev/null | grep -v CMakeFiles | tr '\n' ' ')
+                # Find the main library
+                MAIN_LIB=$(find build -name "libmahjong.so" -type f | head -1)
 
-                # Filter out system files and test files
-                lcov --remove $out/coverage.info \
-                     '/usr/*' \
-                     '*/nix/store/*' \
-                     '*/tests/*' \
-                     '*/gtest/*' \
-                     --output-file $out/coverage.info
+                ${llvmPackage.llvm}/bin/llvm-profdata merge \
+                  -sparse build/coverage/*.profraw \
+                  -o $out/coverage.profdata
 
-                # Generate HTML report
-                genhtml $out/coverage.info --output-directory $out/html
+                # We need to provide some sort of binary for the report, just use the first one
+                FIRST_BINARY=$(echo $TEST_BINARIES | cut -d' ' -f1)
 
-                # Debug coverage summary
-                lcov --list $out/coverage.info > $out/coverage.txt
+                # There's a chance reports and exports generate warnings due to
+                # mismatched data, we can pipe those to the warnings file
+
+                ${llvmPackage.llvm}/bin/llvm-cov report \
+                  $FIRST_BINARY \
+                  -object=$MAIN_LIB \
+                  -instr-profile=$out/coverage.profdata \
+                  $src/src \
+                  > $out/coverage-summary.txt 2> $out/report-warnings.txt
+
+                ${llvmPackage.llvm}/bin/llvm-cov show \
+                  $FIRST_BINARY \
+                  -object=$MAIN_LIB \
+                  -instr-profile=$out/coverage.profdata \
+                  -format=html \
+                  -output-dir=$out/html \
+                  $src/src 2>> $out/reports-warnings.txt
+
+                ${llvmPackage.llvm}/bin/llvm-cov export \
+                  $FIRST_BINARY \
+                  -object=$MAIN_LIB \
+                  -instr-profile=$out/coverage.profdata \
+                  -format=lcov \
+                  $src/src \
+                  > $out/coverage.lcov 2>> $out/reports-warnings.txt
+
+                ${llvmPackage.llvm}/bin/llvm-cov export \
+                  $FIRST_BINARY \
+                  -object=$MAIN_LIB \
+                  -instr-profile=$out/coverage.profdata \
+                  -format=json \
+                  $src/src \
+                  > $out/coverage.json 2>> $out/reports-warnings.txt
               '';
 
           default = clang;

@@ -32,13 +32,28 @@ endif()
 # Code Coverage Configuration
 add_library(coverage_config INTERFACE)
 
-if(libmahjong_enable_coverage AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-  target_compile_options(coverage_config INTERFACE
-    -O0        # no optimization
-    -g         # generate debug info
-    --coverage # sets all required flags
-  )
-  target_link_options(coverage_config INTERFACE --coverage)
+if(libmahjong_enable_coverage)
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    # GCC coverage flags
+    target_compile_options(coverage_config INTERFACE
+      -O0
+      -g
+      --coverage 
+    )
+    target_link_options(coverage_config INTERFACE --coverage)
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    # Clang coverage flags
+    target_compile_options(coverage_config INTERFACE
+      -O0
+      -g
+      -fprofile-instr-generate
+      -fcoverage-mapping
+    )
+    target_link_options(coverage_config INTERFACE 
+      -fprofile-instr-generate
+      -fcoverage-mapping
+    )
+  endif()
 endif()
 
 if(libmahjong_use_clang_utils AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
