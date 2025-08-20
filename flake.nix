@@ -183,18 +183,16 @@
                   -sparse build/coverage/*.profraw \
                   -o $out/coverage.profdata
 
-                # We need to provide some sort of binary for the report, just use the first one
+                # We need to provide some sort of binary for the reports/exports,
+                # but all the cov data got generated when we ran ctest. Just use the first one
                 FIRST_BINARY=$(echo $TEST_BINARIES | cut -d' ' -f1)
-
-                # There's a chance reports and exports generate warnings due to
-                # mismatched data, we can pipe those to the warnings file
 
                 ${llvmPackage.llvm}/bin/llvm-cov report \
                   $FIRST_BINARY \
                   -object=$MAIN_LIB \
                   -instr-profile=$out/coverage.profdata \
                   $src/src \
-                  > $out/coverage-summary.txt 2> $out/report-warnings.txt
+                  > $out/coverage-summary.txt
 
                 ${llvmPackage.llvm}/bin/llvm-cov show \
                   $FIRST_BINARY \
@@ -202,7 +200,7 @@
                   -instr-profile=$out/coverage.profdata \
                   -format=html \
                   -output-dir=$out/html \
-                  $src/src 2>> $out/reports-warnings.txt
+                  $src/src
 
                 ${llvmPackage.llvm}/bin/llvm-cov export \
                   $FIRST_BINARY \
@@ -210,15 +208,14 @@
                   -instr-profile=$out/coverage.profdata \
                   -format=lcov \
                   $src/src \
-                  > $out/coverage.lcov 2>> $out/reports-warnings.txt
+                  > $out/coverage.lcov
 
                 ${llvmPackage.llvm}/bin/llvm-cov export \
                   $FIRST_BINARY \
                   -object=$MAIN_LIB \
                   -instr-profile=$out/coverage.profdata \
-                  -format=json \
                   $src/src \
-                  > $out/coverage.json 2>> $out/reports-warnings.txt
+                  > $out/coverage.json
               '';
 
           default = clang;

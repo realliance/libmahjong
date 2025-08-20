@@ -1,0 +1,84 @@
+name: Coverage Report
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - name: base
+            ref: ${{ github.event.pull_request.base.sha }}
+          - name: head
+            ref: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.target.ref }}
+
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Run coverage on ${{ matrix.target.name }} branch
+        run: |
+          nix build .#coverage
+          jq '.data[0].files |= map({filename, summary})' result/coverage.json > coverage-${{ matrix.target.name }}.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.target.name }}
+          path: coverage-${{ matrix.target.name }}.json
+
+  compare-coverage:
+    runs-on: ubuntu-latest
+    needs: coverage
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage-base
+          path: ./base
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage-head
+          path: ./head
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Compare coverage
+        id: compare
+        run: |
+          # Run the JavaScript comparison script
+          node .github/workflows/scripts/compare-coverage.js
+
+          {
+            echo 'report<<EOF'
+            cat coverage_report.md
+            echo EOF
+          } >> $GITHUB_OUTPUT
+
+      - name: Find existing comment
+        id: find_comment
+        uses: peter-evans/find-comment@v2
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: "Coverage Report"
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.compare.outputs.report }}
+          edit-mode: replace
