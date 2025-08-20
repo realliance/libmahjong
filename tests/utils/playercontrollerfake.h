@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <memory>
 #include <string>
 #include <vector>
@@ -9,12 +10,17 @@
 
 namespace mahjong {
 
-// Fake PlayController for testing.
 class PlayerControllerFake : public PlayerController {
  public:
+  using DecisionCallback = std::function<Event(const Event&)>;
+
   static std::unique_ptr<PlayerController> New() {
     return std::make_unique<PlayerControllerFake>();
   }
+
+  // Default constructor has standard decline behavior
+  PlayerControllerFake();
+  explicit PlayerControllerFake(DecisionCallback callback);
 
   void GameStart(int _playerID) override {}
   void RoundStart(std::vector<Piece> hand, Wind seatWind,
@@ -22,14 +28,18 @@ class PlayerControllerFake : public PlayerController {
   void ReceiveEvent(Event e) override;
   Event RetrieveDecision() override;
 
-  void AddEvents(std::vector<Event> events);
-  std::vector<Event> GetEvents();
+  // Set a new decision callback
+  void SetDecisionCallback(DecisionCallback callback) {
+    decisionCallback_ = callback;
+  }
 
-  std::string Name() override { return "PlayerControllerFake"; };
+  std::string Name() override { return "PlayerControllerFake"; }
+
+  static Event DefaultDecisionCallback(const Event& e);
 
  private:
-  std::vector<Event> queue_;
-  std::vector<Event> events_;
+  DecisionCallback decisionCallback_;
+  Event lastEvent_;
 };
 
 }  // namespace mahjong

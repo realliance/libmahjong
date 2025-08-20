@@ -48,6 +48,7 @@ package_add_test(remove_pieces "remove_pieces.test.cc")
 package_add_test(setup "setup.test.cc")
 
 package_add_test(handformer "utils/handformer.test.cc")
+package_add_test(gamestate_utils "utils/gamestate_utils.test.cc")
 
 package_add_test(
   yakus
@@ -78,6 +79,12 @@ package_add_test(
   "yakus/blessingofman.test.cc")
 
 package_add_test(api "api/game_control.test.cc")
+
+package_add_test(
+  rules
+  "rules/basic_rules.test.cc"
+  "rules/calls.test.cc"
+)
 
 get_target_property(test_utils_sources test_utils SOURCES)
 list(TRANSFORM test_utils_sources PREPEND ${CMAKE_CURRENT_LIST_DIR}/utils/)

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
+#include <utility>
 #include <array>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "statefunctions/router.h"
