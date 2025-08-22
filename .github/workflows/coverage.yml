@@ -15,14 +15,25 @@ jobs:
           - name: head
             ref: ${{ github.event.pull_request.head.sha }}
     steps:
+      - name: Check for cached coverage
+        id: cache-coverage
+        uses: actions/cache@v4
+        with:
+          path: coverage-${{ matrix.target.name }}.json
+          key: coverage-${{ matrix.target.ref }}-v1
+          
       - uses: actions/checkout@v4
+        if: steps.cache-coverage.outputs.cache-hit != 'true'
         with:
           ref: ${{ matrix.target.ref }}
 
       - uses: DeterminateSystems/nix-installer-action@main
+        if: steps.cache-coverage.outputs.cache-hit != 'true'
       - uses: DeterminateSystems/magic-nix-cache-action@main
+        if: steps.cache-coverage.outputs.cache-hit != 'true'
 
       - name: Run coverage on ${{ matrix.target.name }} branch
+        if: steps.cache-coverage.outputs.cache-hit != 'true'
         run: |
           # Try to build coverage, fallback to empty if package doesn't exist
           # This will be useful while we have previous branches without the coverage derivations
