@@ -1,0 +1,15 @@
+[package]
+name = "libmahjong-rs"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+thiserror = "2"
+
+[dev-dependencies]
+anyhow = "1"
+tokio = { version = "1", features = ["full"] }
+futures = "0.3"
+
+[build-dependencies]
+cmake = "0.1"
