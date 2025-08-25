@@ -3,11 +3,12 @@
 #include <algorithm>
 #include <cstddef>
 #include <iterator>
-#include <random>
 #include <vector>
 
+#include "types/gamestate.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/settings.h"
 
 namespace mahjong {
 
@@ -22,99 +23,68 @@ const std::vector<Piece> kPieceSet = {
     kGreenDragon,  kRedDragon,      kEastWind,       kSouthWind,
     kNorthWind,    kWestWind};
 
-Walls::Walls() {
-  std::random_device rd;
-  std::mt19937_64 g(rd());
-
+void Walls::New(GameState& state) {
+  std::vector<Piece> living_walls;
+  living_walls.reserve(kPieceSet.size() * 4);
   for (int i = 0; i < 4; i++) {
-    livingWalls.insert(livingWalls.end(), kPieceSet.begin(), kPieceSet.end());
+    living_walls.insert(living_walls.end(), kPieceSet.begin(), kPieceSet.end());
   }
-  std::shuffle(livingWalls.begin(), livingWalls.end(), g);
+  std::shuffle(living_walls.begin(), living_walls.end(), state.g);
 
-  std::move(livingWalls.begin(), livingWalls.begin() + 14,
-            std::back_inserter(deadWall));
-  for (size_t i = 0; i < 14; i++) {
-    livingWalls.erase(livingWalls.begin());
+  for (int i = 0; i < kLivingWallCount; ++i) {
+    state.livingWall[i] = living_walls[i];
   }
-}
-
-Walls::Walls(std::mt19937_64& g) {
-  const std::vector<Piece> wall;
-  for (int i = 0; i < 4; i++) {
-    livingWalls.insert(livingWalls.end(), kPieceSet.begin(), kPieceSet.end());
-  }
-  std::shuffle(livingWalls.begin(), livingWalls.end(), g);
-
-  std::move(livingWalls.begin(), livingWalls.begin() + 14,
-            std::back_inserter(deadWall));
-  for (size_t i = 0; i < 14; i++) {
-    livingWalls.erase(livingWalls.begin());
+  for (int i = 0; i < kDeadWallCount; ++i) {
+    state.deadWall[i] = living_walls[kLivingWallCount + i];
   }
 }
 
-Walls::Walls(std::vector<Piece> wall) {
-  std::swap(livingWalls, wall);
-  std::move(livingWalls.rbegin(), livingWalls.rbegin() + 14,
-            std::back_inserter(deadWall));
-  for (size_t i = 0; i < 14; i++) {
-    livingWalls.pop_back();
+Piece Walls::TakePiece(GameState& state) {
+  if (state.livingWallIndex == kLivingWallCount) {
+    return kError;
   }
+  const Piece p = state.livingWall[state.livingWallIndex++];
+  return p;
 }
 
-Piece Walls::TakePiece() {
-  if (!livingWalls.empty()) {
-    const Piece p = livingWalls.front();
-    livingWalls.erase(livingWalls.begin());
-    return p;
-  }
-  return kError;
-}
-
-std::vector<Piece> Walls::TakeHand() {
-  if (livingWalls.size() < 13) {
+std::vector<Piece> Walls::TakeHand(GameState& state) {
+  if (state.livingWallIndex + 13 == kLivingWallCount) {
     return {};
   }
   std::vector<Piece> hand;
-  std::move(livingWalls.begin(), livingWalls.begin() + 13,
-            std::back_inserter(hand));
+  hand.resize(13);
   for (size_t i = 0; i < 13; i++) {
-    livingWalls.erase(livingWalls.begin());
+    hand[i] = state.livingWall[state.livingWallIndex++];
   }
   return hand;
 }
 
-Piece Walls::TakeReplacementTile() {
-  if (livingWalls.empty()) {
+Piece Walls::TakeReplacementTile(GameState& state) {
+  if (state.deadWallIndex == kReplacementCount) {
     return kError;
   }
-  if (replacements < 1) {
-    return kError;
-  }
-  replacements--;
-  const Piece p = deadWall.front();
-  deadWall.erase(deadWall.begin());
-  deadWall.push_back(livingWalls.back());
-  doraCount++;
-  livingWalls.pop_back();
+  const Piece p = state.deadWall[state.deadWallIndex++];
+  state.livingWallIndex++;
+  state.doraCount++;
   return p;
 }
 
-std::vector<Piece> Walls::GetDoras() const {
+std::vector<Piece> Walls::GetDoras(const GameState& state) {
   std::vector<Piece> doras;
-  std::copy_n(deadWall.begin() + replacements, doraCount,
+  std::copy_n(state.deadWall.begin() + kReplacementCount, state.doraCount,
               std::back_inserter(doras));
   return doras;
 }
 
-std::vector<Piece> Walls::GetUraDoras() const {
+std::vector<Piece> Walls::GetUraDoras(const GameState& state) {
   std::vector<Piece> doras;
-  std::copy_n(deadWall.begin() + replacements + doraCount, doraCount,
-              std::back_inserter(doras));
+  std::copy_n(state.deadWall.begin() + kReplacementCount + kDoraCount,
+              state.doraCount, std::back_inserter(doras));
   return doras;
 }
 
-int Walls::GetRemainingPieces() const {
-  return livingWalls.size();
+int Walls::GetRemainingPieces(const GameState& state) {
+  return kLivingWallCount - state.livingWallIndex;
 }
 
 }  // namespace mahjong

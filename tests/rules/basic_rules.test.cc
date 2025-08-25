@@ -8,6 +8,7 @@
 #include "types/gamestate.h"
 #include "types/settings.h"
 #include "types/statefunction.h"
+#include "types/walls.h"
 #include "utils/gamestate_utils.h"
 
 namespace mahjong {
@@ -53,11 +54,11 @@ TEST(RoundSetup, wall) {
   EXPECT_EQ(state->seed, 12345);
 
   // Check that walls were initialized correctly
-  EXPECT_EQ(state->walls.livingWalls.size(), 70);
-  EXPECT_EQ(state->walls.deadWall.size(), 14);
+  EXPECT_EQ(Walls::GetRemainingPieces(*state), 70);
+  EXPECT_EQ(state->deadWallIndex, 0);
 
   // Check that dora indicator is set
-  EXPECT_EQ(state->walls.GetDoras().size(), 1);
+  EXPECT_EQ(Walls::GetDoras(*state).size(), 1);
 }
 
 TEST(TurnOrder, initialPlayer) {
@@ -103,7 +104,7 @@ TEST(DrawMechanics, drawIncreasesTileCount) {
     EXPECT_EQ(state->hands[i].live.size(), 13);
   }
 
-  const int walls_before = state->walls.GetRemainingPieces();
+  const int walls_before = Walls::GetRemainingPieces(*state);
 
   // First player draws
   state = AdvanceGameState(std::move(state));
@@ -118,7 +119,7 @@ TEST(DrawMechanics, drawIncreasesTileCount) {
   }
 
   // Wall should have one less tile
-  EXPECT_EQ(state->walls.GetRemainingPieces(), walls_before - 1);
+  EXPECT_EQ(Walls::GetRemainingPieces(*state), walls_before - 1);
 }
 
 TEST(StateMachine, earlyGameTransitions) {

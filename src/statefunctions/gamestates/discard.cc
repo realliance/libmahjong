@@ -71,7 +71,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
   }
 
   if (decision.type == Event::kDecline &&
-      state->walls.GetRemainingPieces() == 0) {
+      Walls::GetRemainingPieces(*state) == 0) {
     state->nextState = StateFunctionType::kExhaust;
     return state;
   }

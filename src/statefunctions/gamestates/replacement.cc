@@ -14,7 +14,7 @@
 namespace mahjong {
 namespace {
 std::unique_ptr<GameState> Replacement(std::unique_ptr<GameState> state) {
-  const Piece draw = state->walls.TakeReplacementTile();
+  const Piece draw = Walls::TakeReplacementTile(*state);
   state->hands.at(state->currentPlayer).live.push_back(draw);
   state->hands.at(state->currentPlayer).sort();
   state->pendingPiece = draw;
@@ -24,7 +24,7 @@ std::unique_ptr<GameState> Replacement(std::unique_ptr<GameState> state) {
                    .type = Event::kDora,  // type
                    .player = -1,          // player
                    .piece = static_cast<int16_t>(
-                       state->walls.GetDoras().back().toUint8_t()),  // piece
+                       Walls::GetDoras(*state).back().toUint8_t()),  // piece
                    .decision = false,                                // decision
                });
 

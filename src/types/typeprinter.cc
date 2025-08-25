@@ -15,7 +15,6 @@
 #include "types/meld.h"
 #include "types/piecetype.h"
 #include "types/player.h"
-#include "types/walls.h"
 
 std::ostream& operator<<(std::ostream& os, const mahjong::Event& e) {
   os << "{type: " << e.typeToStr();
@@ -48,7 +47,20 @@ std::ostream& operator<<(std::ostream& os, const mahjong::GameState& state) {
   for (size_t i = 0; i < state.players.size(); i++) {
     os << "player[" << i << "]: " << state.players.at(i) << '\n';
   }
-  os << state.walls << '\n';
+  os << "{ doraCount: " << state.doraCount;
+  os << " livingWall: [" << '\n';
+  for (const auto& piece : state.livingWall) {
+    os << piece.toStr() << ", ";
+  }
+  os << "]" << '\n';
+  os << " livingWallIndex: " << state.livingWallIndex;
+  os << " deadWall: [" << '\n';
+  for (const auto& piece : state.deadWall) {
+    os << piece.toStr() << ", ";
+  }
+  os << "]" << '\n';
+  os << " DeadWallIndex: " << state.deadWallIndex;
+  os << "}" << '\n';
   return os;
 }
 
@@ -96,23 +108,6 @@ std::ostream& operator<<(std::ostream& os, const mahjong::Node& node) {
 std::ostream& operator<<(std::ostream& os, const mahjong::Meld& meld) {
   os << "{ type: " << meld.typeToStr();
   os << ", start: " << meld.start.toStr() << "}";
-  return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const mahjong::Walls& walls) {
-  os << "{ doraCount: " << walls.doraCount;
-  os << " replacements: " << walls.replacements;
-  os << " livingWalls: [" << '\n';
-  for (const auto& piece : walls.livingWalls) {
-    os << piece.toStr() << ", ";
-  }
-  os << "]" << '\n';
-  os << " deadWall: [" << '\n';
-  for (const auto& piece : walls.deadWall) {
-    os << piece.toStr() << ", ";
-  }
-  os << "]" << '\n';
-  os << "}";
   return os;
 }
 

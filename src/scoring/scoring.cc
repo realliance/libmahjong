@@ -14,6 +14,7 @@
 #include "types/piecetype.h"
 #include "types/score.h"
 #include "types/sets.h"
+#include "types/walls.h"
 
 namespace mahjong {
 
@@ -95,7 +96,7 @@ Score scoreHand(const GameState& state, int player) {
       }
     }
 
-    for (const auto& dora : state.walls.GetDoras()) {
+    for (const auto& dora : Walls::GetDoras(state)) {
       for (const auto& p : state.hands.at(player).live) {
         if (p == dora) {
           branchscore.han++;
