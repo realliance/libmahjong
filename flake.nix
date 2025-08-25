@@ -6,8 +6,14 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = import nixpkgs { inherit system; };
 
@@ -30,7 +36,7 @@
           src = ./.;
 
           cmakeFlags = [
-            "-DBUILD_SHARED_LIBS=ON"  # Explicitly build shared libraries
+            "-DBUILD_SHARED_LIBS=ON" # Explicitly build shared libraries
             "-Dlibmahjong_build_tests=OFF"
             "-Dlibmahjong_build_tools=OFF"
             "-DCMAKE_INSTALL_LIBDIR=lib"
@@ -39,21 +45,24 @@
 
           # Let CMake handle installation
           dontUseCmakeBuildDir = false;
-          
+
           meta = with pkgs.lib; {
             description = "Riichi Mahjong Game Engine Library";
           };
         };
 
-        clangNativeBuildInputs = buildPackages ++ (with llvmPackage; [
-          clang-tools  # Add clang-tools which includes clang-tidy
-          libcxx
-          clang
-          lldb         # Use LLDB for debugging instead of GDB
-        ]) ++ (with pkgs; [
-          clangGtest      # Use our clang-built GTest instead of pkgs.gtest
-          clangGtest.dev  # Include the development headers
-        ]);
+        clangNativeBuildInputs =
+          buildPackages
+          ++ (with llvmPackage; [
+            clang-tools # Add clang-tools which includes clang-tidy
+            libcxx
+            clang
+            lldb # Use LLDB for debugging instead of GDB
+          ])
+          ++ (with pkgs; [
+            clangGtest # Use our clang-built GTest instead of pkgs.gtest
+            clangGtest.dev # Include the development headers
+          ]);
       in
       {
         devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.stdenv; } {
@@ -61,7 +70,7 @@
 
           # Disable all hardening
           hardeningDisable = [ "all" ];
-          
+
           shellHook = ''
             mkdir -p .vscode
             echo "{" > .vscode/settings.json
@@ -80,62 +89,138 @@
         };
 
         packages = rec {
-          gcc = pkgs.stdenv.mkDerivation (commonAttrs // {
-            nativeBuildInputs = buildPackages;
-            # Add any runtime dependencies your library needs
-            propagatedBuildInputs = with pkgs; [ 
-              # Add dependencies that users of your library will need
-            ];
-            
-            # This ensures dependent packages can find your library
-            setupHook = pkgs.writeText "setup-hook.sh" ''
-              addLibmahjongLibs() {
-                addToSearchPath LD_LIBRARY_PATH $1/lib
+          gcc = pkgs.stdenv.mkDerivation (
+            commonAttrs
+            // {
+              nativeBuildInputs = buildPackages;
+              # Add any runtime dependencies your library needs
+              propagatedBuildInputs = with pkgs; [
+                # Add dependencies that users of your library will need
+              ];
+
+              # This ensures dependent packages can find your library
+              setupHook = pkgs.writeText "setup-hook.sh" ''
+                addLibmahjongLibs() {
+                  addToSearchPath LD_LIBRARY_PATH $1/lib
+                }
+                addEnvHooks "$targetOffset" addLibmahjongLibs
+              '';
+            }
+          );
+
+          clang = llvmPackage.stdenv.mkDerivation (
+            commonAttrs
+            // {
+              nativeBuildInputs = clangNativeBuildInputs;
+
+              hardeningDisable = [ "all" ];
+
+              # This ensures dependent packages can find your library
+              setupHook = pkgs.writeText "setup-hook.sh" ''
+                addLibmahjongLibs() {
+                  addToSearchPath LD_LIBRARY_PATH $1/lib
+                }
+                addEnvHooks "$targetOffset" addLibmahjongLibs
+              '';
+            }
+          );
+
+          tests =
+            pkgs.runCommand "libmahjong-tests"
+              {
+                nativeBuildInputs = clangNativeBuildInputs;
+                src = ./.;
+                hardeningDisable = [ "all" ];
               }
-              addEnvHooks "$targetOffset" addLibmahjongLibs
-            '';
-          });
-          
-          clang = llvmPackage.stdenv.mkDerivation (commonAttrs // {
-            nativeBuildInputs = clangNativeBuildInputs;
+              ''
+                # Create output directory
+                mkdir -p $out
 
-            hardeningDisable = [ "all" ];
+                # Create build directory and configure with tests enabled
+                cmake -S $src \
+                      -B build \
+                      -G Ninja \
+                      -Dlibmahjong_build_tools=OFF \
+                      -Dlibmahjong_build_tests=ON
 
-            # This ensures dependent packages can find your library
-            setupHook = pkgs.writeText "setup-hook.sh" ''
-              addLibmahjongLibs() {
-                addToSearchPath LD_LIBRARY_PATH $1/lib
+                # Build the project with tests
+                cmake --build build
+
+                # Run tests with JUnit output
+                (ctest --test-dir build --output-on-failure --output-junit $out/test.xml || 
+                  (echo "Tests failed but continuing build" && cp -r build/Testing $out/test-details))
+              '';
+
+          coverage =
+            pkgs.runCommand "libmahjong-coverage"
+              {
+                nativeBuildInputs = clangNativeBuildInputs;
+                src = ./.;
+                hardeningDisable = [ "all" ];
               }
-              addEnvHooks "$targetOffset" addLibmahjongLibs
-            '';
-          });
+              ''
+                mkdir -p $out
 
-          tests = pkgs.runCommand "libmahjong-tests" {
-            nativeBuildInputs = clangNativeBuildInputs;
-            src = ./.;
-            hardeningDisable = [ "all" ];
-          } ''
-            # Create output directory
-            mkdir -p $out
-            
-            # Create build directory and configure with tests enabled
-            cmake -S $src \
-                  -B build \
-                  -G Ninja \
-                  -Dlibmahjong_build_tools=OFF \
-                  -Dlibmahjong_build_tests=ON
-            
-            # Build the project with tests
-            cmake --build build
-            
-            # Run tests with JUnit output
-            (ctest --test-dir build --output-on-failure --output-junit $out/test.xml || 
-              (echo "Tests failed but continuing build" && cp -r build/Testing $out/test-details))
-          '';
+                cmake -S $src \
+                      -B build \
+                      -G Ninja \
+                      -DCMAKE_BUILD_TYPE=Debug \
+                      -Dlibmahjong_build_tools=OFF \
+                      -Dlibmahjong_build_tests=ON \
+                      -Dlibmahjong_enable_coverage=ON
+
+                cmake --build build
+
+                mkdir -p build/coverage
+                LLVM_PROFILE_FILE="$PWD/build/coverage/coverage-%p.profraw" ctest --test-dir build --output-on-failure
+
+                # Find all test executables
+                TEST_BINARIES=$(find build/tests -type f -executable ! -name "*.so" 2>/dev/null | grep -v CMakeFiles | tr '\n' ' ')
+                # Find the main library
+                MAIN_LIB=$(find build -name "libmahjong.so" -type f | head -1)
+
+                ${llvmPackage.llvm}/bin/llvm-profdata merge \
+                  -sparse build/coverage/*.profraw \
+                  -o $out/coverage.profdata
+
+                # We need to provide some sort of binary for the reports/exports,
+                # but all the cov data got generated when we ran ctest. Just use the first one
+                FIRST_BINARY=$(echo $TEST_BINARIES | cut -d' ' -f1)
+
+                ${llvmPackage.llvm}/bin/llvm-cov report \
+                  $FIRST_BINARY \
+                  -object=$MAIN_LIB \
+                  -instr-profile=$out/coverage.profdata \
+                  $src/src \
+                  > $out/coverage-summary.txt
+
+                ${llvmPackage.llvm}/bin/llvm-cov show \
+                  $FIRST_BINARY \
+                  -object=$MAIN_LIB \
+                  -instr-profile=$out/coverage.profdata \
+                  -format=html \
+                  -output-dir=$out/html \
+                  $src/src
+
+                ${llvmPackage.llvm}/bin/llvm-cov export \
+                  $FIRST_BINARY \
+                  -object=$MAIN_LIB \
+                  -instr-profile=$out/coverage.profdata \
+                  -format=lcov \
+                  $src/src \
+                  > $out/coverage.lcov
+
+                ${llvmPackage.llvm}/bin/llvm-cov export \
+                  $FIRST_BINARY \
+                  -object=$MAIN_LIB \
+                  -instr-profile=$out/coverage.profdata \
+                  $src/src \
+                  > $out/coverage.json
+              '';
 
           default = clang;
         };
-        
+
         lib = {
           libmahjong = self.packages.${system}.default;
         };

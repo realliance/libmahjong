@@ -13,6 +13,10 @@ if(libmahjong_use_precompiled_headers)
   target_precompile_headers(libmahjong PRIVATE ${libmahjong_includes})
 endif()
 
+if(libmahjong_enable_coverage)
+  target_link_libraries(libmahjong PUBLIC coverage_config)
+endif()
+
 install(TARGETS libmahjong DESTINATION lib)
 install(TARGETS libmahjong FILE_SET HEADERS
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libmahjong)
