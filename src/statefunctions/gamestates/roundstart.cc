@@ -18,9 +18,9 @@ namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
-  state->walls = Walls(state->g);
+  Walls::New(*state);
   for (size_t i = 0; i < 4; i++) {
-    auto hand = state->walls.TakeHand();
+    auto hand = Walls::TakeHand(*state);
     state->players.at(i).controller->RoundStart(
         hand, static_cast<Wind>((i + 3 * (state->roundNum % 4)) % 4),
         (state->roundNum > 3) ? kSouth : kEast);
@@ -32,7 +32,7 @@ std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
                    .type = Event::kDora,  // type
                    .player = -1,          // player
                    .piece = static_cast<int16_t>(
-                       state->walls.GetDoras()[0].toUint8_t()),  // piece
+                       Walls::GetDoras(*state)[0].toUint8_t()),  // piece
                    .decision = false,                            // decision
                });
 

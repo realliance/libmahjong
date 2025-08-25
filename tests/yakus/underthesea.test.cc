@@ -2,15 +2,12 @@
 
 #include <array>
 #include <memory>
-#include <string>
-#include <vector>
 
 #include "analysis/analysis.h"
 #include "analysis/handnode.h"
 #include "scoring/yakus/bottomofthesea.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
-#include "types/walls.h"
+#include "types/settings.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
@@ -18,7 +15,7 @@ namespace mahjong::yaku {
 TEST(isBottomOfTheSea, 1Han) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m789m111z999s55z"));
-  game_state.walls.livingWalls.clear();
+  game_state.livingWallIndex = kLivingWallCount;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
 
@@ -34,7 +31,7 @@ TEST(isBottomOfTheSea, 1Han) {
 TEST(isBottomOfTheSea, 1HanRonned) {
   auto game_state = GameState();
   game_state.hands[0] = Hand(HandFromNotation("123m789m111z999s55z"));
-  game_state.walls.livingWalls.clear();
+  game_state.livingWallIndex = kLivingWallCount;
   game_state.hasRonned[0] = true;
 
   auto root = breakdownHand(game_state.hands.at(0).live);

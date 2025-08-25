@@ -3,12 +3,12 @@
 #include <cstdint>
 #include <random>
 
+#include "statefunction.h"
 #include "types/hand.h"
 #include "types/piecetype.h"
 #include "types/player.h"
 #include "types/settings.h"
 #include "types/statefunction.h"
-#include "types/walls.h"
 
 namespace mahjong {
 
@@ -23,11 +23,15 @@ struct GameState {
   bool concealedKan = false;
   uint64_t seed = 0;
   std::mt19937_64 g;
+  int doraCount = 1;
   Piece pendingPiece = Piece(Piece::Type::kError);
   StateFunctionType prevState;
   StateFunctionType currState;
   StateFunctionType nextState;
-  Walls walls;
+  std::array<Piece, kLivingWallCount> livingWall;
+  int livingWallIndex = 0;
+  std::array<Piece, kDeadWallCount> deadWall;
+  int deadWallIndex = 0;
   std::array<int, kNumPlayers> scores = {};
   std::array<bool, kNumPlayers> hasRonned = {};
   std::array<Hand, kNumPlayers> hands = {};

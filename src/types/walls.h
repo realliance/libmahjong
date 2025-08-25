@@ -1,24 +1,19 @@
 #pragma once
-#include <random>
 #include <vector>
 
 #include "types/piecetype.h"
+#include "piecetype.h"
+#include "types/gamestate.h"
 
 namespace mahjong {
 class Walls {
  public:
-  explicit Walls();
-  explicit Walls(std::mt19937_64& g);
-  explicit Walls(std::vector<Piece> wall);
-  std::vector<Piece> livingWalls;
-  std::vector<Piece> deadWall;
-  int doraCount = 1;
-  int replacements = 4;
-  Piece TakePiece();
-  std::vector<Piece> TakeHand();
-  Piece TakeReplacementTile();
-  [[nodiscard]] std::vector<Piece> GetDoras() const;
-  [[nodiscard]] std::vector<Piece> GetUraDoras() const;
-  [[nodiscard]] int GetRemainingPieces() const;
+  static void New(GameState& state);
+  static Piece TakePiece(GameState& state);
+  static std::vector<Piece> TakeHand(GameState& state);
+  static Piece TakeReplacementTile(GameState& state);
+  [[nodiscard]] static std::vector<Piece> GetDoras(const GameState& state);
+  [[nodiscard]] static std::vector<Piece> GetUraDoras(const GameState& state);
+  [[nodiscard]] static int GetRemainingPieces(const GameState& state);
 };
 }  // namespace mahjong

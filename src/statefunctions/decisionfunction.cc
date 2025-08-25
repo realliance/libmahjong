@@ -56,7 +56,7 @@ bool CanRon(const GameState& state, int player) {
 }
 
 bool CanKan(const GameState& state, int player) {
-  if (state.walls.GetRemainingPieces() == 0) {
+  if (Walls::GetRemainingPieces(state) == 0) {
     return false;
   }
   if (state.hands.at(player).riichi) {
@@ -102,7 +102,7 @@ bool CanTsumo(const GameState& state, int player) {
 }
 
 bool CanConvertedKan(const GameState& state, int player) {
-  if (state.walls.GetRemainingPieces() == 0) {
+  if (Walls::GetRemainingPieces(state) == 0) {
     return false;
   }
   return std::any_of(state.hands.at(player).melds.begin(),
@@ -113,7 +113,7 @@ bool CanConvertedKan(const GameState& state, int player) {
 }
 
 bool CanConcealedKan(const GameState& state, int player) {
-  if (state.walls.GetRemainingPieces() == 0) {
+  if (Walls::GetRemainingPieces(state) == 0) {
     return false;
   }
   // TODO(#19): Allow riichi concealed kan under the right conditions

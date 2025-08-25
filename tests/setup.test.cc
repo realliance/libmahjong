@@ -35,7 +35,7 @@ TEST(Setup, DoraIndicator) {
   }
   ASSERT_NO_THROW(state = Router::Instance().Route(
                       StateFunctionType::kRoundStart)(std::move(state)));
-  EXPECT_EQ(state->walls.GetDoras().size(), 1);
+  EXPECT_EQ(Walls::GetDoras(*state).size(), 1);
 }
 
 TEST(Setup, Dealing) {

@@ -2,12 +2,11 @@
 
 #include <array>
 #include <string>
-#include <vector>
 
 #include "scoring/yakus/fullyconcealedhand.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
-#include "types/walls.h"
+#include "types/settings.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
@@ -45,7 +44,7 @@ TEST(isFullyConcealedHand, MustHavePiecesRemainingInWall) {
   game_state.currentPlayer = 0;
 
   // Empty the Wall
-  game_state.walls.livingWalls.clear();
+  game_state.livingWallIndex = kLivingWallCount;
 
   EXPECT_FALSE(isFullyConcealedHand(game_state, 0));
 }
