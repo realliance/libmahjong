@@ -29,12 +29,11 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
     std::vector<int> winners;
     int highscore = -100000;
     for (int i = 0; i < 4; i++) {
-      if (state->players.at(i).points + state->scores.at(i) > highscore) {
-        highscore = state->players.at(i).points + state->scores.at(i);
+      if (state->points[i] + state->scores.at(i) > highscore) {
+        highscore = state->points[i] + state->scores.at(i);
         winners.clear();
         winners.push_back(i);
-      } else if (state->players.at(i).points + state->scores.at(i) ==
-                 highscore) {
+      } else if (state->points[i] + state->scores.at(i) == highscore) {
         winners.push_back(i);
       }
     }
@@ -50,7 +49,7 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
                        .player = i,
                        .piece = static_cast<int16_t>(state->scores.at(i) / 100),
                        .decision = false});
-    state->players.at(i).points += state->scores.at(i);
+    state->points[i] += state->scores.at(i);
   }
   state->scores = {};
 

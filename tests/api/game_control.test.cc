@@ -7,7 +7,6 @@
 
 #include "api/gamestate.h"
 #include "api/types.h"
-#include "controllers/playercontroller.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/piecetype.h"
@@ -37,8 +36,7 @@ TEST(Api, SettingsConversion) {
   EXPECT_EQ(state->seed, settings.seed);
   EXPECT_EQ(state->players.size(), settings.num_controllers);
   for (uint64_t i = 0; i < state->players.size(); ++i) {
-    EXPECT_EQ(state->players[i].controller->Name(),
-              settings.seat_controllers[i]);
+    EXPECT_EQ(state->players[i]->Name(), settings.seat_controllers[i]);
   }
   api::FreeGameState(state);
 }
@@ -86,7 +84,7 @@ TEST(Api, ObserveGameState) {
   // Check arrays are properly sized and initialized
   for (int i = 0; i < 4; i++) {
     EXPECT_EQ(observed.scores[i], state->scores[i]);
-    EXPECT_EQ(observed.points[i], state->players[i].points);
+    EXPECT_EQ(observed.points[i], state->points[i]);
     EXPECT_EQ(observed.hasRonned[i], state->hasRonned[i]);
   }
 
@@ -127,7 +125,7 @@ TEST(Api, ObserveGameStateAfterAdvancement) {
 
   // Check points are copied
   for (int i = 0; i < 4; i++) {
-    EXPECT_EQ(observed.points[i], state->players[i].points);
+    EXPECT_EQ(observed.points[i], state->points[i]);
   }
 
   api::FreeGameState(state);

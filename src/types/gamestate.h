@@ -3,10 +3,9 @@
 #include <cstdint>
 #include <random>
 
-#include "statefunction.h"
+#include "controllers/playercontroller.h"
 #include "types/hand.h"
 #include "types/piecetype.h"
-#include "types/player.h"
 #include "types/settings.h"
 #include "types/statefunction.h"
 
@@ -35,7 +34,8 @@ struct GameState {
   std::array<int, kNumPlayers> scores = {};
   std::array<bool, kNumPlayers> hasRonned = {};
   std::array<Hand, kNumPlayers> hands = {};
-  std::array<Player, kNumPlayers> players = {};
+  std::array<std::unique_ptr<PlayerController>, kNumPlayers> players = {};
+  std::array<int, kNumPlayers> points = {};
 };
 
 }  // namespace mahjong

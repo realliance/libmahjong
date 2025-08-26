@@ -12,7 +12,6 @@
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"
-#include "types/player.h"
 #include "types/winds.h"
 
 namespace mahjong {
@@ -25,7 +24,7 @@ Wind GetSeat(int round, int player) {
 void AlertPlayers(const GameState& state, Event e) {
   e.decision = false;
   for (const auto& player : state.players) {
-    player.controller->ReceiveEvent(e);
+    player->ReceiveEvent(e);
   }
 }
 
@@ -61,7 +60,7 @@ void DiscardPiece(GameState& state, int player, Piece p) {
 
 Piece AskForDiscard(const GameState& state) {
   state.players.at(state.currentPlayer)
-      .controller->ReceiveEvent(Event{
+      ->ReceiveEvent(Event{
           .type = Event::kDiscard,        // type
           .player = state.currentPlayer,  // player
           .piece = 0,                     // piece
@@ -98,7 +97,7 @@ Event GetValidDecisionOrThrow(const GameState& state, int player, bool inHand) {
       throw 0xBAD22222;
     }
     i++;
-    decision = state.players.at(player).controller->RetrieveDecision();
+    decision = state.players.at(player)->RetrieveDecision();
     valid = ValidateDecision(state, player, decision, inHand);
   }
   return decision;

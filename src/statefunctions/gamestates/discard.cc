@@ -4,7 +4,6 @@
 #include <memory>
 #include <vector>
 
-#include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
@@ -42,7 +41,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
     for (const auto& [decision, decisionIsPossible] : decisions) {
       if (decisionIsPossible(*state, player)) {
         need_decision.at(player) = true;
-        state->players.at(player).controller->ReceiveEvent(Event{
+        state->players.at(player)->ReceiveEvent(Event{
             .type = decision,                // type
             .player = state->currentPlayer,  // player
             .piece =

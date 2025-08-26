@@ -29,7 +29,7 @@ TEST(GameSetup, playerScore) {
   EXPECT_EQ(state->currState, StateFunctionType::kGameStart);
   // All players have the expected starting points
   for (int i = 0; i < kNumPlayers; i++) {
-    EXPECT_EQ(state->players[i].points, kStartingPoints);
+    EXPECT_EQ(state->points[i], kStartingPoints);
   }
 }
 
