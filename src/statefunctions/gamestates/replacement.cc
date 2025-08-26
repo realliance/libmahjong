@@ -16,7 +16,6 @@ namespace {
 std::unique_ptr<GameState> Replacement(std::unique_ptr<GameState> state) {
   const Piece draw = Walls::TakeReplacementTile(*state);
   state->hands.at(state->currentPlayer).live.push_back(draw);
-  state->hands.at(state->currentPlayer).sort();
   state->pendingPiece = draw;
 
   AlertPlayers(*state,

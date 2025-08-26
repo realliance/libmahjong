@@ -34,7 +34,6 @@ std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
 
   state->currentPlayer = state->lastCaller;
   state->hands.at(state->lastCaller).live.push_back(state->pendingPiece);
-  state->hands.at(state->lastCaller).sort();
   state->lastCall = state->turnNum;
   state->concealedKan = false;
   state->turnNum++;

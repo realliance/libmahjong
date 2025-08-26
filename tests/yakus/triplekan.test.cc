@@ -9,7 +9,6 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus/threekans.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
@@ -33,7 +32,7 @@ TEST(isThreeKans, 2Han) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("666z22m"));
+  game_state.hands[0].live = HandFromNotation("666z22m");
   game_state.hands[0].melds = {meld_a, meld_b, meld_c};
   game_state.hands[0].open = true;
 
@@ -67,7 +66,7 @@ TEST(isThreeKans, WithOtherMelds) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("22m"));
+  game_state.hands[0].live = HandFromNotation("22m");
   game_state.hands[0].melds = {meld_a, meld_b, meld_c, meld_d};
   game_state.hands[0].open = true;
 
@@ -93,7 +92,7 @@ TEST(isThreeKans, BadHand) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("777p666z22m"));
+  game_state.hands[0].live = HandFromNotation("777p666z22m");
   game_state.hands[0].melds = {meld_a, meld_b};
   game_state.hands[0].open = true;
 
@@ -123,7 +122,7 @@ TEST(isThreeKans, AllConcealed) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("666z22m"));
+  game_state.hands[0].live = HandFromNotation("666z22m");
   game_state.hands[0].melds = {meld_a, meld_b, meld_c};
   game_state.hands[0].open = false;
 

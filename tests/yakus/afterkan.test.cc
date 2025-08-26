@@ -8,7 +8,6 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus/afterakan.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/statefunction.h"
 #include "utils/handformer.h"
 
@@ -16,7 +15,7 @@ namespace mahjong::yaku {
 
 TEST(isAfterAKan, 1Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m1111z999s55z"));
+  game_state.hands[0].live = HandFromNotation("123m789m1111z999s55z");
   game_state.currentPlayer = 0;
 
   game_state.prevState = StateFunctionType::kReplacement;
@@ -34,7 +33,7 @@ TEST(isAfterAKan, 1Han) {
 
 TEST(isAfterAKan, DoesntApply) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m1111z999s55z"));
+  game_state.hands[0].live = HandFromNotation("123m789m1111z999s55z");
   game_state.currentPlayer = 0;
 
   game_state.prevState = StateFunctionType::kPon;
@@ -52,7 +51,7 @@ TEST(isAfterAKan, DoesntApply) {
 
 TEST(isAfterAKan, WrongPlayer) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m1111z999s55z"));
+  game_state.hands[0].live = HandFromNotation("123m789m1111z999s55z");
   game_state.currentPlayer = 2;
 
   game_state.prevState = StateFunctionType::kReplacement;

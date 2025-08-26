@@ -9,14 +9,13 @@
 #include "analysis/analysis.h"
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
 
 TEST(isSevenPairs, 2Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("11m22p33s44z55m11z66z"));
+  game_state.hands[0].live = HandFromNotation("11m22p33s44z55m11z66z");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
@@ -32,7 +31,7 @@ TEST(isSevenPairs, 2Han) {
 
 TEST(isSevenPairs, MustBeConcealed) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("11m22p33s44z55m11z66z"));
+  game_state.hands[0].live = HandFromNotation("11m22p33s44z55m11z66z");
   game_state.hands[0].open = true;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
@@ -48,7 +47,7 @@ TEST(isSevenPairs, MustBeConcealed) {
 
 TEST(isSevenPairs, UniquePairsOnly) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("1111m22p33s44z11z66z"));
+  game_state.hands[0].live = HandFromNotation("1111m22p33s44z11z66z");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);

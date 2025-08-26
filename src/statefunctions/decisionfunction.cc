@@ -27,7 +27,6 @@ bool CanRon(const GameState& state, int player) {
   // Build the theoretical hand
   auto& tmp_state = const_cast<GameState&>(state);
   tmp_state.hands.at(player).live.push_back(state.pendingPiece);
-  tmp_state.hands.at(player).sort();
 
   // If this Ron is occurring due to a concealed kan discard,
   if (state.concealedKan) {

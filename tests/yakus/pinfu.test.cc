@@ -9,7 +9,6 @@
 #include "analysis/analysis.h"
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "utils/handformer.h"
@@ -18,7 +17,7 @@ namespace mahjong::yaku {
 
 TEST(isPinfu, 1Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m456p234678s44m"));
+  game_state.hands[0].live = HandFromNotation("123m456p234678s44m");
   game_state.hands[0].open = false;
   game_state.pendingPiece = Piece(kFourPin);
 
@@ -35,7 +34,7 @@ TEST(isPinfu, 1Han) {
 
 TEST(isPinfu, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m555p234678s44m"));
+  game_state.hands[0].live = HandFromNotation("123m555p234678s44m");
   game_state.hands[0].open = false;
   game_state.pendingPiece = Piece(kTwoBamboo);
 
@@ -52,7 +51,7 @@ TEST(isPinfu, BadHand) {
 
 TEST(isPinfu, CantBeOpen) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m456p234678s44m"));
+  game_state.hands[0].live = HandFromNotation("123m456p234678s44m");
   game_state.hands[0].open = true;
   game_state.pendingPiece = Piece(kFourPin);
 
@@ -69,7 +68,7 @@ TEST(isPinfu, CantBeOpen) {
 
 TEST(isPinfu, NeedTwoWait) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m456p234678s44m"));
+  game_state.hands[0].live = HandFromNotation("123m456p234678s44m");
   game_state.hands[0].open = false;
   game_state.pendingPiece = Piece(kFivePin);
 

@@ -8,14 +8,13 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus/honorpon.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
 
 TEST(isWindOrDragonPon, WhiteDragon) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m456m555z11z"));
+  game_state.hands[0].live = HandFromNotation("123m456m555z11z");
 
   auto root = breakdownHand(game_state.hands.at(0).live);
 
@@ -30,7 +29,7 @@ TEST(isWindOrDragonPon, WhiteDragon) {
 
 TEST(isWindOrDragonPon, GreenDragon) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m456m666z11z"));
+  game_state.hands[0].live = HandFromNotation("123m456m666z11z");
 
   auto root = breakdownHand(game_state.hands.at(0).live);
 
@@ -45,7 +44,7 @@ TEST(isWindOrDragonPon, GreenDragon) {
 
 TEST(isWindOrDragonPon, RedDragon) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m456m777z11z"));
+  game_state.hands[0].live = HandFromNotation("123m456m777z11z");
 
   auto root = breakdownHand(game_state.hands.at(0).live);
 
@@ -60,7 +59,7 @@ TEST(isWindOrDragonPon, RedDragon) {
 
 TEST(isWindOrDragonPon, Kan) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m456m7777z11z"));
+  game_state.hands[0].live = HandFromNotation("123m456m7777z11z");
 
   auto root = breakdownHand(game_state.hands.at(0).live);
 
@@ -75,7 +74,7 @@ TEST(isWindOrDragonPon, Kan) {
 
 TEST(isWindOrDragonPon, CanWhenOpen) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m456m777z11z"));
+  game_state.hands[0].live = HandFromNotation("123m456m777z11z");
   game_state.hands[0].open = true;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
@@ -91,7 +90,7 @@ TEST(isWindOrDragonPon, CanWhenOpen) {
 
 TEST(isWindOrDragonPon, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m456m222p11p"));
+  game_state.hands[0].live = HandFromNotation("123m456m222p11p");
 
   auto root = breakdownHand(game_state.hands.at(0).live);
 

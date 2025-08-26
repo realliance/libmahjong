@@ -60,7 +60,6 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
       });
 
   state->hands.at(state->lastCaller).live.push_back(state->pendingPiece);
-  state->hands.at(state->lastCaller).sort();
   state->lastCall = state->turnNum;
   state->concealedKan = false;
   state->turnNum++;

@@ -10,7 +10,6 @@
 #include "analysis/analysis.h"
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
@@ -26,7 +25,7 @@ TEST(isFullFlush, 5Han) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m222m345m99m"));
+  game_state.hands[0].live = HandFromNotation("111m222m345m99m");
   game_state.hands[0].open = true;
   game_state.hands[0].melds = {meld};
 
@@ -43,7 +42,7 @@ TEST(isFullFlush, 5Han) {
 
 TEST(isFullFlush, 6Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m222m345m666m99m"));
+  game_state.hands[0].live = HandFromNotation("111m222m345m666m99m");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
@@ -59,7 +58,7 @@ TEST(isFullFlush, 6Han) {
 
 TEST(isFullFlush, BadHandHonors) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m222m111z666m99m"));
+  game_state.hands[0].live = HandFromNotation("111m222m111z666m99m");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
@@ -75,7 +74,7 @@ TEST(isFullFlush, BadHandHonors) {
 
 TEST(isFullFlush, BadHandSuit) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m222m111p666m99m"));
+  game_state.hands[0].live = HandFromNotation("111m222m111p666m99m");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
@@ -91,7 +90,7 @@ TEST(isFullFlush, BadHandSuit) {
 
 TEST(isFullFlush, BadHandFullFlushHonors) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111z222z333z444z55z"));
+  game_state.hands[0].live = HandFromNotation("111z222z333z444z55z");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);

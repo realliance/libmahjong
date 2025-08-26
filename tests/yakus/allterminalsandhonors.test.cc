@@ -10,7 +10,6 @@
 #include "analysis/analysis.h"
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
@@ -21,7 +20,7 @@ namespace mahjong::yaku {
 
 TEST(isAllTerminalsAndHonors, 2Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("222z111p111m999s66z"));
+  game_state.hands[0].live = HandFromNotation("222z111p111m999s66z");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
@@ -37,7 +36,7 @@ TEST(isAllTerminalsAndHonors, 2Han) {
 
 TEST(isAllTerminalsAndHonors, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("222z111p111m888s66z"));
+  game_state.hands[0].live = HandFromNotation("222z111p111m888s66z");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
@@ -58,7 +57,7 @@ TEST(isAllTerminalsAndHonors, CanBeOpen) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("222z111m999s66z"));
+  game_state.hands[0].live = HandFromNotation("222z111m999s66z");
   game_state.hands[0].open = true;
   game_state.hands[0].melds = {meld};
 
