@@ -8,7 +8,6 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus/robbingakan.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/statefunction.h"
 #include "utils/handformer.h"
 
@@ -16,7 +15,7 @@ namespace mahjong::yaku {
 
 TEST(isRobbingAKan, 1Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m1111z999s55z"));
+  game_state.hands[0].live = HandFromNotation("123m789m1111z999s55z");
   game_state.hasRonned[0] = true;
   game_state.nextState = StateFunctionType::kKanDiscard;
 
@@ -33,7 +32,7 @@ TEST(isRobbingAKan, 1Han) {
 
 TEST(isRobbingAKan, DoesntApply) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m1111z999s55z"));
+  game_state.hands[0].live = HandFromNotation("123m789m1111z999s55z");
   game_state.hasRonned[0] = true;
   game_state.nextState = StateFunctionType::kPon;
 

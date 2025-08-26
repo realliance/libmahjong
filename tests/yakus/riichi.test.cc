@@ -8,14 +8,13 @@
 #include "scoring/yakus/doubleriichi.h"
 #include "scoring/yakus/ippatsu.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
 
 TEST(isRiichi, Riichi) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
+  game_state.hands[0].live = HandFromNotation("555m555p555s111z44m");
   game_state.hands[0].riichi = true;
 
   game_state.hands[0].riichiRound = 7;
@@ -27,7 +26,7 @@ TEST(isRiichi, Riichi) {
 
 TEST(isRiichi, Ippatsu) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
+  game_state.hands[0].live = HandFromNotation("555m555p555s111z44m");
   game_state.hands[0].riichi = true;
 
   game_state.hands[0].riichiRound = 14;
@@ -39,7 +38,7 @@ TEST(isRiichi, Ippatsu) {
 
 TEST(isRiichi, DoubleRiichi) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
+  game_state.hands[0].live = HandFromNotation("555m555p555s111z44m");
   game_state.hands[0].riichi = true;
 
   game_state.hands[0].riichiRound = 1;
@@ -51,7 +50,7 @@ TEST(isRiichi, DoubleRiichi) {
 
 TEST(isRiichi, NoRiichi) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
+  game_state.hands[0].live = HandFromNotation("555m555p555s111z44m");
   game_state.hands[0].riichi = false;
 
   game_state.turnNum = 2;

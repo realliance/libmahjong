@@ -8,7 +8,6 @@ target_sources(
          FILES
          "event.h"
          "gamestate.h"
-         "hand.h"
          "meld.h"
          "pieces.h"
          "piecetype.h"

@@ -9,7 +9,6 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus/threeconcealedpons.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
@@ -19,7 +18,7 @@
 namespace mahjong::yaku {
 TEST(isThreeConcealedPons, 2Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m111p111s666z44m"));
+  game_state.hands[0].live = HandFromNotation("111m111p111s666z44m");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
@@ -39,7 +38,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealed) {
   meld.start = Piece(kTwoBamboo);
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m111p111s44m"));
+  game_state.hands[0].live = HandFromNotation("111m111p111s44m");
   game_state.hands[0].melds.push_back(meld);
   game_state.hands[0].open = true;
 
@@ -60,7 +59,7 @@ TEST(isThreeConcealedPons, CanHaveAdditionalOpenPon) {
   meld.start = Piece(kTwoBamboo);
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m111p111s44m"));
+  game_state.hands[0].live = HandFromNotation("111m111p111s44m");
   game_state.hands[0].melds.push_back(meld);
   game_state.hands[0].open = true;
 
@@ -81,7 +80,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealedNegative) {
   meld.start = Piece(kOneBamboo);
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m111p234s44m"));
+  game_state.hands[0].live = HandFromNotation("111m111p234s44m");
   game_state.hands[0].melds.push_back(meld);
   game_state.hands[0].open = true;
 
@@ -98,7 +97,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealedNegative) {
 
 TEST(isThreeConcealedPons, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m111p234567s44m"));
+  game_state.hands[0].live = HandFromNotation("111m111p234567s44m");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);

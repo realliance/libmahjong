@@ -10,7 +10,6 @@
 #include "analysis/analysis.h"
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
@@ -26,7 +25,7 @@ TEST(isHalfFlush, 2Han) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("11m234m111z222z"));
+  game_state.hands[0].live = HandFromNotation("11m234m111z222z");
   game_state.hands[0].open = true;
   game_state.hands[0].melds = {meld};
 
@@ -43,7 +42,7 @@ TEST(isHalfFlush, 2Han) {
 
 TEST(isHalfFlush, 3Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("11m234m777m111z222z"));
+  game_state.hands[0].live = HandFromNotation("11m234m777m111z222z");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
@@ -64,7 +63,7 @@ TEST(isHalfFlush, BadHand) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("11m234m111p222z"));
+  game_state.hands[0].live = HandFromNotation("11m234m111p222z");
   game_state.hands[0].open = true;
   game_state.hands[0].melds = {meld};
 
@@ -86,7 +85,7 @@ TEST(isHalfFlush, FullFlushIncompatible) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("11m234m888m777m"));
+  game_state.hands[0].live = HandFromNotation("11m234m888m777m");
   game_state.hands[0].open = true;
   game_state.hands[0].melds = {meld};
 

@@ -16,7 +16,6 @@ namespace mahjong {
 namespace {
 std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
   state->hands.at(state->lastCaller).live.push_back(state->pendingPiece);
-  state->hands.at(state->lastCaller).sort();
 
   std::array<int, 4> basic_points = {};
   if (state->hands.at(state->currentPlayer).riichi &&

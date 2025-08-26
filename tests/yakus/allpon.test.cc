@@ -9,7 +9,6 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus/allpons.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
@@ -20,7 +19,7 @@ namespace mahjong::yaku {
 
 TEST(isAllPons, 2Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m222p888s666z44m"));
+  game_state.hands[0].live = HandFromNotation("111m222p888s666z44m");
 
   auto root = breakdownHand(game_state.hands.at(0).live);
 
@@ -40,7 +39,7 @@ TEST(isAllPons, WithKans) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m222p666z44m"));
+  game_state.hands[0].live = HandFromNotation("111m222p666z44m");
   game_state.hands[0].melds = {meld};
   game_state.hands[0].open = true;
 
@@ -62,7 +61,7 @@ TEST(isAllPons, ConcealedKan) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m222p666z44m"));
+  game_state.hands[0].live = HandFromNotation("111m222p666z44m");
   game_state.hands[0].melds = {meld};
   game_state.hands[0].open = false;
 
@@ -79,7 +78,7 @@ TEST(isAllPons, ConcealedKan) {
 
 TEST(isAllPons, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m222p666z789m44m"));
+  game_state.hands[0].live = HandFromNotation("111m222p666z789m44m");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);

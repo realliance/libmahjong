@@ -5,7 +5,7 @@
 namespace mahjong {
 struct Event;
 struct GameState;
-class Hand;
+struct Hand;
 class Node;
 struct Meld;
 class Walls;

@@ -4,12 +4,22 @@
 #include <random>
 
 #include "controllers/playercontroller.h"
-#include "types/hand.h"
+#include "types/meld.h"
 #include "types/piecetype.h"
 #include "types/settings.h"
 #include "types/statefunction.h"
 
 namespace mahjong {
+
+struct Hand {
+  std::vector<Piece> live;
+  std::vector<Meld> melds;
+  std::vector<Piece> discards;
+  bool open = false;
+  bool riichi = false;
+  size_t riichiPieceDiscard = -1;
+  int riichiRound = -1;
+};
 
 struct GameState {
   int currentPlayer = -1;

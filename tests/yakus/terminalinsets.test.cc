@@ -9,7 +9,6 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus/terminalsinallsets.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
@@ -25,7 +24,7 @@ TEST(isTerminalsInAllSets, 2Han) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m111p11s"));
+  game_state.hands[0].live = HandFromNotation("123m789m111p11s");
   game_state.hands[0].open = true;
   game_state.hands[0].melds = {meld};
 
@@ -42,7 +41,7 @@ TEST(isTerminalsInAllSets, 2Han) {
 
 TEST(isTerminalsInAllSets, 3Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m111p789p11s"));
+  game_state.hands[0].live = HandFromNotation("123m789m111p789p11s");
   game_state.hands[0].open = false;
 
   auto root = breakdownHand(game_state.hands.at(0).live);
@@ -63,7 +62,7 @@ TEST(isTerminalsInAllSets, BadHand) {
   };
 
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m222p11s"));
+  game_state.hands[0].live = HandFromNotation("123m789m222p11s");
   game_state.hands[0].open = true;
   game_state.hands[0].melds = {meld};
 

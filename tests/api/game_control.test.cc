@@ -8,7 +8,6 @@
 #include "api/gamestate.h"
 #include "api/types.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/piecetype.h"
 
 namespace {

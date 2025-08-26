@@ -9,13 +9,12 @@
 #include "analysis/analysis.h"
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
 TEST(isBlessingOfMan, 5Han) {
   auto game_state = GameState();
-  game_state.hands[3] = Hand(HandFromNotation("123m123p444m111z55m"));
+  game_state.hands[3].live = HandFromNotation("123m123p444m111z55m");
   game_state.hands[3].open = false;
 
   game_state.turnNum = 1;
@@ -38,7 +37,7 @@ TEST(isBlessingOfMan, 5Han) {
 
 TEST(isBlessingOfMan, MustBeARon) {
   auto game_state = GameState();
-  game_state.hands[3] = Hand(HandFromNotation("123m123p444m111z55m"));
+  game_state.hands[3].live = HandFromNotation("123m123p444m111z55m");
   game_state.hands[3].open = false;
 
   game_state.turnNum = 3;
@@ -61,7 +60,7 @@ TEST(isBlessingOfMan, MustBeARon) {
 
 TEST(isBlessingOfMan, MustBeBeforePlayerFirstTurn) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m123p444m111z55m"));
+  game_state.hands[0].live = HandFromNotation("123m123p444m111z55m");
   game_state.hands[0].open = false;
 
   game_state.turnNum = 2;
@@ -84,7 +83,7 @@ TEST(isBlessingOfMan, MustBeBeforePlayerFirstTurn) {
 
 TEST(isBlessingOfMan, NoCalledMustHaveOccured) {
   auto game_state = GameState();
-  game_state.hands[3] = Hand(HandFromNotation("123m123p444m111z55m"));
+  game_state.hands[3].live = HandFromNotation("123m123p444m111z55m");
   game_state.hands[3].open = false;
 
   game_state.turnNum = 1;
