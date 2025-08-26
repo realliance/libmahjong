@@ -53,7 +53,7 @@ std::unique_ptr<GameState> CreateTestGameState(uint64_t seed) {
   auto state = std::make_unique<GameState>();
   state->seed = seed;
   for (int i = 0; i < kNumPlayers; i++) {
-    state->players[i].controller = std::make_unique<PlayerControllerFake>();
+    state->players[i] = std::make_unique<PlayerControllerFake>();
   }
   state->nextState = StateFunctionType::kGameStart;
   return state;
@@ -71,19 +71,19 @@ std::unique_ptr<GameState> InitializeTestRound(
         std::min(playerControllers.size(), static_cast<size_t>(kNumPlayers));
     for (size_t i = 0; i < num_players; i++) {
       if (playerControllers[i]) {
-        state->players[i].controller = std::move(playerControllers[i]);
+        state->players[i] = std::move(playerControllers[i]);
       } else {
-        state->players[i].controller = std::make_unique<PlayerControllerFake>();
+        state->players[i] = std::make_unique<PlayerControllerFake>();
       }
     }
     // Fill remaining players with default controllers
     for (size_t i = num_players; i < kNumPlayers; i++) {
-      state->players[i].controller = std::make_unique<PlayerControllerFake>();
+      state->players[i] = std::make_unique<PlayerControllerFake>();
     }
   } else {
     // All players get default fake controllers
     for (int i = 0; i < kNumPlayers; i++) {
-      state->players[i].controller = std::make_unique<PlayerControllerFake>();
+      state->players[i] = std::make_unique<PlayerControllerFake>();
     }
   }
 

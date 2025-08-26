@@ -44,7 +44,7 @@ TEST(GameStateUtils, InitializeTestRoundDefault) {
 
   // All players are filled with a controller
   for (int i = 0; i < kNumPlayers; i++) {
-    EXPECT_NE(state->players[i].controller, nullptr);
+    EXPECT_NE(state->players[i], nullptr);
   }
 
   // Draw occurred

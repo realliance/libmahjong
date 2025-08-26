@@ -4,7 +4,6 @@
 #include <memory>
 #include <vector>
 
-#include "controllers/playercontroller.h"
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
@@ -21,7 +20,7 @@ std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
   Walls::New(*state);
   for (size_t i = 0; i < 4; i++) {
     auto hand = Walls::TakeHand(*state);
-    state->players.at(i).controller->RoundStart(
+    state->players.at(i)->RoundStart(
         hand, static_cast<Wind>((i + 3 * (state->roundNum % 4)) % 4),
         (state->roundNum > 3) ? kSouth : kEast);
     state->hands.at(i) = Hand(hand);

@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <memory>
 
-#include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
@@ -23,7 +22,7 @@ std::unique_ptr<GameState> KanDiscard(std::unique_ptr<GameState> state) {
     if (CanRon(*state, player)) {
       need_decision.at(player) = true;
       state->players.at(state->currentPlayer)
-          .controller->ReceiveEvent(Event{
+          ->ReceiveEvent(Event{
               .type = Event::kRon,             // type
               .player = state->currentPlayer,  // player
               .piece = static_cast<int16_t>(

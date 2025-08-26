@@ -4,7 +4,6 @@
 #include <memory>
 #include <vector>
 
-#include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
@@ -32,7 +31,7 @@ std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
     if (decisionIsPossible(*state, state->currentPlayer)) {
       decision_asked = true;
       state->players.at(state->currentPlayer)
-          .controller->ReceiveEvent(Event{
+          ->ReceiveEvent(Event{
               .type = decision,                // type
               .player = state->currentPlayer,  // player
               .piece = static_cast<int16_t>(

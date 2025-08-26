@@ -143,7 +143,7 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
   // Player data
   for (int i = 0; i < 4; i++) {
     observed.scores[i] = state->scores[i];
-    observed.points[i] = state->players[i].points;
+    observed.points[i] = state->points[i];
     observed.hasRonned[i] = state->hasRonned[i];
 
     // Convert Hand to CHand

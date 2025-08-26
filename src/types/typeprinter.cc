@@ -14,7 +14,6 @@
 #include "types/hand.h"
 #include "types/meld.h"
 #include "types/piecetype.h"
-#include "types/player.h"
 
 std::ostream& operator<<(std::ostream& os, const mahjong::Event& e) {
   os << "{type: " << e.typeToStr();
@@ -45,7 +44,12 @@ std::ostream& operator<<(std::ostream& os, const mahjong::GameState& state) {
   }
   os << "players: " << '\n';
   for (size_t i = 0; i < state.players.size(); i++) {
-    os << "player[" << i << "]: " << state.players.at(i) << '\n';
+    os << "player[" << i << "]: ";
+    os << "{ controller: "
+       << ((state.players[i] != nullptr) ? state.players[i]->Name()
+                                         : "NULLPTR");
+    os << " points: " << state.points[i];
+    os << '\n';
   }
   os << "{ doraCount: " << state.doraCount;
   os << " livingWall: [" << '\n';
@@ -108,13 +112,5 @@ std::ostream& operator<<(std::ostream& os, const mahjong::Node& node) {
 std::ostream& operator<<(std::ostream& os, const mahjong::Meld& meld) {
   os << "{ type: " << meld.typeToStr();
   os << ", start: " << meld.start.toStr() << "}";
-  return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const mahjong::Player& player) {
-  os << "{ controller: "
-     << ((player.controller != nullptr) ? player.controller->Name()
-                                        : "NULLPTR");
-  os << " points: " << player.points;
   return os;
 }
