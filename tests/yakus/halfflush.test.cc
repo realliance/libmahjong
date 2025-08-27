@@ -19,17 +19,16 @@
 namespace mahjong::yaku {
 
 TEST(isHalfFlush, 2Han) {
-  const Meld meld = {
+  auto game_state = GameState();
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("11m234m111z222z");
+  hand.open = true;
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = Piece(kSixCharacter),
   };
 
-  auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("11m234m111z222z");
-  game_state.hands[0].open = true;
-  game_state.hands[0].melds = {meld};
-
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isHalfFlush(game_state, 0, branch)) {
@@ -42,10 +41,11 @@ TEST(isHalfFlush, 2Han) {
 
 TEST(isHalfFlush, 3Han) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("11m234m777m111z222z");
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("11m234m777m111z222z");
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isHalfFlush(game_state, 0, branch)) {
@@ -57,17 +57,16 @@ TEST(isHalfFlush, 3Han) {
 }
 
 TEST(isHalfFlush, BadHand) {
-  const Meld meld = {
+  auto game_state = GameState();
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("11m234m111p222z");
+  hand.open = true;
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = Piece(kSixCharacter),
   };
 
-  auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("11m234m111p222z");
-  game_state.hands[0].open = true;
-  game_state.hands[0].melds = {meld};
-
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isHalfFlush(game_state, 0, branch)) {
@@ -79,17 +78,16 @@ TEST(isHalfFlush, BadHand) {
 }
 
 TEST(isHalfFlush, FullFlushIncompatible) {
-  const Meld meld = {
+  auto game_state = GameState();
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("11m234m888m777m");
+  hand.open = true;
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = Piece(kSixCharacter),
   };
 
-  auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("11m234m888m777m");
-  game_state.hands[0].open = true;
-  game_state.hands[0].melds = {meld};
-
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isHalfFlush(game_state, 0, branch)) {

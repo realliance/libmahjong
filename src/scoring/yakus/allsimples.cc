@@ -10,13 +10,14 @@
 namespace mahjong::yaku {
 bool isAllSimples(const GameState& state, int player,
                   const std::vector<const mahjong::Node*>& /*branch*/) {
-  for (const auto& piece : state.hands.at(player).live) {
+  const Hand& hand = state.hands[player];
+  for (const auto& piece : hand.live) {
     if (piece.isHonor() || piece.isTerminal()) {
       return false;
     }
   }
-  for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.start.isHonor() || meld.start.isTerminal()) {
+  for (int i = 0; i < hand.meld_count; ++i) {
+    if (hand.melds[i].start.isHonor() || hand.melds[i].start.isTerminal()) {
       return false;
     }
   }

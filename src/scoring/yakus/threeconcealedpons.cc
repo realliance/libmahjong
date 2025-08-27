@@ -17,8 +17,9 @@ bool isThreeConcealedPons(const GameState& state, int player,
       concealed_pons++;
     }
   }
-  for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type == SetType::kConcealedKan) {
+  const Hand& hand = state.hands[player];
+  for (int i = 0; i < hand.meld_count; ++i) {
+    if (hand.melds[i].type == SetType::kConcealedKan) {
       concealed_pons++;
     }
   }

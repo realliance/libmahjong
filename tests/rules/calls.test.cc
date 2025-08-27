@@ -69,7 +69,7 @@ TEST(Calls, AcceptPon) {
   // - State should be kDiscard (Player 1 needs to discard)
   EXPECT_EQ(state->currentPlayer, 1);
   EXPECT_EQ(state->currState, StateFunctionType::kDiscard);
-  EXPECT_EQ(state->hands[1].melds.size(), 1);
+  EXPECT_EQ(state->hands[1].meld_count, 1);
   EXPECT_EQ(state->hands[1].melds[0].type, SetType::kPon);
   EXPECT_EQ(state->hands[1].melds[0].start, Piece(Piece::kNineBamboo));
 

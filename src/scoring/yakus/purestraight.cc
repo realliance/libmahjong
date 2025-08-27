@@ -41,25 +41,26 @@ bool isPureStraight(const GameState& state, int player,
       }
     }
   }
-  for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type == SetType::kChi) {
+  const Hand& hand = state.hands[player];
+  for (int i = 0; i < hand.meld_count; ++i) {
+    if (hand.melds[i].type == SetType::kChi) {
       int ind = 0;
-      if (meld.start.getPieceNum() == k_firstchistart) {
+      if (hand.melds[i].start.getPieceNum() == k_firstchistart) {
         ind = 0;
-      } else if (meld.start.getPieceNum() == k_secondchistart) {
+      } else if (hand.melds[i].start.getPieceNum() == k_secondchistart) {
         ind = 1;
-      } else if (meld.start.getPieceNum() == k_thirdchistart) {
+      } else if (hand.melds[i].start.getPieceNum() == k_thirdchistart) {
         ind = 2;
       } else {
         continue;
       }
-      if (meld.start.getSuit() == Piece::Type::kBambooSuit) {
+      if (hand.melds[i].start.getSuit() == Piece::Type::kBambooSuit) {
         bamboo_chi.at(ind) = true;
       }
-      if (meld.start.getSuit() == Piece::Type::kCharacterSuit) {
+      if (hand.melds[i].start.getSuit() == Piece::Type::kCharacterSuit) {
         char_chi.at(ind) = true;
       }
-      if (meld.start.getSuit() == Piece::Type::kPinSuit) {
+      if (hand.melds[i].start.getSuit() == Piece::Type::kPinSuit) {
         pin_chi.at(ind) = true;
       }
     }

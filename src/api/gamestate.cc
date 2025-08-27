@@ -158,7 +158,7 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
     }
 
     // Melds
-    const int meld_count = static_cast<int>(cpp_hand.melds.size());
+    const int meld_count = cpp_hand.meld_count;
     c_hand.meldCount = std::min(meld_count, kMaxMeldsPerHand);
     for (int j = 0; j < c_hand.meldCount; j++) {
       c_hand.melds[j].type = static_cast<CMeldType>(cpp_hand.melds[j].type);

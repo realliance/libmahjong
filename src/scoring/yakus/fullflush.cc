@@ -10,17 +10,18 @@
 namespace mahjong::yaku {
 bool isFullFlush(const GameState& state, int player,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
-  if (state.hands.at(player).live.front().isHonor()) {
+  const Hand& hand = state.hands[player];
+  if (hand.live.front().isHonor()) {
     return false;
   }
-  const int suit = state.hands.at(player).live.front().getSuit();
-  for (const auto& piece : state.hands.at(player).live) {
+  const int suit = hand.live.front().getSuit();
+  for (const auto& piece : hand.live) {
     if (piece.getSuit() != suit) {
       return false;
     }
   }
-  for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.start.getSuit() != suit) {
+  for (int i = 0; i < hand.meld_count; ++i) {
+    if (hand.melds[i].start.getSuit() != suit) {
       return false;
     }
   }

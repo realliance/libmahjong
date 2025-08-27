@@ -20,10 +20,11 @@ namespace mahjong::yaku {
 
 TEST(isAllTerminalsAndHonors, 2Han) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("222z111p111m999s66z");
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("222z111p111m999s66z");
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllTerminalsAndHonors(game_state, 0, branch)) {
@@ -36,10 +37,11 @@ TEST(isAllTerminalsAndHonors, 2Han) {
 
 TEST(isAllTerminalsAndHonors, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("222z111p111m888s66z");
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("222z111p111m888s66z");
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllTerminalsAndHonors(game_state, 0, branch)) {
@@ -51,17 +53,16 @@ TEST(isAllTerminalsAndHonors, BadHand) {
 }
 
 TEST(isAllTerminalsAndHonors, CanBeOpen) {
-  const Meld meld = {
+  auto game_state = GameState();
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("222z111m999s66z");
+  hand.open = true;
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = Piece(kNinePin),
   };
 
-  auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("222z111m999s66z");
-  game_state.hands[0].open = true;
-  game_state.hands[0].melds = {meld};
-
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllTerminalsAndHonors(game_state, 0, branch)) {
