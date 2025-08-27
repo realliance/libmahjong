@@ -14,9 +14,10 @@ namespace mahjong::yaku {
 
 TEST(isWindOrDragonPon, WhiteDragon) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("123m456m555z11z");
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("123m456m555z11z");
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isWhiteDragon(game_state, 0, branch)) {
@@ -29,9 +30,10 @@ TEST(isWindOrDragonPon, WhiteDragon) {
 
 TEST(isWindOrDragonPon, GreenDragon) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("123m456m666z11z");
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("123m456m666z11z");
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isGreenDragon(game_state, 0, branch)) {
@@ -44,9 +46,10 @@ TEST(isWindOrDragonPon, GreenDragon) {
 
 TEST(isWindOrDragonPon, RedDragon) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("123m456m777z11z");
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("123m456m777z11z");
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isRedDragon(game_state, 0, branch)) {
@@ -59,9 +62,10 @@ TEST(isWindOrDragonPon, RedDragon) {
 
 TEST(isWindOrDragonPon, Kan) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("123m456m7777z11z");
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("123m456m7777z11z");
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isRedDragon(game_state, 0, branch)) {
@@ -74,10 +78,11 @@ TEST(isWindOrDragonPon, Kan) {
 
 TEST(isWindOrDragonPon, CanWhenOpen) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("123m456m777z11z");
-  game_state.hands[0].open = true;
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("123m456m777z11z");
+  hand.open = true;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isRedDragon(game_state, 0, branch)) {
@@ -90,9 +95,10 @@ TEST(isWindOrDragonPon, CanWhenOpen) {
 
 TEST(isWindOrDragonPon, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("123m456m222p11p");
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("123m456m222p11p");
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isGreenDragon(game_state, 0, branch)) {

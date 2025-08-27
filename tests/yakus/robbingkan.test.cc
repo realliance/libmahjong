@@ -15,11 +15,12 @@ namespace mahjong::yaku {
 
 TEST(isRobbingAKan, 1Han) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("123m789m1111z999s55z");
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("123m789m1111z999s55z");
   game_state.hasRonned[0] = true;
   game_state.nextState = StateFunctionType::kKanDiscard;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isRobbingAKan(game_state, 0, branch)) {
@@ -32,11 +33,12 @@ TEST(isRobbingAKan, 1Han) {
 
 TEST(isRobbingAKan, DoesntApply) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("123m789m1111z999s55z");
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("123m789m1111z999s55z");
   game_state.hasRonned[0] = true;
   game_state.nextState = StateFunctionType::kPon;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isRobbingAKan(game_state, 0, branch)) {

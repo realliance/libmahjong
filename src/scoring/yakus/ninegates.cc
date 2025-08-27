@@ -12,13 +12,14 @@
 namespace mahjong::yaku {
 bool isNineGates(const GameState& state, int player,
                  const std::vector<const mahjong::Node*>& branch) {
-  if (state.hands.at(player).open) {
+  const Hand& hand = state.hands[player];
+  if (hand.open) {
     return false;
   }
   if (!isFullFlush(state, player, branch)) {
     return false;
   }
-  if (state.hands.at(player).open) {
+  if (hand.open) {
     return false;
   }
   std::map<int, int> pieces;
@@ -26,7 +27,7 @@ bool isNineGates(const GameState& state, int player,
     pieces.at(i) = 0;
   }
   bool duplicate = false;
-  for (const auto& piece : state.hands.at(player).live) {
+  for (const auto& piece : hand.live) {
     if (pieces.contains(piece.getPieceNum())) {
       if ((pieces[piece.getPieceNum()] != 0) && !piece.isTerminal()) {
         if (duplicate) {
