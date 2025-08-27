@@ -18,17 +18,16 @@
 namespace mahjong::yaku {
 
 TEST(isTerminalsInAllSets, 2Han) {
-  const Meld meld = {
+  auto game_state = GameState();
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("123m789m111p11s");
+  hand.open = true;
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kChi,
       .start = Piece(kSevenPin),
   };
 
-  auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("123m789m111p11s");
-  game_state.hands[0].open = true;
-  game_state.hands[0].melds = {meld};
-
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTerminalsInAllSets(game_state, 0, branch)) {
@@ -41,10 +40,11 @@ TEST(isTerminalsInAllSets, 2Han) {
 
 TEST(isTerminalsInAllSets, 3Han) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("123m789m111p789p11s");
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("123m789m111p789p11s");
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTerminalsInAllSets(game_state, 0, branch)) {
@@ -56,17 +56,17 @@ TEST(isTerminalsInAllSets, 3Han) {
 }
 
 TEST(isTerminalsInAllSets, BadHand) {
-  const Meld meld = {
+  auto game_state = GameState();
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("123m789m222p11s");
+  hand.open = true;
+  hand.open = true;
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kChi,
       .start = Piece(kSevenPin),
   };
 
-  auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("123m789m222p11s");
-  game_state.hands[0].open = true;
-  game_state.hands[0].melds = {meld};
-
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTerminalsInAllSets(game_state, 0, branch)) {

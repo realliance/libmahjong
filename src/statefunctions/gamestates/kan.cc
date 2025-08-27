@@ -8,6 +8,7 @@
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/meld.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
 #include "types/statefunction.h"
@@ -30,9 +31,10 @@ std::unique_ptr<GameState> Kan(std::unique_ptr<GameState> state) {
     state->hands.at(state->currentPlayer).riichiPieceDiscard++;
   }
 
-  state->hands.at(state->lastCaller).open = true;
+  Hand& hand = state->hands.at(state->lastCaller);
+  hand.open = true;
   state->currentPlayer = state->lastCaller;
-  state->hands.at(state->lastCaller).live.push_back(state->pendingPiece);
+  hand.live.push_back(state->pendingPiece);
   state->lastCall = state->turnNum;
   state->concealedKan = false;
   state->turnNum++;
@@ -43,8 +45,10 @@ std::unique_ptr<GameState> Kan(std::unique_ptr<GameState> state) {
     state->nextState = StateFunctionType::kError;
     return state;
   }
-  state->hands.at(state->lastCaller)
-      .melds.push_back({SetType::kKan, state->pendingPiece});
+  hand.melds[hand.meld_count++] = Meld{
+      .type = SetType::kKan,
+      .start = state->pendingPiece,
+  };
 
   state->nextState = StateFunctionType::kKanDiscard;
   return state;

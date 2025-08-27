@@ -22,8 +22,9 @@ bool findPon(const GameState& state, int player,
       return true;
     }
   }
-  for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type >= SetType::kPon && meld.start == piece) {
+  const Hand& hand = state.hands[player];
+  for (int i = 0; i < hand.meld_count; ++i) {
+    if (hand.melds[i].type >= SetType::kPon && hand.melds[i].start == piece) {
       return true;
     }
   }

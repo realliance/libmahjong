@@ -12,8 +12,9 @@ namespace mahjong::yaku {
 bool isFourKans(const GameState& state, int player,
                 const std::vector<const mahjong::Node*>& /*branch*/) {
   int kans = 0;
-  for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type >= SetType::kKan) {
+  const Hand& hand = state.hands[player];
+  for (int i = 0; i < hand.meld_count; ++i) {
+    if (hand.melds[i].type >= SetType::kKan) {
       kans++;
     }
   }

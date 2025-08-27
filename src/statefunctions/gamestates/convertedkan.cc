@@ -7,7 +7,6 @@
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
-#include "types/meld.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
 #include "types/statefunction.h"
@@ -29,9 +28,11 @@ std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
     return state;
   }
   state->concealedKan = false;
-  for (auto& meld : state->hands.at(state->currentPlayer).melds) {
-    if (meld.type == SetType::kPon && meld.start == state->pendingPiece) {
-      meld.type = SetType::kKan;
+  Hand& hand = state->hands.at(state->currentPlayer);
+  for (int i = 0; i < hand.meld_count; ++i) {
+    if (hand.melds[i].type == SetType::kPon &&
+        hand.melds[i].start == state->pendingPiece) {
+      hand.melds[i].type = SetType::kKan;
       state->nextState = StateFunctionType::kKanDiscard;
       return state;
     }

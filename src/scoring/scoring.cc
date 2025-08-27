@@ -59,7 +59,8 @@ const int kFuRounding = 10;
 }  // namespace
 
 Score scoreHand(const GameState& state, int player) {
-  auto root = breakdownHand(state.hands.at(player).live);
+  const Hand& hand = state.hands[player];
+  auto root = breakdownHand(hand.live);
   Score s;
   s.han = 0;
   s.yakuman = 0;
@@ -76,7 +77,7 @@ Score scoreHand(const GameState& state, int player) {
     }
 
     for (const auto& yaku : Yakus::Instance().GetYakus()) {
-      if (yaku.type == Yaku::kClosed && state.hands[player].open) {
+      if (yaku.type == Yaku::kClosed && hand.open) {
         continue;
       }
       if (!yaku.is_yaku_func(state, player, branch)) {
@@ -88,7 +89,7 @@ Score scoreHand(const GameState& state, int player) {
           branchscore.han += yaku.value;
           break;
         case Yaku::kBonusWhenClosed:
-          branchscore.han += yaku.value + (state.hands[player].open ? 0 : 1);
+          branchscore.han += yaku.value + (hand.open ? 0 : 1);
           break;
         case Yaku::kYakuman:
           branchscore.yakuman++;
@@ -97,20 +98,20 @@ Score scoreHand(const GameState& state, int player) {
     }
 
     for (const auto& dora : Walls::GetDoras(state)) {
-      for (const auto& p : state.hands.at(player).live) {
+      for (const auto& p : hand.live) {
         if (p == dora) {
           branchscore.han++;
         }
       }
-      for (const auto& meld : state.hands.at(player).melds) {
-        if (meld.start == dora) {
+      for (int i = 0; i < hand.meld_count; ++i) {
+        if (hand.melds[i].start == dora) {
           branchscore.han++;
         }
-        if (meld.type == SetType::kChi) {
-          if (meld.start + 1 == dora) {
+        if (hand.melds[i].type == SetType::kChi) {
+          if (hand.melds[i].start + 1 == dora) {
             branchscore.han++;
           }
-          if (meld.start + 2 == dora) {
+          if (hand.melds[i].start + 2 == dora) {
             branchscore.han++;
           }
         }
@@ -178,9 +179,10 @@ int getFu(const GameState& state, int player,
   } else if (!state.hasRonned.at(player)) {
     fu += kSelfdraw;
   }
-  for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type == SetType::kKan) {
-      if (!meld.start.isHonor() && !meld.start.isTerminal()) {
+  const Hand& hand = state.hands[player];
+  for (int i = 0; i < hand.meld_count; ++i) {
+    if (hand.melds[i].type == SetType::kKan) {
+      if (!hand.melds[i].start.isHonor() && !hand.melds[i].start.isTerminal()) {
         fu += open ? kSimplekan : kCsimplekan;
       } else {
         fu += open ? kTermHonorkan : kCtermHonorkan;
@@ -251,8 +253,9 @@ bool isOpenPinfu(const GameState& state, int player,
       }
     }
   }
-  for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type > SetType::kChi) {
+  const Hand& hand = state.hands[player];
+  for (int i = 0; i < hand.meld_count; ++i) {
+    if (hand.melds[i].type > SetType::kChi) {
       return false;
     }
   }

@@ -104,8 +104,9 @@ bool CanConvertedKan(const GameState& state, int player) {
   if (Walls::GetRemainingPieces(state) == 0) {
     return false;
   }
-  return std::any_of(state.hands.at(player).melds.begin(),
-                     state.hands.at(player).melds.end(), [&](auto meld) {
+  const Hand& hand = state.hands.at(player);
+  return std::any_of(hand.melds.begin(), hand.melds.begin() + hand.meld_count,
+                     [&](auto meld) {
                        return meld.type == SetType::kPon &&
                               CountPieces(state, player, meld.start) == 1;
                      });

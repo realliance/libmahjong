@@ -161,7 +161,7 @@ TEST(Api, ObserveGameStateHandsAndDiscards) {
     }
 
     // Check melds
-    EXPECT_EQ(c_hand.meldCount, static_cast<int>(cpp_hand.melds.size()));
+    EXPECT_EQ(c_hand.meldCount, cpp_hand.meld_count);
     for (int meld = 0; meld < c_hand.meldCount; meld++) {
       EXPECT_EQ(static_cast<int>(c_hand.melds[meld].type),
                 static_cast<int>(cpp_hand.melds[meld].type));

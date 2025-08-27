@@ -2,12 +2,12 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <vector>
 
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/meld.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
 #include "types/statefunction.h"
@@ -29,8 +29,11 @@ std::unique_ptr<GameState> ConcealedKan(std::unique_ptr<GameState> state) {
     state->nextState = StateFunctionType::kError;
     return state;
   }
-  state->hands.at(state->currentPlayer)
-      .melds.push_back({SetType::kConcealedKan, state->pendingPiece});
+  Hand& hand = state->hands.at(state->currentPlayer);
+  hand.melds[hand.meld_count++] = Meld{
+      .type = SetType::kConcealedKan,
+      .start = state->pendingPiece,
+  };
   state->concealedKan = true;
   state->nextState = StateFunctionType::kKanDiscard;
   return state;

@@ -20,10 +20,11 @@ namespace mahjong::yaku {
 
 TEST(isLittleThreeDragons, 2Han) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("555z666z111m222p77z");
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("555z666z111m222p77z");
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isLittleThreeDragons(game_state, 0, branch)) {
@@ -35,17 +36,16 @@ TEST(isLittleThreeDragons, 2Han) {
 }
 
 TEST(isLittleThreeDragons, WhenOpen) {
-  const Meld meld = {
+  auto game_state = GameState();
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("666z111m222p77z");
+  hand.open = true;
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = Piece(kWhiteDragon),
   };
 
-  auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("666z111m222p77z");
-  game_state.hands[0].open = true;
-  game_state.hands[0].melds = {meld};
-
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isLittleThreeDragons(game_state, 0, branch)) {
@@ -57,17 +57,16 @@ TEST(isLittleThreeDragons, WhenOpen) {
 }
 
 TEST(isLittleThreeDragons, BadHand) {
-  const Meld meld = {
+  auto game_state = GameState();
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("666z111m222p77s");
+  hand.open = true;
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = Piece(kWhiteDragon),
   };
 
-  auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("666z111m222p77s");
-  game_state.hands[0].open = true;
-  game_state.hands[0].melds = {meld};
-
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isLittleThreeDragons(game_state, 0, branch)) {
