@@ -15,9 +15,10 @@ namespace mahjong::yaku {
 
 TEST(isTriplePon, 2Han) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("111m111p111s666z44m");
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("111m111p111s666z44m");
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTriplePon(game_state, 0, branch)) {
@@ -30,9 +31,10 @@ TEST(isTriplePon, 2Han) {
 
 TEST(isTriplePon, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("111m111p222m666z44m");
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("111m111p222m666z44m");
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTriplePon(game_state, 0, branch)) {

@@ -15,9 +15,10 @@ namespace mahjong::yaku {
 
 TEST(isAllSimples, 1Han) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("222m333p444s555p88m");
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("222m333p444s555p88m");
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllSimples(game_state, 0, branch)) {
@@ -30,9 +31,10 @@ TEST(isAllSimples, 1Han) {
 
 TEST(isAllSimples, BadHandHonors) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("222m333p444s111z88m");
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("222m333p444s111z88m");
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllSimples(game_state, 0, branch)) {
@@ -45,9 +47,10 @@ TEST(isAllSimples, BadHandHonors) {
 
 TEST(isAllSimples, BadHandTerminals) {
   auto game_state = GameState();
-  game_state.hands[0].live = HandFromNotation("222m333p444s111m88m");
+  Hand& hand = game_state.hands[0];
+  hand.live = HandFromNotation("222m333p444s111m88m");
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live);
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllSimples(game_state, 0, branch)) {
