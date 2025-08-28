@@ -14,12 +14,13 @@ namespace mahjong {
 struct Hand {
   bool open = false;
   bool riichi = false;
-  size_t riichiPieceDiscard = -1;
+  int riichiPieceDiscard = -1;
   int riichiRound = -1;
   int meld_count = 0;
   std::vector<Piece> live;
   std::array<Meld, 4> melds;
-  std::vector<Piece> discards;
+  std::array<Piece, kMaxDiscardCount> discards;
+  int discards_count = 0;
 };
 
 struct GameState {

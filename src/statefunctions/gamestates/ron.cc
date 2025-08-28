@@ -19,7 +19,7 @@ std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
 
   std::array<int, 4> basic_points = {};
   if (state->hands.at(state->currentPlayer).riichi &&
-      state->hands.at(state->currentPlayer).discards.size() ==
+      state->hands.at(state->currentPlayer).discards_count ==
           state->hands.at(state->currentPlayer).riichiPieceDiscard) {
     state->riichiSticks--;
     state->hands.at(state->currentPlayer).riichi = false;

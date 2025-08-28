@@ -28,7 +28,7 @@ std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
                        });
 
   if (state->hands.at(state->currentPlayer).riichi &&
-      state->hands.at(state->currentPlayer).discards.size() ==
+      state->hands.at(state->currentPlayer).discards_count ==
           state->hands.at(state->currentPlayer).riichiPieceDiscard) {
     state->hands.at(state->currentPlayer).riichiPieceDiscard++;
   }

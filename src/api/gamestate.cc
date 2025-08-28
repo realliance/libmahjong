@@ -168,8 +168,7 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
 
     // Discards
     const auto& discards = cpp_hand.discards;
-    const int discards_size = static_cast<int>(discards.size());
-    c_hand.discardCount = std::min(discards_size, kMaxDiscardsPerPlayer);
+    c_hand.discardCount = cpp_hand.discards_count;
     for (auto j = 0; j < c_hand.discardCount; j++) {
       c_hand.discards[j] = static_cast<CPiece>(discards[j].toUint8_t());
     }
