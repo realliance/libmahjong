@@ -171,7 +171,7 @@ TEST(Api, ObserveGameStateHandsAndDiscards) {
     }
 
     // Check discards using CHand structure
-    EXPECT_EQ(c_hand.discardCount, static_cast<int>(cpp_hand.discards.size()));
+    EXPECT_EQ(c_hand.discardCount, static_cast<int>(cpp_hand.discards_count));
     for (int discard = 0; discard < c_hand.discardCount; discard++) {
       EXPECT_EQ(
           c_hand.discards[discard],

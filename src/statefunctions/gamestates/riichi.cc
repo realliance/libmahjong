@@ -31,7 +31,7 @@ std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
 
   state->hands.at(state->currentPlayer).riichiRound = state->turnNum;
   state->hands.at(state->currentPlayer).riichiPieceDiscard =
-      state->hands.at(state->currentPlayer).discards.size();
+      state->hands.at(state->currentPlayer).discards_count;
   state->hands.at(state->currentPlayer).riichi = true;
   state->riichiSticks++;
 

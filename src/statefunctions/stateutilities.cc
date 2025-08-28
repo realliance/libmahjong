@@ -55,7 +55,7 @@ uint8_t RemovePieces(GameState& state, int player, Piece p, uint8_t count) {
 // Discard an instance of piece p from given players hand
 void DiscardPiece(GameState& state, int player, Piece p) {
   RemovePieces(state, player, p, /*count=*/1);
-  state.hands.at(player).discards.push_back(p);
+  state.hands[player].discards[state.hands[player].discards_count++] = p;
 }
 
 Piece AskForDiscard(const GameState& state) {

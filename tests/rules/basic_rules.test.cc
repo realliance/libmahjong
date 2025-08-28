@@ -149,7 +149,7 @@ TEST(DiscardMechanics, discardDecreasesTileCount) {
   EXPECT_EQ(state->currState, StateFunctionType::kPlayerHand);
   EXPECT_EQ(state->nextState, StateFunctionType::kDiscard);
 
-  const int discards_before = state->hands[0].discards.size();
+  const int discards_before = state->hands[0].discards_count;
   state = AdvanceGameState(std::move(state));
   EXPECT_EQ(state->currState, StateFunctionType::kDiscard);
 
@@ -157,7 +157,7 @@ TEST(DiscardMechanics, discardDecreasesTileCount) {
   EXPECT_EQ(state->hands[0].live.size(), 13);
 
   // Discard pile should have increased
-  EXPECT_EQ(state->hands[0].discards.size(), discards_before + 1);
+  EXPECT_EQ(state->hands[0].discards_count, discards_before + 1);
 }
 
 }  // namespace mahjong

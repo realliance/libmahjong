@@ -15,6 +15,7 @@ constexpr int kReplacementCount = kNumPlayers == 4 ? 4 : 8;
 constexpr int kDoraCount = 5;
 constexpr int kDeadWallCount = (2 * kDoraCount) + kReplacementCount;
 constexpr int kLivingWallCount = kTileCount - kDeadWallCount;
+constexpr int kMaxDiscardCount = 27;
 
 struct GameSettings {
   std::vector<std::string> seatControllers;
