@@ -3,9 +3,10 @@
 #include <array>
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
+#include "types/sets.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
@@ -14,8 +15,8 @@ bool isTriplePon(const GameState& state, int player,
   std::array<bool, 9> bamboo_pon = {};
   std::array<bool, 9> char_pon = {};
   std::array<bool, 9> pin_pon = {};
-  for (const auto& node : branch) {
-    if (node->type() == Node::kPonSet) {
+  for (const auto* node : branch) {
+    if (node->type() == SetType::kPon) {
       if (node->start().getSuit() == Piece::Type::kBambooSuit) {
         bamboo_pon.at(node->start().getPieceNum() - 1) = true;
       }
@@ -28,7 +29,7 @@ bool isTriplePon(const GameState& state, int player,
     }
   }
   for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type >= Meld::kPon) {
+    if (meld.type >= SetType::kPon) {
       if (meld.start.getSuit() == Piece::Type::kBambooSuit) {
         bamboo_pon.at(meld.start.getPieceNum() - 1) = true;
       }

@@ -6,12 +6,12 @@
 #include <random>
 #include <vector>
 
-#include "hand.h"
-#include "piecetype.h"
-#include "player.h"
-#include "settings.h"
-#include "statefunction.h"
-#include "walls.h"
+#include "types/hand.h"
+#include "types/piecetype.h"
+#include "types/player.h"
+#include "types/settings.h"
+#include "types/statefunction.h"
+#include "types/walls.h"
 
 namespace mahjong {
 

@@ -4,7 +4,7 @@
 #include <functional>
 #include <string>
 
-#include "winds.h"
+#include "types/winds.h"
 
 namespace mahjong {
 
@@ -97,7 +97,7 @@ class Piece {
     return (p_ | kRedFive) != (rhs.p_ | kRedFive);
   }
 
-  Piece operator-(uint8_t i) const {
+  Piece operator-(int8_t i) const {
     if (i == 0) {
       return Piece(p_);
     }
@@ -112,7 +112,7 @@ class Piece {
                  ~static_cast<uint8_t>(kTerminalBit));
   }
 
-  Piece operator+(uint8_t i) const {
+  Piece operator+(int8_t i) const {
     if (i == 0) {
       return Piece(p_);
     }

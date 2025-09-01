@@ -2,7 +2,7 @@
 #include <random>
 #include <vector>
 
-#include "piecetype.h"
+#include "types/piecetype.h"
 
 namespace mahjong {
 class Walls {

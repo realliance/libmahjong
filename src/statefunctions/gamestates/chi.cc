@@ -8,9 +8,9 @@
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
-#include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 #include "types/statefunction.h"
 
 namespace mahjong {
@@ -74,7 +74,8 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
     state->nextState = StateFunctionType::kError;
     return state;
   }
-  state->hands.at(state->lastCaller).melds.push_back({Meld::kChi, chi_start});
+  state->hands.at(state->lastCaller)
+      .melds.push_back({SetType::kChi, chi_start});
 
   state->pendingPiece = AskForDiscard(*state);
 

@@ -7,22 +7,23 @@
 #include <string>
 #include <vector>
 
-#include "piecetype.h"
+#include "types/piecetype.h"
+#include "types/sets.h"
 
 namespace mahjong {
 
 class Node : public std::enable_shared_from_this<Node> {
  public:
-  enum Type { kError, kChiSet, kPonSet, kPair, kSingle, kRoot };
-
   bool operator!=(const Node& n) const;
 
-  Node(int id, Type type, Piece start, Node* parent = nullptr)
+  explicit Node(int id) : id_(id) {}
+
+  Node(int id, SetType type, Piece start, Node* parent)
       : id_(id), type_(type), start_(start), parent_(parent) {}
 
   std::string typeToStr() const;
 
-  Node* addLeaf(Piece start, Node::Type type, int id) {
+  Node* addLeaf(Piece start, SetType type, int id) {
     leaves_.push_back(std::make_unique<Node>(
         /*id=*/id,
         /*type=*/type,
@@ -85,7 +86,7 @@ class Node : public std::enable_shared_from_this<Node> {
   }
 
   int id() const { return id_; }
-  Type type() const { return type_; }
+  SetType type() const { return type_; }
   Piece start() const { return start_; }
   Node* parent() { return parent_; }
   Node const* parent() const { return parent_; }
@@ -94,7 +95,7 @@ class Node : public std::enable_shared_from_this<Node> {
 
  private:
   int id_;
-  Type type_;
+  SetType type_;
   Piece start_;
   Node* parent_ = nullptr;  // not owned.
   std::vector<std::unique_ptr<Node>> leaves_;

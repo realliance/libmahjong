@@ -3,7 +3,6 @@
 #include <memory>
 #include <stdexcept>
 #include <utility>
-#include <vector>
 
 #include "gamestate_utils.h"
 #include "types/gamestate.h"

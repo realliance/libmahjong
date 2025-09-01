@@ -9,6 +9,7 @@
 #include "types/gamestate.h"
 #include "types/meld.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 #include "types/statefunction.h"
 
 namespace mahjong {
@@ -29,8 +30,8 @@ std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
   }
   state->concealedKan = false;
   for (auto& meld : state->hands.at(state->currentPlayer).melds) {
-    if (meld.type == Meld::kPon && meld.start == state->pendingPiece) {
-      meld.type = Meld::kKan;
+    if (meld.type == SetType::kPon && meld.start == state->pendingPiece) {
+      meld.type = SetType::kKan;
       state->nextState = StateFunctionType::kKanDiscard;
       return state;
     }

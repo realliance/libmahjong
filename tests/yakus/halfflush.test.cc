@@ -7,19 +7,20 @@
 
 #include "analysis/analysis.h"
 
+#include "analysis/handnode.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
-#include "types/handnode.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
 
 TEST(isHalfFlush, 2Han) {
   const Meld meld = {
-      .type = Meld::kPon,
+      .type = SetType::kPon,
       .start = Piece(kSixCharacter),
   };
 
@@ -57,7 +58,7 @@ TEST(isHalfFlush, 3Han) {
 
 TEST(isHalfFlush, BadHand) {
   const Meld meld = {
-      .type = Meld::kPon,
+      .type = SetType::kPon,
       .start = Piece(kSixCharacter),
   };
 
@@ -79,7 +80,7 @@ TEST(isHalfFlush, BadHand) {
 
 TEST(isHalfFlush, FullFlushIncompatible) {
   const Meld meld = {
-      .type = Meld::kPon,
+      .type = SetType::kPon,
       .start = Piece(kSixCharacter),
   };
 

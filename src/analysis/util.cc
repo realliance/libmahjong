@@ -8,6 +8,7 @@
 #include "types/gamestate.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 
 namespace mahjong {
 namespace {
@@ -131,8 +132,8 @@ int countSingles(const std::vector<Piece>& hand) {
   int min_singles = 15;
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     int singles = 0;
-    for (const auto& node : branch) {
-      if (node->type() == Node::kSingle) {
+    for (const auto* node : branch) {
+      if (node->type() == SetType::kSingle) {
         singles++;
       }
     }

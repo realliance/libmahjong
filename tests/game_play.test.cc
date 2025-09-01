@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <array>
-#include <vector>
 
 #include "scoring/scoring.h"
 #include "statefunctions/decisionfunction.h"

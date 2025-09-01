@@ -8,10 +8,11 @@
 #include <array>
 #include <vector>
 
-#include "analysis.h"
-#include "types/handnode.h"
+#include "analysis/analysis.h"
+#include "analysis/handnode.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 
 namespace mahjong {
 namespace {
@@ -195,8 +196,8 @@ bool TestStdForm(const std::vector<Piece>& hand) {
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     bool complete = true;
     const std::vector<const Node*> singles;
-    for (const auto& node : branch) {
-      if (node->type() == Node::kSingle) {
+    for (const auto* node : branch) {
+      if (node->type() == SetType::kSingle) {
         complete = false;
         break;
       }

@@ -7,12 +7,13 @@
 
 #include "analysis/analysis.h"
 
+#include "analysis/handnode.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
-#include "types/handnode.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
@@ -35,7 +36,7 @@ TEST(isLittleThreeDragons, 2Han) {
 
 TEST(isLittleThreeDragons, WhenOpen) {
   const Meld meld = {
-      .type = Meld::kPon,
+      .type = SetType::kPon,
       .start = Piece(kWhiteDragon),
   };
 
@@ -57,7 +58,7 @@ TEST(isLittleThreeDragons, WhenOpen) {
 
 TEST(isLittleThreeDragons, BadHand) {
   const Meld meld = {
-      .type = Meld::kPon,
+      .type = SetType::kPon,
       .start = Piece(kWhiteDragon),
   };
 

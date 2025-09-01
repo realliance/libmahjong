@@ -3,12 +3,13 @@
 #include <algorithm>
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "analysis/util.h"
 #include "scoring/yakus.h"
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
 #include "types/pieces.h"
+#include "types/sets.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
@@ -17,17 +18,16 @@ bool isPinfu(const GameState& state, int player,
   if (state.hands.at(player).open) {
     return false;
   }
-  for (const auto& node : branch) {
+  for (const auto* node : branch) {
     switch (node->type()) {
-      case Node::kPonSet:
-      case Node::kSingle:
-      case Node::kError:
+      case SetType::kPon:
+      case SetType::kConcealedKan:
+      case SetType::kKan:
+      case SetType::kSingle:
         return false;
 
-      case Node::kChiSet:
-      case Node::kRoot:
-        continue;
-      case Node::kPair: {
+      case SetType::kChi:
+      case SetType::kPair: {
         if (node->start() == kRedDragon || node->start() == kWhiteDragon ||
             node->start() == kGreenDragon) {
           return false;

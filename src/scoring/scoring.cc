@@ -12,6 +12,7 @@
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/score.h"
+#include "types/sets.h"
 
 namespace mahjong {
 
@@ -66,8 +67,8 @@ Score scoreHand(const GameState& state, int player) {
   }
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     Score branchscore;
-    if (std::ranges::any_of(branch, [](const auto& node) {
-          return node->type() == Node::kSingle;
+    if (std::ranges::any_of(branch, [](const auto* node) {
+          return node->type() == SetType::kSingle;
         })) {
       continue;
     }
@@ -103,7 +104,7 @@ Score scoreHand(const GameState& state, int player) {
         if (meld.start == dora) {
           branchscore.han++;
         }
-        if (meld.type == Meld::kChi) {
+        if (meld.type == SetType::kChi) {
           if (meld.start + 1 == dora) {
             branchscore.han++;
           }
@@ -176,7 +177,7 @@ int getFu(const GameState& state, int player,
     fu += kSelfdraw;
   }
   for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type == Meld::kKan) {
+    if (meld.type == SetType::kKan) {
       if (!meld.start.isHonor() && !meld.start.isTerminal()) {
         fu += open ? kSimplekan : kCsimplekan;
       } else {
@@ -184,8 +185,8 @@ int getFu(const GameState& state, int player,
       }
     }
   }
-  for (const auto& node : branch) {
-    if (node->type() == Node::kPonSet) {
+  for (const auto* node : branch) {
+    if (node->type() == SetType::kPon) {
       if (!node->start().isHonor() && !node->start().isTerminal()) {
         fu += open ? kSimplepon : kCsimplepon;
       } else {
@@ -195,7 +196,7 @@ int getFu(const GameState& state, int player,
     if (open) {
       continue;
     }
-    if (node->type() == Node::kPair) {
+    if (node->type() == SetType::kPair) {
       if (node->start().isHonor()) {
         if (node->start() == kGreenDragon || node->start() == kRedDragon ||
             node->start() == kWhiteDragon ||
@@ -207,7 +208,7 @@ int getFu(const GameState& state, int player,
         fu += kEdgeclosedpairwait;
       }
     }
-    if (node->type() == Node::kChiSet) {
+    if (node->type() == SetType::kChi) {
       if (node->start() + 1 == state.pendingPiece) {
         fu += kEdgeclosedpairwait;
       }
@@ -231,11 +232,11 @@ int getFu(const GameState& state, int player,
 
 bool isOpenPinfu(const GameState& state, int player,
                  const std::vector<const mahjong::Node*>& branch) {
-  for (const auto& node : branch) {
-    if (node->type() == Node::kPonSet) {
+  for (const auto* node : branch) {
+    if (node->type() == SetType::kPon) {
       return false;
     }
-    if (node->type() == Node::kPair) {
+    if (node->type() == SetType::kPair) {
       if (node->start() == kRedDragon || node->start() == kWhiteDragon ||
           node->start() == kGreenDragon) {
         return false;
@@ -249,7 +250,7 @@ bool isOpenPinfu(const GameState& state, int player,
     }
   }
   for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type > Meld::kChi) {
+    if (meld.type > SetType::kChi) {
       return false;
     }
   }
@@ -263,8 +264,8 @@ bool isComplete(const GameState& state, int player) {
     return false;
   }
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (std::any_of(branch.begin(), branch.end(), [](const auto& node) {
-          return node->type() == Node::kSingle;
+    if (std::any_of(branch.begin(), branch.end(), [](const auto* node) {
+          return node->type() == SetType::kSingle;
         })) {
       continue;
     }

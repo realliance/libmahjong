@@ -6,13 +6,14 @@
 
 #include "analysis/analysis.h"
 
+#include "analysis/handnode.h"
 #include "scoring/yakus/allpons.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
-#include "types/handnode.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
@@ -34,7 +35,7 @@ TEST(isAllPons, 2Han) {
 
 TEST(isAllPons, WithKans) {
   const Meld meld = {
-      .type = Meld::kKan,
+      .type = SetType::kKan,
       .start = Piece(kFivePin),
   };
 
@@ -56,7 +57,7 @@ TEST(isAllPons, WithKans) {
 
 TEST(isAllPons, ConcealedKan) {
   const Meld meld = {
-      .type = Meld::kConcealedKan,
+      .type = SetType::kConcealedKan,
       .start = Piece(kFivePin),
   };
 

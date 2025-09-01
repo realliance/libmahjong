@@ -1,8 +1,8 @@
-#include "totobot.h"
+#include "controllers/totobot.h"
 
 #include <vector>
 
-#include "controllermanager.h"
+#include "controllers/controllermanager.h"
 #include "types/event.h"
 #include "types/piecetype.h"
 #include "types/winds.h"

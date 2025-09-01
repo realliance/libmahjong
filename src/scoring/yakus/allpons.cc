@@ -2,23 +2,24 @@
 
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
+#include "types/sets.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isAllPons(const GameState& state, int player,
                const std::vector<const mahjong::Node*>& branch) {
   int pons = 0;
-  for (const auto& node : branch) {
-    if (node->type() == Node::kPonSet) {
+  for (const auto* node : branch) {
+    if (node->type() == SetType::kPon) {
       pons++;
     }
   }
   for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type == Meld::kKan || meld.type == Meld::kPon ||
-        meld.type == Meld::kConcealedKan) {
+    if (meld.type == SetType::kKan || meld.type == SetType::kPon ||
+        meld.type == SetType::kConcealedKan) {
       pons++;
     }
   }

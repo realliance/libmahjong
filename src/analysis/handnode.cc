@@ -1,47 +1,44 @@
-#include "handnode.h"
+#include "analysis/handnode.h"
 
 #include <algorithm>
 #include <cstddef>
-#include <cstdint>
+#include <format>
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "typeprinter.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
+#include "types/typeprinter.h"
 
 namespace mahjong {
 
 namespace {
-std::string NodeTypeToColorStr(uint8_t nodetype) {
+std::string NodeTypeToColorStr(SetType nodetype) {
   switch (nodetype) {
-    case Node::kChiSet:
+    case SetType::kChi:
       return "purple";
-    case Node::kPonSet:
+    case SetType::kPon:
       return "yellow";
-    case Node::kPair:
+    case SetType::kPair:
       return "green";
-    case Node::kSingle:
+    case SetType::kSingle:
       return "blue";
-    case Node::kRoot:
-      return "black";
     default:
       return "red";
   }
 }
 
-std::string NodeTypeToShapeStr(uint8_t nodetype) {
+std::string NodeTypeToShapeStr(SetType nodetype) {
   switch (nodetype) {
-    case Node::kChiSet:
+    case SetType::kChi:
       return "house";
-    case Node::kPonSet:
+    case SetType::kPon:
       return "septagon";
-    case Node::kPair:
+    case SetType::kPair:
       return "oval";
-    case Node::kSingle:
+    case SetType::kSingle:
       return "box";
-    case Node::kRoot:
-      return "underline";
     default:
       return "Mdiamond";
   }
@@ -50,18 +47,16 @@ std::string NodeTypeToShapeStr(uint8_t nodetype) {
 
 std::string Node::typeToStr() const {
   switch (type_) {
-    case kChiSet:
+    case kChi:
       return "Chi";
-    case kPonSet:
+    case kPon:
       return "Pon";
     case kPair:
       return "Pair";
     case kSingle:
       return "Single";
-    case kRoot:
-      return "RootNode";
     default:
-      return "Invalid Type";
+      return "Error";
   }
 }
 
@@ -147,12 +142,13 @@ std::ostream& Node::DumpAsTGF(std::ostream& os) const {
   std::vector<std::string> nodes;
   std::vector<std::string> connections;
   for (const auto& node : *this) {
-    nodes.push_back(std::to_string(node.id_) + " Piece: " +
-                    (node.type() != kRoot ? node.start_.toStr() : "Root") +
-                    " Type: " + node.typeToStr());
+    const bool is_root = node.parent_ == nullptr;
+    const std::string piece = is_root ? "Root" : node.start().toStr();
+    const std::string type = is_root ? "RootNode" : node.typeToStr();
+    nodes.push_back(
+        std::format("{} Piece: {} Type: {}", node.id_, piece, type));
     for (const auto& leaf : node.leaves_) {
-      connections.push_back(std::to_string(node.id_) + " " +
-                            std::to_string(leaf->id_));
+      connections.push_back(std::format("{} {}", node.id_, leaf->id_));
     }
   }
   for (const auto& node : nodes) {
@@ -169,14 +165,17 @@ std::ostream& Node::DumpAsDot(std::ostream& os) const {
   std::vector<std::string> nodes;
   std::vector<std::string> connections;
   for (const auto& node : *this) {
-    nodes.push_back(std::to_string(node.id_) + " [label=\"" + node.typeToStr() +
-                    ": " +
-                    (node.type_ != kRoot ? node.start_.toStr() : "Root") +
-                    "\"" + ",shape=" + NodeTypeToShapeStr(node.type_) +
-                    ",color=" + NodeTypeToColorStr(node.type_) + "];");
+    const bool is_root = node.parent_ == nullptr;
+    const std::string piece = is_root ? "Root" : node.start().toStr();
+    const std::string type = is_root ? "RootNode" : node.typeToStr();
+    const std::string shape =
+        is_root ? "underline" : NodeTypeToShapeStr(node.type_);
+    const std::string color =
+        is_root ? "black" : NodeTypeToColorStr(node.type_);
+    nodes.push_back(std::format("{} [label=\"{}: {}\",shape={},color={}];",
+                                node.id_, piece, type, shape, color));
     for (const auto& leaf : node.leaves_) {
-      connections.push_back(std::to_string(node.id_) + " -> " +
-                            std::to_string(leaf->id_) + ";");
+      connections.push_back(std::format("{} -> {};", node.id_, leaf->id_));
     }
   }
   os << "digraph {" << '\n';
@@ -217,7 +216,8 @@ std::vector<std::vector<const Node*>> Node::AsBranchVectors(const Node* root) {
     if (!current->leaves_.empty()) {
       nodeloc.push_back(current->leaves_[0].get());
     } else {
-      branches.push_back(nodeloc);
+      // Skip the root node when adding to branches list.
+      branches.emplace_back(nodeloc.begin() + 1, nodeloc.end());
       size_t next = current->leafPosInParent() + 1;
 
       while ((current->parent_ != nullptr) &&
@@ -253,10 +253,10 @@ bool Node::IsComplete() const {
     int pair_count = 0;
     return std::none_of(branch.begin(), branch.end(),
                         [&pair_count](auto node) {
-                          if (node->type_ == Node::kPair) {
+                          if (node->type_ == SetType::kPair) {
                             pair_count += 1;
                           }
-                          return node->type_ == Node::kSingle;
+                          return node->type_ == SetType::kSingle;
                         }) &&
            (pair_count == 1 || pair_count == 7);
   });

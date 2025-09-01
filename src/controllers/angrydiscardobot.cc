@@ -1,6 +1,6 @@
-#include "angrydiscardobot.h"
+#include "controllers/angrydiscardobot.h"
 
-#include "controllermanager.h"
+#include "controllers/controllermanager.h"
 #include "types/event.h"
 
 namespace mahjong {

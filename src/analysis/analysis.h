@@ -2,7 +2,7 @@
 #include <memory>
 #include <vector>
 
-#include "types/handnode.h"
+#include "analysis/handnode.h"
 #include "types/piecetype.h"
 
 namespace mahjong {

@@ -3,9 +3,10 @@
 #include <array>
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
+#include "types/sets.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
@@ -17,8 +18,8 @@ bool isPureStraight(const GameState& state, int player,
   std::array<bool, 3> bamboo_chi = {};
   std::array<bool, 3> char_chi = {};
   std::array<bool, 3> pin_chi = {};
-  for (const auto& node : branch) {
-    if (node->type() == Node::kChiSet) {
+  for (const auto* node : branch) {
+    if (node->type() == SetType::kChi) {
       int ind = 0;
       if (node->start().getPieceNum() == k_firstchistart) {
         ind = 0;
@@ -41,7 +42,7 @@ bool isPureStraight(const GameState& state, int player,
     }
   }
   for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type == Meld::kChi) {
+    if (meld.type == SetType::kChi) {
       int ind = 0;
       if (meld.start.getPieceNum() == k_firstchistart) {
         ind = 0;

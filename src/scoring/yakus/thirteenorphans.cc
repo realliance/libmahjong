@@ -3,9 +3,9 @@
 #include <map>
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/yaku.h"

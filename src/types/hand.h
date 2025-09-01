@@ -4,8 +4,8 @@
 #include <utility>
 #include <vector>
 
-#include "meld.h"
-#include "piecetype.h"
+#include "types/meld.h"
+#include "types/piecetype.h"
 
 namespace mahjong {
 

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "playercontroller.h"
+#include "controllers/playercontroller.h"
 #include "types/event.h"
 #include "types/piecetype.h"
 #include "types/winds.h"

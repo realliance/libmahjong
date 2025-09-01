@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "playercontroller.h"
+#include "controllers/playercontroller.h"
 
 namespace mahjong {
 using newControllerInst = std::function<std::unique_ptr<PlayerController>()>;

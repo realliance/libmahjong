@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.h"
+#include "api/types.h"
 
 namespace mahjong {
 struct GameState;
@@ -10,7 +10,7 @@ namespace api {
 
 extern "C" {
 
-#include "stdbool.h"
+#include <stdbool.h>
 
 int StartGame(const CGameSettings* settings, bool async);
 void ExitGame(int game);

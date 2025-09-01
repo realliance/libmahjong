@@ -6,20 +6,21 @@
 
 #include "analysis/analysis.h"
 
+#include "analysis/handnode.h"
 #include "scoring/yakus/terminalsinallsets.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
-#include "types/handnode.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
 
 TEST(isTerminalsInAllSets, 2Han) {
   const Meld meld = {
-      .type = Meld::kChi,
+      .type = SetType::kChi,
       .start = Piece(kSevenPin),
   };
 
@@ -57,7 +58,7 @@ TEST(isTerminalsInAllSets, 3Han) {
 
 TEST(isTerminalsInAllSets, BadHand) {
   const Meld meld = {
-      .type = Meld::kChi,
+      .type = SetType::kChi,
       .start = Piece(kSevenPin),
   };
 

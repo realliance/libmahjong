@@ -1,4 +1,4 @@
-#include "walls.h"
+#include "types/walls.h"
 
 #include <algorithm>
 #include <cstddef>
