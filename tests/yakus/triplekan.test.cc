@@ -6,28 +6,29 @@
 
 #include "analysis/analysis.h"
 
+#include "analysis/handnode.h"
 #include "scoring/yakus/threekans.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
-#include "types/handnode.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
 
 TEST(isThreeKans, 2Han) {
   const Meld meld_a = {
-      .type = Meld::kConcealedKan,
+      .type = SetType::kConcealedKan,
       .start = Piece(kOneBamboo),
   };
   const Meld meld_b = {
-      .type = Meld::kKan,
+      .type = SetType::kKan,
       .start = Piece(kTwoBamboo),
   };
   const Meld meld_c = {
-      .type = Meld::kKan,
+      .type = SetType::kKan,
       .start = Piece(kFivePin),
   };
 
@@ -49,19 +50,19 @@ TEST(isThreeKans, 2Han) {
 
 TEST(isThreeKans, WithOtherMelds) {
   const Meld meld_a = {
-      .type = Meld::kConcealedKan,
+      .type = SetType::kConcealedKan,
       .start = Piece(kOneBamboo),
   };
   const Meld meld_b = {
-      .type = Meld::kKan,
+      .type = SetType::kKan,
       .start = Piece(kTwoBamboo),
   };
   const Meld meld_c = {
-      .type = Meld::kKan,
+      .type = SetType::kKan,
       .start = Piece(kFivePin),
   };
   const Meld meld_d = {
-      .type = Meld::kChi,
+      .type = SetType::kChi,
       .start = Piece(kTwoBamboo),
   };
 
@@ -83,11 +84,11 @@ TEST(isThreeKans, WithOtherMelds) {
 
 TEST(isThreeKans, BadHand) {
   const Meld meld_a = {
-      .type = Meld::kConcealedKan,
+      .type = SetType::kConcealedKan,
       .start = Piece(kOneBamboo),
   };
   const Meld meld_b = {
-      .type = Meld::kKan,
+      .type = SetType::kKan,
       .start = Piece(kTwoBamboo),
   };
 
@@ -109,15 +110,15 @@ TEST(isThreeKans, BadHand) {
 
 TEST(isThreeKans, AllConcealed) {
   const Meld meld_a = {
-      .type = Meld::kConcealedKan,
+      .type = SetType::kConcealedKan,
       .start = Piece(kOneBamboo),
   };
   const Meld meld_b = {
-      .type = Meld::kConcealedKan,
+      .type = SetType::kConcealedKan,
       .start = Piece(kTwoBamboo),
   };
   const Meld meld_c = {
-      .type = Meld::kConcealedKan,
+      .type = SetType::kConcealedKan,
       .start = Piece(kFivePin),
   };
 

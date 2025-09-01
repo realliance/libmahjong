@@ -1,4 +1,4 @@
-#include "typeprinter.h"
+#include "types/typeprinter.h"
 
 #include <array>
 #include <cstddef>
@@ -7,15 +7,15 @@
 #include <ostream>
 #include <string>
 
+#include "analysis/handnode.h"
 #include "controllers/playercontroller.h"
-#include "event.h"
-#include "gamestate.h"
-#include "hand.h"
-#include "handnode.h"
-#include "meld.h"
+#include "types/event.h"
+#include "types/gamestate.h"
+#include "types/hand.h"
+#include "types/meld.h"
 #include "types/piecetype.h"
 #include "types/player.h"
-#include "walls.h"
+#include "types/walls.h"
 
 std::ostream& operator<<(std::ostream& os, const mahjong::Event& e) {
   os << "{type: " << e.typeToStr();

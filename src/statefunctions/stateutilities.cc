@@ -1,4 +1,4 @@
-#include "stateutilities.h"
+#include "statefunctions/stateutilities.h"
 
 #include <algorithm>
 #include <array>
@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "controllers/playercontroller.h"
-#include "decisionfunction.h"
+#include "statefunctions/decisionfunction.h"
 #include "types/event.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"

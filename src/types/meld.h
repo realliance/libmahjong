@@ -1,18 +1,13 @@
 #pragma once
 #include <string>
 
-#include "piecetype.h"
+#include "types/piecetype.h"
+#include "types/sets.h"
 
 namespace mahjong {
 
 struct Meld {
-  enum Type {  // order here is important. add any new types carefully
-    kChi,
-    kPon,
-    kKan,
-    kConcealedKan
-  };
-  Type type;
+  SetType type;
   Piece start;
 
   bool operator==(Meld other) const {
@@ -24,13 +19,13 @@ struct Meld {
 
   [[nodiscard]] std::string typeToStr() const {
     switch (type) {
-      case Meld::kChi:
+      case SetType::kChi:
         return "Chi";
-      case Meld::kKan:
+      case SetType::kKan:
         return "Kan";
-      case Meld::kPon:
+      case SetType::kPon:
         return "Pon";
-      case Meld::kConcealedKan:
+      case SetType::kConcealedKan:
         return "ConcealedKan";
       default:
         return "InvalidMeldType";

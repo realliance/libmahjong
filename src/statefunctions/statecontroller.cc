@@ -1,4 +1,4 @@
-#include "statecontroller.h"
+#include "statefunctions/statecontroller.h"
 
 #include <array>
 #include <iostream>
@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "controllers/controllermanager.h"
-#include "router.h"
+#include "statefunctions/router.h"
 #include "types/gamestate.h"
 #include "types/settings.h"
 #include "types/statefunction.h"

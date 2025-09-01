@@ -1,4 +1,4 @@
-#include "piecetype.h"
+#include "types/piecetype.h"
 
 #include <cstdint>
 #include <map>

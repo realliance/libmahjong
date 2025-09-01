@@ -2,11 +2,11 @@
 
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "scoring/yakus/doubleriichi.h"
 #include "scoring/yakus/riichi.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {

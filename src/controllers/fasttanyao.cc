@@ -1,11 +1,11 @@
-#include "fasttanyao.h"
+#include "controllers/fasttanyao.h"
 
 #include <algorithm>
 #include <cstdint>
 #include <utility>
 #include <vector>
 
-#include "controllermanager.h"
+#include "controllers/controllermanager.h"
 #include "types/event.h"
 #include "types/piecetype.h"
 #include "types/winds.h"

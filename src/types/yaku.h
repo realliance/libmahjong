@@ -1,8 +1,8 @@
 #pragma once
 
 #include <functional>
+#include "analysis/handnode.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
 
 namespace mahjong {
 

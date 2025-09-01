@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "piecetype.h"
+#include "types/piecetype.h"
 
 namespace mahjong {
 

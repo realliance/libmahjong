@@ -6,10 +6,11 @@
 #include <utility>
 #include <vector>
 
-#include "analysis.h"
-#include "types/handnode.h"
+#include "analysis/analysis.h"
+#include "analysis/handnode.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 
 namespace mahjong {
 
@@ -87,7 +88,7 @@ void breakdownForwardChi(Breakdown* b, Piece piece) {
           b->pieces.end());
     }
   }
-  b->currentNode = b->currentNode->addLeaf(piece, Node::kChiSet, b->id++);
+  b->currentNode = b->currentNode->addLeaf(piece, SetType::kChi, b->id++);
 }
 
 void breakdownPon(Breakdown* b, Piece piece) {
@@ -96,7 +97,7 @@ void breakdownPon(Breakdown* b, Piece piece) {
     b->pieces.erase(std::remove(b->pieces.begin(), b->pieces.end(), piece),
                     b->pieces.end());
   }
-  b->currentNode = b->currentNode->addLeaf(piece, Node::kPonSet, b->id++);
+  b->currentNode = b->currentNode->addLeaf(piece, SetType::kPon, b->id++);
 }
 
 void breakdownPair(Breakdown* b, Piece piece) {
@@ -105,11 +106,11 @@ void breakdownPair(Breakdown* b, Piece piece) {
     b->pieces.erase(std::remove(b->pieces.begin(), b->pieces.end(), piece),
                     b->pieces.end());
   }
-  b->currentNode = b->currentNode->addLeaf(piece, Node::kPair, b->id++);
+  b->currentNode = b->currentNode->addLeaf(piece, SetType::kPair, b->id++);
 }
 
 void breakdownSingle(Breakdown* b, Piece piece) {
-  b->currentNode = b->currentNode->addLeaf(piece, Node::kSingle, b->id++);
+  b->currentNode = b->currentNode->addLeaf(piece, SetType::kSingle, b->id++);
 
   b->counts[piece]--;
   if (b->counts[piece] == 0) {
@@ -134,14 +135,7 @@ void resetCounts(Breakdown* b, const Node* target) {
       os.close();
       throw -2;
     }
-    if (b->currentNode->parent()->type() == Node::kError) {
-      std::cerr << "reset Failure: reset up to an error." << '\n';
-      std::ofstream os("error.gv");
-      b->rootNode->DumpAsDot(os);
-      os.close();
-      throw -4;
-    }
-    if (b->currentNode->type() == Node::kChiSet) {
+    if (b->currentNode->type() == SetType::kChi) {
       for (int i = 0; i < 3; i++) {
         if (b->counts[b->currentNode->start() + i] == 0) {
           b->pieces.push_back(Piece{b->currentNode->start() + i});
@@ -154,13 +148,13 @@ void resetCounts(Breakdown* b, const Node* target) {
         b->pieces.emplace_back(b->currentNode->start());
         std::sort(b->pieces.begin(), b->pieces.end());
       }
-      if (b->currentNode->type() == Node::kSingle) {
+      if (b->currentNode->type() == SetType::kSingle) {
         b->counts[b->currentNode->start()]++;
       }
-      if (b->currentNode->type() == Node::kPair) {
+      if (b->currentNode->type() == SetType::kPair) {
         b->counts[b->currentNode->start()] += 2;
       }
-      if (b->currentNode->type() == Node::kPonSet) {
+      if (b->currentNode->type() == SetType::kPon) {
         b->counts[b->currentNode->start()] += 3;
       }
     }
@@ -326,10 +320,7 @@ void driver(Breakdown* b) {
 
 std::unique_ptr<Node> breakdownHand(const std::vector<Piece>& pieces) {
   Breakdown b;
-  b.rootNode = std::make_unique<Node>(b.id++,                     // id
-                                      Node::kRoot,                // type
-                                      Piece(Piece::Type::kError)  // Start
-  );
+  b.rootNode = std::make_unique<Node>(/*id=*/b.id++);
   b.currentNode = b.rootNode.get();
   b.pieces = pieces;
   countPieces(&b);

@@ -3,10 +3,11 @@
 #include <cstddef>
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "scoring/yakus/twicepuredoublechi.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
+#include "types/sets.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
@@ -16,7 +17,7 @@ bool isPureDoubleChi(const GameState& state, int player,
     return false;
   }
   for (size_t i = 0; i < branch.size(); i++) {
-    if (branch.at(i)->type() != Node::kChiSet) {
+    if (branch.at(i)->type() != SetType::kChi) {
       continue;
     }
     for (size_t j = 0; j < branch.size(); j++) {

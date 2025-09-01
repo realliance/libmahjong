@@ -2,9 +2,10 @@
 
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
+#include "types/sets.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
@@ -12,7 +13,7 @@ bool isThreeKans(const GameState& state, int player,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
   int kans = 0;
   for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type >= Meld::kKan) {
+    if (meld.type >= SetType::kKan) {
       kans++;
     }
   }

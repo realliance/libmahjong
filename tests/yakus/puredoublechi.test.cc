@@ -6,9 +6,9 @@
 
 #include "analysis/analysis.h"
 
+#include "analysis/handnode.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
-#include "types/handnode.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {

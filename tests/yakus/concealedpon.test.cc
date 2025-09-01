@@ -6,13 +6,14 @@
 
 #include "analysis/analysis.h"
 
+#include "analysis/handnode.h"
 #include "scoring/yakus/threeconcealedpons.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
-#include "types/handnode.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
@@ -34,7 +35,7 @@ TEST(isThreeConcealedPons, 2Han) {
 
 TEST(isThreeConcealedPons, PonsMustBeConcealed) {
   auto meld = Meld();
-  meld.type = Meld::kChi;
+  meld.type = SetType::kChi;
   meld.start = Piece(kTwoBamboo);
 
   auto game_state = GameState();
@@ -55,7 +56,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealed) {
 
 TEST(isThreeConcealedPons, CanHaveAdditionalOpenPon) {
   auto meld = Meld();
-  meld.type = Meld::kPon;
+  meld.type = SetType::kPon;
   meld.start = Piece(kTwoBamboo);
 
   auto game_state = GameState();
@@ -76,7 +77,7 @@ TEST(isThreeConcealedPons, CanHaveAdditionalOpenPon) {
 
 TEST(isThreeConcealedPons, PonsMustBeConcealedNegative) {
   auto meld = Meld();
-  meld.type = Meld::kPon;
+  meld.type = SetType::kPon;
   meld.start = Piece(kOneBamboo);
 
   auto game_state = GameState();

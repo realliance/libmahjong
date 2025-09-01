@@ -2,12 +2,13 @@
 
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 #include "types/winds.h"
 #include "types/yaku.h"
 
@@ -16,13 +17,13 @@ namespace {
 bool findPon(const GameState& state, int player,
              const std::vector<const mahjong::Node*>& branch,
              const Piece& piece) {
-  for (const auto& node : branch) {
-    if (node->type() == Node::kPonSet && node->start() == piece) {
+  for (const auto* node : branch) {
+    if (node->type() == SetType::kPon && node->start() == piece) {
       return true;
     }
   }
   for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type >= Meld::kPon && meld.start == piece) {
+    if (meld.type >= SetType::kPon && meld.start == piece) {
       return true;
     }
   }

@@ -10,12 +10,12 @@
 #include <vector>
 
 #include "controllers/playercontroller.h"
-#include "playercontrollerfake.h"
 #include "statefunctions/router.h"
 #include "statefunctions/statecontroller.h"
 #include "types/gamestate.h"
 #include "types/settings.h"
 #include "types/statefunction.h"
+#include "utils/playercontrollerfake.h"
 
 namespace mahjong {
 

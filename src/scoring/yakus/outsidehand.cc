@@ -2,19 +2,20 @@
 
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "scoring/yakus/allterminalsandhonors.h"
 #include "scoring/yakus/terminalsinallsets.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
+#include "types/sets.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
 bool isOutsideHand(const GameState& state, int player,
                    const std::vector<const mahjong::Node*>& branch) {
   bool chi = false;
-  for (const auto& node : branch) {
-    if (node->type() == Node::kChiSet) {
+  for (const auto* node : branch) {
+    if (node->type() == SetType::kChi) {
       if (node->start().isTerminal() || (node->start() + 2).isTerminal()) {
         chi = true;
       } else {
@@ -27,7 +28,7 @@ bool isOutsideHand(const GameState& state, int player,
     }
   }
   for (const auto& meld : state.hands.at(player).melds) {
-    if (meld.type == Meld::kChi) {
+    if (meld.type == SetType::kChi) {
       if (meld.start.isTerminal() || (meld.start + 2).isTerminal()) {
         chi = true;
       } else {

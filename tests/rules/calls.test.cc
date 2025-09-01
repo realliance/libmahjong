@@ -7,8 +7,8 @@
 #include "controllers/playercontroller.h"
 #include "statefunctions/statecontroller.h"
 #include "types/event.h"
-#include "types/meld.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 #include "types/statefunction.h"
 #include "utils/gamestate_utils.h"
 #include "utils/handformer.h"
@@ -69,7 +69,7 @@ TEST(Calls, AcceptPon) {
   EXPECT_EQ(state->currentPlayer, 1);
   EXPECT_EQ(state->currState, StateFunctionType::kDiscard);
   EXPECT_EQ(state->hands[1].melds.size(), 1);
-  EXPECT_EQ(state->hands[1].melds[0].type, Meld::kPon);
+  EXPECT_EQ(state->hands[1].melds[0].type, SetType::kPon);
   EXPECT_EQ(state->hands[1].melds[0].start, Piece(Piece::kNineBamboo));
 
   // Player 1's hand should be reduced by 2 tiles (used for pon)

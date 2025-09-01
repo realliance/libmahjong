@@ -1,4 +1,4 @@
-#include "gentlemanbot.h"
+#include "controllers/gentlemanbot.h"
 
 #include <array>
 #include <cstddef>
@@ -7,11 +7,12 @@
 #include <vector>
 
 #include "analysis/analysis.h"
-#include "controllermanager.h"
+#include "analysis/handnode.h"
+#include "controllers/controllermanager.h"
 #include "types/event.h"
-#include "types/handnode.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 #include "types/winds.h"
 
 namespace mahjong {
@@ -73,7 +74,7 @@ Piece GentlemanBot::getDiscard() {
   const std::unique_ptr<Node> symbolic_hand = breakdownHand(hand_);
 
   for (const auto& leaf : *symbolic_hand) {
-    if (leaf.type() == Node::kSingle) {
+    if (leaf.type() == SetType::kSingle) {
       free_pieces.push_back(leaf.start());
     }
   }

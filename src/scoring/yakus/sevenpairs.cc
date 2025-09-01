@@ -3,10 +3,11 @@
 #include <set>
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
 #include "types/piecetype.h"
+#include "types/sets.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
@@ -16,17 +17,16 @@ bool isSevenPairs(const GameState& state, int player,
     return false;
   }
   std::set<Piece> pairs;
-  for (const auto& node : branch) {
+  for (const auto* node : branch) {
     switch (node->type()) {
-      case Node::kError:
-      case Node::kChiSet:
-      case Node::kPonSet:
-      case Node::kSingle:
+      case SetType::kChi:
+      case SetType::kPon:
+      case SetType::kConcealedKan:
+      case SetType::kKan:
+      case SetType::kSingle:
         return false;
-      case Node::kPair:
+      case SetType::kPair:
         pairs.insert(node->start());
-      case Node::kRoot:
-        break;
     }
   }
   return pairs.size() == 7;

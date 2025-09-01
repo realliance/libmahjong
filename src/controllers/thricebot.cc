@@ -1,9 +1,9 @@
-#include "thricebot.h"
+#include "controllers/thricebot.h"
 
 #include <cstddef>
 #include <vector>
 
-#include "controllermanager.h"
+#include "controllers/controllermanager.h"
 #include "types/event.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"

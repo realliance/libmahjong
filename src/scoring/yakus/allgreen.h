@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
 
 namespace mahjong::yaku {
 bool isAllGreen(const GameState& state, int player,

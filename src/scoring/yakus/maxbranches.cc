@@ -3,8 +3,9 @@
 #include <array>
 #include <vector>
 
+#include "analysis/handnode.h"
 #include "types/gamestate.h"
-#include "types/handnode.h"
+#include "types/sets.h"
 
 namespace mahjong::yaku {
 bool isMaxBranches(const GameState& state, int player,
@@ -30,17 +31,17 @@ bool isMaxBranches(const GameState& state, int player,
         meld.start.getPieceNum() > start + 3) {
       return false;
     }
-    if (meld.type >= Meld::kKan) {
+    if (meld.type >= SetType::kKan) {
       if (meld.start.getPieceNum() != start &&
           meld.start.getPieceNum() != start + 1) {
         return false;
       }
       sets.at(meld.start.getPieceNum() - start) += 3;
     }
-    if (meld.type == Meld::kPon) {
+    if (meld.type == SetType::kPon) {
       sets.at(meld.start.getPieceNum() - start) += 3;
     }
-    if (meld.type == Meld::kChi) {
+    if (meld.type == SetType::kChi) {
       sets.at(meld.start.getPieceNum() - start)++;
       sets.at(meld.start.getPieceNum() - start + 1)++;
       sets.at(meld.start.getPieceNum() - start + 2)++;
