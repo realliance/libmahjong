@@ -1,13 +1,10 @@
 #include "analysis/util.h"
 
 #include <algorithm>
-#include <array>
 #include <cstdlib>
 #include <map>
 #include <vector>
 #include "analysis/analysis.h"
-#include "analysis/handnode.h"
-#include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
@@ -27,31 +24,6 @@ const std::vector<Piece> kPieceSet{
     kNorthWind,    kWestWind,
 };
 }  // namespace
-
-int countSingles(const std::vector<Piece>& hand) {
-  auto root = breakdownHand(hand);
-  int min_singles = 15;
-  for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    int singles = 0;
-    for (const auto* node : branch) {
-      if (node->type() == SetType::kSingle) {
-        singles++;
-      }
-    }
-    min_singles = std::min(singles, min_singles);
-  }
-  return min_singles;
-}
-
-int countPiece(const GameState& state, int player, Piece p) {
-  int count = 0;
-  for (const auto& piece : state.hands.at(player).live) {
-    if (piece == p) {
-      count++;
-    }
-  }
-  return count;
-}
 
 std::vector<Piece> completeSet(const Piece a, const Piece b) {
   if (a.getSuit() != b.getSuit()) {

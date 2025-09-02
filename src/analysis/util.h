@@ -3,17 +3,12 @@
 #include <vector>
 
 #include "analysis/analysis.h"
-#include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
 
 namespace mahjong {
-
-int countSingles(const std::vector<Piece>& hand);
-
-int countPiece(const GameState& state, int player, Piece p);
-
+// Returns list of pieces that form a complete set with a and b.
 std::vector<Piece> completeSet(Piece a, Piece b);
 
 // Returns list of waits that complete the hand.
