@@ -263,7 +263,7 @@ bool isComplete(const GameState& state, int player) {
     return false;
   }
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (std::any_of(branch.begin(), branch.end(), [](const auto* node) {
+    if (std::ranges::any_of(branch, [](const auto* node) {
           return node->type() == SetType::kSingle;
         })) {
       continue;
