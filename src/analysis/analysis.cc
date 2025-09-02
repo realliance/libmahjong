@@ -77,8 +77,9 @@ std::unique_ptr<Node> breakdownHand(const std::vector<Piece>& pieces) {
   b.currentNode = b.rootNode.get();
   b.pieces = pieces;
   countPieces(&b);
-  std::sort(b.pieces.begin(), b.pieces.end());
-  b.pieces.erase(std::unique(b.pieces.begin(), b.pieces.end()), b.pieces.end());
+  std::ranges::sort(b.pieces);
+  auto [begin,end] = std::ranges::unique(b.pieces);
+  b.pieces.erase(begin,end);
 
   driver(&b);
 

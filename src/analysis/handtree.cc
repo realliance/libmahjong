@@ -67,9 +67,7 @@ void breakdownForwardChi(Breakdown* b, Piece piece) {
   for (int i = 0; i < 3; i++) {
     b->counts[piece + i]--;
     if (b->counts[piece + i] == 0) {
-      b->pieces.erase(
-          std::remove(b->pieces.begin(), b->pieces.end(), piece + i),
-          b->pieces.end());
+      std::erase(b->pieces, piece + i);
     }
   }
   b->currentNode = b->currentNode->addLeaf(piece, SetType::kChi, b->id++);
@@ -78,8 +76,7 @@ void breakdownForwardChi(Breakdown* b, Piece piece) {
 void breakdownPon(Breakdown* b, Piece piece) {
   b->counts[piece] -= 3;
   if (b->counts[piece] == 0) {
-    b->pieces.erase(std::remove(b->pieces.begin(), b->pieces.end(), piece),
-                    b->pieces.end());
+    std::erase(b->pieces, piece);
   }
   b->currentNode = b->currentNode->addLeaf(piece, SetType::kPon, b->id++);
 }
@@ -87,8 +84,7 @@ void breakdownPon(Breakdown* b, Piece piece) {
 void breakdownPair(Breakdown* b, Piece piece) {
   b->counts[piece] -= 2;
   if (b->counts[piece] == 0) {
-    b->pieces.erase(std::remove(b->pieces.begin(), b->pieces.end(), piece),
-                    b->pieces.end());
+    std::erase(b->pieces, piece);
   }
   b->currentNode = b->currentNode->addLeaf(piece, SetType::kPair, b->id++);
 }
@@ -98,8 +94,7 @@ void breakdownSingle(Breakdown* b, Piece piece) {
 
   b->counts[piece]--;
   if (b->counts[piece] == 0) {
-    b->pieces.erase(std::remove(b->pieces.begin(), b->pieces.end(), piece),
-                    b->pieces.end());
+    std::erase(b->pieces, piece);
   }
 }
 
@@ -123,14 +118,14 @@ void resetCounts(Breakdown* b, const Node* target) {
       for (int i = 0; i < 3; i++) {
         if (b->counts[b->currentNode->start() + i] == 0) {
           b->pieces.push_back(Piece{b->currentNode->start() + i});
-          std::sort(b->pieces.begin(), b->pieces.end());
+          std::ranges::sort(b->pieces);
         }
         b->counts[b->currentNode->start() + i]++;
       }
     } else {
       if (b->counts[b->currentNode->start()] == 0) {
         b->pieces.emplace_back(b->currentNode->start());
-        std::sort(b->pieces.begin(), b->pieces.end());
+        std::ranges::sort(b->pieces);
       }
       if (b->currentNode->type() == SetType::kSingle) {
         b->counts[b->currentNode->start()]++;
@@ -173,7 +168,7 @@ void driver(Breakdown* b) {
           if (possibleChiForward(b->counts, chi_start)) {
             // Find the position of chi_start in the pieces vector
             auto piece_itr =
-                std::find(b->pieces.begin(), b->pieces.end(), chi_start);
+                std::ranges::find(b->pieces, chi_start);
             if (piece_itr != b->pieces.end()) {
               breakdownForwardChi(b, *piece_itr);
             }
@@ -206,7 +201,7 @@ void driver(Breakdown* b) {
       Piece chi_middle_piece;
       if (possibleChiForward(b->counts, current_piece - 1)) {
         const Piece chi_start = current_piece - 1;
-        auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
+        auto it = std::ranges::find(b->pieces, chi_start);
         if (it != b->pieces.end()) {
           can_chi_middle = true;
           chi_middle_piece = *it;
@@ -217,7 +212,7 @@ void driver(Breakdown* b) {
       Piece chi_end_piece;
       if (possibleChiForward(b->counts, current_piece - 2)) {
         const Piece chi_start = current_piece - 2;
-        auto it = std::find(b->pieces.begin(), b->pieces.end(), chi_start);
+        auto it = std::ranges::find(b->pieces, chi_start);
         if (it != b->pieces.end()) {
           can_chi_end = true;
           chi_end_piece = *it;
