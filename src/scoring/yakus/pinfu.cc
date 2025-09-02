@@ -1,6 +1,5 @@
 #include "scoring/yakus/pinfu.h"
 
-#include <algorithm>
 #include <vector>
 
 #include "analysis/handnode.h"
@@ -44,9 +43,7 @@ bool isPinfu(const GameState& state, int player,
       }
     }
   }
-  std::vector<Piece> hand = state.hands.at(player).live;
-  hand.erase(std::find(hand.begin(), hand.end(), state.pendingPiece));
-  return isInTenpai13Pieces(hand, /*allWaits=*/true).size() > 1;
+  return getWaits(state.hands[player], state.pendingPiece).size() >= 2;
 }
 
 REGISTER_YAKU({

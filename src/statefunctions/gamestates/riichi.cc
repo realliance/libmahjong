@@ -16,8 +16,9 @@ namespace mahjong {
 namespace {
 std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
   // TODO(#22): Ask the players if they want to riichi
-  state->pendingPiece =
-      getRiichiDiscard(state->hands.at(state->currentPlayer).live)[0];
+  state->pendingPiece = getPossibleWaits(state->hands[state->currentPlayer])
+                            .begin()
+                            ->second.front();
 
   AlertPlayers(*state,
                Event{

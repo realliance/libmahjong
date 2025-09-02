@@ -3,13 +3,20 @@
 #include <vector>
 
 #include "analysis/handnode.h"
+#include "types/hand.h"
 #include "types/piecetype.h"
 
 namespace mahjong {
+struct Branch {
+  std::vector<Piece> chis;
+  std::vector<Piece> pons;
+  std::vector<Piece> kans;
+  std::vector<Piece> pairs;
+  std::vector<Piece> singles;
+  bool open = true;
+  bool complete = true;
+};
 
-std::vector<Piece> GetPossibleStdFormHand();
-std::vector<Piece> GetPossibleTenpaiHand(bool replacement = false);
-bool TestStdForm(const std::vector<Piece>& hand);
 std::unique_ptr<Node> breakdownHand(const std::vector<Piece>& pieces);
-
+std::vector<Branch> AnalyzeHand(const Hand& hand, bool only_complete = false);
 }  // namespace mahjong
