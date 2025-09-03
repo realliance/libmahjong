@@ -2,7 +2,7 @@
   description = "Libmahjong Riichi Mahjong Game Engine";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -23,7 +23,7 @@
           ninja
         ];
 
-        llvmPackage = pkgs.llvmPackages_20;
+        llvmPackage = pkgs.llvmPackages_21;
 
         # Override the existing gtest package to use clang
         clangGtest = pkgs.gtest.override {
