@@ -1,7 +1,6 @@
 #include <array>
 #include <cstdint>
 #include <memory>
-#include <vector>
 
 #include "scoring/scoring.h"
 #include "statefunctions/router.h"
@@ -15,14 +14,15 @@ namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
-  state->hands.at(state->lastCaller).live.push_back(state->pendingPiece);
+  Hand& caller_hand = state->hands[state->lastCaller];
+  caller_hand.live[caller_hand.live_count++] = state->pendingPiece;
 
   std::array<int, 4> basic_points = {};
-  if (state->hands.at(state->currentPlayer).riichi &&
-      state->hands.at(state->currentPlayer).discards_count ==
-          state->hands.at(state->currentPlayer).riichiPieceDiscard) {
+  Hand& curr_hand = state->hands[state->currentPlayer];
+  if (curr_hand.riichi &&
+      curr_hand.discards_count == curr_hand.riichiPieceDiscard) {
     state->riichiSticks--;
-    state->hands.at(state->currentPlayer).riichi = false;
+    curr_hand.riichi = false;
   }
   for (int player = 0; player < 4; player++) {
     if (state->hasRonned.at(player)) {

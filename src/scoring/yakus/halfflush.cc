@@ -12,9 +12,9 @@ namespace mahjong::yaku {
 bool isHalfFlush(const GameState& state, int player,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
   const Hand& hand = state.hands[player];
-  const int suit = hand.live.front().getSuit();
+  const int suit = hand.live[0].getSuit();
   bool honors = false;
-  for (const auto& piece : hand.live) {
+  for (const auto& piece : hand.live_range()) {
     if (piece.isHonor()) {
       honors = true;
       continue;

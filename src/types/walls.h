@@ -1,9 +1,9 @@
 #pragma once
 #include <vector>
 
-#include "types/piecetype.h"
 #include "piecetype.h"
 #include "types/gamestate.h"
+#include "types/piecetype.h"
 
 namespace mahjong {
 class Walls {

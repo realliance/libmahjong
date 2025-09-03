@@ -60,7 +60,7 @@ const int kFuRounding = 10;
 
 Score scoreHand(const GameState& state, int player) {
   const Hand& hand = state.hands[player];
-  auto root = breakdownHand(hand.live);
+  auto root = breakdownHand(hand.live_range());
   Score s;
   s.han = 0;
   s.yakuman = 0;
@@ -98,7 +98,7 @@ Score scoreHand(const GameState& state, int player) {
     }
 
     for (const auto& dora : Walls::GetDoras(state)) {
-      for (const auto& p : hand.live) {
+      for (const auto& p : hand.live_range()) {
         if (p == dora) {
           branchscore.han++;
         }
@@ -263,7 +263,8 @@ bool isOpenPinfu(const GameState& state, int player,
 }
 
 bool isComplete(const GameState& state, int player) {
-  auto root = breakdownHand(state.hands.at(player).live);
+  const Hand& hand = state.hands[player];
+  auto root = breakdownHand(hand.live_range());
   if (!root->IsComplete() && !yaku::isThirteenOrphans(state, player)) {
     return false;
   }

@@ -49,7 +49,7 @@ std::vector<Piece> completeSet(const Piece a, const Piece b) {
 
 std::vector<Piece> getWaits(const Hand& hand) {
   // 13, 10, 7, 4, 1 are possible piece counts for non-melded tiles
-  if (hand.live.empty() || hand.live.size() % 3 != 1) {
+  if (hand.live_count == 0 || hand.live_count % 3 != 1) {
     return {};
   }
   constexpr int kMaxSingles = 2;
@@ -70,13 +70,17 @@ std::vector<Piece> getWaits(const Hand& hand) {
 
 std::vector<Piece> getWaits(const Hand& hand, const Piece& piece) {
   Hand new_hand = hand;
-  new_hand.live.erase(std::ranges::find(new_hand.live, piece));
+  // This will move all pieces matching piece to the end of the array, but
+  // we will only decrease the count by 1 so only a single piece will be
+  // removed.
+  std::ranges::remove(new_hand.live, piece);
+  new_hand.live_count--;
   return getWaits(new_hand);
 }
 
 std::map<Piece, std::vector<Piece>> getPossibleWaits(const Hand& hand) {
   // 14, 11, 8, 5, 2 are the possible piece counts for non-melded tiles.
-  if (hand.live.empty() || hand.live.size() % 3 != 2) {
+  if (hand.live_count == 0 || hand.live_count % 3 != 2) {
     return {};
   }
   constexpr int kMaxSingles = 3;

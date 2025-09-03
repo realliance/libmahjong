@@ -29,10 +29,10 @@ std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
                    .decision = false,                            // decision
                });
 
-  state->hands.at(state->currentPlayer).riichiRound = state->turnNum;
-  state->hands.at(state->currentPlayer).riichiPieceDiscard =
-      state->hands.at(state->currentPlayer).discards_count;
-  state->hands.at(state->currentPlayer).riichi = true;
+  Hand& hand = state->hands[state->currentPlayer];
+  hand.riichiRound = state->turnNum;
+  hand.riichiPieceDiscard = hand.discards_count;
+  hand.riichi = true;
   state->riichiSticks++;
 
   state->nextState = StateFunctionType::kDiscard;

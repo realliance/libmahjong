@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <vector>
 
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
@@ -62,7 +61,7 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
           .decision = false,                                     // decision
       });
 
-  hand.live.push_back(state->pendingPiece);
+  hand.live[hand.live_count++] = state->pendingPiece;
   state->lastCall = state->turnNum;
   state->concealedKan = false;
   state->turnNum++;

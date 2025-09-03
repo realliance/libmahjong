@@ -25,7 +25,7 @@ bool isThirteenOrphans(const GameState& state, int player,
       {kGreenDragon, false}};
   bool duplicate = false;
 
-  for (const auto& piece : hand.live) {
+  for (const auto& piece : hand.live_range()) {
     if (pieces.contains(piece)) {
       if (pieces[piece]) {
         duplicate = true;

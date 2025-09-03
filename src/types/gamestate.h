@@ -2,6 +2,7 @@
 #include <array>
 #include <cstdint>
 #include <random>
+#include <ranges>
 
 #include "controllers/playercontroller.h"
 #include "types/meld.h"
@@ -17,10 +18,14 @@ struct Hand {
   int riichiPieceDiscard = -1;
   int riichiRound = -1;
   int meld_count = 0;
-  std::vector<Piece> live;
+  std::array<Piece, 14> live;
+  int live_count = 13;
   std::array<Meld, 4> melds;
   std::array<Piece, kMaxDiscardCount> discards;
   int discards_count = 0;
+  [[nodiscard]] std::ranges::subrange<const Piece*> live_range() const {
+    return std::ranges::subrange(live.begin(), live.begin() + live_count);
+  }
 };
 
 struct GameState {

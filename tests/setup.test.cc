@@ -46,7 +46,7 @@ TEST(Setup, Dealing) {
   ASSERT_NO_THROW(state = Router::Instance().Route(
                       StateFunctionType::kRoundStart)(std::move(state)));
   for (int i = 0; i < 4; i++) {
-    EXPECT_EQ(state->hands[i].live.size(), 13);
+    EXPECT_EQ(state->hands[i].live_count, 13);
   }
   state = Router::Instance().Route(StateFunctionType::kDraw)(std::move(state));
   EXPECT_EQ(state->currentPlayer, 0);

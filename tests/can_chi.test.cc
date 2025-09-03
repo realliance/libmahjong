@@ -14,6 +14,7 @@ TEST(CanChi, EastShouldChiOnNorth) {
   state.pendingPiece = kOneCharacter;
   state.currentPlayer = 3;
   state.hands[0].live = {kOneCharacter, kTwoCharacter, kThreeCharacter};
+  state.hands[0].live_count = 3;
   EXPECT_TRUE(CanChi(state, 0));
   state.pendingPiece = kTwoCharacter;
   EXPECT_TRUE(CanChi(state, 0));
@@ -28,6 +29,7 @@ TEST(CanChi, EastShouldNotChiOnSouth) {
   state.pendingPiece = kOneCharacter;
   state.currentPlayer = 1;
   state.hands[0].live = {kOneCharacter, kTwoCharacter, kThreeCharacter};
+  state.hands[0].live_count = 3;
   EXPECT_FALSE(CanChi(state, 0));
 }
 
@@ -36,6 +38,7 @@ TEST(CanChi, NoChiOnHonor) {
   state.pendingPiece = kOneCharacter;
   state.currentPlayer = 3;
   state.hands[0].live = {kOneCharacter, kTwoCharacter, kThreeCharacter};
+  state.hands[0].live_count = 3;
   state.pendingPiece = kWhiteDragon;
   EXPECT_FALSE(CanChi(state, 0));
 }

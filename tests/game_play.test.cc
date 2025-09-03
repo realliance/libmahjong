@@ -13,12 +13,13 @@ namespace mahjong {
 
 TEST(GamePlay, Furiten) {
   auto state = GameState();
-  state.hands[0].live = HandFromNotation("123m456p234678s44m");
-  state.hands[0].open = false;
+  Hand& hand = state.hands[0];
+  HandFromNotation("123m456p234678s44m", &hand);
+  hand.open = false;
   EXPECT_TRUE(isComplete(state, 0));
   state.pendingPiece = Piece(kFourPin);
   // Place Four Pin in Discard Pile
-  state.hands[0].discards = {kFourPin};
+  hand.discards = {kFourPin};
   EXPECT_FALSE(CanRon(state, 0));
 }
 

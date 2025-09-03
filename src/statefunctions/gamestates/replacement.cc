@@ -15,7 +15,8 @@ namespace mahjong {
 namespace {
 std::unique_ptr<GameState> Replacement(std::unique_ptr<GameState> state) {
   const Piece draw = Walls::TakeReplacementTile(*state);
-  state->hands.at(state->currentPlayer).live.push_back(draw);
+  Hand& hand = state->hands.at(state->currentPlayer);
+  hand.live[hand.live_count++] = draw;
   state->pendingPiece = draw;
 
   AlertPlayers(*state,

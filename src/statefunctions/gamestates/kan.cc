@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <vector>
 
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
@@ -34,13 +33,12 @@ std::unique_ptr<GameState> Kan(std::unique_ptr<GameState> state) {
   Hand& hand = state->hands.at(state->lastCaller);
   hand.open = true;
   state->currentPlayer = state->lastCaller;
-  hand.live.push_back(state->pendingPiece);
   state->lastCall = state->turnNum;
   state->concealedKan = false;
   state->turnNum++;
 
   if (RemovePieces(*state, state->lastCaller, state->pendingPiece,
-                   /*count=*/4) != 4) {
+                   /*count=*/3) != 3) {
     std::cerr << "Not Enough Pieces to remove in kan" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;

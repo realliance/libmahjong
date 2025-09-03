@@ -16,10 +16,10 @@ namespace mahjong::yaku {
 TEST(isSevenPairs, 2Han) {
   auto game_state = GameState();
   Hand& hand = game_state.hands[0];
-  hand.live = HandFromNotation("11m22p33s44z55m11z66z");
+  HandFromNotation("11m22p33s44z55m11z66z", &hand);
   hand.open = false;
 
-  auto root = breakdownHand(hand.live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isSevenPairs(game_state, 0, branch)) {
@@ -33,10 +33,10 @@ TEST(isSevenPairs, 2Han) {
 TEST(isSevenPairs, MustBeConcealed) {
   auto game_state = GameState();
   Hand& hand = game_state.hands[0];
-  hand.live = HandFromNotation("11m22p33s44z55m11z66z");
+  HandFromNotation("11m22p33s44z55m11z66z", &hand);
   hand.open = true;
 
-  auto root = breakdownHand(hand.live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isSevenPairs(game_state, 0, branch)) {
@@ -50,10 +50,10 @@ TEST(isSevenPairs, MustBeConcealed) {
 TEST(isSevenPairs, UniquePairsOnly) {
   auto game_state = GameState();
   Hand& hand = game_state.hands[0];
-  hand.live = HandFromNotation("1111m22p33s44z11z66z");
+  HandFromNotation("1111m22p33s44z11z66z", &hand);
   hand.open = false;
 
-  auto root = breakdownHand(hand.live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isSevenPairs(game_state, 0, branch)) {

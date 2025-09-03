@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <vector>
+#include <ranges>
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
@@ -30,25 +30,24 @@ void AlertPlayers(const GameState& state, Event e) {
 
 // Count number of piece p that are in given players hands
 uint8_t CountPieces(const GameState& state, int player, Piece p) {
-  return std::count(state.hands.at(player).live.begin(),
-                    state.hands.at(player).live.end(), p);
+  const Hand& hand = state.hands.at(player);
+  return std::ranges::count(hand.live_range(), p);
 }
 
 // Remove an instance of piece p from given players hand
 uint8_t RemovePieces(GameState& state, int player, Piece p, uint8_t count) {
-  count = std::min(CountPieces(state, player, p), count);
+  Hand& hand = state.hands.at(player);
   uint8_t removed = 0;
-  state.hands.at(player).live.erase(
-      std::remove_if(state.hands.at(player).live.begin(),
-                     state.hands.at(player).live.end(),
-                     [&](Piece _p) {
-                       if (count > removed && p == _p) {
-                         removed++;
-                         return true;
-                       }
-                       return false;
-                     }),
-      state.hands.at(player).live.end());
+  count = std::min(CountPieces(state, player, p), count);
+  const auto match_piece = [&](Piece _p) {
+    if (count > removed && p == _p) {
+      removed++;
+      return true;
+    }
+    return false;
+  };
+  std::ranges::remove_if(hand.live, match_piece);
+  hand.live_count -= removed;
   return removed;
 }
 
@@ -81,8 +80,8 @@ Event GetValidDecisionOrThrow(const GameState& state, int player, bool inHand) {
       Event replacement_decision = decision;
       replacement_decision.type = inHand ? Event::kDiscard : Event::kDecline;
       if (inHand) {
-        replacement_decision.piece = static_cast<int16_t>(
-            state.hands.at(player).live.back().toUint8_t());
+        replacement_decision.piece =
+            state.hands[player].live_range().back().toUint8_t();
       }
       if (ValidateDecision(state, player, replacement_decision, inHand)) {
         return replacement_decision;

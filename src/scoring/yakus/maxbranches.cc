@@ -16,7 +16,7 @@ bool isMaxBranches(const GameState& state, int player,
   std::array<int, 6> sets = {};
   const std::array<int, 6> final = {3, 3, 2, 2, 2, 2};
 
-  for (const auto& piece : hand.live) {
+  for (const auto& piece : hand.live_range()) {
     if (piece.getSuit() != suit) {
       return false;
     }

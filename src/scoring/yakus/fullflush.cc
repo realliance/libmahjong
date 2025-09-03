@@ -11,11 +11,11 @@ namespace mahjong::yaku {
 bool isFullFlush(const GameState& state, int player,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
   const Hand& hand = state.hands[player];
-  if (hand.live.front().isHonor()) {
+  if (hand.live[0].isHonor()) {
     return false;
   }
-  const int suit = hand.live.front().getSuit();
-  for (const auto& piece : hand.live) {
+  const int suit = hand.live[0].getSuit();
+  for (const auto& piece : hand.live_range()) {
     if (piece.getSuit() != suit) {
       return false;
     }

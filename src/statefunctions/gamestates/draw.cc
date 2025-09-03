@@ -1,6 +1,5 @@
 #include <array>
 #include <memory>
-#include <vector>
 
 #include "statefunctions/router.h"
 #include "types/gamestate.h"
@@ -13,7 +12,8 @@ std::unique_ptr<GameState> Draw(std::unique_ptr<GameState> state) {
   state->currentPlayer = (state->currentPlayer + 1) % 4;
   state->turnNum++;
   state->pendingPiece = Walls::TakePiece(*state);
-  state->hands.at(state->currentPlayer).live.push_back(state->pendingPiece);
+  Hand& hand = state->hands[state->currentPlayer];
+  hand.live[hand.live_count++] = state->pendingPiece;
   state->nextState = StateFunctionType::kPlayerHand;
   return state;
 }

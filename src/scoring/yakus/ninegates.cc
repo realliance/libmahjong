@@ -27,7 +27,7 @@ bool isNineGates(const GameState& state, int player,
     pieces.at(i) = 0;
   }
   bool duplicate = false;
-  for (const auto& piece : hand.live) {
+  for (const auto& piece : hand.live_range()) {
     if (pieces.contains(piece.getPieceNum())) {
       if ((pieces[piece.getPieceNum()] != 0) && !piece.isTerminal()) {
         if (duplicate) {

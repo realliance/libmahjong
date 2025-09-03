@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -22,7 +23,8 @@ std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
     state->players.at(i)->RoundStart(
         hand, static_cast<Wind>((i + 3 * (state->roundNum % 4)) % 4),
         (state->roundNum > 3) ? kSouth : kEast);
-    state->hands.at(i).live = hand;
+    state->hands[i].live_count = hand.size();
+    std::ranges::move(hand, state->hands[i].live.begin());
   }
 
   AlertPlayers(*state,

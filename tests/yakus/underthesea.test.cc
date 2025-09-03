@@ -15,10 +15,10 @@ namespace mahjong::yaku {
 TEST(isBottomOfTheSea, 1Han) {
   auto game_state = GameState();
   Hand& hand = game_state.hands[0];
-  hand.live = HandFromNotation("123m789m111z999s55z");
+  HandFromNotation("123m789m111z999s55z", &hand);
   game_state.livingWallIndex = kLivingWallCount;
 
-  auto root = breakdownHand(hand.live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isBottomOfTheSea(game_state, 0, branch)) {
@@ -32,11 +32,11 @@ TEST(isBottomOfTheSea, 1Han) {
 TEST(isBottomOfTheSea, 1HanRonned) {
   auto game_state = GameState();
   Hand& hand = game_state.hands[0];
-  hand.live = HandFromNotation("123m789m111z999s55z");
+  HandFromNotation("123m789m111z999s55z", &hand);
   game_state.livingWallIndex = kLivingWallCount;
   game_state.hasRonned[0] = true;
 
-  auto root = breakdownHand(hand.live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isBottomOfTheSea(game_state, 0, branch)) {
@@ -50,9 +50,9 @@ TEST(isBottomOfTheSea, 1HanRonned) {
 TEST(isBottomOfTheSea, DoesntApply) {
   auto game_state = GameState();
   Hand& hand = game_state.hands[0];
-  hand.live = HandFromNotation("123m789m111z999s55z");
+  HandFromNotation("123m789m111z999s55z", &hand);
 
-  auto root = breakdownHand(hand.live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isBottomOfTheSea(game_state, 0, branch)) {
