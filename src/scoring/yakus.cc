@@ -1,5 +1,7 @@
 #include "scoring/yakus.h"
+
 #include <vector>
+
 #include "types/yaku.h"
 
 namespace mahjong {

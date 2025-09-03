@@ -1,8 +1,7 @@
 #include "utils/handformer.h"
 
-#include <cctype>
-
 #include <algorithm>
+#include <cctype>
 #include <cstdint>
 #include <iterator>
 #include <map>
@@ -45,7 +44,8 @@ std::vector<Piece> HandFromNotation(const std::string& notation) {
   std::vector<int8_t> current_tiles;
   for (const auto& c : notation) {
     if (!std::isdigit(c) && !std::isalpha(c)) {
-      // Push -1 if input is invalid (which is later translated to an error piece)
+      // Push -1 if input is invalid (which is later translated to an error
+      // piece)
       current_tiles.push_back(-1);
       continue;
     }

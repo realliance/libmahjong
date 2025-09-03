@@ -18,7 +18,8 @@ bool FastTanyao::ShouldKeep(Piece piece) {
 }
 
 void FastTanyao::OutputSet(uint8_t /*unused*/, const pieceSet& /*unused*/) {
-  // std::cout << "(" << Piece(id).toStr() << ", " << unsigned(set.at(id)) << ")" << std::endl;
+  // std::cout << "(" << Piece(id).toStr() << ", " << unsigned(set.at(id)) <<
+  // ")" << std::endl;
 }
 
 void FastTanyao::IncrementPiece(Piece piece, pieceSet& set) {
@@ -52,7 +53,8 @@ void FastTanyao::DecrementPiece(Piece piece, pieceSet& set) {
 void FastTanyao::ProcessNewPiece(Piece piece) {
   if (!ShouldKeep(piece)) {
     immediate_discard_.push_back(piece);
-    // std::cout << Piece(piece).toStr() << " should be immediately discarded." << std::endl;
+    // std::cout << Piece(piece).toStr() << " should be immediately discarded."
+    // << std::endl;
     return;
   }
 
@@ -71,7 +73,8 @@ Piece FastTanyao::ChooseDiscard() {
   if (!immediate_discard_.empty()) {
     auto discard = immediate_discard_.back();
     immediate_discard_.pop_back();
-    // std::cout << "Chose piece " << discard.toStr() << " to discard (imm discard)" << std::endl;
+    // std::cout << "Chose piece " << discard.toStr() << " to discard (imm
+    // discard)" << std::endl;
     return discard;
   }
 
@@ -85,7 +88,8 @@ Piece FastTanyao::ChooseDiscard() {
       if (possible_triple.second + set_contains_piece->second == 4 &&
           possible_triple.second < 3) {
         DecrementPiece(Piece(piece), possible_triples_);
-        // std::cout << "Chose piece " << Piece(piece).toStr() << " to discard (all pieces in play)" << std::endl;
+        // std::cout << "Chose piece " << Piece(piece).toStr() << " to discard
+        // (all pieces in play)" << std::endl;
         return Piece(piece);
       }
       if (possible_triple.second > 0) {
@@ -97,10 +101,12 @@ Piece FastTanyao::ChooseDiscard() {
   auto min_value = *std::ranges::min_element(
       discard_options,
       [](const auto& l, const auto& r) { return l.second < r.second; });
-  // std::cout << unsigned(minValue.first) << ", " << unsigned(minValue.second) << std::endl;
+  // std::cout << unsigned(minValue.first) << ", " << unsigned(minValue.second)
+  // << std::endl;
   auto discard_piece = Piece(min_value.first);
   DecrementPiece(discard_piece, possible_triples_);
-  // std::cout << "Chose piece " << discardPiece.toStr() << " to discard (min risk)" << std::endl;
+  // std::cout << "Chose piece " << discardPiece.toStr() << " to discard (min
+  // risk)" << std::endl;
   return discard_piece;
 }
 

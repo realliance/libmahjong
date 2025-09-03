@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
+
 #include <array>
 #include <memory>
 #include <string>
 
 #include "analysis/analysis.h"
-
 #include "analysis/handnode.h"
 #include "scoring/yakus/afterakan.h"
 #include "types/gamestate.h"

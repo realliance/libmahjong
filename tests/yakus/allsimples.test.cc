@@ -1,11 +1,12 @@
 #include "scoring/yakus/allsimples.h"
+
 #include <gtest/gtest.h>
+
 #include <array>
 #include <memory>
 #include <string>
 
 #include "analysis/analysis.h"
-
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
 #include "types/hand.h"

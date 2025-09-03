@@ -1,10 +1,12 @@
+#include "gamestate_utils.h"
+
 #include <gtest/gtest.h>
+
 #include <cstdint>
 #include <memory>
 #include <stdexcept>
 #include <utility>
 
-#include "gamestate_utils.h"
 #include "types/gamestate.h"
 #include "types/settings.h"
 #include "types/statefunction.h"

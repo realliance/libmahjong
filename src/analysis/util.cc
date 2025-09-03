@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <map>
 #include <vector>
+
 #include "analysis/analysis.h"
 #include "types/hand.h"
 #include "types/pieces.h"
@@ -69,8 +70,7 @@ std::vector<Piece> getWaits(const Hand& hand) {
 
 std::vector<Piece> getWaits(const Hand& hand, const Piece& piece) {
   Hand new_hand = hand;
-  new_hand.live.erase(
-      std::ranges::find(new_hand.live, piece));
+  new_hand.live.erase(std::ranges::find(new_hand.live, piece));
   return getWaits(new_hand);
 }
 
