@@ -23,7 +23,7 @@
           ninja
         ];
 
-        llvmPackage = pkgs.llvmPackages_21;
+        llvmPackage = pkgs.llvmPackages_20;
 
         # Override the existing gtest package to use clang
         clangGtest = pkgs.gtest.override {
