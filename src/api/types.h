@@ -9,7 +9,8 @@ extern "C" {
 static const int kMaxLiveHandSize = 14;  // Maximum 14 pieces (13 + 1 drawn)
 static const int kMaxMeldsPerHand = 4;   // Maximum 4 melds possible
 static const int kMaxDiscardsPerPlayer =
-    27;  // Flow interruption from calls can allow the max discards to go up to 27.
+    27;  // Flow interruption from calls can allow the max discards to go up
+         // to 27.
 
 using CPiece = int;
 using CWind = int;

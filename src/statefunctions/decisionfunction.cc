@@ -2,13 +2,13 @@
 
 #include <algorithm>
 #include <array>
-#include <vector>
 
 #include "analysis/util.h"
 #include "scoring/scoring.h"
 #include "scoring/yakus/thirteenorphans.h"
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
+#include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
 #include "types/walls.h"
@@ -26,31 +26,26 @@ bool CanRon(const GameState& state, int player) {
 
   // Build the theoretical hand
   auto& tmp_state = const_cast<GameState&>(state);
-  tmp_state.hands.at(player).live.push_back(state.pendingPiece);
+  auto& tmp_hand = tmp_state.hands[player];
+  tmp_hand.live[tmp_hand.live_count++] = state.pendingPiece;
 
   // If this Ron is occurring due to a concealed kan discard,
   if (state.concealedKan) {
     // If it happens to be a ron for a thirteen orphans,
     // it's allowed and you can ron
     if (yaku::isThirteenOrphans(state, player)) {
-      tmp_state.hands.at(player).live.erase(
-          std::find(state.hands.at(player).live.begin(),
-                    state.hands.at(player).live.end(), state.pendingPiece));
+      tmp_hand.live[--tmp_hand.live_count] = kError;
       return true;
     }
 
     // otherwise, you can't
-    tmp_state.hands.at(player).live.erase(
-        std::find(state.hands.at(player).live.begin(),
-                  state.hands.at(player).live.end(), state.pendingPiece));
+    tmp_hand.live[--tmp_hand.live_count] = kError;
     return false;
   }
 
   // if not a concealed kan, check if it's complete
   const bool can_ron = isComplete(state, player);
-  tmp_state.hands.at(player).live.erase(
-      std::find(state.hands.at(player).live.begin(),
-                state.hands.at(player).live.end(), state.pendingPiece));
+  tmp_hand.live[--tmp_hand.live_count] = kError;
   return can_ron;
 }
 
@@ -124,10 +119,11 @@ bool CanConcealedKan(const GameState& state, int player) {
 }
 
 bool CanRiichi(const GameState& state, int player) {
-  if (state.hands.at(player).riichi) {
+  const Hand& hand = state.hands[player];
+  if (hand.riichi) {
     return false;
   }
-  if (state.hands.at(player).open) {
+  if (hand.open) {
     return false;
   }
   return !getPossibleWaits(state.hands[player]).empty();

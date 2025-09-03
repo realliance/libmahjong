@@ -18,11 +18,11 @@ namespace mahjong::yaku {
 TEST(isPinfu, 1Han) {
   auto game_state = GameState();
   Hand& hand = game_state.hands[0];
-  hand.live = HandFromNotation("123m456p234678s44m");
+  HandFromNotation("123m456p234678s44m", &hand);
   hand.open = false;
   game_state.pendingPiece = Piece(kFourPin);
 
-  auto root = breakdownHand(hand.live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPinfu(game_state, 0, branch)) {
@@ -36,11 +36,11 @@ TEST(isPinfu, 1Han) {
 TEST(isPinfu, BadHand) {
   auto game_state = GameState();
   Hand& hand = game_state.hands[0];
-  hand.live = HandFromNotation("123m555p234678s44m");
+  HandFromNotation("123m555p234678s44m", &hand);
   hand.open = false;
   game_state.pendingPiece = Piece(kTwoBamboo);
 
-  auto root = breakdownHand(hand.live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPinfu(game_state, 0, branch)) {
@@ -54,11 +54,11 @@ TEST(isPinfu, BadHand) {
 TEST(isPinfu, CantBeOpen) {
   auto game_state = GameState();
   Hand& hand = game_state.hands[0];
-  hand.live = HandFromNotation("123m456p234678s44m");
+  HandFromNotation("123m456p234678s44m", &hand);
   hand.open = true;
   game_state.pendingPiece = Piece(kFourPin);
 
-  auto root = breakdownHand(hand.live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPinfu(game_state, 0, branch)) {
@@ -72,11 +72,11 @@ TEST(isPinfu, CantBeOpen) {
 TEST(isPinfu, NeedTwoWait) {
   auto game_state = GameState();
   Hand& hand = game_state.hands[0];
-  hand.live = HandFromNotation("123m456p234678s44m");
+  HandFromNotation("123m456p234678s44m", &hand);
   hand.open = false;
   game_state.pendingPiece = Piece(kFivePin);
 
-  auto root = breakdownHand(hand.live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPinfu(game_state, 0, branch)) {

@@ -3,7 +3,6 @@
 #include <array>
 #include <cstdint>
 #include <memory>
-#include <vector>
 
 #include "api/gamestate.h"
 #include "api/types.h"
@@ -148,7 +147,7 @@ TEST(Api, ObserveGameStateHandsAndDiscards) {
     const mahjong::Hand& cpp_hand = state->hands[player];
 
     // Check live pieces
-    EXPECT_EQ(c_hand.livePieceCount, static_cast<int>(cpp_hand.live.size()));
+    EXPECT_EQ(c_hand.livePieceCount, static_cast<int>(cpp_hand.live_count));
     for (int piece = 0; piece < api::kMaxLiveHandSize; piece++) {
       if (piece < c_hand.livePieceCount) {
         EXPECT_EQ(c_hand.livePieces[piece],

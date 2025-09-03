@@ -149,7 +149,7 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
     CHand& c_hand = observed.hands[i];
 
     // Live pieces
-    const int live_piece_count = static_cast<int>(cpp_hand.live.size());
+    const int live_piece_count = static_cast<int>(cpp_hand.live_count);
     c_hand.livePieceCount = std::min(live_piece_count, kMaxLiveHandSize);
     for (int j = 0; j < c_hand.livePieceCount; j++) {
       c_hand.livePieces[j] = static_cast<CPiece>(cpp_hand.live[j].toUint8_t());

@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <vector>
 
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
@@ -35,13 +34,12 @@ std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
 
   Hand& hand = state->hands.at(state->lastCaller);
   state->currentPlayer = state->lastCaller;
-  hand.live.push_back(state->pendingPiece);
   state->lastCall = state->turnNum;
   state->concealedKan = false;
   state->turnNum++;
 
   if (RemovePieces(*state, state->lastCaller, state->pendingPiece,
-                   /*count=*/3) != 3) {
+                   /*count=*/2) != 2) {
     std::cerr << "Not enough pieces to remove in Pon" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;

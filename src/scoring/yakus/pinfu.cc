@@ -14,7 +14,8 @@
 namespace mahjong::yaku {
 bool isPinfu(const GameState& state, int player,
              const std::vector<const mahjong::Node*>& branch) {
-  if (state.hands.at(player).open) {
+  const Hand& hand = state.hands.at(player);
+  if (hand.open) {
     return false;
   }
   for (const auto* node : branch) {

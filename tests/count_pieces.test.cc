@@ -12,6 +12,7 @@ namespace mahjong {
 TEST(CountPieces, CountPieces) {
   GameState state;
   state.hands[0].live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
+  state.hands[0].live_count = 4;
 
   EXPECT_EQ(CountPieces(state, 0, kOneCharacter), 1);
   EXPECT_EQ(CountPieces(state, 0, kFourPin), 1);

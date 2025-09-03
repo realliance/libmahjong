@@ -73,7 +73,7 @@ std::ostream& operator<<(std::ostream& os, const mahjong::Hand& hand) {
   os << " riichiRound: " << hand.riichiRound;
   os << " live: [" << '\n';
   ;
-  for (const auto& piece : hand.live) {
+  for (const auto& piece : hand.live_range()) {
     os << piece.toStr() << ", ";
   }
   os << "]" << '\n';

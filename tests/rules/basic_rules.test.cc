@@ -40,7 +40,7 @@ TEST(RoundSetup, playerHands) {
 
   // Each player should have 13 tiles
   for (int i = 0; i < kNumPlayers; i++) {
-    EXPECT_EQ(state->hands[i].live.size(), 13)
+    EXPECT_EQ(state->hands[i].live_count, 13)
         << "Player " << i << " should have 13 tiles";
   }
 }
@@ -101,7 +101,7 @@ TEST(DrawMechanics, drawIncreasesTileCount) {
 
   // All players start with 13 tiles
   for (int i = 0; i < kNumPlayers; i++) {
-    EXPECT_EQ(state->hands[i].live.size(), 13);
+    EXPECT_EQ(state->hands[i].live_count, 13);
   }
 
   const int walls_before = Walls::GetRemainingPieces(*state);
@@ -111,11 +111,11 @@ TEST(DrawMechanics, drawIncreasesTileCount) {
   EXPECT_EQ(state->currState, StateFunctionType::kDraw);
 
   // Player 0 should now have 14 tiles
-  EXPECT_EQ(state->hands[0].live.size(), 14);
+  EXPECT_EQ(state->hands[0].live_count, 14);
 
   // Other players still have 13
   for (int i = 1; i < kNumPlayers; i++) {
-    EXPECT_EQ(state->hands[i].live.size(), 13);
+    EXPECT_EQ(state->hands[i].live_count, 13);
   }
 
   // Wall should have one less tile
@@ -142,7 +142,7 @@ TEST(DiscardMechanics, discardDecreasesTileCount) {
   EXPECT_EQ(state->currState, StateFunctionType::kDraw);
 
   // Player 0 has 14 tiles after draw
-  EXPECT_EQ(state->hands[0].live.size(), 14);
+  EXPECT_EQ(state->hands[0].live_count, 14);
 
   // Move through player hand to discard
   state = AdvanceGameState(std::move(state));
@@ -154,7 +154,7 @@ TEST(DiscardMechanics, discardDecreasesTileCount) {
   EXPECT_EQ(state->currState, StateFunctionType::kDiscard);
 
   // Player should be back to 13 tiles
-  EXPECT_EQ(state->hands[0].live.size(), 13);
+  EXPECT_EQ(state->hands[0].live_count, 13);
 
   // Discard pile should have increased
   EXPECT_EQ(state->hands[0].discards_count, discards_before + 1);

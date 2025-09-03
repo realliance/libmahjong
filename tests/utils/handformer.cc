@@ -10,6 +10,7 @@
 #include <utility>
 #include <vector>
 
+#include "types/gamestate.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 
@@ -90,6 +91,12 @@ std::vector<Piece> HandFromNotation(const std::string& notation) {
   current_tiles.clear();
 
   return result;
+}
+
+void HandFromNotation(const std::string& notation, Hand* hand) {
+  std::vector hand_vec = HandFromNotation(notation);
+  hand->live_count = hand_vec.size();
+  std::ranges::move(hand_vec, hand->live.begin());
 }
 
 bool IsValidNotation(const std::string& notation) {
