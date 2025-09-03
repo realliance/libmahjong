@@ -41,7 +41,8 @@ void AlphabeticalBot::ReceiveEvent(Event e) {
       break;
     case Event::kDiscard:
       if (e.decision && e.player == id_) {
-        // std::cout << "Player " << id_ << " pushing piece into hand: " << e.piece << std::endl;
+        // std::cout << "Player " << id_ << " pushing piece into hand: " <<
+        // e.piece << std::endl;
         hand_.emplace_back(e.piece);
       }
       break;

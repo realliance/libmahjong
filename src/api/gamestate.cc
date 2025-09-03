@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <memory>
 #include <vector>
+
 #include "api/types.h"
 #include "controllers/controllermanager.h"
 #include "statefunctions/statecontroller.h"
@@ -95,8 +96,8 @@ bool IsValidGameController(const char* controller) {
 
 mahjong::GameState* InitGameState(const CGameSettings* settings) {
   const mahjong::GameSettings cpp_settings = convertGameSettings(settings);
-  // Check controllers ahead of time as C++ throws will not be handled correctly by
-  // all library consumers (rust)
+  // Check controllers ahead of time as C++ throws will not be handled correctly
+  // by all library consumers (rust)
   for (const auto& controller : cpp_settings.seatControllers) {
     if (!IsValidGameController(controller.c_str())) {
       return nullptr;

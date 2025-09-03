@@ -1,5 +1,7 @@
 #include "scoring/yakus/pinfu.h"
+
 #include <gtest/gtest.h>
+
 #include <array>
 #include <memory>
 #include <string>

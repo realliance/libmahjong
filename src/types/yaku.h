@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
 

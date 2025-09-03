@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <map>
 #include <vector>
+
 #include "analysis/analysis.h"
 #include "types/hand.h"
 #include "types/pieces.h"

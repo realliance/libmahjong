@@ -1,7 +1,10 @@
 #include "utils/handformer.h"
+
 #include <gtest/gtest.h>
+
 #include <string>
 #include <vector>
+
 #include "types/pieces.h"
 #include "types/piecetype.h"
 

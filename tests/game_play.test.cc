@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+
 #include <array>
 
 #include "scoring/scoring.h"
