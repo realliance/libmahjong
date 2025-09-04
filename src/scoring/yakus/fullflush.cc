@@ -20,8 +20,8 @@ bool isFullFlush(const GameState& state, int player,
       return false;
     }
   }
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (hand.melds[i].start.getSuit() != suit) {
+  for (const auto& meld : hand.melds_range()) {
+    if (meld.start.getSuit() != suit) {
       return false;
     }
   }

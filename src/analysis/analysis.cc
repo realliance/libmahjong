@@ -25,7 +25,7 @@ void countPieces(Breakdown* b) {
 std::vector<Branch> AnalyzeHand(const Hand& hand, const bool only_complete) {
   Branch base_branch;
   base_branch.open = !hand.melds.empty();
-  for (const Meld& meld : hand.melds) {
+  for (const auto& meld : hand.melds_range()) {
     switch (meld.type) {
       case SetType::kChi:
         base_branch.chis.emplace_back(meld.start);

@@ -17,8 +17,8 @@ bool isAllGreen(const GameState& state, int player,
     }
   }
 
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (!hand.melds[i].start.isGreen()) {
+  for (const auto& meld : hand.melds_range()) {
+    if (!meld.start.isGreen()) {
       return false;
     }
   }

@@ -16,8 +16,8 @@ bool isAllHonors(const GameState& state, int player,
       return false;
     }
   }
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (!hand.melds[i].start.isHonor()) {
+  for (const auto& meld : hand.melds_range()) {
+    if (!meld.start.isHonor()) {
       return false;
     }
   }

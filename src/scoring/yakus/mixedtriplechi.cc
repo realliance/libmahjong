@@ -30,16 +30,16 @@ bool isMixedTripleChi(const GameState& state, int player,
     }
   }
   const Hand& hand = state.hands[player];
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (hand.melds[i].type == SetType::kChi) {
-      if (hand.melds[i].start.getSuit() == Piece::Type::kBambooSuit) {
-        bamboo_chi.at(hand.melds[i].start.getPieceNum()) = true;
+  for (const auto& meld : hand.melds_range()) {
+    if (meld.type == SetType::kChi) {
+      if (meld.start.getSuit() == Piece::Type::kBambooSuit) {
+        bamboo_chi.at(meld.start.getPieceNum()) = true;
       }
-      if (hand.melds[i].start.getSuit() == Piece::Type::kCharacterSuit) {
-        char_chi.at(hand.melds[i].start.getPieceNum()) = true;
+      if (meld.start.getSuit() == Piece::Type::kCharacterSuit) {
+        char_chi.at(meld.start.getPieceNum()) = true;
       }
-      if (hand.melds[i].start.getSuit() == Piece::Type::kPinSuit) {
-        pin_chi.at(hand.melds[i].start.getPieceNum()) = true;
+      if (meld.start.getSuit() == Piece::Type::kPinSuit) {
+        pin_chi.at(meld.start.getPieceNum()) = true;
       }
     }
   }

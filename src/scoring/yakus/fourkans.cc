@@ -13,8 +13,8 @@ bool isFourKans(const GameState& state, int player,
                 const std::vector<const mahjong::Node*>& /*branch*/) {
   int kans = 0;
   const Hand& hand = state.hands[player];
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (hand.melds[i].type >= SetType::kKan) {
+  for (const auto& meld : hand.melds_range()) {
+    if (meld.type >= SetType::kKan) {
       kans++;
     }
   }

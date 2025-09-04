@@ -16,8 +16,8 @@ bool isAllTerminals(const GameState& state, int player,
       return false;
     }
   }
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (!hand.melds[i].start.isTerminal()) {
+  for (const auto& meld : hand.melds_range()) {
+    if (!meld.start.isTerminal()) {
       return false;
     }
   }

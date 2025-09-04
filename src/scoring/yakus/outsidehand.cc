@@ -28,16 +28,15 @@ bool isOutsideHand(const GameState& state, int player,
     }
   }
   const Hand& hand = state.hands[player];
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (hand.melds[i].type == SetType::kChi) {
-      if (hand.melds[i].start.isTerminal() ||
-          (hand.melds[i].start + 2).isTerminal()) {
+  for (const auto& meld : hand.melds_range()) {
+    if (meld.type == SetType::kChi) {
+      if (meld.start.isTerminal() || (meld.start + 2).isTerminal()) {
         chi = true;
       } else {
         return false;
       }
     } else {
-      if (!hand.melds[i].start.isTerminal() && !hand.melds[i].start.isHonor()) {
+      if (!meld.start.isTerminal() && !meld.start.isHonor()) {
         return false;
       }
     }

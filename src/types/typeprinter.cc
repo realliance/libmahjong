@@ -11,6 +11,7 @@
 #include "controllers/playercontroller.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/meld.h"
 #include "types/piecetype.h"
 
 std::ostream& operator<<(std::ostream& os, const mahjong::Event& e) {
@@ -78,9 +79,9 @@ std::ostream& operator<<(std::ostream& os, const mahjong::Hand& hand) {
   }
   os << "]" << '\n';
   os << "melds: [" << '\n';
-  for (int i = 0; i < hand.meld_count; ++i) {
-    os << "{ type: " << hand.melds[i].typeToStr();
-    os << ", start: " << hand.melds[i].start.toStr() << "}";
+  for (const auto& meld : hand.melds_range()) {
+    os << "{ type: " << meld.typeToStr();
+    os << ", start: " << meld.start.toStr() << "}";
     os << ", ";
   }
   os << "]" << '\n';
