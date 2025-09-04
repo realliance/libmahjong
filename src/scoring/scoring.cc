@@ -103,15 +103,15 @@ Score scoreHand(const GameState& state, int player) {
           branchscore.han++;
         }
       }
-      for (int i = 0; i < hand.meld_count; ++i) {
-        if (hand.melds[i].start == dora) {
+      for (const auto& meld : hand.melds_range()) {
+        if (meld.start == dora) {
           branchscore.han++;
         }
-        if (hand.melds[i].type == SetType::kChi) {
-          if (hand.melds[i].start + 1 == dora) {
+        if (meld.type == SetType::kChi) {
+          if (meld.start + 1 == dora) {
             branchscore.han++;
           }
-          if (hand.melds[i].start + 2 == dora) {
+          if (meld.start + 2 == dora) {
             branchscore.han++;
           }
         }
@@ -180,9 +180,9 @@ int getFu(const GameState& state, int player,
     fu += kSelfdraw;
   }
   const Hand& hand = state.hands[player];
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (hand.melds[i].type == SetType::kKan) {
-      if (!hand.melds[i].start.isHonor() && !hand.melds[i].start.isTerminal()) {
+  for (const auto& meld : hand.melds_range()) {
+    if (meld.type == SetType::kKan) {
+      if (!meld.start.isHonor() && !meld.start.isTerminal()) {
         fu += open ? kSimplekan : kCsimplekan;
       } else {
         fu += open ? kTermHonorkan : kCtermHonorkan;
@@ -254,8 +254,8 @@ bool isOpenPinfu(const GameState& state, int player,
     }
   }
   const Hand& hand = state.hands[player];
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (hand.melds[i].type > SetType::kChi) {
+  for (const auto& meld : hand.melds_range()) {
+    if (meld.type > SetType::kChi) {
       return false;
     }
   }

@@ -25,28 +25,28 @@ bool isMaxBranches(const GameState& state, int player,
     }
     sets.at(piece.getPieceNum() - start)++;
   }
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (hand.melds[i].start.getSuit() != suit) {
+  for (const auto& meld : hand.melds_range()) {
+    if (meld.start.getSuit() != suit) {
       return false;
     }
-    if (hand.melds[i].start.getPieceNum() < start ||
-        hand.melds[i].start.getPieceNum() > start + 3) {
+    if (meld.start.getPieceNum() < start ||
+        meld.start.getPieceNum() > start + 3) {
       return false;
     }
-    if (hand.melds[i].type >= SetType::kKan) {
-      if (hand.melds[i].start.getPieceNum() != start &&
-          hand.melds[i].start.getPieceNum() != start + 1) {
+    if (meld.type >= SetType::kKan) {
+      if (meld.start.getPieceNum() != start &&
+          meld.start.getPieceNum() != start + 1) {
         return false;
       }
-      sets.at(hand.melds[i].start.getPieceNum() - start) += 3;
+      sets.at(meld.start.getPieceNum() - start) += 3;
     }
-    if (hand.melds[i].type == SetType::kPon) {
-      sets.at(hand.melds[i].start.getPieceNum() - start) += 3;
+    if (meld.type == SetType::kPon) {
+      sets.at(meld.start.getPieceNum() - start) += 3;
     }
-    if (hand.melds[i].type == SetType::kChi) {
-      sets.at(hand.melds[i].start.getPieceNum() - start)++;
-      sets.at(hand.melds[i].start.getPieceNum() - start + 1)++;
-      sets.at(hand.melds[i].start.getPieceNum() - start + 2)++;
+    if (meld.type == SetType::kChi) {
+      sets.at(meld.start.getPieceNum() - start)++;
+      sets.at(meld.start.getPieceNum() - start + 1)++;
+      sets.at(meld.start.getPieceNum() - start + 2)++;
     }
   }
   for (int i = 0; i < 6; i++) {

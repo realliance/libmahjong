@@ -33,8 +33,8 @@ bool isLittleThreeDragons(const GameState& state, int player,
     return false;
   }
   const Hand& hand = state.hands[player];
-  for (int i = 0; i < hand.meld_count; ++i) {
-    switch (hand.melds[i].start.toUint8_t()) {
+  for (const auto& meld : hand.melds_range()) {
+    switch (meld.start.toUint8_t()) {
       case Piece::Type::kRedDragon:
       case Piece::Type::kGreenDragon:
       case Piece::Type::kWhiteDragon:

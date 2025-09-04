@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <iostream>
@@ -7,6 +8,7 @@
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/meld.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
 #include "types/statefunction.h"
@@ -27,16 +29,19 @@ std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
     state->nextState = StateFunctionType::kError;
     return state;
   }
-  state->concealedKan = false;
-  Hand& hand = state->hands.at(state->currentPlayer);
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (hand.melds[i].type == SetType::kPon &&
-        hand.melds[i].start == state->pendingPiece) {
-      hand.melds[i].type = SetType::kKan;
-      state->nextState = StateFunctionType::kKanDiscard;
-      return state;
-    }
+
+  Hand& hand = state->hands[state->currentPlayer];
+  if (auto* meld = std::ranges::find(hand.melds,
+                                     Meld{
+                                         .type = SetType::kPon,
+                                         .start = state->pendingPiece,
+                                     });
+      meld != hand.melds.end()) {
+    meld->type = SetType::kKan;
+    state->nextState = StateFunctionType::kKanDiscard;
+    return state;
   }
+
   std::cerr << "Could Not find matching pon" << '\n';
   state->nextState = StateFunctionType::kError;
   return state;

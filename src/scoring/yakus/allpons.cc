@@ -18,10 +18,9 @@ bool isAllPons(const GameState& state, int player,
     }
   }
   const Hand& hand = state.hands[player];
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (hand.melds[i].type == SetType::kKan ||
-        hand.melds[i].type == SetType::kPon ||
-        hand.melds[i].type == SetType::kConcealedKan) {
+  for (const auto& meld : hand.melds_range()) {
+    if (meld.type == SetType::kKan || meld.type == SetType::kPon ||
+        meld.type == SetType::kConcealedKan) {
       pons++;
     }
   }

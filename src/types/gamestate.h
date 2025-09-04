@@ -17,14 +17,17 @@ struct Hand {
   bool riichi = false;
   int riichiPieceDiscard = -1;
   int riichiRound = -1;
-  int meld_count = 0;
   std::array<Piece, 14> live;
   int live_count = 13;
   std::array<Meld, 4> melds;
+  int meld_count = 0;
   std::array<Piece, kMaxDiscardCount> discards;
   int discards_count = 0;
   [[nodiscard]] std::ranges::subrange<const Piece*> live_range() const {
     return std::ranges::subrange(live.begin(), live.begin() + live_count);
+  }
+  [[nodiscard]] std::ranges::subrange<const Meld*> melds_range() const {
+    return std::ranges::subrange(melds.begin(), melds.begin() + meld_count);
   }
 };
 

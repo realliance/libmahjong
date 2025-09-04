@@ -31,13 +31,12 @@ bool isTerminalsInAllSets(const GameState& state, int player,
     }
   }
   const Hand& hand = state.hands[player];
-  for (int i = 0; i < hand.meld_count; ++i) {
-    switch (hand.melds[i].type) {
+  for (const auto& meld : hand.melds_range()) {
+    switch (meld.type) {
       case SetType::kSingle:
         return false;
       case SetType::kChi:
-        if (!hand.melds[i].start.isTerminal() &&
-            !(hand.melds[i].start + 2).isTerminal()) {
+        if (!meld.start.isTerminal() && !(meld.start + 2).isTerminal()) {
           return false;
         }
         break;
@@ -45,7 +44,7 @@ bool isTerminalsInAllSets(const GameState& state, int player,
       case SetType::kKan:
       case SetType::kConcealedKan:
       case SetType::kPon:
-        if (!hand.melds[i].start.isTerminal()) {
+        if (!meld.start.isTerminal()) {
           return false;
         }
         break;

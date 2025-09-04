@@ -29,16 +29,16 @@ bool isTriplePon(const GameState& state, int player,
     }
   }
   const Hand& hand = state.hands[player];
-  for (int i = 0; i < hand.meld_count; ++i) {
-    if (hand.melds[i].type >= SetType::kPon) {
-      if (hand.melds[i].start.getSuit() == Piece::Type::kBambooSuit) {
-        bamboo_pon.at(hand.melds[i].start.getPieceNum() - 1) = true;
+  for (const auto& meld : hand.melds_range()) {
+    if (meld.type >= SetType::kPon) {
+      if (meld.start.getSuit() == Piece::Type::kBambooSuit) {
+        bamboo_pon.at(meld.start.getPieceNum() - 1) = true;
       }
-      if (hand.melds[i].start.getSuit() == Piece::Type::kCharacterSuit) {
-        char_pon.at(hand.melds[i].start.getPieceNum() - 1) = true;
+      if (meld.start.getSuit() == Piece::Type::kCharacterSuit) {
+        char_pon.at(meld.start.getPieceNum() - 1) = true;
       }
-      if (hand.melds[i].start.getSuit() == Piece::Type::kPinSuit) {
-        pin_pon.at(hand.melds[i].start.getPieceNum() - 1) = true;
+      if (meld.start.getSuit() == Piece::Type::kPinSuit) {
+        pin_pon.at(meld.start.getPieceNum() - 1) = true;
       }
     }
   }
