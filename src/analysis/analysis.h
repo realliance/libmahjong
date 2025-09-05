@@ -17,7 +17,7 @@ struct Branch {
   bool complete = true;
 };
 
-std::unique_ptr<Node> breakdownPlayer(const std::span<const Piece>& pieces);
+std::unique_ptr<Node> breakdownHand(const std::span<const Piece>& pieces);
 std::vector<Branch> AnalyzeHand(const Player& player,
                                   bool only_complete = false);
 }  // namespace mahjong

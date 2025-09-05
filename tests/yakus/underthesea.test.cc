@@ -18,7 +18,7 @@ TEST(isBottomOfTheSea, 1Han) {
   HandFromNotation("123m789m111z999s55z", &player);
   game_state.livingWallIndex = kLivingWallCount;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isBottomOfTheSea(game_state, player, branch)) {
@@ -36,7 +36,7 @@ TEST(isBottomOfTheSea, 1HanRonned) {
   game_state.livingWallIndex = kLivingWallCount;
   game_state.players[0].hasRonned = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isBottomOfTheSea(game_state, player, branch)) {
@@ -52,7 +52,7 @@ TEST(isBottomOfTheSea, DoesntApply) {
   Player& player =game_state.players[0];
   HandFromNotation("123m789m111z999s55z", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isBottomOfTheSea(game_state, player, branch)) {

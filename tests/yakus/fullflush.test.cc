@@ -27,7 +27,7 @@ TEST(isFullFlush, 5Han) {
       .start = Piece(kSixCharacter),
   };
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isFullFlush(game_state, player, branch)) {
@@ -44,7 +44,7 @@ TEST(isFullFlush, 6Han) {
   HandFromNotation("111m222m345m666m99m", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isFullFlush(game_state, player, branch)) {
@@ -61,7 +61,7 @@ TEST(isFullFlush, BadPlayerHonors) {
   HandFromNotation("111m222m111z666m99m", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isFullFlush(game_state, player, branch)) {
@@ -78,7 +78,7 @@ TEST(isFullFlush, BadPlayerSuit) {
   HandFromNotation("111m222m111p666m99m", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isFullFlush(game_state, player, branch)) {
@@ -95,7 +95,7 @@ TEST(isFullFlush, BadPlayerFullFlushHonors) {
   HandFromNotation("111z222z333z444z55z", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isFullFlush(game_state, player, branch)) {

@@ -26,7 +26,7 @@ TEST(isBlessingOfMan, 5Han) {
 
   player.hasRonned = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isBlessingOfMan(game_state, player, branch)) {
@@ -50,7 +50,7 @@ TEST(isBlessingOfMan, MustBeARon) {
 
   player.hasRonned = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isBlessingOfMan(game_state, player, branch)) {
@@ -74,7 +74,7 @@ TEST(isBlessingOfMan, MustBeBeforePlayerFirstTurn) {
 
   player.hasRonned = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isBlessingOfMan(game_state, player, branch)) {
@@ -97,7 +97,7 @@ TEST(isBlessingOfMan, NoCalledMustHaveOccured) {
 
   player.hasRonned = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isBlessingOfMan(game_state, player, branch)) {

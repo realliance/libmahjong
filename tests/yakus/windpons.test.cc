@@ -18,7 +18,7 @@ TEST(isWindOrDragonPon, SeatWind) {
   HandFromNotation("123m456m444z55z", &player);
   game_state.roundNum = 1;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   auto branches = Node::AsBranchVectors(root.get());
 
@@ -38,7 +38,7 @@ TEST(isWindOrDragonPon, SeatWindKan) {
   HandFromNotation("123m456m4444z55z", &player);
   game_state.roundNum = 1;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isSeatWind(game_state, player, branch)) {
@@ -55,7 +55,7 @@ TEST(isWindOrDragonPon, PrevalentWind) {
   HandFromNotation("123m456m111z55z", &player);
   game_state.roundNum = 1;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPrevalentWind(game_state, player, branch)) {
@@ -72,7 +72,7 @@ TEST(isWindOrDragonPon, PrevalentWindKan) {
   HandFromNotation("123m456m1111z55z", &player);
   game_state.roundNum = 1;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPrevalentWind(game_state, player, branch)) {
@@ -89,7 +89,7 @@ TEST(isWindOrDragonPon, Dealer2Han) {
   HandFromNotation("123m456m111z55z", &player);
   game_state.roundNum = 0;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isSeatWind(game_state, player, branch) &&
@@ -107,7 +107,7 @@ TEST(isWindOrDragonPon, Dealer2HanKan) {
   HandFromNotation("123m456m1111z55z", &player);
   game_state.roundNum = 0;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isSeatWind(game_state, player, branch) &&
@@ -125,7 +125,7 @@ TEST(isWindOrDragonPon, NotSeatOrPrevalent) {
   HandFromNotation("123m456m222z55z", &player);
   game_state.roundNum = 0;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isSeatWind(game_state, player, branch) ||
@@ -143,7 +143,7 @@ TEST(isWindOrDragonPon, NoWind) {
   HandFromNotation("123m456m666m55z", &player);
   game_state.roundNum = 0;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isSeatWind(game_state, player, branch) ||

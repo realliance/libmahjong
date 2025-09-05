@@ -19,7 +19,7 @@ TEST(isOutsideHand, Open) {
   HandFromNotation("123m789m111z999s55z", &player);
   player.open = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isOutsideHand(game_state, player, branch)) {
@@ -36,7 +36,7 @@ TEST(isOutsideHand, Closed) {
   HandFromNotation("123m789m111z999s55z", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isOutsideHand(game_state, player, branch)) {
@@ -52,7 +52,7 @@ TEST(isOutsideHand, NoChi) {
   Player& player =game_state.players[0];
   HandFromNotation("111m111p111s999m66z", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isOutsideHand(game_state, player, branch)) {
@@ -68,7 +68,7 @@ TEST(isOutsideHand, BadPlayer) {
   Player& player =game_state.players[0];
   HandFromNotation("111m234p111s999m66z", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isOutsideHand(game_state, player, branch)) {

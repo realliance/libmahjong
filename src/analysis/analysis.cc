@@ -43,7 +43,7 @@ std::vector<Branch> AnalyzeHand(const Player& player,
     }
   }
   std::vector<Branch> branches;
-  const std::unique_ptr<Node> root = breakdownPlayer(player.live_range());
+  const std::unique_ptr<Node> root = breakdownHand(player.live_range());
   for (const auto& branch_vec : Node::AsBranchVectors(root.get())) {
     branches.push_back(base_branch);
     Branch& branch = branches.back();
@@ -75,7 +75,7 @@ std::vector<Branch> AnalyzeHand(const Player& player,
   return branches;
 }
 
-std::unique_ptr<Node> breakdownPlayer(const std::span<const Piece>& pieces) {
+std::unique_ptr<Node> breakdownHand(const std::span<const Piece>& pieces) {
   Breakdown b;
   b.rootNode = std::make_unique<Node>(/*id=*/b.id++);
   b.currentNode = b.rootNode.get();

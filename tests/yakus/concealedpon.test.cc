@@ -20,7 +20,7 @@ TEST(isThreeConcealedPons, 2Han) {
   HandFromNotation("111m111p111s666z44m", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isThreeConcealedPons(game_state, player, branch)) {
@@ -41,7 +41,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealed) {
   };
   player.open = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isThreeConcealedPons(game_state, player, branch)) {
@@ -62,7 +62,7 @@ TEST(isThreeConcealedPons, CanHaveAdditionalOpenPon) {
   };
   player.open = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isThreeConcealedPons(game_state, player, branch)) {
@@ -83,7 +83,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealedNegative) {
   };
   player.open = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isThreeConcealedPons(game_state, player, branch)) {
@@ -100,7 +100,7 @@ TEST(isThreeConcealedPons, BadPlayer) {
   HandFromNotation("111m111p234567s44m", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isThreeConcealedPons(game_state, player, branch)) {

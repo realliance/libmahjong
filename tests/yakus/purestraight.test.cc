@@ -19,7 +19,7 @@ TEST(isPureStraight, Open) {
   HandFromNotation("123m456m789m555p11z", &player);
   player.open = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPureStraight(game_state, player, branch)) {
@@ -36,7 +36,7 @@ TEST(isPureStraight, Closed) {
   HandFromNotation("123m456m789m555p11z", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPureStraight(game_state, player, branch)) {
@@ -53,7 +53,7 @@ TEST(isPureStraight, BadPlayer) {
   HandFromNotation("123m456m999m555p11z", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPureStraight(game_state, player, branch)) {

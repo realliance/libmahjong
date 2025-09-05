@@ -21,7 +21,7 @@ TEST(isAfterAKan, 1Han) {
 
   game_state.prevState = StateFunctionType::kReplacement;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAfterAKan(game_state, player, branch)) {
@@ -40,7 +40,7 @@ TEST(isAfterAKan, DoesntApply) {
 
   game_state.prevState = StateFunctionType::kPon;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAfterAKan(game_state, player, branch)) {
@@ -59,7 +59,7 @@ TEST(isAfterAKan, WrongPlayer) {
 
   game_state.prevState = StateFunctionType::kReplacement;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAfterAKan(game_state, player, branch)) {

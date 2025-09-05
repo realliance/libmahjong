@@ -26,7 +26,7 @@ TEST(isTerminalsInAllSets, 2Han) {
       .start = Piece(kSevenPin),
   };
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTerminalsInAllSets(game_state, player, branch)) {
@@ -43,7 +43,7 @@ TEST(isTerminalsInAllSets, 3Han) {
   HandFromNotation("123m789m111p789p11s", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTerminalsInAllSets(game_state, player, branch)) {
@@ -65,7 +65,7 @@ TEST(isTerminalsInAllSets, BadPlayer) {
       .start = Piece(kSevenPin),
   };
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTerminalsInAllSets(game_state, player, branch)) {

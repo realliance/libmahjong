@@ -17,7 +17,7 @@ TEST(isWindOrDragonPon, WhiteDragon) {
   Player& player =game_state.players[0];
   HandFromNotation("123m456m555z11z", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isWhiteDragon(game_state, player, branch)) {
@@ -33,7 +33,7 @@ TEST(isWindOrDragonPon, GreenDragon) {
   Player& player =game_state.players[0];
   HandFromNotation("123m456m666z11z", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isGreenDragon(game_state, player, branch)) {
@@ -49,7 +49,7 @@ TEST(isWindOrDragonPon, RedDragon) {
   Player& player =game_state.players[0];
   HandFromNotation("123m456m777z11z", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isRedDragon(game_state, player, branch)) {
@@ -65,7 +65,7 @@ TEST(isWindOrDragonPon, Kan) {
   Player& player =game_state.players[0];
   HandFromNotation("123m456m7777z11z", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isRedDragon(game_state, player, branch)) {
@@ -82,7 +82,7 @@ TEST(isWindOrDragonPon, CanWhenOpen) {
   HandFromNotation("123m456m777z11z", &player);
   player.open = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isRedDragon(game_state, player, branch)) {
@@ -98,7 +98,7 @@ TEST(isWindOrDragonPon, BadPlayer) {
   Player& player =game_state.players[0];
   HandFromNotation("123m456m222p11p", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isGreenDragon(game_state, player, branch)) {
