@@ -11,7 +11,7 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isPureStraight(const GameState& /* state */, const Player& player,
+bool isPureStraight(const GameState& /* state */, const Hand& player,
                     const std::vector<const mahjong::Node*>& branch) {
   const int k_firstchistart = 1;
   const int k_secondchistart = 4;
@@ -42,7 +42,7 @@ bool isPureStraight(const GameState& /* state */, const Player& player,
       }
     }
   }
-    for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : player.melds_range()) {
     if (meld.type == SetType::kChi) {
       int ind = 0;
       if (meld.start.getPieceNum() == k_firstchistart) {

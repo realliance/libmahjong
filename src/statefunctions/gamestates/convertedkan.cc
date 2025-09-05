@@ -31,7 +31,7 @@ std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
     return state;
   }
 
-  Player& player =state->players[state->currentPlayer];
+  Hand& player = state->players[state->currentPlayer];
   if (auto* meld = std::ranges::find(player.melds,
                                      Meld{
                                          .type = SetType::kPon,

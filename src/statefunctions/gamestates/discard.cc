@@ -35,7 +35,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
   };
 
   std::array<bool, 4> need_decision = {false, false, false, false};
-  for(const Player& player : state->players){
+  for (const Hand& player : state->players) {
     if (player.id == state->currentPlayer) {
       continue;
     }
@@ -54,7 +54,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
   }
 
   Event decision = kDeclineEvent;
-  for(Player& player : state->players){
+  for (Hand& player : state->players) {
     if (need_decision.at(player.id)) {
       Event temp_decision =
           GetValidDecisionOrThrow(*state, player, /*inPlayer=*/false);

@@ -10,10 +10,10 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isThreeKans(const GameState& /* state */, const Player& player,
+bool isThreeKans(const GameState& /* state */, const Hand& player,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
   int kans = 0;
-    for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : player.melds_range()) {
     if (meld.type >= SetType::kKan) {
       kans++;
     }

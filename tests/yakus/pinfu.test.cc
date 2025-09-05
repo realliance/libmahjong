@@ -18,7 +18,7 @@ namespace mahjong::yaku {
 
 TEST(isPinfu, 1Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m456p234678s44m", &player);
   player.open = false;
   game_state.pendingPiece = Piece(kFourPin);
@@ -36,7 +36,7 @@ TEST(isPinfu, 1Han) {
 
 TEST(isPinfu, BadPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m555p234678s44m", &player);
   player.open = false;
   game_state.pendingPiece = Piece(kTwoBamboo);
@@ -54,7 +54,7 @@ TEST(isPinfu, BadPlayer) {
 
 TEST(isPinfu, CantBeOpen) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m456p234678s44m", &player);
   player.open = true;
   game_state.pendingPiece = Piece(kFourPin);
@@ -72,7 +72,7 @@ TEST(isPinfu, CantBeOpen) {
 
 TEST(isPinfu, NeedTwoWait) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m456p234678s44m", &player);
   player.open = false;
   game_state.pendingPiece = Piece(kFivePin);

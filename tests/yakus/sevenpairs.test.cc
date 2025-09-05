@@ -16,7 +16,7 @@ namespace mahjong::yaku {
 
 TEST(isSevenPairs, 2Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("11m22p33s44z55m11z66z", &player);
   player.open = false;
 
@@ -33,7 +33,7 @@ TEST(isSevenPairs, 2Han) {
 
 TEST(isSevenPairs, MustBeConcealed) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("11m22p33s44z55m11z66z", &player);
   player.open = true;
 
@@ -50,7 +50,7 @@ TEST(isSevenPairs, MustBeConcealed) {
 
 TEST(isSevenPairs, UniquePairsOnly) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("1111m22p33s44z11z66z", &player);
   player.open = false;
 

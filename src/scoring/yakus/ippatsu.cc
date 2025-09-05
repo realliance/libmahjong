@@ -11,7 +11,7 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isIppatsu(const GameState& state, const Player& player,
+bool isIppatsu(const GameState& state, const Hand& player,
                const std::vector<const mahjong::Node*>& /*branch*/) {
   return (isRiichi(state, player) || isDoubleRiichi(state, player)) &&
          (state.turnNum - player.riichiRound <= 4 &&

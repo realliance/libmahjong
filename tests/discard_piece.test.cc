@@ -1,15 +1,14 @@
 #include <gtest/gtest.h>
 
-#include <array>
 
 #include "statefunctions/stateutilities.h"
-#include "types/hand.h"
 #include "types/pieces.h"
+#include "types/hand.h"
 
 namespace mahjong {
 
 TEST(DiscardPiece, DiscardsCorrectPiece) {
-    Player  player;
+  Hand player;
   player.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
   player.live_count = 4;
 
@@ -18,7 +17,7 @@ TEST(DiscardPiece, DiscardsCorrectPiece) {
 }
 
 TEST(DiscardPiece, DoesntDiscardInCorrectPiece) {
-  Player  player;
+  Hand player;
   player.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
   player.live_count = 4;
 

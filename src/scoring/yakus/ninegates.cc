@@ -11,9 +11,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isNineGates(const GameState& state, const Player& player,
+bool isNineGates(const GameState& state, const Hand& player,
                  const std::vector<const mahjong::Node*>& branch) {
-    if (player.open) {
+  if (player.open) {
     return false;
   }
   if (!isFullFlush(state, player, branch)) {

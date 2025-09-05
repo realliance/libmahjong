@@ -10,7 +10,7 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isFourConcealedPon(const GameState&  /*state*/, const Player& player,
+bool isFourConcealedPon(const GameState& /*state*/, const Hand& player,
                         const std::vector<const mahjong::Node*>& branch) {
   if (player.open) {
     return false;
@@ -21,7 +21,7 @@ bool isFourConcealedPon(const GameState&  /*state*/, const Player& player,
       concealed_pons++;
     }
   }
-    for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : player.melds_range()) {
     if (meld.type == SetType::kConcealedKan) {
       concealed_pons++;
     }

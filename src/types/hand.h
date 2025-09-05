@@ -7,7 +7,7 @@
 #include "types/settings.h"
 namespace mahjong {
 
-struct Player {
+struct Hand {
   int id;
   std::array<Piece, kMaxDiscardCount> discards;
   int discards_count = 0;

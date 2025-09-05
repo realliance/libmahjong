@@ -63,7 +63,7 @@ std::ostream& operator<<(std::ostream& os, const mahjong::GameState& state) {
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const mahjong::Player& player) {
+std::ostream& operator<<(std::ostream& os, const mahjong::Hand& player) {
   os << "{ open: " << player.open;
   os << " riichi: " << player.riichi;
   os << " riichiPieceDiscard: " << player.riichiPieceDiscard;

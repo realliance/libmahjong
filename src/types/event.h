@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <string>
 
-
 namespace mahjong {
 
 struct Event {

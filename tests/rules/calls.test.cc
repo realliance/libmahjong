@@ -53,11 +53,11 @@ TEST(Calls, AcceptPon) {
   auto state = InitializeTestRound(12345, std::move(controllers));
 
   // Override with hopeless hands
-  Player& player0 = state->players[0];
+  Hand& player0 = state->players[0];
   // 14 Pieces because has drawn in InitializeTestRound.
   HandFromNotation("11447m2258p33699s", &player0);
   // Has the pair of nine bamboo 13 Pieces, yet to draw.
-  Player& player1 = state->players[1];
+  Hand& player1 = state->players[1];
   HandFromNotation("13579m99s246p135z", &player1);
 
   // Advance to pon event

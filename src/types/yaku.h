@@ -8,7 +8,7 @@
 
 namespace mahjong {
 
-using yakuFunc = std::function<int(const GameState&, const Player&,
+using yakuFunc = std::function<int(const GameState&, const Hand&,
                                    const std::vector<const Node*>&)>;
 
 using Han = int;

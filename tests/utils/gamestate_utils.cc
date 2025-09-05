@@ -12,7 +12,6 @@
 #include "statefunctions/router.h"
 #include "statefunctions/statecontroller.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/settings.h"
 #include "types/statefunction.h"
 #include "utils/playercontrollerfake.h"
@@ -60,8 +59,8 @@ std::unique_ptr<GameState> CreateTestGameState(uint64_t seed) {
 }
 
 std::unique_ptr<GameState> InitializeTestRound(
-    uint64_t seed,
-    std::array<std::unique_ptr<PlayerController>, kNumPlayers> playerControllers) {
+    uint64_t seed, std::array<std::unique_ptr<PlayerController>, kNumPlayers>
+                       playerControllers) {
   auto state = std::make_unique<GameState>();
   state->seed = seed;
 

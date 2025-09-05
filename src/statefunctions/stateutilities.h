@@ -12,15 +12,15 @@ struct GameState;
 
 Wind GetSeat(int round, int player);
 
-uint8_t RemovePieces(Player& player, Piece p, uint8_t count);
-void DiscardPiece(Player& player, Piece p);
+uint8_t RemovePieces(Hand& player, Piece p, uint8_t count);
+void DiscardPiece(Hand& player, Piece p);
 
 void AlertPlayers(const GameState& state, Event e);
 Piece AskForDiscard(const GameState& state);
-uint8_t CountPieces(const Player& player, Piece p);
-bool ValidateDecision(const GameState& state, const Player& player,
+uint8_t CountPieces(const Hand& player, Piece p);
+bool ValidateDecision(const GameState& state, const Hand& player,
                       Event decision, bool inPlayer);
-Event GetValidDecisionOrThrow(const GameState& state, const Player& player,
+Event GetValidDecisionOrThrow(const GameState& state, const Hand& player,
                               bool inPlayer);
 
 }  // namespace mahjong

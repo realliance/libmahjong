@@ -20,7 +20,7 @@ namespace mahjong::yaku {
 
 TEST(isHalfFlush, 2Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("11m234m111z222z", &player);
   player.open = true;
   player.melds[player.meld_count++] = Meld{
@@ -41,7 +41,7 @@ TEST(isHalfFlush, 2Han) {
 
 TEST(isHalfFlush, 3Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("11m234m777m111z222z", &player);
   player.open = false;
 
@@ -58,7 +58,7 @@ TEST(isHalfFlush, 3Han) {
 
 TEST(isHalfFlush, BadPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("11m234m111p222z", &player);
   player.open = true;
   player.melds[player.meld_count++] = Meld{
@@ -79,7 +79,7 @@ TEST(isHalfFlush, BadPlayer) {
 
 TEST(isHalfFlush, FullFlushIncompatible) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("11m234m888m777m", &player);
   player.open = true;
   player.melds[player.meld_count++] = Meld{

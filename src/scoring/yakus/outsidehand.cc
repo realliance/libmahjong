@@ -12,8 +12,8 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isOutsideHand(const GameState& state, const Player& player,
-                     const std::vector<const mahjong::Node*>& branch) {
+bool isOutsideHand(const GameState& state, const Hand& player,
+                   const std::vector<const mahjong::Node*>& branch) {
   bool chi = false;
   for (const auto* node : branch) {
     if (node->type() == SetType::kChi) {
@@ -28,7 +28,7 @@ bool isOutsideHand(const GameState& state, const Player& player,
       }
     }
   }
-    for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : player.melds_range()) {
     if (meld.type == SetType::kChi) {
       if (meld.start.isTerminal() || (meld.start + 2).isTerminal()) {
         chi = true;

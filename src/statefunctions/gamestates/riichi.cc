@@ -30,7 +30,7 @@ std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
                    .decision = false,                            // decision
                });
 
-  Player& player =state->players[state->currentPlayer];
+  Hand& player = state->players[state->currentPlayer];
   player.riichiRound = state->turnNum;
   player.riichiPieceDiscard = player.discards_count;
   player.riichi = true;

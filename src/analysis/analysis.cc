@@ -22,8 +22,7 @@ void countPieces(Breakdown* b) {
 }
 }  // namespace
 
-std::vector<Branch> AnalyzeHand(const Player& player,
-                                  const bool only_complete) {
+std::vector<Branch> AnalyzeHand(const Hand& player, const bool only_complete) {
   Branch base_branch;
   base_branch.open = !player.melds.empty();
   for (const auto& meld : player.melds_range()) {

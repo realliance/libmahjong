@@ -20,7 +20,7 @@ namespace mahjong::yaku {
 
 TEST(isFullFlush, 5Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m222m345m99m", &player);
   player.open = true;
   player.melds[player.meld_count++] = Meld{
@@ -41,7 +41,7 @@ TEST(isFullFlush, 5Han) {
 
 TEST(isFullFlush, 6Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m222m345m666m99m", &player);
   player.open = false;
 
@@ -58,7 +58,7 @@ TEST(isFullFlush, 6Han) {
 
 TEST(isFullFlush, BadPlayerHonors) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m222m111z666m99m", &player);
   player.open = false;
 
@@ -75,7 +75,7 @@ TEST(isFullFlush, BadPlayerHonors) {
 
 TEST(isFullFlush, BadPlayerSuit) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m222m111p666m99m", &player);
   player.open = false;
 
@@ -92,7 +92,7 @@ TEST(isFullFlush, BadPlayerSuit) {
 
 TEST(isFullFlush, BadPlayerFullFlushHonors) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111z222z333z444z55z", &player);
   player.open = false;
 

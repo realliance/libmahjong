@@ -11,7 +11,7 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isTriplePon(const GameState& /* state */, const Player& player,
+bool isTriplePon(const GameState& /* state */, const Hand& player,
                  const std::vector<const mahjong::Node*>& branch) {
   std::array<bool, 9> bamboo_pon = {};
   std::array<bool, 9> char_pon = {};
@@ -29,7 +29,7 @@ bool isTriplePon(const GameState& /* state */, const Player& player,
       }
     }
   }
-    for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : player.melds_range()) {
     if (meld.type >= SetType::kPon) {
       if (meld.start.getSuit() == Piece::Type::kBambooSuit) {
         bamboo_pon.at(meld.start.getPieceNum() - 1) = true;

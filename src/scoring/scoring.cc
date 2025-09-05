@@ -59,8 +59,8 @@ const int kFuRounding = 10;
 
 }  // namespace
 
-Score scorePlayer(const GameState& state, const Player& player) {
-    auto root = breakdownHand(player.live_range());
+Score scorePlayer(const GameState& state, const Hand& player) {
+  auto root = breakdownHand(player.live_range());
   Score s;
   s.han = 0;
   s.yakuman = 0;
@@ -156,7 +156,7 @@ int getBasicPoints(Score s) {
 
 const int kSevenpairs = 25;
 
-int getFu(const GameState& state, const Player& player,
+int getFu(const GameState& state, const Hand& player,
           const std::vector<const mahjong::Node*>& branch) {
   if (yaku::isSevenPairs(state, player, branch)) {
     return kSevenpairs;
@@ -179,7 +179,7 @@ int getFu(const GameState& state, const Player& player,
   } else if (!player.hasRonned) {
     fu += kSelfdraw;
   }
-    for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : player.melds_range()) {
     if (meld.type == SetType::kKan) {
       if (!meld.start.isHonor() && !meld.start.isTerminal()) {
         fu += open ? kSimplekan : kCsimplekan;
@@ -233,7 +233,7 @@ int getFu(const GameState& state, const Player& player,
          (kFuRounding - (fu % kFuRounding));  // rounding up to multiple of ten
 }
 
-bool isOpenPinfu(const GameState& state, const Player& player,
+bool isOpenPinfu(const GameState& state, const Hand& player,
                  const std::vector<const mahjong::Node*>& branch) {
   for (const auto* node : branch) {
     if (node->type() == SetType::kPon) {
@@ -252,7 +252,7 @@ bool isOpenPinfu(const GameState& state, const Player& player,
       }
     }
   }
-    for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : player.melds_range()) {
     if (meld.type > SetType::kChi) {
       return false;
     }
@@ -260,8 +260,8 @@ bool isOpenPinfu(const GameState& state, const Player& player,
   return getWaits(player, state.pendingPiece).size() >= 2;
 }
 
-bool isComplete(const GameState& state, const Player& player) {
-    auto root = breakdownHand(player.live_range());
+bool isComplete(const GameState& state, const Hand& player) {
+  auto root = breakdownHand(player.live_range());
   if (!root->IsComplete() && !yaku::isThirteenOrphans(state, player)) {
     return false;
   }

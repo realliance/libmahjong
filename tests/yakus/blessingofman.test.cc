@@ -15,7 +15,7 @@
 namespace mahjong::yaku {
 TEST(isBlessingOfMan, 5Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[3];
+  Hand& player = game_state.players[3];
   HandFromNotation("123m123p444m111z55m", &player);
   player.open = false;
   player.id = 3;
@@ -40,7 +40,7 @@ TEST(isBlessingOfMan, 5Han) {
 
 TEST(isBlessingOfMan, MustBeARon) {
   auto game_state = GameState();
-  Player& player =game_state.players[3];
+  Hand& player = game_state.players[3];
   HandFromNotation("123m123p444m111z55m", &player);
   player.open = false;
 
@@ -64,7 +64,7 @@ TEST(isBlessingOfMan, MustBeARon) {
 
 TEST(isBlessingOfMan, MustBeBeforePlayerFirstTurn) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m123p444m111z55m", &player);
   player.open = false;
 
@@ -88,7 +88,7 @@ TEST(isBlessingOfMan, MustBeBeforePlayerFirstTurn) {
 
 TEST(isBlessingOfMan, NoCalledMustHaveOccured) {
   auto game_state = GameState();
-  Player& player =game_state.players[3];
+  Hand& player = game_state.players[3];
   HandFromNotation("123m123p444m111z55m", &player);
   player.open = false;
 

@@ -19,7 +19,7 @@ namespace mahjong::yaku {
 
 TEST(isAllPons, 2Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m222p888s666z44m", &player);
 
   auto root = breakdownHand(player.live_range());
@@ -35,7 +35,7 @@ TEST(isAllPons, 2Han) {
 
 TEST(isAllPons, WithKans) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m222p666z44m", &player);
   player.melds[player.meld_count++] = Meld{
       .type = SetType::kKan,
@@ -56,7 +56,7 @@ TEST(isAllPons, WithKans) {
 
 TEST(isAllPons, ConcealedKan) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m222p666z44m", &player);
   player.melds[player.meld_count++] = Meld{
       .type = SetType::kConcealedKan,
@@ -77,7 +77,7 @@ TEST(isAllPons, ConcealedKan) {
 
 TEST(isAllPons, BadPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m222p666z789m44m", &player);
   player.open = false;
 

@@ -30,12 +30,12 @@ void AlertPlayers(const GameState& state, Event e) {
 }
 
 // Count number of piece p that are in given players hands
-uint8_t CountPieces(const Player& player, Piece p) {
+uint8_t CountPieces(const Hand& player, Piece p) {
   return std::ranges::count(player.live_range(), p);
 }
 
 // Remove an instance of piece p from given players hand
-uint8_t RemovePieces(Player& player, Piece p, uint8_t count) {
+uint8_t RemovePieces(Hand& player, Piece p, uint8_t count) {
   uint8_t removed = 0;
   count = std::min(CountPieces(player, p), count);
   const auto match_piece = [&](Piece _p) {
@@ -51,7 +51,7 @@ uint8_t RemovePieces(Player& player, Piece p, uint8_t count) {
 }
 
 // Discard an instance of piece p from given players hand
-void DiscardPiece(Player& player, Piece p) {
+void DiscardPiece(Hand& player, Piece p) {
   RemovePieces(player, p, /*count=*/1);
   player.discards[player.discards_count++] = p;
 }
@@ -65,12 +65,12 @@ Piece AskForDiscard(const GameState& state) {
           .decision = true,               // decision
       });
 
-  return Piece(
-      GetValidDecisionOrThrow(state, state.players[state.currentPlayer], /*inPlayer=*/true)
-          .piece);
+  return Piece(GetValidDecisionOrThrow(
+                   state, state.players[state.currentPlayer], /*inPlayer=*/true)
+                   .piece);
 }
 
-Event GetValidDecisionOrThrow(const GameState& state, const Player& player,
+Event GetValidDecisionOrThrow(const GameState& state, const Hand& player,
                               bool inPlayer) {
   Event decision;
   bool valid = false;
@@ -101,7 +101,7 @@ Event GetValidDecisionOrThrow(const GameState& state, const Player& player,
   return decision;
 }
 
-bool ValidateDecision(const GameState& state, const Player& player,
+bool ValidateDecision(const GameState& state, const Hand& player,
                       Event decision, bool inPlayer) {
   if (decision.type > Event::kDiscard) {
     return false;

@@ -16,7 +16,7 @@ namespace mahjong::yaku {
 
 TEST(isOutsideHand, Open) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m111z999s55z", &player);
   player.open = true;
 
@@ -33,7 +33,7 @@ TEST(isOutsideHand, Open) {
 
 TEST(isOutsideHand, Closed) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m111z999s55z", &player);
   player.open = false;
 
@@ -50,7 +50,7 @@ TEST(isOutsideHand, Closed) {
 
 TEST(isOutsideHand, NoChi) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m111p111s999m66z", &player);
 
   auto root = breakdownHand(player.live_range());
@@ -66,7 +66,7 @@ TEST(isOutsideHand, NoChi) {
 
 TEST(isOutsideHand, BadPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m234p111s999m66z", &player);
 
   auto root = breakdownHand(player.live_range());

@@ -15,7 +15,7 @@
 
 namespace mahjong::yaku {
 namespace {
-bool findPon(const GameState& /* state */, const Player& player,
+bool findPon(const GameState& /* state */, const Hand& player,
              const std::vector<const mahjong::Node*>& branch,
              const Piece& piece) {
   for (const auto* node : branch) {
@@ -23,7 +23,7 @@ bool findPon(const GameState& /* state */, const Player& player,
       return true;
     }
   }
-    for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : player.melds_range()) {
     if (meld.type >= SetType::kPon && meld.start == piece) {
       return true;
     }
@@ -33,29 +33,29 @@ bool findPon(const GameState& /* state */, const Player& player,
 
 }  // namespace
 
-bool isSeatWind(const GameState& state, const Player& player,
+bool isSeatWind(const GameState& state, const Hand& player,
                 const std::vector<const mahjong::Node*>& branch) {
   return findPon(state, player, branch,
                  Piece::fromWind(GetSeat(state.roundNum, player.id)));
 }
 
-bool isPrevalentWind(const GameState& state, const Player& player,
+bool isPrevalentWind(const GameState& state, const Hand& player,
                      const std::vector<const mahjong::Node*>& branch) {
   return findPon(state, player, branch,
                  Piece::fromWind(state.roundNum > 3 ? kSouth : kEast));
 }
 
-bool isGreenDragon(const GameState& state, const Player& player,
+bool isGreenDragon(const GameState& state, const Hand& player,
                    const std::vector<const mahjong::Node*>& branch) {
   return findPon(state, player, branch, kGreenDragon);
 }
 
-bool isRedDragon(const GameState& state, const Player& player,
+bool isRedDragon(const GameState& state, const Hand& player,
                  const std::vector<const mahjong::Node*>& branch) {
   return findPon(state, player, branch, kRedDragon);
 }
 
-bool isWhiteDragon(const GameState& state, const Player& player,
+bool isWhiteDragon(const GameState& state, const Hand& player,
                    const std::vector<const mahjong::Node*>& branch) {
   return findPon(state, player, branch, kWhiteDragon);
 }

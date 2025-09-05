@@ -10,9 +10,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isHalfFlush(const GameState& state, const Player& player,
+bool isHalfFlush(const GameState& state, const Hand& player,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
-    const int suit = player.live[0].getSuit();
+  const int suit = player.live[0].getSuit();
   bool honors = false;
   for (const auto& piece : player.live_range()) {
     if (piece.isHonor()) {

@@ -20,7 +20,7 @@ namespace mahjong::yaku {
 
 TEST(isLittleThreeDragons, 2Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("555z666z111m222p77z", &player);
   player.open = false;
 
@@ -37,7 +37,7 @@ TEST(isLittleThreeDragons, 2Han) {
 
 TEST(isLittleThreeDragons, WhenOpen) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("666z111m222p77z", &player);
   player.open = true;
   player.melds[player.meld_count++] = Meld{
@@ -58,7 +58,7 @@ TEST(isLittleThreeDragons, WhenOpen) {
 
 TEST(isLittleThreeDragons, BadPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("666z111m222p77s", &player);
   player.open = true;
   player.melds[player.meld_count++] = Meld{

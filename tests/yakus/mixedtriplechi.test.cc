@@ -16,7 +16,7 @@ namespace mahjong::yaku {
 
 TEST(isMixedTripleChi, Open) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123p123m123s555p11z", &player);
   player.open = true;
 
@@ -33,7 +33,7 @@ TEST(isMixedTripleChi, Open) {
 
 TEST(isMixedTripleChi, Closed) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123p123m123s555p11z", &player);
   player.open = false;
 
@@ -50,7 +50,7 @@ TEST(isMixedTripleChi, Closed) {
 
 TEST(isMixedTripleChi, BadPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123p123p123s555p11z", &player);
   player.open = false;
 

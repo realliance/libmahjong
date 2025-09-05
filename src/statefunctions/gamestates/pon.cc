@@ -33,7 +33,7 @@ std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
     state->players.at(state->currentPlayer).riichiPieceDiscard++;
   }
 
-  Player& player = state->players.at(state->lastCaller);
+  Hand& player = state->players.at(state->lastCaller);
   state->currentPlayer = state->lastCaller;
   state->lastCall = state->turnNum;
   state->concealedKan = false;

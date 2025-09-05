@@ -6,7 +6,7 @@
 #include "types/hand.h"
 
 namespace mahjong::yaku {
-bool isThreeKans(const GameState& state, const Player& player,
+bool isThreeKans(const GameState& state, const Hand& player,
                  const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
 }

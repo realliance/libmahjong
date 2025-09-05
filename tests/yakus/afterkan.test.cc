@@ -16,7 +16,7 @@ namespace mahjong::yaku {
 
 TEST(isAfterAKan, 1Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m1111z999s55z", &player);
   game_state.currentPlayer = 0;
 
@@ -35,7 +35,7 @@ TEST(isAfterAKan, 1Han) {
 
 TEST(isAfterAKan, DoesntApply) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m1111z999s55z", &player);
   game_state.currentPlayer = 0;
 
@@ -54,7 +54,7 @@ TEST(isAfterAKan, DoesntApply) {
 
 TEST(isAfterAKan, WrongPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m1111z999s55z", &player);
   game_state.currentPlayer = 2;
 
