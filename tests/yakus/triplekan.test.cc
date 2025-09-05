@@ -8,6 +8,7 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus/threekans.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"

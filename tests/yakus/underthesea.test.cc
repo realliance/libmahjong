@@ -7,6 +7,7 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus/bottomofthesea.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/settings.h"
 #include "utils/handformer.h"
 

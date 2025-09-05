@@ -8,7 +8,7 @@
 
 #include "analysis/handnode.h"
 #include "analysis/handtree.h"
-#include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/meld.h"
 #include "types/piecetype.h"
 #include "types/sets.h"

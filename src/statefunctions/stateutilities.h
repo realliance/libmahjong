@@ -3,6 +3,7 @@
 
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/piecetype.h"
 #include "types/winds.h"
 

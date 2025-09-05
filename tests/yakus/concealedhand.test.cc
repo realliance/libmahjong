@@ -5,6 +5,7 @@
 
 #include "scoring/yakus/fullyconcealedhand.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/settings.h"
 #include "utils/handformer.h"
 

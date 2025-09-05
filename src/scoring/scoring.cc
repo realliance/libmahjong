@@ -10,6 +10,7 @@
 #include "scoring/yakus/sevenpairs.h"
 #include "scoring/yakus/thirteenorphans.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/score.h"

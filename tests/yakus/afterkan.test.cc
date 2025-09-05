@@ -8,6 +8,7 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus/afterakan.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/statefunction.h"
 #include "utils/handformer.h"
 

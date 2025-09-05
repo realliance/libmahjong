@@ -7,6 +7,7 @@
 #include "scoring/yakus.h"
 #include "scoring/yakus/twicepuredoublechi.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/sets.h"
 #include "types/yaku.h"
 
