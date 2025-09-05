@@ -58,9 +58,8 @@ const int kFuRounding = 10;
 
 }  // namespace
 
-Score scoreHand(const GameState& state, int player) {
-  const Hand& hand = state.hands[player];
-  auto root = breakdownHand(hand.live_range());
+Score scorePlayer(const GameState& state, const Player& player) {
+    auto root = breakdownPlayer(player.live_range());
   Score s;
   s.han = 0;
   s.yakuman = 0;
@@ -77,7 +76,7 @@ Score scoreHand(const GameState& state, int player) {
     }
 
     for (const auto& yaku : Yakus::Instance().GetYakus()) {
-      if (yaku.type == Yaku::kClosed && hand.open) {
+      if (yaku.type == Yaku::kClosed && player.open) {
         continue;
       }
       if (!yaku.is_yaku_func(state, player, branch)) {
@@ -89,7 +88,7 @@ Score scoreHand(const GameState& state, int player) {
           branchscore.han += yaku.value;
           break;
         case Yaku::kBonusWhenClosed:
-          branchscore.han += yaku.value + (hand.open ? 0 : 1);
+          branchscore.han += yaku.value + (player.open ? 0 : 1);
           break;
         case Yaku::kYakuman:
           branchscore.yakuman++;
@@ -98,12 +97,12 @@ Score scoreHand(const GameState& state, int player) {
     }
 
     for (const auto& dora : Walls::GetDoras(state)) {
-      for (const auto& p : hand.live_range()) {
+      for (const auto& p : player.live_range()) {
         if (p == dora) {
           branchscore.han++;
         }
       }
-      for (const auto& meld : hand.melds_range()) {
+      for (const auto& meld : player.melds_range()) {
         if (meld.start == dora) {
           branchscore.han++;
         }
@@ -156,31 +155,30 @@ int getBasicPoints(Score s) {
 
 const int kSevenpairs = 25;
 
-int getFu(const GameState& state, int player,
+int getFu(const GameState& state, const Player& player,
           const std::vector<const mahjong::Node*>& branch) {
   if (yaku::isSevenPairs(state, player, branch)) {
     return kSevenpairs;
   }
   if (yaku::isPinfu(state, player, branch)) {
-    if (state.hasRonned.at(player)) {
+    if (player.hasRonned) {
       return kPinfuDiscard;
     }
     return kPinfuSelfdraw;
   }
   int fu = 0;
-  if (!state.hands.at(player).open && state.hasRonned.at(player)) {
+  if (!player.open && player.hasRonned) {
     fu = kConcealedDiscard;
   } else {
     fu = kOpenOrSelfdraw;
   }
-  const bool open = state.hands.at(player).open;
+  const bool open = player.open;
   if (isOpenPinfu(state, player, branch)) {
     fu += kOpenpinfu;
-  } else if (!state.hasRonned.at(player)) {
+  } else if (!player.hasRonned) {
     fu += kSelfdraw;
   }
-  const Hand& hand = state.hands[player];
-  for (const auto& meld : hand.melds_range()) {
+    for (const auto& meld : player.melds_range()) {
     if (meld.type == SetType::kKan) {
       if (!meld.start.isHonor() && !meld.start.isTerminal()) {
         fu += open ? kSimplekan : kCsimplekan;
@@ -234,7 +232,7 @@ int getFu(const GameState& state, int player,
          (kFuRounding - (fu % kFuRounding));  // rounding up to multiple of ten
 }
 
-bool isOpenPinfu(const GameState& state, int player,
+bool isOpenPinfu(const GameState& state, const Player& player,
                  const std::vector<const mahjong::Node*>& branch) {
   for (const auto* node : branch) {
     if (node->type() == SetType::kPon) {
@@ -253,18 +251,16 @@ bool isOpenPinfu(const GameState& state, int player,
       }
     }
   }
-  const Hand& hand = state.hands[player];
-  for (const auto& meld : hand.melds_range()) {
+    for (const auto& meld : player.melds_range()) {
     if (meld.type > SetType::kChi) {
       return false;
     }
   }
-  return getWaits(state.hands[player], state.pendingPiece).size() >= 2;
+  return getWaits(player, state.pendingPiece).size() >= 2;
 }
 
-bool isComplete(const GameState& state, int player) {
-  const Hand& hand = state.hands[player];
-  auto root = breakdownHand(hand.live_range());
+bool isComplete(const GameState& state, const Player& player) {
+    auto root = breakdownPlayer(player.live_range());
   if (!root->IsComplete() && !yaku::isThirteenOrphans(state, player)) {
     return false;
   }

@@ -20,38 +20,43 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
   state->concealedKan = false;
   state->lastCaller = -1;
   state->pendingPiece = Piece(Piece::kError);
-  state->hasRonned = {};
+  for (auto& player : state->players) {
+    player.hasRonned = false;
+  }
 
-  state->hands = {};
+  state->controllers = {};
 
   const int last_round = 3;
   if (state->roundNum > last_round && state->riichiSticks > 0) {
     std::vector<int> winners;
     int highscore = -100000;
     for (int i = 0; i < 4; i++) {
-      if (state->points[i] + state->scores.at(i) > highscore) {
-        highscore = state->points[i] + state->scores.at(i);
+      if (state->players[i].points + state->players.at(i).score > highscore) {
+        highscore = state->players[i].points + state->players.at(i).score;
         winners.clear();
         winners.push_back(i);
-      } else if (state->points[i] + state->scores.at(i) == highscore) {
+      } else if (state->players[i].points + state->players.at(i).score ==
+                 highscore) {
         winners.push_back(i);
       }
     }
     for (const auto& winner : winners) {
-      state->scores.at(winner) += (state->riichiSticks * 1000) / winners.size();
+      state->players.at(winner).score +=
+          (state->riichiSticks * 1000) / winners.size();
     }
   }
 
   // TODO(#17): Scoring
   for (int i = 0; i < 4; i++) {
-    AlertPlayers(*state,
-                 Event{.type = Event::kPointDiff,
-                       .player = i,
-                       .piece = static_cast<int16_t>(state->scores.at(i) / 100),
-                       .decision = false});
-    state->points[i] += state->scores.at(i);
+    AlertPlayers(
+        *state,
+        Event{.type = Event::kPointDiff,
+              .player = i,
+              .piece = static_cast<int16_t>(state->players.at(i).score / 100),
+              .decision = false});
+    state->players[i].points += state->players.at(i).score;
+    state->players[i].score = 0;
   }
-  state->scores = {};
 
   // TODO (#14): for now naively increment the round number
   state->roundNum++;

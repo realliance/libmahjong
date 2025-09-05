@@ -93,7 +93,7 @@ std::vector<Piece> HandFromNotation(const std::string& notation) {
   return result;
 }
 
-void HandFromNotation(const std::string& notation, Hand* hand) {
+void HandFromNotation(const std::string& notation, Player* hand) {
   std::vector hand_vec = HandFromNotation(notation);
   hand->live_count = hand_vec.size();
   std::ranges::move(hand_vec, hand->live.begin());
@@ -134,7 +134,7 @@ bool IsValidNotation(const std::string& notation) {
   return current_set.empty();
 }
 
-std::string HandToNotation(const std::vector<Piece>& hand) {
+std::string PlayerToNotation(const std::vector<Piece>& hand) {
   std::map<Piece::Type, std::vector<uint8_t>> suit_and_tiles;
 
   for (const auto& t : hand) {

@@ -19,18 +19,18 @@ namespace mahjong::yaku {
 
 TEST(isFullFlush, 5Han) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("111m222m345m99m", &hand);
-  hand.open = true;
-  hand.melds[hand.meld_count++] = Meld{
+  Player& player =game_state.players[0];
+  HandFromNotation("111m222m345m99m", &player);
+  player.open = true;
+  player.melds[player.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = Piece(kSixCharacter),
   };
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isFullFlush(game_state, 0, branch)) {
+    if (isFullFlush(game_state, player, branch)) {
       SUCCEED();
       return;
     }
@@ -40,14 +40,14 @@ TEST(isFullFlush, 5Han) {
 
 TEST(isFullFlush, 6Han) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("111m222m345m666m99m", &hand);
-  hand.open = false;
+  Player& player =game_state.players[0];
+  HandFromNotation("111m222m345m666m99m", &player);
+  player.open = false;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isFullFlush(game_state, 0, branch)) {
+    if (isFullFlush(game_state, player, branch)) {
       SUCCEED();
       return;
     }
@@ -55,16 +55,16 @@ TEST(isFullFlush, 6Han) {
   FAIL();
 }
 
-TEST(isFullFlush, BadHandHonors) {
+TEST(isFullFlush, BadPlayerHonors) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("111m222m111z666m99m", &hand);
-  hand.open = false;
+  Player& player =game_state.players[0];
+  HandFromNotation("111m222m111z666m99m", &player);
+  player.open = false;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isFullFlush(game_state, 0, branch)) {
+    if (isFullFlush(game_state, player, branch)) {
       FAIL();
       return;
     }
@@ -72,16 +72,16 @@ TEST(isFullFlush, BadHandHonors) {
   SUCCEED();
 }
 
-TEST(isFullFlush, BadHandSuit) {
+TEST(isFullFlush, BadPlayerSuit) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("111m222m111p666m99m", &hand);
-  hand.open = false;
+  Player& player =game_state.players[0];
+  HandFromNotation("111m222m111p666m99m", &player);
+  player.open = false;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isFullFlush(game_state, 0, branch)) {
+    if (isFullFlush(game_state, player, branch)) {
       FAIL();
       return;
     }
@@ -89,16 +89,16 @@ TEST(isFullFlush, BadHandSuit) {
   SUCCEED();
 }
 
-TEST(isFullFlush, BadHandFullFlushHonors) {
+TEST(isFullFlush, BadPlayerFullFlushHonors) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("111z222z333z444z55z", &hand);
-  hand.open = false;
+  Player& player =game_state.players[0];
+  HandFromNotation("111z222z333z444z55z", &player);
+  player.open = false;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isFullFlush(game_state, 0, branch)) {
+    if (isFullFlush(game_state, player, branch)) {
       FAIL();
       return;
     }

@@ -52,7 +52,7 @@ std::vector<Piece> completeSet(const Piece a, const Piece b) {
   return waits;
 }
 
-std::vector<Piece> getWaits(const Hand& hand) {
+std::vector<Piece> getWaits(const Player& hand) {
   // 13, 10, 7, 4, 1 are possible piece counts for non-melded tiles
   if (hand.live_count == 0 || hand.live_count % 3 != 1) {
     return {};
@@ -73,8 +73,8 @@ std::vector<Piece> getWaits(const Hand& hand) {
   return waits;
 }
 
-std::vector<Piece> getWaits(const Hand& hand, const Piece& piece) {
-  Hand new_hand = hand;
+std::vector<Piece> getWaits(const Player& hand, const Piece& piece) {
+  Player new_hand = hand;
   // This will move all pieces matching piece to the end of the array, but
   // we will only decrease the count by 1 so only a single piece will be
   // removed.
@@ -83,7 +83,7 @@ std::vector<Piece> getWaits(const Hand& hand, const Piece& piece) {
   return getWaits(new_hand);
 }
 
-std::map<Piece, std::vector<Piece>> getPossibleWaits(const Hand& hand) {
+std::map<Piece, std::vector<Piece>> getPossibleWaits(const Player& hand) {
   // 14, 11, 8, 5, 2 are the possible piece counts for non-melded tiles.
   if (hand.live_count == 0 || hand.live_count % 3 != 2) {
     return {};

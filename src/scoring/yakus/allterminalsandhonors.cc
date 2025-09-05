@@ -9,15 +9,14 @@
 
 namespace mahjong::yaku {
 bool isAllTerminalsAndHonors(
-    const GameState& state, int player,
+    const GameState&  /*state*/, const Player& player,
     const std::vector<const mahjong::Node*>& /*branch*/) {
-  const Hand& hand = state.hands[player];
-  for (const auto& piece : hand.live_range()) {
+    for (const auto& piece : player.live_range()) {
     if (!piece.isHonor() && !piece.isTerminal()) {
       return false;
     }
   }
-  for (const auto& meld : hand.melds_range()) {
+  for (const auto& meld : player.melds_range()) {
     if (!meld.start.isHonor() && !meld.start.isTerminal()) {
       return false;
     }

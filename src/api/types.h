@@ -6,8 +6,8 @@ namespace api {
 
 extern "C" {
 
-static const int kMaxLiveHandSize = 14;  // Maximum 14 pieces (13 + 1 drawn)
-static const int kMaxMeldsPerHand = 4;   // Maximum 4 melds possible
+static const int kMaxLivePlayerSize = 14;  // Maximum 14 pieces (13 + 1 drawn)
+static const int kMaxMeldsPerPlayer = 4;   // Maximum 4 melds possible
 static const int kMaxDiscardsPerPlayer =
     27;  // Flow interruption from calls can allow the max discards to go up
          // to 27.
@@ -41,7 +41,7 @@ enum CStateFunctionType {
   kGameStart = 1,
   kRoundStart = 2,
   kDraw = 3,
-  kPlayerHand = 4,
+  kPlayerPlayer = 4,
   kPon = 5,
   kChi = 6,
   kKan = 7,
@@ -63,10 +63,10 @@ struct CMeld {
   CPiece start;
 };
 
-struct CHand {
-  CPiece livePieces[kMaxLiveHandSize];     // Live pieces
+struct CPlayer {
+  CPiece livePieces[kMaxLivePlayerSize];   // Live pieces
   int livePieceCount;                      // Number of live pieces
-  CMeld melds[kMaxMeldsPerHand];           // Melds
+  CMeld melds[kMaxMeldsPerPlayer];         // Melds
   int meldCount;                           // Number of melds
   CPiece discards[kMaxDiscardsPerPlayer];  // Discards
   int discardCount;                        // Number of discards
@@ -91,7 +91,7 @@ struct CObservedGameState {
   int scores[4];        // Temporary round score changes
   int points[4];        // Player points
   bool hasRonned[4];    // Which players have declared ron this turn
-  CHand hands[4];       // Player hands with live pieces, melds, and discards
+  CPlayer hands[4];     // Player hands with live pieces, melds, and discards
   CStateFunctionType prevState;  // Previous state function
   CStateFunctionType currState;  // Current state function
   CStateFunctionType nextState;  // Next state function

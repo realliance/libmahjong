@@ -20,7 +20,7 @@ REGISTER_PLAYER_CONTROLLER(ThriceBot);
 
 void ThriceBot::RoundStart(std::vector<Piece> _hand, Wind s, Wind p) {
   for (const Piece m : _hand) {
-    HandTile h;
+    PlayerTile h;
     h.piece = m;
     if (m.isHonor()) {
       h.weight = kHonorWeight;
@@ -54,8 +54,8 @@ void ThriceBot::assignweights() {
   }
 }
 
-ThriceBot::HandTile ThriceBot::assignTileWeight(HandTile h1) {
-  HandTile h;
+ThriceBot::PlayerTile ThriceBot::assignTileWeight(PlayerTile h1) {
+  PlayerTile h;
   h.piece = h1.piece;
   h.weight = h1.weight;
   for (auto& i : hand_) {
@@ -89,7 +89,7 @@ void ThriceBot::ReceiveEvent(Event e) {
     }
 
     if (e.type == Event::kDiscard && e.player == pid_) {
-      HandTile h;
+      PlayerTile h;
       h.piece = Piece(e.piece);
       if (h.piece.isHonor()) {
         h.weight = kHonorWeight;

@@ -15,13 +15,13 @@ namespace mahjong {
 namespace {
 std::unique_ptr<GameState> KanDiscard(std::unique_ptr<GameState> state) {
   std::array<bool, 4> need_decision = {false, false, false, false};
-  for (int player = 0; player < 4; player++) {
-    if (player == state->currentPlayer) {
+  for(const Player& player : state->players){
+    if (player.id == state->currentPlayer) {
       continue;
     }
     if (CanRon(*state, player)) {
-      need_decision.at(player) = true;
-      state->players.at(state->currentPlayer)
+      need_decision.at(player.id) = true;
+      state->controllers.at(state->currentPlayer)
           ->ReceiveEvent(Event{
               .type = Event::kRon,             // type
               .player = state->currentPlayer,  // player
@@ -33,12 +33,12 @@ std::unique_ptr<GameState> KanDiscard(std::unique_ptr<GameState> state) {
   }
 
   bool have_ronned = false;
-  for (int i = 0; i < 4; i++) {
-    if (need_decision.at(i)) {
+  for(Player& player : state->players){
+    if (need_decision.at(player.id)) {
       const Event temp_decision =
-          GetValidDecisionOrThrow(*state, i, /*inHand=*/false);
+          GetValidDecisionOrThrow(*state, player, /*inPlayer=*/false);
       if (temp_decision.type == Event::kRon) {
-        state->hasRonned.at(i) = true;
+        player.hasRonned = true;
         have_ronned = true;
       }
     }

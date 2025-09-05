@@ -11,9 +11,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isPureDoubleChi(const GameState& state, int player,
+bool isPureDoubleChi(const GameState& state, const Player& player,
                      const std::vector<const mahjong::Node*>& branch) {
-  if (state.hands.at(player).open) {
+  if (player.open) {
     return false;
   }
   for (size_t i = 0; i < branch.size(); i++) {

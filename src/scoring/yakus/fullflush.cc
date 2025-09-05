@@ -8,19 +8,18 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isFullFlush(const GameState& state, int player,
+bool isFullFlush(const GameState&  /*state*/, const Player& player,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
-  const Hand& hand = state.hands[player];
-  if (hand.live[0].isHonor()) {
+    if (player.live[0].isHonor()) {
     return false;
   }
-  const int suit = hand.live[0].getSuit();
-  for (const auto& piece : hand.live_range()) {
+  const int suit = player.live[0].getSuit();
+  for (const auto& piece : player.live_range()) {
     if (piece.getSuit() != suit) {
       return false;
     }
   }
-  for (const auto& meld : hand.melds_range()) {
+  for (const auto& meld : player.melds_range()) {
     if (meld.start.getSuit() != suit) {
       return false;
     }

@@ -11,10 +11,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isThirteenOrphans(const GameState& state, int player,
+bool isThirteenOrphans(const GameState&  /*state*/, const Player& player,
                        const std::vector<const mahjong::Node*>& /*branch*/) {
-  const Hand& hand = state.hands[player];
-  if (hand.open) {
+    if (player.open) {
     return false;
   }
   std::map<Piece, bool> pieces = {
@@ -25,7 +24,7 @@ bool isThirteenOrphans(const GameState& state, int player,
       {kGreenDragon, false}};
   bool duplicate = false;
 
-  for (const auto& piece : hand.live_range()) {
+  for (const auto& piece : player.live_range()) {
     if (pieces.contains(piece)) {
       if (pieces[piece]) {
         duplicate = true;

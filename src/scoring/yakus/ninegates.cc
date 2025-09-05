@@ -10,16 +10,15 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isNineGates(const GameState& state, int player,
+bool isNineGates(const GameState& state, const Player& player,
                  const std::vector<const mahjong::Node*>& branch) {
-  const Hand& hand = state.hands[player];
-  if (hand.open) {
+    if (player.open) {
     return false;
   }
   if (!isFullFlush(state, player, branch)) {
     return false;
   }
-  if (hand.open) {
+  if (player.open) {
     return false;
   }
   std::map<int, int> pieces;
@@ -27,7 +26,7 @@ bool isNineGates(const GameState& state, int player,
     pieces.at(i) = 0;
   }
   bool duplicate = false;
-  for (const auto& piece : hand.live_range()) {
+  for (const auto& piece : player.live_range()) {
     if (pieces.contains(piece.getPieceNum())) {
       if ((pieces[piece.getPieceNum()] != 0) && !piece.isTerminal()) {
         if (duplicate) {

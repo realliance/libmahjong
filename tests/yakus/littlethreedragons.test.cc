@@ -19,14 +19,14 @@ namespace mahjong::yaku {
 
 TEST(isLittleThreeDragons, 2Han) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("555z666z111m222p77z", &hand);
-  hand.open = false;
+  Player& player =game_state.players[0];
+  HandFromNotation("555z666z111m222p77z", &player);
+  player.open = false;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isLittleThreeDragons(game_state, 0, branch)) {
+    if (isLittleThreeDragons(game_state, player, branch)) {
       SUCCEED();
       return;
     }
@@ -36,18 +36,18 @@ TEST(isLittleThreeDragons, 2Han) {
 
 TEST(isLittleThreeDragons, WhenOpen) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("666z111m222p77z", &hand);
-  hand.open = true;
-  hand.melds[hand.meld_count++] = Meld{
+  Player& player =game_state.players[0];
+  HandFromNotation("666z111m222p77z", &player);
+  player.open = true;
+  player.melds[player.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = Piece(kWhiteDragon),
   };
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isLittleThreeDragons(game_state, 0, branch)) {
+    if (isLittleThreeDragons(game_state, player, branch)) {
       SUCCEED();
       return;
     }
@@ -55,20 +55,20 @@ TEST(isLittleThreeDragons, WhenOpen) {
   FAIL();
 }
 
-TEST(isLittleThreeDragons, BadHand) {
+TEST(isLittleThreeDragons, BadPlayer) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("666z111m222p77s", &hand);
-  hand.open = true;
-  hand.melds[hand.meld_count++] = Meld{
+  Player& player =game_state.players[0];
+  HandFromNotation("666z111m222p77s", &player);
+  player.open = true;
+  player.melds[player.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = Piece(kWhiteDragon),
   };
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isLittleThreeDragons(game_state, 0, branch)) {
+    if (isLittleThreeDragons(game_state, player, branch)) {
       FAIL();
       return;
     }

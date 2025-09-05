@@ -31,16 +31,16 @@ TEST(isThreeKans, 2Han) {
   };
 
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("666z22m", &hand);
-  hand.melds = {meld_a, meld_b, meld_c};
-  hand.meld_count = 3;
-  hand.open = true;
+  Player& player =game_state.players[0];
+  HandFromNotation("666z22m", &player);
+  player.melds = {meld_a, meld_b, meld_c};
+  player.meld_count = 3;
+  player.open = true;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isThreeKans(game_state, 0, branch)) {
+    if (isThreeKans(game_state, player, branch)) {
       SUCCEED();
       return;
     }
@@ -67,16 +67,16 @@ TEST(isThreeKans, WithOtherMelds) {
   };
 
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("22m", &hand);
-  hand.melds = {meld_a, meld_b, meld_c, meld_d};
-  hand.meld_count = 4;
-  hand.open = true;
+  Player& player =game_state.players[0];
+  HandFromNotation("22m", &player);
+  player.melds = {meld_a, meld_b, meld_c, meld_d};
+  player.meld_count = 4;
+  player.open = true;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isThreeKans(game_state, 0, branch)) {
+    if (isThreeKans(game_state, player, branch)) {
       SUCCEED();
       return;
     }
@@ -84,7 +84,7 @@ TEST(isThreeKans, WithOtherMelds) {
   FAIL();
 }
 
-TEST(isThreeKans, BadHand) {
+TEST(isThreeKans, BadPlayer) {
   const Meld meld_a = {
       .type = SetType::kConcealedKan,
       .start = Piece(kOneBamboo),
@@ -95,16 +95,16 @@ TEST(isThreeKans, BadHand) {
   };
 
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("777p666z22m", &hand);
-  hand.melds = {meld_a, meld_b};
-  hand.meld_count = 2;
-  hand.open = true;
+  Player& player =game_state.players[0];
+  HandFromNotation("777p666z22m", &player);
+  player.melds = {meld_a, meld_b};
+  player.meld_count = 2;
+  player.open = true;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isThreeKans(game_state, 0, branch)) {
+    if (isThreeKans(game_state, player, branch)) {
       FAIL();
       return;
     }
@@ -127,16 +127,16 @@ TEST(isThreeKans, AllConcealed) {
   };
 
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("666z22m", &hand);
-  hand.melds = {meld_a, meld_b, meld_c};
-  hand.meld_count = 3;
-  hand.open = false;
+  Player& player =game_state.players[0];
+  HandFromNotation("666z22m", &player);
+  player.melds = {meld_a, meld_b, meld_c};
+  player.meld_count = 3;
+  player.open = false;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isThreeKans(game_state, 0, branch)) {
+    if (isThreeKans(game_state, player, branch)) {
       SUCCEED();
       return;
     }

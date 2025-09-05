@@ -16,116 +16,113 @@
 namespace mahjong {
 
 // TODO(#18): "I really hate this" - alice
-bool CanRon(const GameState& state, int player) {
+bool CanRon(const GameState& state, const Player& player) {
   // If the pending piece is your discard, you can't Ron
-  for (const auto& piece : state.hands.at(player).discards) {
+  for (const auto& piece : player.discards) {
     if (state.pendingPiece == piece) {
       return false;
     }
   }
 
   // Build the theoretical hand
-  auto& tmp_state = const_cast<GameState&>(state);
-  auto& tmp_hand = tmp_state.hands[player];
-  tmp_hand.live[tmp_hand.live_count++] = state.pendingPiece;
+  auto& tmp_player = const_cast<Player&>(player);
+  tmp_player.live[tmp_player.live_count++] = state.pendingPiece;
 
   // If this Ron is occurring due to a concealed kan discard,
   if (state.concealedKan) {
     // If it happens to be a ron for a thirteen orphans,
     // it's allowed and you can ron
     if (yaku::isThirteenOrphans(state, player)) {
-      tmp_hand.live[--tmp_hand.live_count] = kError;
+      tmp_player.live[--tmp_player.live_count] = kError;
       return true;
     }
 
     // otherwise, you can't
-    tmp_hand.live[--tmp_hand.live_count] = kError;
+    tmp_player.live[--tmp_player.live_count] = kError;
     return false;
   }
 
   // if not a concealed kan, check if it's complete
   const bool can_ron = isComplete(state, player);
-  tmp_hand.live[--tmp_hand.live_count] = kError;
+  tmp_player.live[--tmp_player.live_count] = kError;
   return can_ron;
 }
 
-bool CanKan(const GameState& state, int player) {
+bool CanKan(const GameState& state, const Player& player) {
   if (Walls::GetRemainingPieces(state) == 0) {
     return false;
   }
-  if (state.hands.at(player).riichi) {
+  if (player.riichi) {
     return false;
   }
-  return CountPieces(state, player, state.pendingPiece) == 3;
+  return CountPieces(player, state.pendingPiece) == 3;
 }
 
-bool CanPon(const GameState& state, int player) {
-  if (state.hands.at(player).riichi) {
+bool CanPon(const GameState& state, const Player& player) {
+  if (player.riichi) {
     return false;
   }
-  return CountPieces(state, player, state.pendingPiece) == 2;
+  return CountPieces(player, state.pendingPiece) == 2;
 }
 
-bool CanChi(const GameState& state, int player) {
-  if (state.hands.at(player).riichi) {
+bool CanChi(const GameState& state, const Player& player) {
+  if (player.riichi) {
     return false;
   }
   if (state.pendingPiece.isHonor()) {
     return false;
   }
-  if (((state.currentPlayer + 1) % 4) != player) {
+  if (((state.currentPlayer + 1) % 4) != player.id) {
     return false;
   }
-  if (CountPieces(state, player, state.pendingPiece - 2) > 0 &&
-      CountPieces(state, player, state.pendingPiece - 1) > 0) {
+  if (CountPieces(player, state.pendingPiece - 2) > 0 &&
+      CountPieces(player, state.pendingPiece - 1) > 0) {
     return true;
   }
-  if (CountPieces(state, player, state.pendingPiece - 1) > 0 &&
-      CountPieces(state, player, state.pendingPiece + 1) > 0) {
+  if (CountPieces(player, state.pendingPiece - 1) > 0 &&
+      CountPieces(player, state.pendingPiece + 1) > 0) {
     return true;
   }
-  if (CountPieces(state, player, state.pendingPiece + 1) > 0 &&
-      CountPieces(state, player, state.pendingPiece + 2) > 0) {
+  if (CountPieces(player, state.pendingPiece + 1) > 0 &&
+      CountPieces(player, state.pendingPiece + 2) > 0) {
     return true;
   }
   return false;
 }
 
-bool CanTsumo(const GameState& state, int player) {
+bool CanTsumo(const GameState& state, const Player& player) {
   return isComplete(state, player);
 }
 
-bool CanConvertedKan(const GameState& state, int player) {
+bool CanConvertedKan(const GameState& state, const Player& player) {
   if (Walls::GetRemainingPieces(state) == 0) {
     return false;
   }
-  const Hand& hand = state.hands.at(player);
-  return std::any_of(hand.melds.begin(), hand.melds.begin() + hand.meld_count,
-                     [&](auto meld) {
+  return std::any_of(player.melds.begin(),
+                     player.melds.begin() + player.meld_count, [&](auto meld) {
                        return meld.type == SetType::kPon &&
-                              CountPieces(state, player, meld.start) == 1;
+                              CountPieces(player, meld.start) == 1;
                      });
 }
 
-bool CanConcealedKan(const GameState& state, int player) {
+bool CanConcealedKan(const GameState& state, const Player& player) {
   if (Walls::GetRemainingPieces(state) == 0) {
     return false;
   }
   // TODO(#19): Allow riichi concealed kan under the right conditions
-  if (state.hands.at(player).riichi) {
+  if (player.riichi) {
     return false;
   }
-  return CountPieces(state, player, state.pendingPiece) == 4;
+  return CountPieces(player, state.pendingPiece) == 4;
 }
 
-bool CanRiichi(const GameState& state, int player) {
-  const Hand& hand = state.hands[player];
-  if (hand.riichi) {
+bool CanRiichi(const GameState& /*unused*/, const Player& player) {
+  if (player.riichi) {
     return false;
   }
-  if (hand.open) {
+  if (player.open) {
     return false;
   }
-  return !getPossibleWaits(state.hands[player]).empty();
+  return !getPossibleWaits(player).empty();
 }
 }  // namespace mahjong

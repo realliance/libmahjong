@@ -9,8 +9,8 @@
 namespace mahjong {
 
 std::vector<Piece> HandFromNotation(const std::string& notation);
-void HandFromNotation(const std::string& notation, Hand* hand);
+void HandFromNotation(const std::string& notation, Player* hand);
 bool IsValidNotation(const std::string& notation);
-std::string HandToNotation(const std::vector<Piece>& hand);
+std::string PlayerToNotation(const std::vector<Piece>& hand);
 
 }  // namespace mahjong

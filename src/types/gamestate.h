@@ -12,17 +12,23 @@
 
 namespace mahjong {
 
-struct Hand {
-  bool open = false;
+struct Hand {};
+
+struct Player {
+  int id;
+  std::array<Piece, kMaxDiscardCount> discards;
+  int discards_count = 0;
   bool riichi = false;
-  int riichiPieceDiscard = -1;
-  int riichiRound = -1;
+  int riichiPieceDiscard;
+  int riichiRound;
+  int score;
+  bool hasRonned;
+  int points;
+  bool open;
   std::array<Piece, 14> live;
   int live_count = 13;
   std::array<Meld, 4> melds;
   int meld_count = 0;
-  std::array<Piece, kMaxDiscardCount> discards;
-  int discards_count = 0;
   [[nodiscard]] std::ranges::subrange<const Piece*> live_range() const {
     return std::ranges::subrange(live.begin(), live.begin() + live_count);
   }
@@ -39,23 +45,23 @@ struct GameState {
   int counters = 0;
   int lastCall = -1;
   int lastCaller = -1;
+  int livingWallIndex = 0;
+  int deadWallIndex = 0;
+  int doraCount = 1;
   bool concealedKan = false;
+  Piece pendingPiece = Piece(Piece::Type::kError);
+
+  std::array<Player, kNumPlayers> players;
+  std::array<Piece, kLivingWallCount> livingWall;
+  std::array<Piece, kDeadWallCount> deadWall;
+
   uint64_t seed = 0;
   std::mt19937_64 g;
-  int doraCount = 1;
-  Piece pendingPiece = Piece(Piece::Type::kError);
+  std::array<std::unique_ptr<PlayerController>, kNumPlayers> controllers = {};
+
   StateFunctionType prevState;
   StateFunctionType currState;
   StateFunctionType nextState;
-  std::array<Piece, kLivingWallCount> livingWall;
-  int livingWallIndex = 0;
-  std::array<Piece, kDeadWallCount> deadWall;
-  int deadWallIndex = 0;
-  std::array<int, kNumPlayers> scores = {};
-  std::array<bool, kNumPlayers> hasRonned = {};
-  std::array<Hand, kNumPlayers> hands = {};
-  std::array<std::unique_ptr<PlayerController>, kNumPlayers> players = {};
-  std::array<int, kNumPlayers> points = {};
 };
 
 }  // namespace mahjong

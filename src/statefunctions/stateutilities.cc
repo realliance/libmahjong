@@ -23,22 +23,20 @@ Wind GetSeat(int round, int player) {
 // Push Event to Player Queue
 void AlertPlayers(const GameState& state, Event e) {
   e.decision = false;
-  for (const auto& player : state.players) {
-    player->ReceiveEvent(e);
+  for (const auto& controller : state.controllers) {
+    controller->ReceiveEvent(e);
   }
 }
 
 // Count number of piece p that are in given players hands
-uint8_t CountPieces(const GameState& state, int player, Piece p) {
-  const Hand& hand = state.hands.at(player);
-  return std::ranges::count(hand.live_range(), p);
+uint8_t CountPieces(const Player& player, Piece p) {
+  return std::ranges::count(player.live_range(), p);
 }
 
 // Remove an instance of piece p from given players hand
-uint8_t RemovePieces(GameState& state, int player, Piece p, uint8_t count) {
-  Hand& hand = state.hands.at(player);
+uint8_t RemovePieces(Player& player, Piece p, uint8_t count) {
   uint8_t removed = 0;
-  count = std::min(CountPieces(state, player, p), count);
+  count = std::min(CountPieces(player, p), count);
   const auto match_piece = [&](Piece _p) {
     if (count > removed && p == _p) {
       removed++;
@@ -46,19 +44,19 @@ uint8_t RemovePieces(GameState& state, int player, Piece p, uint8_t count) {
     }
     return false;
   };
-  std::ranges::remove_if(hand.live, match_piece);
-  hand.live_count -= removed;
+  std::ranges::remove_if(player.live, match_piece);
+  player.live_count -= removed;
   return removed;
 }
 
 // Discard an instance of piece p from given players hand
-void DiscardPiece(GameState& state, int player, Piece p) {
-  RemovePieces(state, player, p, /*count=*/1);
-  state.hands[player].discards[state.hands[player].discards_count++] = p;
+void DiscardPiece(Player& player, Piece p) {
+  RemovePieces(player, p, /*count=*/1);
+  player.discards[player.discards_count++] = p;
 }
 
 Piece AskForDiscard(const GameState& state) {
-  state.players.at(state.currentPlayer)
+  state.controllers.at(state.currentPlayer)
       ->ReceiveEvent(Event{
           .type = Event::kDiscard,        // type
           .player = state.currentPlayer,  // player
@@ -67,50 +65,50 @@ Piece AskForDiscard(const GameState& state) {
       });
 
   return Piece(
-      GetValidDecisionOrThrow(state, state.currentPlayer, /*inHand=*/true)
+      GetValidDecisionOrThrow(state, state.players[state.currentPlayer], /*inPlayer=*/true)
           .piece);
 }
 
-Event GetValidDecisionOrThrow(const GameState& state, int player, bool inHand) {
+Event GetValidDecisionOrThrow(const GameState& state, const Player& player,
+                              bool inPlayer) {
   Event decision;
   bool valid = false;
   int i = 0;
   while (!valid) {
     if (i > 100) {
       Event replacement_decision = decision;
-      replacement_decision.type = inHand ? Event::kDiscard : Event::kDecline;
-      if (inHand) {
-        replacement_decision.piece =
-            state.hands[player].live_range().back().toUint8_t();
+      replacement_decision.type = inPlayer ? Event::kDiscard : Event::kDecline;
+      if (inPlayer) {
+        replacement_decision.piece = player.live_range().back().toUint8_t();
       }
-      if (ValidateDecision(state, player, replacement_decision, inHand)) {
+      if (ValidateDecision(state, player, replacement_decision, inPlayer)) {
         return replacement_decision;
       }
       std::cerr
           << "WARNING: Player Controller sent invalid event too many times."
           << '\n';
       std::cerr << "Decision.type: " << decision.type << " Decision.piece "
-                << decision.piece << " player: " << player
-                << " inHand: " << (inHand ? "true" : "false") << '\n';
+                << decision.piece << " player: " << player.id
+                << " inPlayer: " << (inPlayer ? "true" : "false") << '\n';
       std::cerr << "ERROR: was not able to recover from invalid event." << '\n';
       throw 0xBAD22222;
     }
     i++;
-    decision = state.players.at(player)->RetrieveDecision();
-    valid = ValidateDecision(state, player, decision, inHand);
+    decision = state.controllers.at(player.id)->RetrieveDecision();
+    valid = ValidateDecision(state, player, decision, inPlayer);
   }
   return decision;
 }
 
-bool ValidateDecision(const GameState& state, int player, Event decision,
-                      bool inHand) {
+bool ValidateDecision(const GameState& state, const Player& player,
+                      Event decision, bool inPlayer) {
   if (decision.type > Event::kDiscard) {
     return false;
   }
-  if (decision.type > Event::kDecline && !inHand) {
+  if (decision.type > Event::kDecline && !inPlayer) {
     return false;
   }
-  if (decision.type < Event::kTsumo && inHand) {
+  if (decision.type < Event::kTsumo && inPlayer) {
     return false;
   }
   switch (decision.type) {
@@ -131,7 +129,7 @@ bool ValidateDecision(const GameState& state, int player, Event decision,
     case Event::kRiichi:
       return CanRiichi(state, player);
     case Event::kDiscard:
-      return CountPieces(state, player, Piece(decision.piece)) > 0;
+      return CountPieces(player, Piece(decision.piece)) > 0;
     case Event::kDecline:
       return true;
     default:

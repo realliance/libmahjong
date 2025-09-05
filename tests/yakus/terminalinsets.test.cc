@@ -18,18 +18,18 @@ namespace mahjong::yaku {
 
 TEST(isTerminalsInAllSets, 2Han) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("123m789m111p11s", &hand);
-  hand.open = true;
-  hand.melds[hand.meld_count++] = Meld{
+  Player& player =game_state.players[0];
+  HandFromNotation("123m789m111p11s", &player);
+  player.open = true;
+  player.melds[player.meld_count++] = Meld{
       .type = SetType::kChi,
       .start = Piece(kSevenPin),
   };
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isTerminalsInAllSets(game_state, 0, branch)) {
+    if (isTerminalsInAllSets(game_state, player, branch)) {
       SUCCEED();
       return;
     }
@@ -39,14 +39,14 @@ TEST(isTerminalsInAllSets, 2Han) {
 
 TEST(isTerminalsInAllSets, 3Han) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("123m789m111p789p11s", &hand);
-  hand.open = false;
+  Player& player =game_state.players[0];
+  HandFromNotation("123m789m111p789p11s", &player);
+  player.open = false;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isTerminalsInAllSets(game_state, 0, branch)) {
+    if (isTerminalsInAllSets(game_state, player, branch)) {
       SUCCEED();
       return;
     }
@@ -54,21 +54,21 @@ TEST(isTerminalsInAllSets, 3Han) {
   FAIL();
 }
 
-TEST(isTerminalsInAllSets, BadHand) {
+TEST(isTerminalsInAllSets, BadPlayer) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("123m789m222p11s", &hand);
-  hand.open = true;
-  hand.open = true;
-  hand.melds[hand.meld_count++] = Meld{
+  Player& player =game_state.players[0];
+  HandFromNotation("123m789m222p11s", &player);
+  player.open = true;
+  player.open = true;
+  player.melds[player.meld_count++] = Meld{
       .type = SetType::kChi,
       .start = Piece(kSevenPin),
   };
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isTerminalsInAllSets(game_state, 0, branch)) {
+    if (isTerminalsInAllSets(game_state, player, branch)) {
       FAIL();
       return;
     }

@@ -33,21 +33,16 @@ std::ostream& operator<<(std::ostream& os, const mahjong::GameState& state) {
   os << "lastCaller: " << state.lastCaller << '\n';
   os << "seed: " << state.seed << '\n';
   os << "pendingPiece: " << state.pendingPiece.toStr() << '\n';
-  os << "hasRonned: " << '\n';
-  for (size_t i = 0; i < state.hasRonned.size(); i++) {
-    os << "hasRonned[" << i << "]: {" << state.hasRonned.at(i) << "}" << '\n';
-  }
   os << "hands: " << '\n';
-  for (size_t i = 0; i < state.hands.size(); i++) {
-    os << "hand[" << i << "]: {" << state.hands.at(i) << "}" << '\n';
-  }
-  os << "players: " << '\n';
   for (size_t i = 0; i < state.players.size(); i++) {
+    os << "hand[" << i << "]: {" << state.players.at(i) << "}" << '\n';
+  }
+  os << "controllers: " << '\n';
+  for (size_t i = 0; i < state.controllers.size(); i++) {
     os << "player[" << i << "]: ";
     os << "{ controller: "
-       << ((state.players[i] != nullptr) ? state.players[i]->Name()
-                                         : "NULLPTR");
-    os << " points: " << state.points[i];
+       << ((state.controllers[i] != nullptr) ? state.controllers[i]->Name()
+                                             : "NULLPTR");
     os << '\n';
   }
   os << "{ doraCount: " << state.doraCount;
@@ -67,26 +62,28 @@ std::ostream& operator<<(std::ostream& os, const mahjong::GameState& state) {
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const mahjong::Hand& hand) {
-  os << "{ open: " << hand.open;
-  os << " riichi: " << hand.riichi;
-  os << " riichiPieceDiscard: " << hand.riichiPieceDiscard;
-  os << " riichiRound: " << hand.riichiRound;
+std::ostream& operator<<(std::ostream& os, const mahjong::Player& player) {
+  os << "{ open: " << player.open;
+  os << " riichi: " << player.riichi;
+  os << " riichiPieceDiscard: " << player.riichiPieceDiscard;
+  os << " riichiRound: " << player.riichiRound;
   os << " live: [" << '\n';
-  ;
-  for (const auto& piece : hand.live_range()) {
+  os << "hasRonned: " << '\n';
+  os << "hasRonned: {" << player.hasRonned << "}" << '\n';
+  os << " points: " << player.points;
+  for (const auto& piece : player.live_range()) {
     os << piece.toStr() << ", ";
   }
   os << "]" << '\n';
   os << "melds: [" << '\n';
-  for (const auto& meld : hand.melds_range()) {
+  for (const auto& meld : player.melds_range()) {
     os << "{ type: " << meld.typeToStr();
     os << ", start: " << meld.start.toStr() << "}";
     os << ", ";
   }
   os << "]" << '\n';
   os << "discards: [" << '\n';
-  for (const auto& piece : hand.discards) {
+  for (const auto& piece : player.discards) {
     os << piece.toStr() << ", ";
   }
   os << "]" << '\n';

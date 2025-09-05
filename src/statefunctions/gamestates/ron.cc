@@ -14,60 +14,59 @@ namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
-  Hand& caller_hand = state->hands[state->lastCaller];
-  caller_hand.live[caller_hand.live_count++] = state->pendingPiece;
+  Player& caller_player = state->players[state->lastCaller];
+  caller_player.live[caller_player.live_count++] = state->pendingPiece;
 
   std::array<int, 4> basic_points = {};
-  Hand& curr_hand = state->hands[state->currentPlayer];
-  if (curr_hand.riichi &&
-      curr_hand.discards_count == curr_hand.riichiPieceDiscard) {
+  Player& curr_player = state->players[state->currentPlayer];
+  if (curr_player.riichi &&
+      curr_player.discards_count == curr_player.riichiPieceDiscard) {
     state->riichiSticks--;
-    curr_hand.riichi = false;
+    curr_player.riichi = false;
   }
-  for (int player = 0; player < 4; player++) {
-    if (state->hasRonned.at(player)) {
+  for (Player& player : state->players) {
+    if (player.hasRonned) {
       AlertPlayers(*state, Event{
                                .type = Event::kRon,  // type
-                               .player = player,     // player
+                               .player = player.id,     // player
                                .piece = static_cast<int16_t>(
                                    state->pendingPiece.toUint8_t()),  // piece
                                .decision = false,  // decision
                            });
-      basic_points.at(player) = getBasicPoints(scoreHand(*state, player));
+      basic_points.at(player.id) = getBasicPoints(scorePlayer(*state, player));
     }
-    if (state->hands.at(player).riichi) {
-      state->scores.at(player) -= 1000;
+    if (player.riichi) {
+      player.score -= 1000;
     }
   }
   int payment = 0;
-  for (int i = 0; i < 4; i++) {
-    const int player = (state->roundNum + i) % 4;
-    if (state->hasRonned.at(player)) {
-      state->scores.at(player) += 1000 * state->riichiSticks;
+  for (Player& player : state->players) {
+    if (player.hasRonned) {
+      player.score += 1000 * state->riichiSticks;
       state->riichiSticks = 0;
-      state->scores.at(player) += 300 * state->counters;
+      player.score += 300 * state->counters;
       payment += 300 * state->counters;
-      if (i == state->roundNum % 4) {
-        int amount = 6 * basic_points.at(player);
+      if (player.id == state->roundNum % 4) {
+        int amount = 6 * basic_points.at(player.id);
         if ((amount % 100) != 0) {
           amount = amount + (100 - (amount % 100));
         }
-        state->scores.at(player) += amount;
+        player.score += amount;
         payment += amount;
       } else {
-        int amount = 4 * basic_points.at(player);
+        int amount = 4 * basic_points.at(player.id);
         if ((amount % 100) != 0) {
           amount = amount + (100 - (amount % 100));
         }
-        state->scores.at(player) += amount;
+        player.score += amount;
         payment += amount;
       }
     }
   }
 
-  state->scores.at(state->currentPlayer) -= payment;
+  state->players[state->currentPlayer].score -= payment;
 
-  if (state->hasRonned.at(state->roundNum % 4)) {
+  if (state->players.at(state->roundNum % 4).hasRonned) {
     state->counters++;
   } else {
     state->roundNum++;
@@ -76,7 +75,7 @@ std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
 
   bool allzeros = true;
   for (int i = 0; i < 4; i++) {
-    if (state->scores.at(i) != 0) {
+    if (state->players.at(i).score != 0) {
       allzeros = false;
     }
   }

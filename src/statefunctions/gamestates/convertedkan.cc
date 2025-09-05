@@ -23,20 +23,20 @@ std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
                                state->pendingPiece.toUint8_t()),  // piece
                            .decision = false,                     // decision
                        });
-  if (RemovePieces(*state, state->currentPlayer, state->pendingPiece,
+  if (RemovePieces(state->players[state->currentPlayer], state->pendingPiece,
                    /*count=*/1) != 1) {
     std::cerr << "Not Enough pieces to remove in ConvertedKan" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;
   }
 
-  Hand& hand = state->hands[state->currentPlayer];
-  if (auto* meld = std::ranges::find(hand.melds,
+  Player& player =state->players[state->currentPlayer];
+  if (auto* meld = std::ranges::find(player.melds,
                                      Meld{
                                          .type = SetType::kPon,
                                          .start = state->pendingPiece,
                                      });
-      meld != hand.melds.end()) {
+      meld != player.melds.end()) {
     meld->type = SetType::kKan;
     state->nextState = StateFunctionType::kKanDiscard;
     return state;

@@ -10,9 +10,9 @@ namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> GameEnd(std::unique_ptr<GameState> state) {
-  for (auto& player : state->players) {
-    player->ReceiveEvent(kEndEvent);
-    player.reset();
+  for (auto& controller : state->controllers) {
+    controller->ReceiveEvent(kEndEvent);
+    controller.reset();
   }
   return state;
 }
