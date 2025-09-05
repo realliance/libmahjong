@@ -15,22 +15,22 @@
 namespace mahjong {
 
 namespace {
-std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
+std::unique_ptr<GameState> PlayerPlayer(std::unique_ptr<GameState> state) {
   const std::vector<PossibleDecision> decisions = {
       PossibleDecision{.type = Event::kTsumo, .func = CanTsumo},
       PossibleDecision{.type = Event::kConcealedKan, .func = CanConcealedKan},
       PossibleDecision{.type = Event::kConvertedKan, .func = CanConvertedKan},
       PossibleDecision{.type = Event::kRiichi, .func = CanRiichi},
       PossibleDecision{.type = Event::kDiscard,
-                       .func = [](const GameState& state, int) {
-                         return !state.hands.at(state.currentPlayer).riichi;
+                       .func = [](const GameState&, const Player& player) {
+                         return !player.riichi;
                        }}};
 
   bool decision_asked = false;
   for (const auto& [decision, decisionIsPossible] : decisions) {
-    if (decisionIsPossible(*state, state->currentPlayer)) {
+    if (decisionIsPossible(*state, state->players[state->currentPlayer])) {
       decision_asked = true;
-      state->players.at(state->currentPlayer)
+      state->controllers.at(state->currentPlayer)
           ->ReceiveEvent(Event{
               .type = decision,                // type
               .player = state->currentPlayer,  // player
@@ -49,8 +49,8 @@ std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
     decision.decision = true;
     state->nextState = StateFunctionType::kDiscard;
   } else {
-    decision =
-        GetValidDecisionOrThrow(*state, state->currentPlayer, /*inHand=*/true);
+    decision = GetValidDecisionOrThrow(*state, state->players[state->currentPlayer],
+                                       /*inPlayer=*/true);
   }
 
   // note riichi handling is a lil borked on the player agency side
@@ -86,5 +86,5 @@ std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
 }
 }  // namespace
 
-REGISTER_ROUTE(PlayerHand, StateFunctionType::kPlayerHand);
+REGISTER_ROUTE(PlayerPlayer, StateFunctionType::kPlayerPlayer);
 }  // namespace mahjong

@@ -9,7 +9,7 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isAllPons(const GameState& state, int player,
+bool isAllPons(const GameState& /* state */, const Player& player,
                const std::vector<const mahjong::Node*>& branch) {
   int pons = 0;
   for (const auto* node : branch) {
@@ -17,8 +17,7 @@ bool isAllPons(const GameState& state, int player,
       pons++;
     }
   }
-  const Hand& hand = state.hands[player];
-  for (const auto& meld : hand.melds_range()) {
+    for (const auto& meld : player.melds_range()) {
     if (meld.type == SetType::kKan || meld.type == SetType::kPon ||
         meld.type == SetType::kConcealedKan) {
       pons++;

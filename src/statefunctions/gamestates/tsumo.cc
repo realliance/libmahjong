@@ -22,15 +22,15 @@ std::unique_ptr<GameState> Tsumo(std::unique_ptr<GameState> state) {
                            .decision = false,                     // decision
                        });
   const int basic_points =
-      getBasicPoints(scoreHand(*state, state->currentPlayer));
-  state->scores.at(state->currentPlayer) += state->riichiSticks * 1000;
+      getBasicPoints(scorePlayer(*state, state->players[state->currentPlayer]));
+  state->players[state->currentPlayer].score += state->riichiSticks * 1000;
   state->riichiSticks = 0;
-  state->scores.at(state->currentPlayer) += state->counters * 300;
+  state->players[state->currentPlayer].score += state->counters * 300;
 
   for (int i = 0; i < 4; i++) {
     if (i == state->currentPlayer) {
-      if (state->hands.at(state->currentPlayer).riichi) {
-        state->scores.at(i) -= 1000;
+      if (state->players.at(state->currentPlayer).riichi) {
+        state->players.at(i).score -= 1000;
       }
       continue;
     }
@@ -44,12 +44,12 @@ std::unique_ptr<GameState> Tsumo(std::unique_ptr<GameState> state) {
     if ((amount % 100) != 0) {
       amount = amount + (100 - (amount % 100));
     }
-    state->scores.at(i) -= amount;
-    state->scores.at(i) -= state->counters * 100;
-    if (state->hands.at(i).riichi) {
-      state->scores.at(i) -= 1000;
+    state->players.at(i).score -= amount;
+    state->players.at(i).score -= state->counters * 100;
+    if (state->players.at(i).riichi) {
+      state->players.at(i).score -= 1000;
     }
-    state->scores.at(state->currentPlayer) += amount;
+    state->players[state->currentPlayer].score += amount;
   }
 
   if (state->currentPlayer == state->roundNum % 4) {

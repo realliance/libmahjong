@@ -11,8 +11,9 @@ namespace mahjong {
 namespace {
 std::unique_ptr<GameState> GameStart(std::unique_ptr<GameState> state) {
   for (int i = 0; i < 4; i++) {
-    state->points[i] = kStartingPoints;
-    state->players[i]->GameStart(i);
+    state->players[i].id = i;
+    state->players[i].points = kStartingPoints;
+    state->controllers[i]->GameStart(i);
   }
   state->g.seed(state->seed);
   state->nextState = StateFunctionType::kRoundStart;

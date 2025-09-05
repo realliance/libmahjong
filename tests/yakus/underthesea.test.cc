@@ -14,14 +14,14 @@ namespace mahjong::yaku {
 
 TEST(isBottomOfTheSea, 1Han) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("123m789m111z999s55z", &hand);
+  Player& player =game_state.players[0];
+  HandFromNotation("123m789m111z999s55z", &player);
   game_state.livingWallIndex = kLivingWallCount;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isBottomOfTheSea(game_state, 0, branch)) {
+    if (isBottomOfTheSea(game_state, player, branch)) {
       SUCCEED();
       return;
     }
@@ -31,15 +31,15 @@ TEST(isBottomOfTheSea, 1Han) {
 
 TEST(isBottomOfTheSea, 1HanRonned) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("123m789m111z999s55z", &hand);
+  Player& player =game_state.players[0];
+  HandFromNotation("123m789m111z999s55z", &player);
   game_state.livingWallIndex = kLivingWallCount;
-  game_state.hasRonned[0] = true;
+  game_state.players[0].hasRonned = true;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isBottomOfTheSea(game_state, 0, branch)) {
+    if (isBottomOfTheSea(game_state, player, branch)) {
       SUCCEED();
       return;
     }
@@ -49,13 +49,13 @@ TEST(isBottomOfTheSea, 1HanRonned) {
 
 TEST(isBottomOfTheSea, DoesntApply) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("123m789m111z999s55z", &hand);
+  Player& player =game_state.players[0];
+  HandFromNotation("123m789m111z999s55z", &player);
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isBottomOfTheSea(game_state, 0, branch)) {
+    if (isBottomOfTheSea(game_state, player, branch)) {
       FAIL();
       return;
     }

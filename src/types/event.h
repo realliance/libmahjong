@@ -1,9 +1,7 @@
 #pragma once
 #include <cstdint>
-#include <iostream>
 #include <string>
 
-#include "types/piecetype.h"
 
 namespace mahjong {
 

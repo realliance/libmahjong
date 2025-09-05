@@ -8,9 +8,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isRiichi(const GameState& state, int player,
+bool isRiichi(const GameState& state, const Player& player,
               const std::vector<const mahjong::Node*>& /*branch*/) {
-  return state.hands.at(player).riichi && !state.hands.at(player).open &&
+  return player.riichi && !player.open &&
          (state.turnNum > 4 || state.lastCall < 0);
 }
 

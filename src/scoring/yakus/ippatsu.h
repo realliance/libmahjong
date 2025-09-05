@@ -5,7 +5,7 @@
 #include "types/gamestate.h"
 
 namespace mahjong::yaku {
-bool isIppatsu(const GameState& state, int player,
+bool isIppatsu(const GameState& state, const Player& player,
                const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
 }

@@ -20,11 +20,11 @@ std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
   Walls::New(*state);
   for (size_t i = 0; i < 4; i++) {
     auto hand = Walls::TakeHand(*state);
-    state->players.at(i)->RoundStart(
+    state->controllers.at(i)->RoundStart(
         hand, static_cast<Wind>((i + 3 * (state->roundNum % 4)) % 4),
         (state->roundNum > 3) ? kSouth : kEast);
-    state->hands[i].live_count = hand.size();
-    std::ranges::move(hand, state->hands[i].live.begin());
+    state->players[i].live_count = hand.size();
+    std::ranges::move(hand, state->players[i].live.begin());
   }
 
   AlertPlayers(*state,

@@ -26,8 +26,8 @@ CStateFunctionType ConvertStateFunctionType(mahjong::StateFunctionType func) {
       return kRoundStart;
     case mahjong::StateFunctionType::kDraw:
       return kDraw;
-    case mahjong::StateFunctionType::kPlayerHand:
-      return kPlayerHand;
+    case mahjong::StateFunctionType::kPlayerPlayer:
+      return kPlayerPlayer;
     case mahjong::StateFunctionType::kPon:
       return kPon;
     case mahjong::StateFunctionType::kChi:
@@ -142,24 +142,24 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
 
   // Player data
   for (int i = 0; i < 4; i++) {
-    observed.scores[i] = state->scores[i];
-    observed.points[i] = state->points[i];
-    observed.hasRonned[i] = state->hasRonned[i];
+    observed.scores[i] = state->players[i].score;
+    observed.points[i] = state->players[i].points;
+    observed.hasRonned[i] = state->players[i].hasRonned;
 
-    // Convert Hand to CHand
-    const auto& cpp_hand = state->hands[i];
-    CHand& c_hand = observed.hands[i];
+    // Convert Player to CPlayer
+    const auto& cpp_hand = state->players[i];
+    CPlayer& c_hand = observed.hands[i];
 
     // Live pieces
     const int live_piece_count = static_cast<int>(cpp_hand.live_count);
-    c_hand.livePieceCount = std::min(live_piece_count, kMaxLiveHandSize);
+    c_hand.livePieceCount = std::min(live_piece_count, kMaxLivePlayerSize);
     for (int j = 0; j < c_hand.livePieceCount; j++) {
       c_hand.livePieces[j] = static_cast<CPiece>(cpp_hand.live[j].toUint8_t());
     }
 
     // Melds
     const int meld_count = cpp_hand.meld_count;
-    c_hand.meldCount = std::min(meld_count, kMaxMeldsPerHand);
+    c_hand.meldCount = std::min(meld_count, kMaxMeldsPerPlayer);
     for (int j = 0; j < c_hand.meldCount; j++) {
       c_hand.melds[j].type = static_cast<CMeldType>(cpp_hand.melds[j].type);
       c_hand.melds[j].start =
@@ -173,7 +173,7 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
       c_hand.discards[j] = static_cast<CPiece>(discards[j].toUint8_t());
     }
 
-    // Hand properties
+    // Player properties
     c_hand.open = cpp_hand.open;
     c_hand.riichi = cpp_hand.riichi;
     c_hand.riichiPieceDiscard = static_cast<int>(cpp_hand.riichiPieceDiscard);

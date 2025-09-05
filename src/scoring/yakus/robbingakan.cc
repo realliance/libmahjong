@@ -9,9 +9,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isRobbingAKan(const GameState& state, int player,
+bool isRobbingAKan(const GameState& state, const Player& player,
                    const std::vector<const mahjong::Node*>& /*branch*/) {
-  if (!state.hasRonned.at(player)) {
+  if (!player.hasRonned) {
     return false;
   }
   if (state.nextState == StateFunctionType::kKanDiscard) {

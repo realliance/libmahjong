@@ -16,7 +16,7 @@ namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
-  state->hands.at(state->lastCaller).open = true;
+  state->players.at(state->lastCaller).open = true;
 
   AlertPlayers(*state, Event{
                            .type = Event::kPon,          // type
@@ -26,25 +26,25 @@ std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
                            .decision = false,                     // decision
                        });
 
-  if (state->hands.at(state->currentPlayer).riichi &&
-      state->hands.at(state->currentPlayer).discards_count ==
-          state->hands.at(state->currentPlayer).riichiPieceDiscard) {
-    state->hands.at(state->currentPlayer).riichiPieceDiscard++;
+  if (state->players.at(state->currentPlayer).riichi &&
+      state->players.at(state->currentPlayer).discards_count ==
+          state->players.at(state->currentPlayer).riichiPieceDiscard) {
+    state->players.at(state->currentPlayer).riichiPieceDiscard++;
   }
 
-  Hand& hand = state->hands.at(state->lastCaller);
+  Player& player = state->players.at(state->lastCaller);
   state->currentPlayer = state->lastCaller;
   state->lastCall = state->turnNum;
   state->concealedKan = false;
   state->turnNum++;
 
-  if (RemovePieces(*state, state->lastCaller, state->pendingPiece,
+  if (RemovePieces(state->players[state->lastCaller], state->pendingPiece,
                    /*count=*/2) != 2) {
     std::cerr << "Not enough pieces to remove in Pon" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;
   }
-  hand.melds[hand.meld_count++] = Meld{
+  player.melds[player.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = state->pendingPiece,
   };

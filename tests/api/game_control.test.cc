@@ -31,9 +31,9 @@ TEST(Api, SettingsConversion) {
   mahjong::GameState* state = api::InitGameState(&settings);
   EXPECT_NE(state, nullptr);
   EXPECT_EQ(state->seed, settings.seed);
-  EXPECT_EQ(state->players.size(), settings.num_controllers);
-  for (uint64_t i = 0; i < state->players.size(); ++i) {
-    EXPECT_EQ(state->players[i]->Name(), settings.seat_controllers[i]);
+  EXPECT_EQ(state->controllers.size(), settings.num_controllers);
+  for (uint64_t i = 0; i < state->controllers.size(); ++i) {
+    EXPECT_EQ(state->controllers[i]->Name(), settings.seat_controllers[i]);
   }
 }
 
@@ -78,9 +78,9 @@ TEST(Api, ObserveGameState) {
 
   // Check arrays are properly sized and initialized
   for (int i = 0; i < 4; i++) {
-    EXPECT_EQ(observed.scores[i], state->scores[i]);
-    EXPECT_EQ(observed.points[i], state->points[i]);
-    EXPECT_EQ(observed.hasRonned[i], state->hasRonned[i]);
+    EXPECT_EQ(observed.scores[i], state->players[i].score);
+    EXPECT_EQ(observed.points[i], state->players[i].points);
+    EXPECT_EQ(observed.hasRonned[i], state->players[i].hasRonned);
   }
 
   api::FreeGameState(state);
@@ -120,13 +120,13 @@ TEST(Api, ObserveGameStateAfterAdvancement) {
 
   // Check points are copied
   for (int i = 0; i < 4; i++) {
-    EXPECT_EQ(observed.points[i], state->points[i]);
+    EXPECT_EQ(observed.points[i], state->players[i].points);
   }
 
   api::FreeGameState(state);
 }
 
-TEST(Api, ObserveGameStateHandsAndDiscards) {
+TEST(Api, ObserveGameStatePlayersAndDiscards) {
   const api::CGameSettings settings = kDefaultSettings;
 
   mahjong::GameState* state = api::InitGameState(&settings);
@@ -140,46 +140,46 @@ TEST(Api, ObserveGameStateHandsAndDiscards) {
 
   // Check that hands are copied (after round start, players should have hands)
   for (int player = 0; player < 4; player++) {
-    const api::CHand& c_hand = observed.hands[player];
-    const mahjong::Hand& cpp_hand = state->hands[player];
+    const api::CPlayer& c_player = observed.hands[player];
+    const mahjong::Player& cpp_player = state->players[player];
 
     // Check live pieces
-    EXPECT_EQ(c_hand.livePieceCount, static_cast<int>(cpp_hand.live_count));
-    for (int piece = 0; piece < api::kMaxLiveHandSize; piece++) {
-      if (piece < c_hand.livePieceCount) {
-        EXPECT_EQ(c_hand.livePieces[piece],
-                  static_cast<api::CPiece>(cpp_hand.live[piece].toUint8_t()));
+    EXPECT_EQ(c_player.livePieceCount, static_cast<int>(cpp_player.live_count));
+    for (int piece = 0; piece < api::kMaxLivePlayerSize; piece++) {
+      if (piece < c_player.livePieceCount) {
+        EXPECT_EQ(c_player.livePieces[piece],
+                  static_cast<api::CPiece>(cpp_player.live[piece].toUint8_t()));
       } else {
         // Should be filled with error pieces
-        EXPECT_EQ(c_hand.livePieces[piece],
+        EXPECT_EQ(c_player.livePieces[piece],
                   static_cast<api::CPiece>(mahjong::Piece::Type::kError));
       }
     }
 
     // Check melds
-    EXPECT_EQ(c_hand.meldCount, cpp_hand.meld_count);
-    for (int meld = 0; meld < c_hand.meldCount; meld++) {
-      EXPECT_EQ(static_cast<int>(c_hand.melds[meld].type),
-                static_cast<int>(cpp_hand.melds[meld].type));
+    EXPECT_EQ(c_player.meldCount, cpp_player.meld_count);
+    for (int meld = 0; meld < c_player.meldCount; meld++) {
+      EXPECT_EQ(static_cast<int>(c_player.melds[meld].type),
+                static_cast<int>(cpp_player.melds[meld].type));
       EXPECT_EQ(
-          c_hand.melds[meld].start,
-          static_cast<api::CPiece>(cpp_hand.melds[meld].start.toUint8_t()));
+          c_player.melds[meld].start,
+          static_cast<api::CPiece>(cpp_player.melds[meld].start.toUint8_t()));
     }
 
-    // Check discards using CHand structure
-    EXPECT_EQ(c_hand.discardCount, static_cast<int>(cpp_hand.discards_count));
-    for (int discard = 0; discard < c_hand.discardCount; discard++) {
+    // Check discards using CPlayer structure
+    EXPECT_EQ(c_player.discardCount, static_cast<int>(cpp_player.discards_count));
+    for (int discard = 0; discard < c_player.discardCount; discard++) {
       EXPECT_EQ(
-          c_hand.discards[discard],
-          static_cast<api::CPiece>(cpp_hand.discards[discard].toUint8_t()));
+          c_player.discards[discard],
+          static_cast<api::CPiece>(cpp_player.discards[discard].toUint8_t()));
     }
 
     // Check hand properties
-    EXPECT_EQ(c_hand.open, cpp_hand.open);
-    EXPECT_EQ(c_hand.riichi, cpp_hand.riichi);
-    EXPECT_EQ(c_hand.riichiPieceDiscard,
-              static_cast<int>(cpp_hand.riichiPieceDiscard));
-    EXPECT_EQ(c_hand.riichiRound, cpp_hand.riichiRound);
+    EXPECT_EQ(c_player.open, cpp_player.open);
+    EXPECT_EQ(c_player.riichi, cpp_player.riichi);
+    EXPECT_EQ(c_player.riichiPieceDiscard,
+              static_cast<int>(cpp_player.riichiPieceDiscard));
+    EXPECT_EQ(c_player.riichiRound, cpp_player.riichiRound);
   }
 
   api::FreeGameState(state);

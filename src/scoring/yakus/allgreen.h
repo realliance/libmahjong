@@ -5,7 +5,7 @@
 #include "types/gamestate.h"
 
 namespace mahjong::yaku {
-bool isAllGreen(const GameState& state, int player,
+bool isAllGreen(const GameState& state, const Player& player,
                 const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
 }

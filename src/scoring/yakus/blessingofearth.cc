@@ -8,9 +8,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isBlessingOfEarth(const GameState& state, int player,
+bool isBlessingOfEarth(const GameState& state, const Player& player,
                        const std::vector<const mahjong::Node*>& /*branch*/) {
-  if (state.hands.at(player).open) {
+  if (player.open) {
     return false;
   }
   if (state.turnNum > 3) {
@@ -19,7 +19,7 @@ bool isBlessingOfEarth(const GameState& state, int player,
   if (state.lastCall >= 0) {
     return false;
   }
-  if (state.hasRonned.at(player)) {
+  if (player.hasRonned) {
     return false;
   }
   return true;

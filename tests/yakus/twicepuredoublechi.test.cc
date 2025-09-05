@@ -15,14 +15,14 @@ namespace mahjong::yaku {
 
 TEST(isTwicePureDoubleChi, 3Han) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("789p789p234m234m11z", &hand);
-  hand.open = false;
+  Player& player =game_state.players[0];
+  HandFromNotation("789p789p234m234m11z", &player);
+  player.open = false;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isTwicePureDoubleChi(game_state, 0, branch)) {
+    if (isTwicePureDoubleChi(game_state, player, branch)) {
       SUCCEED();
       return;
     }
@@ -32,14 +32,14 @@ TEST(isTwicePureDoubleChi, 3Han) {
 
 TEST(isTwicePureDoubleChi, MustBeConcealed) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("789p789p234m234m11z", &hand);
-  hand.open = true;
+  Player& player =game_state.players[0];
+  HandFromNotation("789p789p234m234m11z", &player);
+  player.open = true;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isTwicePureDoubleChi(game_state, 0, branch)) {
+    if (isTwicePureDoubleChi(game_state, player, branch)) {
       FAIL();
       return;
     }
@@ -47,16 +47,16 @@ TEST(isTwicePureDoubleChi, MustBeConcealed) {
   SUCCEED();
 }
 
-TEST(isTwicePureDoubleChi, BadHand) {
+TEST(isTwicePureDoubleChi, BadPlayer) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("789p789p234m567m11z", &hand);
-  hand.open = false;
+  Player& player =game_state.players[0];
+  HandFromNotation("789p789p234m567m11z", &player);
+  player.open = false;
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isTwicePureDoubleChi(game_state, 0, branch)) {
+    if (isTwicePureDoubleChi(game_state, player, branch)) {
       FAIL();
       return;
     }

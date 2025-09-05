@@ -8,16 +8,15 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isAllGreen(const GameState& state, int player,
+bool isAllGreen(const GameState&  /*state*/, const Player& player,
                 const std::vector<const mahjong::Node*>& /*branch*/) {
-  const Hand& hand = state.hands[player];
-  for (const auto& piece : hand.live_range()) {
+    for (const auto& piece : player.live_range()) {
     if (!piece.isGreen()) {
       return false;
     }
   }
 
-  for (const auto& meld : hand.melds_range()) {
+  for (const auto& meld : player.melds_range()) {
     if (!meld.start.isGreen()) {
       return false;
     }

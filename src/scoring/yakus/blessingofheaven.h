@@ -6,7 +6,7 @@
 
 namespace mahjong::yaku {
 bool isBlessingOfHeaven(
-    const GameState& state, int player,
+    const GameState& state, const Player& player,
     const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
 }

@@ -17,15 +17,15 @@ namespace mahjong::yaku {
 
 TEST(isPinfu, 1Han) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("123m456p234678s44m", &hand);
-  hand.open = false;
+  Player& player =game_state.players[0];
+  HandFromNotation("123m456p234678s44m", &player);
+  player.open = false;
   game_state.pendingPiece = Piece(kFourPin);
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isPinfu(game_state, 0, branch)) {
+    if (isPinfu(game_state, player, branch)) {
       SUCCEED();
       return;
     }
@@ -33,17 +33,17 @@ TEST(isPinfu, 1Han) {
   FAIL();
 }
 
-TEST(isPinfu, BadHand) {
+TEST(isPinfu, BadPlayer) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("123m555p234678s44m", &hand);
-  hand.open = false;
+  Player& player =game_state.players[0];
+  HandFromNotation("123m555p234678s44m", &player);
+  player.open = false;
   game_state.pendingPiece = Piece(kTwoBamboo);
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isPinfu(game_state, 0, branch)) {
+    if (isPinfu(game_state, player, branch)) {
       FAIL();
       return;
     }
@@ -53,15 +53,15 @@ TEST(isPinfu, BadHand) {
 
 TEST(isPinfu, CantBeOpen) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("123m456p234678s44m", &hand);
-  hand.open = true;
+  Player& player =game_state.players[0];
+  HandFromNotation("123m456p234678s44m", &player);
+  player.open = true;
   game_state.pendingPiece = Piece(kFourPin);
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isPinfu(game_state, 0, branch)) {
+    if (isPinfu(game_state, player, branch)) {
       FAIL();
       return;
     }
@@ -71,15 +71,15 @@ TEST(isPinfu, CantBeOpen) {
 
 TEST(isPinfu, NeedTwoWait) {
   auto game_state = GameState();
-  Hand& hand = game_state.hands[0];
-  HandFromNotation("123m456p234678s44m", &hand);
-  hand.open = false;
+  Player& player =game_state.players[0];
+  HandFromNotation("123m456p234678s44m", &player);
+  player.open = false;
   game_state.pendingPiece = Piece(kFivePin);
 
-  auto root = breakdownHand(hand.live_range());
+  auto root = breakdownPlayer(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isPinfu(game_state, 0, branch)) {
+    if (isPinfu(game_state, player, branch)) {
       FAIL();
       return;
     }

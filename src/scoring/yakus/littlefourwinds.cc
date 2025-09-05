@@ -9,7 +9,7 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isLittleFourWinds(const GameState& state, int player,
+bool isLittleFourWinds(const GameState&  /*state*/, const Player& player,
                        const std::vector<const mahjong::Node*>& branch) {
   bool pair = false;
   int pons = 0;
@@ -35,8 +35,7 @@ bool isLittleFourWinds(const GameState& state, int player,
   if (!pair) {
     return false;
   }
-  const Hand& hand = state.hands[player];
-  for (const auto& meld : hand.melds_range()) {
+    for (const auto& meld : player.melds_range()) {
     switch (meld.start.toUint8_t()) {
       case Piece::Type::kEastWind:
       case Piece::Type::kSouthWind:

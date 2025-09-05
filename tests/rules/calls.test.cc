@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
+#include <array>
 #include <cstdint>
 #include <memory>
 #include <utility>
-#include <vector>
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/statecontroller.h"
@@ -22,10 +22,10 @@ TEST(Calls, AcceptPon) {
   // Player 0: Has a 9 bamboo, and discards it
   // Player 1: Has a pair of 9 bamboo, will pon when player 0 discards
 
-  std::vector<std::unique_ptr<PlayerController>> controllers;
+  std::array<std::unique_ptr<PlayerController>, 4> controllers;
 
   // Player 0
-  controllers.push_back(
+  controllers[0] =
       std::make_unique<PlayerControllerFake>([](const Event& e) -> Event {
         // Discard 9 Bamboo
         if (e.type == Event::kDiscard) {
@@ -35,10 +35,10 @@ TEST(Calls, AcceptPon) {
         }
 
         return PlayerControllerFake::DefaultDecisionCallback(e);
-      }));
+      });
 
   // Player 1
-  controllers.push_back(
+  controllers[1] =
       std::make_unique<PlayerControllerFake>([](const Event& e) -> Event {
         // Accept all Pons
         if (e.type == Event::kPon) {
@@ -46,18 +46,18 @@ TEST(Calls, AcceptPon) {
         }
 
         return PlayerControllerFake::DefaultDecisionCallback(e);
-      }));
+      });
 
   // Player 2 and 3 are set to default decline all
   auto state = InitializeTestRound(12345, std::move(controllers));
 
   // Override with hopeless hands
-  Hand& player0_hand = state->hands[0];
+  Player& player0 = state->players[0];
   // 14 Pieces because has drawn in InitializeTestRound.
-  HandFromNotation("11447m2258p33699s", &player0_hand);
+  HandFromNotation("11447m2258p33699s", &player0);
   // Has the pair of nine bamboo 13 Pieces, yet to draw.
-  Hand& player1_hand = state->hands[1];
-  HandFromNotation("13579m99s246p135z", &player1_hand);
+  Player& player1 = state->players[1];
+  HandFromNotation("13579m99s246p135z", &player1);
 
   // Advance to pon event
   // Should take 4 iterations: draw, player hand, discard, and then the pon
@@ -73,12 +73,12 @@ TEST(Calls, AcceptPon) {
   // - State should be kDiscard (Player 1 needs to discard)
   EXPECT_EQ(state->currentPlayer, 1);
   EXPECT_EQ(state->currState, StateFunctionType::kDiscard);
-  EXPECT_EQ(player1_hand.meld_count, 1);
-  EXPECT_EQ(player1_hand.melds[0].type, SetType::kPon);
-  EXPECT_EQ(player1_hand.melds[0].start, Piece(Piece::kNineBamboo));
+  EXPECT_EQ(player1.meld_count, 1);
+  EXPECT_EQ(player1.melds[0].type, SetType::kPon);
+  EXPECT_EQ(player1.melds[0].start, Piece(Piece::kNineBamboo));
 
   // Player 1's live hand should be reduced by 3 tiles (pon + discard)
-  EXPECT_EQ(player1_hand.live_count, 10);
+  EXPECT_EQ(player1.live_count, 10);
 }
 
 }  // namespace mahjong
