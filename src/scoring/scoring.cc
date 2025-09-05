@@ -59,7 +59,7 @@ const int kFuRounding = 10;
 }  // namespace
 
 Score scorePlayer(const GameState& state, const Player& player) {
-    auto root = breakdownPlayer(player.live_range());
+    auto root = breakdownHand(player.live_range());
   Score s;
   s.han = 0;
   s.yakuman = 0;
@@ -260,7 +260,7 @@ bool isOpenPinfu(const GameState& state, const Player& player,
 }
 
 bool isComplete(const GameState& state, const Player& player) {
-    auto root = breakdownPlayer(player.live_range());
+    auto root = breakdownHand(player.live_range());
   if (!root->IsComplete() && !yaku::isThirteenOrphans(state, player)) {
     return false;
   }

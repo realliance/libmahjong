@@ -19,7 +19,7 @@ TEST(isTwicePureDoubleChi, 3Han) {
   HandFromNotation("789p789p234m234m11z", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTwicePureDoubleChi(game_state, player, branch)) {
@@ -36,7 +36,7 @@ TEST(isTwicePureDoubleChi, MustBeConcealed) {
   HandFromNotation("789p789p234m234m11z", &player);
   player.open = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTwicePureDoubleChi(game_state, player, branch)) {
@@ -53,7 +53,7 @@ TEST(isTwicePureDoubleChi, BadPlayer) {
   HandFromNotation("789p789p234m567m11z", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTwicePureDoubleChi(game_state, player, branch)) {

@@ -20,7 +20,7 @@ TEST(isRobbingAKan, 1Han) {
   game_state.players[0].hasRonned = true;
   game_state.nextState = StateFunctionType::kKanDiscard;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isRobbingAKan(game_state, player, branch)) {
@@ -38,7 +38,7 @@ TEST(isRobbingAKan, DoesntApply) {
   game_state.players[0].hasRonned = true;
   game_state.nextState = StateFunctionType::kPon;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isRobbingAKan(game_state, player, branch)) {

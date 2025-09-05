@@ -23,7 +23,7 @@ TEST(isLittleThreeDragons, 2Han) {
   HandFromNotation("555z666z111m222p77z", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isLittleThreeDragons(game_state, player, branch)) {
@@ -44,7 +44,7 @@ TEST(isLittleThreeDragons, WhenOpen) {
       .start = Piece(kWhiteDragon),
   };
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isLittleThreeDragons(game_state, player, branch)) {
@@ -65,7 +65,7 @@ TEST(isLittleThreeDragons, BadPlayer) {
       .start = Piece(kWhiteDragon),
   };
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isLittleThreeDragons(game_state, player, branch)) {

@@ -18,7 +18,7 @@ TEST(isTriplePon, 2Han) {
   Player& player =game_state.players[0];
   HandFromNotation("111m111p111s666z44m", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTriplePon(game_state, player, branch)) {
@@ -34,7 +34,7 @@ TEST(isTriplePon, BadPlayer) {
   Player& player =game_state.players[0];
   HandFromNotation("111m111p222m666z44m", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isTriplePon(game_state, player, branch)) {

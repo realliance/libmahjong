@@ -18,7 +18,7 @@ TEST(isAllSimples, 1Han) {
   Player& player =game_state.players[0];
   HandFromNotation("222m333p444s555p88m", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllSimples(game_state, player, branch)) {
@@ -34,7 +34,7 @@ TEST(isAllSimples, BadPlayerHonors) {
   Player& player =game_state.players[0];
   HandFromNotation("222m333p444s111z88m", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllSimples(game_state, player, branch)) {
@@ -50,7 +50,7 @@ TEST(isAllSimples, BadPlayerTerminals) {
   Player& player =game_state.players[0];
   HandFromNotation("222m333p444s111m88m", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllSimples(game_state, player, branch)) {

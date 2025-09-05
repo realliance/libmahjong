@@ -27,7 +27,7 @@ TEST(isHalfFlush, 2Han) {
       .start = Piece(kSixCharacter),
   };
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isHalfFlush(game_state, player, branch)) {
@@ -44,7 +44,7 @@ TEST(isHalfFlush, 3Han) {
   HandFromNotation("11m234m777m111z222z", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isHalfFlush(game_state, player, branch)) {
@@ -65,7 +65,7 @@ TEST(isHalfFlush, BadPlayer) {
       .start = Piece(kSixCharacter),
   };
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isHalfFlush(game_state, player, branch)) {
@@ -86,7 +86,7 @@ TEST(isHalfFlush, FullFlushIncompatible) {
       .start = Piece(kSixCharacter),
   };
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isHalfFlush(game_state, player, branch)) {

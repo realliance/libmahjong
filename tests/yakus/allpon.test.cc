@@ -21,7 +21,7 @@ TEST(isAllPons, 2Han) {
   Player& player =game_state.players[0];
   HandFromNotation("111m222p888s666z44m", &player);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllPons(game_state, player, branch)) {
@@ -42,7 +42,7 @@ TEST(isAllPons, WithKans) {
   };
   player.open = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllPons(game_state, player, branch)) {
@@ -63,7 +63,7 @@ TEST(isAllPons, ConcealedKan) {
   };
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllPons(game_state, player, branch)) {
@@ -80,7 +80,7 @@ TEST(isAllPons, BadPlayer) {
   HandFromNotation("111m222p666z789m44m", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isAllPons(game_state, player, branch)) {

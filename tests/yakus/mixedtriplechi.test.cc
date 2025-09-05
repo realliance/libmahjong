@@ -19,7 +19,7 @@ TEST(isMixedTripleChi, Open) {
   HandFromNotation("123p123m123s555p11z", &player);
   player.open = true;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isMixedTripleChi(game_state, player, branch)) {
@@ -36,7 +36,7 @@ TEST(isMixedTripleChi, Closed) {
   HandFromNotation("123p123m123s555p11z", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isMixedTripleChi(game_state, player, branch)) {
@@ -53,7 +53,7 @@ TEST(isMixedTripleChi, BadPlayer) {
   HandFromNotation("123p123p123s555p11z", &player);
   player.open = false;
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isMixedTripleChi(game_state, player, branch)) {

@@ -22,7 +22,7 @@ TEST(isPinfu, 1Han) {
   player.open = false;
   game_state.pendingPiece = Piece(kFourPin);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPinfu(game_state, player, branch)) {
@@ -40,7 +40,7 @@ TEST(isPinfu, BadPlayer) {
   player.open = false;
   game_state.pendingPiece = Piece(kTwoBamboo);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPinfu(game_state, player, branch)) {
@@ -58,7 +58,7 @@ TEST(isPinfu, CantBeOpen) {
   player.open = true;
   game_state.pendingPiece = Piece(kFourPin);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPinfu(game_state, player, branch)) {
@@ -76,7 +76,7 @@ TEST(isPinfu, NeedTwoWait) {
   player.open = false;
   game_state.pendingPiece = Piece(kFivePin);
 
-  auto root = breakdownPlayer(player.live_range());
+  auto root = breakdownHand(player.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
     if (isPinfu(game_state, player, branch)) {
