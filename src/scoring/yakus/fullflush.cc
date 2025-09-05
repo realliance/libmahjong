@@ -9,9 +9,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isFullFlush(const GameState&  /*state*/, const Player& player,
+bool isFullFlush(const GameState& /*state*/, const Hand& player,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
-    if (player.live[0].isHonor()) {
+  if (player.live[0].isHonor()) {
     return false;
   }
   const int suit = player.live[0].getSuit();

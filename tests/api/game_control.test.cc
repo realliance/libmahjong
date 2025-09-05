@@ -142,7 +142,7 @@ TEST(Api, ObserveGameStatePlayersAndDiscards) {
   // Check that hands are copied (after round start, players should have hands)
   for (int player = 0; player < 4; player++) {
     const api::CPlayer& c_player = observed.hands[player];
-    const mahjong::Player& cpp_player = state->players[player];
+    const mahjong::Hand& cpp_player = state->players[player];
 
     // Check live pieces
     EXPECT_EQ(c_player.livePieceCount, static_cast<int>(cpp_player.live_count));
@@ -168,7 +168,8 @@ TEST(Api, ObserveGameStatePlayersAndDiscards) {
     }
 
     // Check discards using CPlayer structure
-    EXPECT_EQ(c_player.discardCount, static_cast<int>(cpp_player.discards_count));
+    EXPECT_EQ(c_player.discardCount,
+              static_cast<int>(cpp_player.discards_count));
     for (int discard = 0; discard < c_player.discardCount; discard++) {
       EXPECT_EQ(
           c_player.discards[discard],

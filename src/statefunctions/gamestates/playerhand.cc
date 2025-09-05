@@ -23,7 +23,7 @@ std::unique_ptr<GameState> PlayerPlayer(std::unique_ptr<GameState> state) {
       PossibleDecision{.type = Event::kConvertedKan, .func = CanConvertedKan},
       PossibleDecision{.type = Event::kRiichi, .func = CanRiichi},
       PossibleDecision{.type = Event::kDiscard,
-                       .func = [](const GameState&, const Player& player) {
+                       .func = [](const GameState&, const Hand& player) {
                          return !player.riichi;
                        }}};
 
@@ -50,8 +50,9 @@ std::unique_ptr<GameState> PlayerPlayer(std::unique_ptr<GameState> state) {
     decision.decision = true;
     state->nextState = StateFunctionType::kDiscard;
   } else {
-    decision = GetValidDecisionOrThrow(*state, state->players[state->currentPlayer],
-                                       /*inPlayer=*/true);
+    decision =
+        GetValidDecisionOrThrow(*state, state->players[state->currentPlayer],
+                                /*inPlayer=*/true);
   }
 
   // note riichi handling is a lil borked on the player agency side

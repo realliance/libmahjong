@@ -16,7 +16,7 @@ namespace mahjong::yaku {
 
 TEST(isAllSimples, 1Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("222m333p444s555p88m", &player);
 
   auto root = breakdownHand(player.live_range());
@@ -32,7 +32,7 @@ TEST(isAllSimples, 1Han) {
 
 TEST(isAllSimples, BadPlayerHonors) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("222m333p444s111z88m", &player);
 
   auto root = breakdownHand(player.live_range());
@@ -48,7 +48,7 @@ TEST(isAllSimples, BadPlayerHonors) {
 
 TEST(isAllSimples, BadPlayerTerminals) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("222m333p444s111m88m", &player);
 
   auto root = breakdownHand(player.live_range());

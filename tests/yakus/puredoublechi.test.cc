@@ -16,7 +16,7 @@ namespace mahjong::yaku {
 
 TEST(isPureDoubleChi, 1Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("234m234m555p888s88p", &player);
   player.open = false;
 
@@ -33,7 +33,7 @@ TEST(isPureDoubleChi, 1Han) {
 
 TEST(isPureDoubleChi, BadPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("234m123m555p888s88p", &player);
   player.open = false;
 
@@ -50,7 +50,7 @@ TEST(isPureDoubleChi, BadPlayer) {
 
 TEST(isPureDoubleChi, MustBeConcealed) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("234m234m555p888s88p", &player);
   player.open = true;
 

@@ -9,14 +9,14 @@ struct Player;
 class Node;
 struct Meld;
 class Walls;
-struct Player;
+struct Hand;
 }  // namespace mahjong
 
 std::ostream& operator<<(std::ostream& os, const mahjong::Event& e);
 
 std::ostream& operator<<(std::ostream& os, const mahjong::GameState& state);
 
-std::ostream& operator<<(std::ostream& os, const mahjong::Player& player);
+std::ostream& operator<<(std::ostream& os, const mahjong::Hand& player);
 
 std::ostream& operator<<(std::ostream& os, const mahjong::Node& node);
 

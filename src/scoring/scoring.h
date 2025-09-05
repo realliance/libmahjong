@@ -7,15 +7,15 @@
 #include "types/score.h"
 
 namespace mahjong {
-Score scorePlayer(const GameState& state, const Player& player);
+Score scorePlayer(const GameState& state, const Hand& player);
 
 int getBasicPoints(Score s);
 
-int getFu(const GameState& state, const Player& player,
+int getFu(const GameState& state, const Hand& player,
           const std::vector<const mahjong::Node*>& branch);
 
-bool isOpenPinfu(const GameState& state, const Player& player,
+bool isOpenPinfu(const GameState& state, const Hand& player,
                  const std::vector<const mahjong::Node*>& branch);
 
-bool isComplete(const GameState& state, const Player& player);
+bool isComplete(const GameState& state, const Hand& player);
 }  // namespace mahjong

@@ -9,9 +9,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isAllGreen(const GameState&  /*state*/, const Player& player,
+bool isAllGreen(const GameState& /*state*/, const Hand& player,
                 const std::vector<const mahjong::Node*>& /*branch*/) {
-    for (const auto& piece : player.live_range()) {
+  for (const auto& piece : player.live_range()) {
     if (!piece.isGreen()) {
       return false;
     }

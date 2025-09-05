@@ -31,7 +31,7 @@ std::unique_ptr<GameState> Kan(std::unique_ptr<GameState> state) {
     state->players.at(state->currentPlayer).riichiPieceDiscard++;
   }
 
-  Player& player =state->players.at(state->lastCaller);
+  Hand& player = state->players.at(state->lastCaller);
   player.open = true;
   state->currentPlayer = state->lastCaller;
   state->lastCall = state->turnNum;

@@ -10,7 +10,7 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isRobbingAKan(const GameState& state, const Player& player,
+bool isRobbingAKan(const GameState& state, const Hand& player,
                    const std::vector<const mahjong::Node*>& /*branch*/) {
   if (!player.hasRonned) {
     return false;

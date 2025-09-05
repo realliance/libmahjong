@@ -30,7 +30,7 @@ std::unique_ptr<GameState> ConcealedKan(std::unique_ptr<GameState> state) {
     state->nextState = StateFunctionType::kError;
     return state;
   }
-  Player& player = state->players.at(state->currentPlayer);
+  Hand& player = state->players.at(state->currentPlayer);
   player.melds[player.meld_count++] = Meld{
       .type = SetType::kConcealedKan,
       .start = state->pendingPiece,

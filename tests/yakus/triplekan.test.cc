@@ -32,7 +32,7 @@ TEST(isThreeKans, 2Han) {
   };
 
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("666z22m", &player);
   player.melds = {meld_a, meld_b, meld_c};
   player.meld_count = 3;
@@ -68,7 +68,7 @@ TEST(isThreeKans, WithOtherMelds) {
   };
 
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("22m", &player);
   player.melds = {meld_a, meld_b, meld_c, meld_d};
   player.meld_count = 4;
@@ -96,7 +96,7 @@ TEST(isThreeKans, BadPlayer) {
   };
 
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("777p666z22m", &player);
   player.melds = {meld_a, meld_b};
   player.meld_count = 2;
@@ -128,7 +128,7 @@ TEST(isThreeKans, AllConcealed) {
   };
 
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("666z22m", &player);
   player.melds = {meld_a, meld_b, meld_c};
   player.meld_count = 3;

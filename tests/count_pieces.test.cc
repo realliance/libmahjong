@@ -9,7 +9,7 @@
 namespace mahjong {
 
 TEST(CountPieces, CountPieces) {
-  Player player;
+  Hand player;
   player.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
   player.live_count = 4;
 

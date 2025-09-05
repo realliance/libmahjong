@@ -16,7 +16,7 @@ namespace mahjong::yaku {
 
 TEST(isPureStraight, Open) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m456m789m555p11z", &player);
   player.open = true;
 
@@ -33,7 +33,7 @@ TEST(isPureStraight, Open) {
 
 TEST(isPureStraight, Closed) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m456m789m555p11z", &player);
   player.open = false;
 
@@ -50,7 +50,7 @@ TEST(isPureStraight, Closed) {
 
 TEST(isPureStraight, BadPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m456m999m555p11z", &player);
   player.open = false;
 

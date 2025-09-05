@@ -8,20 +8,20 @@
 
 namespace mahjong {
 using DecisionFunction =
-    std::function<bool(const mahjong::GameState& state, const Player& player)>;
+    std::function<bool(const mahjong::GameState& state, const Hand& player)>;
 
 struct PossibleDecision {
   Event::Type type;
   DecisionFunction func;
 };
 
-bool CanKan(const GameState& state, const Player& player);
-bool CanPon(const GameState& state, const Player& player);
-bool CanChi(const GameState& state, const Player& player);
-bool CanRon(const GameState& state, const Player& player);
+bool CanKan(const GameState& state, const Hand& player);
+bool CanPon(const GameState& state, const Hand& player);
+bool CanChi(const GameState& state, const Hand& player);
+bool CanRon(const GameState& state, const Hand& player);
 
-bool CanTsumo(const GameState& state, const Player& player);
-bool CanConcealedKan(const GameState& state, const Player& player);
-bool CanConvertedKan(const GameState& state, const Player& player);
-bool CanRiichi(const GameState& state, const Player& player);
+bool CanTsumo(const GameState& state, const Hand& player);
+bool CanConcealedKan(const GameState& state, const Hand& player);
+bool CanConvertedKan(const GameState& state, const Hand& player);
+bool CanRiichi(const GameState& state, const Hand& player);
 }  // namespace mahjong

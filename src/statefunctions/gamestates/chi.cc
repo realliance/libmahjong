@@ -16,7 +16,7 @@
 
 namespace mahjong {
 namespace {
-Piece GetChiStart(const Player& player, Piece p) {
+Piece GetChiStart(const Hand& player, Piece p) {
   if (CountPieces(player, p - 2) > 0 && CountPieces(player, p - 1) > 0) {
     return p - 2;
   }
@@ -46,7 +46,7 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
     state->players.at(state->currentPlayer).riichiPieceDiscard++;
   }
 
-  Player& player = state->players.at(state->lastCaller);
+  Hand& player = state->players.at(state->lastCaller);
 
   player.open = true;
   state->currentPlayer = state->lastCaller;

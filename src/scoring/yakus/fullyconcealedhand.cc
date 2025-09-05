@@ -10,9 +10,8 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isFullyConcealedHand(
-    const GameState& state, const Player& player,
-    const std::vector<const mahjong::Node*>& /*branch*/) {
+bool isFullyConcealedHand(const GameState& state, const Hand& player,
+                          const std::vector<const mahjong::Node*>& /*branch*/) {
   return state.currentPlayer == player.id && !player.open &&
          Walls::GetRemainingPieces(state) > 0;
 }

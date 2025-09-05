@@ -10,7 +10,7 @@
 namespace mahjong {
 
 std::vector<Piece> HandFromNotation(const std::string& notation);
-void HandFromNotation(const std::string& notation, Player* hand);
+void HandFromNotation(const std::string& notation, Hand* hand);
 bool IsValidNotation(const std::string& notation);
 std::string PlayerToNotation(const std::vector<Piece>& hand);
 

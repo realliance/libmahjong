@@ -15,21 +15,21 @@ namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
-  Player& caller_player = state->players[state->lastCaller];
+  Hand& caller_player = state->players[state->lastCaller];
   caller_player.live[caller_player.live_count++] = state->pendingPiece;
 
   std::array<int, 4> basic_points = {};
-  Player& curr_player = state->players[state->currentPlayer];
+  Hand& curr_player = state->players[state->currentPlayer];
   if (curr_player.riichi &&
       curr_player.discards_count == curr_player.riichiPieceDiscard) {
     state->riichiSticks--;
     curr_player.riichi = false;
   }
-  for (Player& player : state->players) {
+  for (Hand& player : state->players) {
     if (player.hasRonned) {
       AlertPlayers(*state, Event{
                                .type = Event::kRon,  // type
-                               .player = player.id,     // player
+                               .player = player.id,  // player
                                .piece = static_cast<int16_t>(
                                    state->pendingPiece.toUint8_t()),  // piece
                                .decision = false,  // decision
@@ -41,7 +41,7 @@ std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
     }
   }
   int payment = 0;
-  for (Player& player : state->players) {
+  for (Hand& player : state->players) {
     if (player.hasRonned) {
       player.score += 1000 * state->riichiSticks;
       state->riichiSticks = 0;

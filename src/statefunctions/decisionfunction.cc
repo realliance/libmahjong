@@ -17,7 +17,7 @@
 namespace mahjong {
 
 // TODO(#18): "I really hate this" - alice
-bool CanRon(const GameState& state, const Player& player) {
+bool CanRon(const GameState& state, const Hand& player) {
   // If the pending piece is your discard, you can't Ron
   for (const auto& piece : player.discards) {
     if (state.pendingPiece == piece) {
@@ -26,7 +26,7 @@ bool CanRon(const GameState& state, const Player& player) {
   }
 
   // Build the theoretical hand
-  auto& tmp_player = const_cast<Player&>(player);
+  auto& tmp_player = const_cast<Hand&>(player);
   tmp_player.live[tmp_player.live_count++] = state.pendingPiece;
 
   // If this Ron is occurring due to a concealed kan discard,
@@ -49,7 +49,7 @@ bool CanRon(const GameState& state, const Player& player) {
   return can_ron;
 }
 
-bool CanKan(const GameState& state, const Player& player) {
+bool CanKan(const GameState& state, const Hand& player) {
   if (Walls::GetRemainingPieces(state) == 0) {
     return false;
   }
@@ -59,14 +59,14 @@ bool CanKan(const GameState& state, const Player& player) {
   return CountPieces(player, state.pendingPiece) == 3;
 }
 
-bool CanPon(const GameState& state, const Player& player) {
+bool CanPon(const GameState& state, const Hand& player) {
   if (player.riichi) {
     return false;
   }
   return CountPieces(player, state.pendingPiece) == 2;
 }
 
-bool CanChi(const GameState& state, const Player& player) {
+bool CanChi(const GameState& state, const Hand& player) {
   if (player.riichi) {
     return false;
   }
@@ -91,11 +91,11 @@ bool CanChi(const GameState& state, const Player& player) {
   return false;
 }
 
-bool CanTsumo(const GameState& state, const Player& player) {
+bool CanTsumo(const GameState& state, const Hand& player) {
   return isComplete(state, player);
 }
 
-bool CanConvertedKan(const GameState& state, const Player& player) {
+bool CanConvertedKan(const GameState& state, const Hand& player) {
   if (Walls::GetRemainingPieces(state) == 0) {
     return false;
   }
@@ -106,7 +106,7 @@ bool CanConvertedKan(const GameState& state, const Player& player) {
                      });
 }
 
-bool CanConcealedKan(const GameState& state, const Player& player) {
+bool CanConcealedKan(const GameState& state, const Hand& player) {
   if (Walls::GetRemainingPieces(state) == 0) {
     return false;
   }
@@ -117,7 +117,7 @@ bool CanConcealedKan(const GameState& state, const Player& player) {
   return CountPieces(player, state.pendingPiece) == 4;
 }
 
-bool CanRiichi(const GameState& /*unused*/, const Player& player) {
+bool CanRiichi(const GameState& /*unused*/, const Hand& player) {
   if (player.riichi) {
     return false;
   }

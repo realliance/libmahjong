@@ -19,7 +19,7 @@ namespace mahjong::yaku {
 
 TEST(isTerminalsInAllSets, 2Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m111p11s", &player);
   player.open = true;
   player.melds[player.meld_count++] = Meld{
@@ -40,7 +40,7 @@ TEST(isTerminalsInAllSets, 2Han) {
 
 TEST(isTerminalsInAllSets, 3Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m111p789p11s", &player);
   player.open = false;
 
@@ -57,7 +57,7 @@ TEST(isTerminalsInAllSets, 3Han) {
 
 TEST(isTerminalsInAllSets, BadPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m222p11s", &player);
   player.open = true;
   player.open = true;

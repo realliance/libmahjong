@@ -17,7 +17,7 @@
 namespace mahjong::yaku {
 TEST(isThreeConcealedPons, 2Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m111p111s666z44m", &player);
   player.open = false;
 
@@ -34,7 +34,7 @@ TEST(isThreeConcealedPons, 2Han) {
 
 TEST(isThreeConcealedPons, PonsMustBeConcealed) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m111p111s44m", &player);
   player.melds[player.meld_count++] = Meld{
       .type = SetType::kChi,
@@ -55,7 +55,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealed) {
 
 TEST(isThreeConcealedPons, CanHaveAdditionalOpenPon) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m111p111s44m", &player);
   player.melds[player.meld_count++] = Meld{
       .type = SetType::kPon,
@@ -76,7 +76,7 @@ TEST(isThreeConcealedPons, CanHaveAdditionalOpenPon) {
 
 TEST(isThreeConcealedPons, PonsMustBeConcealedNegative) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m111p234s44m", &player);
   player.melds[player.meld_count++] = Meld{
       .type = SetType::kPon,
@@ -97,7 +97,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealedNegative) {
 
 TEST(isThreeConcealedPons, BadPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m111p234567s44m", &player);
   player.open = false;
 

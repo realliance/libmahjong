@@ -16,7 +16,7 @@ namespace mahjong::yaku {
 
 TEST(isRobbingAKan, 1Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m1111z999s55z", &player);
   game_state.players[0].hasRonned = true;
   game_state.nextState = StateFunctionType::kKanDiscard;
@@ -34,7 +34,7 @@ TEST(isRobbingAKan, 1Han) {
 
 TEST(isRobbingAKan, DoesntApply) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m1111z999s55z", &player);
   game_state.players[0].hasRonned = true;
   game_state.nextState = StateFunctionType::kPon;

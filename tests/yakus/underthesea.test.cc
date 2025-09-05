@@ -15,7 +15,7 @@ namespace mahjong::yaku {
 
 TEST(isBottomOfTheSea, 1Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m111z999s55z", &player);
   game_state.livingWallIndex = kLivingWallCount;
 
@@ -32,7 +32,7 @@ TEST(isBottomOfTheSea, 1Han) {
 
 TEST(isBottomOfTheSea, 1HanRonned) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m111z999s55z", &player);
   game_state.livingWallIndex = kLivingWallCount;
   game_state.players[0].hasRonned = true;
@@ -50,7 +50,7 @@ TEST(isBottomOfTheSea, 1HanRonned) {
 
 TEST(isBottomOfTheSea, DoesntApply) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m789m111z999s55z", &player);
 
   auto root = breakdownHand(player.live_range());

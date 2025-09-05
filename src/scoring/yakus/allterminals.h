@@ -6,7 +6,7 @@
 #include "types/hand.h"
 
 namespace mahjong::yaku {
-bool isAllTerminals(const GameState& state, const Player& player,
+bool isAllTerminals(const GameState& state, const Hand& player,
                     const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
 }

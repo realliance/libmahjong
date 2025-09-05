@@ -13,7 +13,7 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isPinfu(const GameState& state, const Player& player,
+bool isPinfu(const GameState& state, const Hand& player,
              const std::vector<const mahjong::Node*>& branch) {
   if (player.open) {
     return false;
@@ -38,7 +38,8 @@ bool isPinfu(const GameState& state, const Player& player,
         if (node->start() == kEastWind && state.roundNum < 4) {
           return false;
         }
-        if (node->start() == Piece::fromWind(GetSeat(state.roundNum, player.id))) {
+        if (node->start() ==
+            Piece::fromWind(GetSeat(state.roundNum, player.id))) {
           return false;
         }
       }

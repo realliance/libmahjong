@@ -15,7 +15,7 @@ namespace mahjong::yaku {
 
 TEST(isRiichi, Riichi) {
   auto game_state = GameState();
-  Player& player = game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("555m555p555s111z44m", &player);
   player.riichi = true;
 
@@ -28,7 +28,7 @@ TEST(isRiichi, Riichi) {
 
 TEST(isRiichi, Ippatsu) {
   auto game_state = GameState();
-  Player& player = game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("555m555p555s111z44m", &player);
   player.riichi = true;
 
@@ -41,7 +41,7 @@ TEST(isRiichi, Ippatsu) {
 
 TEST(isRiichi, DoubleRiichi) {
   auto game_state = GameState();
-  Player& player = game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("555m555p555s111z44m", &player);
   player.riichi = true;
 
@@ -54,7 +54,7 @@ TEST(isRiichi, DoubleRiichi) {
 
 TEST(isRiichi, NoRiichi) {
   auto game_state = GameState();
-  Player& player = game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("555m555p555s111z44m", &player);
   player.riichi = false;
 

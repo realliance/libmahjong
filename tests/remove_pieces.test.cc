@@ -9,7 +9,7 @@
 namespace mahjong {
 
 TEST(RemovePieces, RemoveCorrectAmount) {
-  Player player;
+  Hand player;
   player.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
   player.live_count = 4;
 
@@ -18,7 +18,7 @@ TEST(RemovePieces, RemoveCorrectAmount) {
 }
 
 TEST(RemovePieces, RemoveOnlyTheOnesAvailable) {
-  Player player;
+  Hand player;
   player.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
   player.live_count = 4;
 
@@ -27,7 +27,7 @@ TEST(RemovePieces, RemoveOnlyTheOnesAvailable) {
 }
 
 TEST(RemovePieces, OnlyRemovesOne) {
-  Player player;
+  Hand player;
   player.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
   player.live_count = 4;
 
@@ -36,7 +36,7 @@ TEST(RemovePieces, OnlyRemovesOne) {
 }
 
 TEST(RemovePieces, RemovesZeroWhenPieceDoesntExist) {
-  Player player;
+  Hand player;
   player.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
   player.live_count = 4;
 

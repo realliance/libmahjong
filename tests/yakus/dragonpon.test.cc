@@ -15,7 +15,7 @@ namespace mahjong::yaku {
 
 TEST(isWindOrDragonPon, WhiteDragon) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m456m555z11z", &player);
 
   auto root = breakdownHand(player.live_range());
@@ -31,7 +31,7 @@ TEST(isWindOrDragonPon, WhiteDragon) {
 
 TEST(isWindOrDragonPon, GreenDragon) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m456m666z11z", &player);
 
   auto root = breakdownHand(player.live_range());
@@ -47,7 +47,7 @@ TEST(isWindOrDragonPon, GreenDragon) {
 
 TEST(isWindOrDragonPon, RedDragon) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m456m777z11z", &player);
 
   auto root = breakdownHand(player.live_range());
@@ -63,7 +63,7 @@ TEST(isWindOrDragonPon, RedDragon) {
 
 TEST(isWindOrDragonPon, Kan) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m456m7777z11z", &player);
 
   auto root = breakdownHand(player.live_range());
@@ -79,7 +79,7 @@ TEST(isWindOrDragonPon, Kan) {
 
 TEST(isWindOrDragonPon, CanWhenOpen) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m456m777z11z", &player);
   player.open = true;
 
@@ -96,7 +96,7 @@ TEST(isWindOrDragonPon, CanWhenOpen) {
 
 TEST(isWindOrDragonPon, BadPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("123m456m222p11p", &player);
 
   auto root = breakdownHand(player.live_range());

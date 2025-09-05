@@ -3,7 +3,6 @@
 
 #include "statefunctions/router.h"
 #include "types/gamestate.h"
-#include "types/hand.h"
 #include "types/settings.h"
 #include "types/statefunction.h"
 

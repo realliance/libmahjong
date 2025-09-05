@@ -16,7 +16,7 @@ namespace mahjong::yaku {
 
 TEST(isTriplePon, 2Han) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m111p111s666z44m", &player);
 
   auto root = breakdownHand(player.live_range());
@@ -32,7 +32,7 @@ TEST(isTriplePon, 2Han) {
 
 TEST(isTriplePon, BadPlayer) {
   auto game_state = GameState();
-  Player& player =game_state.players[0];
+  Hand& player = game_state.players[0];
   HandFromNotation("111m111p222m666z44m", &player);
 
   auto root = breakdownHand(player.live_range());
