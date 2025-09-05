@@ -5,6 +5,7 @@
 #include "scoring/scoring.h"
 #include "statefunctions/decisionfunction.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "utils/handformer.h"

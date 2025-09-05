@@ -3,6 +3,7 @@
 
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/score.h"
 
 namespace mahjong {

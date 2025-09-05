@@ -7,6 +7,7 @@
 #include "scoring/yakus/allterminalsandhonors.h"
 #include "scoring/yakus/terminalsinallsets.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/sets.h"
 #include "types/yaku.h"
 

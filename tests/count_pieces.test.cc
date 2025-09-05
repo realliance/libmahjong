@@ -3,7 +3,7 @@
 #include <array>
 
 #include "statefunctions/stateutilities.h"
-#include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/pieces.h"
 
 namespace mahjong {

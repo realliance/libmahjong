@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-#include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 

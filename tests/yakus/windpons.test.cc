@@ -8,6 +8,7 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus/honorpon.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {

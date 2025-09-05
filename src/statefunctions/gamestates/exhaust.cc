@@ -4,6 +4,7 @@
 #include "analysis/util.h"
 #include "statefunctions/router.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/statefunction.h"
 
 namespace mahjong {

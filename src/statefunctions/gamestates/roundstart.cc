@@ -9,6 +9,7 @@
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/statefunction.h"
 #include "types/walls.h"
 #include "types/winds.h"

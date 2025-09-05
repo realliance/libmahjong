@@ -3,6 +3,7 @@
 
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 
 namespace mahjong::yaku {
 bool isTwicePureDoubleChi(const GameState& state, const Player& player,
