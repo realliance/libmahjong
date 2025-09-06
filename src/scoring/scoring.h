@@ -7,7 +7,7 @@
 #include "types/score.h"
 
 namespace mahjong {
-Score scorePlayer(const GameState& state, const Hand& player);
+Score scoreHand(const GameState& state, const Hand& player);
 
 int getBasicPoints(Score s);
 

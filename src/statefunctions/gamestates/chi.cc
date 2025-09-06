@@ -16,40 +16,57 @@
 
 namespace mahjong {
 namespace {
-Piece GetChiStart(const Hand& player, Piece p) {
-  if (CountPieces(player, p - 2) > 0 && CountPieces(player, p - 1) > 0) {
-    return p - 2;
+Piece GetChiStart(const Hand& hand, Piece piece) {
+  if (CountPieces(hand, piece - 2) > 0 && CountPieces(hand, piece - 1) > 0) {
+    return piece - 2;
   }
-  if (CountPieces(player, p - 1) > 0 && CountPieces(player, p + 1) > 0) {
-    return p - 1;
+  if (CountPieces(hand, piece - 1) > 0 && CountPieces(hand, piece + 1) > 0) {
+    return piece - 1;
   }
-  if (CountPieces(player, p + 1) > 0 && CountPieces(player, p + 2) > 0) {
-    return p;
+  if (CountPieces(hand, piece + 1) > 0 && CountPieces(hand, piece + 2) > 0) {
+    return piece;
   }
   return kError;
 }
 
 std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
+  if (Hand& player = state->players[state->currentPlayer];
+      player.riichi && player.discards_count == player.riichiPieceDiscard) {
+    player.riichiPieceDiscard++;
+  }
+
+  state->currentPlayer = state->lastCaller;
+  state->lastCall = state->turnNum;
+  state->concealedKan = false;
+  state->turnNum++;
+
+  Hand& player = state->players[state->currentPlayer];
+  player.open = true;
   // only gives a single one of the chis
   // ui oof
-  const Piece chi_start =
-      GetChiStart(state->players[state->lastCaller], state->pendingPiece);
+  const Piece chi_start = GetChiStart(player, state->pendingPiece);
   if (chi_start == kError) {
     std::cerr << "Failed to get start of Chi" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;
   }
 
-  if (state->players.at(state->currentPlayer).riichi &&
-      state->players.at(state->currentPlayer).discards_count ==
-          state->players.at(state->currentPlayer).riichiPieceDiscard) {
-    state->players.at(state->currentPlayer).riichiPieceDiscard++;
+  for (int i = 0; i < 3; ++i) {
+    if (chi_start + i == state->pendingPiece) {
+      continue;
+    }
+    if (RemovePieces(player, chi_start + i,
+                     /*count=*/1) != 1) {
+      std::cerr << "Not Enough Pieces to remove in Chi" << '\n';
+      state->nextState = StateFunctionType::kError;
+      return state;
+    }
   }
 
-  Hand& player = state->players.at(state->lastCaller);
-
-  player.open = true;
-  state->currentPlayer = state->lastCaller;
+  player.melds[player.meld_count++] = Meld{
+      .type = SetType::kChi,
+      .start = chi_start,
+  };
 
   AlertPlayers(
       *state,
@@ -59,26 +76,6 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
           .piece = static_cast<int16_t>(chi_start.toUint8_t()),  // piece
           .decision = false,                                     // decision
       });
-
-  player.live[player.live_count++] = state->pendingPiece;
-  state->lastCall = state->turnNum;
-  state->concealedKan = false;
-  state->turnNum++;
-
-  if (RemovePieces(state->players[state->lastCaller], chi_start, /*count=*/1) !=
-          1 ||
-      RemovePieces(state->players[state->lastCaller], chi_start + 1,
-                   /*count=*/1) != 1 ||
-      RemovePieces(state->players[state->lastCaller], chi_start + 2,
-                   /*count=*/1) != 1) {
-    std::cerr << "Not Enough Pieces to remove in Chi" << '\n';
-    state->nextState = StateFunctionType::kError;
-    return state;
-  }
-  player.melds[player.meld_count++] = Meld{
-      .type = SetType::kChi,
-      .start = chi_start,
-  };
 
   state->pendingPiece = AskForDiscard(*state);
 

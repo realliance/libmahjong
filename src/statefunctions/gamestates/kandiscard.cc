@@ -37,7 +37,7 @@ std::unique_ptr<GameState> KanDiscard(std::unique_ptr<GameState> state) {
   for (Hand& player : state->players) {
     if (need_decision.at(player.id)) {
       const Event temp_decision =
-          GetValidDecisionOrThrow(*state, player, /*inPlayer=*/false);
+          GetValidDecisionOrThrow(*state, player, /*inHand=*/false);
       if (temp_decision.type == Event::kRon) {
         player.hasRonned = true;
         have_ronned = true;

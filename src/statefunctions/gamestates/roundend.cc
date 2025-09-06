@@ -31,14 +31,13 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
   if (state->roundNum > last_round && state->riichiSticks > 0) {
     std::vector<int> winners;
     int highscore = -100000;
-    for (int i = 0; i < 4; i++) {
-      if (state->players[i].points + state->players.at(i).score > highscore) {
-        highscore = state->players[i].points + state->players.at(i).score;
+    for (const Hand& player : state->players) {
+      if (player.points + player.score > highscore) {
+        highscore = player.points + player.score;
         winners.clear();
-        winners.push_back(i);
-      } else if (state->players[i].points + state->players.at(i).score ==
-                 highscore) {
-        winners.push_back(i);
+        winners.push_back(player.id);
+      } else if (player.points + player.score == highscore) {
+        winners.push_back(player.id);
       }
     }
     for (const auto& winner : winners) {
@@ -48,15 +47,14 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
   }
 
   // TODO(#17): Scoring
-  for (int i = 0; i < 4; i++) {
-    AlertPlayers(
-        *state,
-        Event{.type = Event::kPointDiff,
-              .player = i,
-              .piece = static_cast<int16_t>(state->players.at(i).score / 100),
-              .decision = false});
-    state->players[i].points += state->players.at(i).score;
-    state->players[i].score = 0;
+  for (Hand& player : state->players) {
+    AlertPlayers(*state,
+                 Event{.type = Event::kPointDiff,
+                       .player = player.id,
+                       .piece = static_cast<int16_t>(player.score / 100),
+                       .decision = false});
+    player.points += player.score;
+    player.score = 0;
   }
 
   // TODO (#14): for now naively increment the round number

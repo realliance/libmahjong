@@ -30,7 +30,7 @@ TEST(isAllSimples, 1Han) {
   FAIL();
 }
 
-TEST(isAllSimples, BadPlayerHonors) {
+TEST(isAllSimples, BadHandHonors) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("222m333p444s111z88m", &player);
@@ -46,7 +46,7 @@ TEST(isAllSimples, BadPlayerHonors) {
   SUCCEED();
 }
 
-TEST(isAllSimples, BadPlayerTerminals) {
+TEST(isAllSimples, BadHandTerminals) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("222m333p444s111m88m", &player);

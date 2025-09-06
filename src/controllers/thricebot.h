@@ -14,7 +14,7 @@ namespace mahjong {
 
 class ThriceBot : public PlayerController {
  public:
-  struct PlayerTile {
+  struct HandTile {
     Piece piece;
     float weight{};
   };
@@ -34,11 +34,11 @@ class ThriceBot : public PlayerController {
  private:
   void assignweights();
   Piece popDiscard();
-  PlayerTile assignTileWeight(PlayerTile h1);
+  HandTile assignTileWeight(HandTile h1);
   void checkDiscard();
   bool checkTile(Piece p);
 
-  std::vector<PlayerTile> hand_;
+  std::vector<HandTile> hand_;
   std::array<uint8_t, Piece::kPiecesize> discarded_ = {};
   Event lastEvent_;
   Wind swind_;

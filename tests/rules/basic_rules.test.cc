@@ -33,7 +33,7 @@ TEST(GameSetup, playerScore) {
   }
 }
 
-TEST(RoundSetup, playerPlayers) {
+TEST(RoundSetup, playerHands) {
   auto state = CreateTestGameState();
   // Advance through Round Start
   state = AdvanceThroughState(std::move(state), StateFunctionType::kRoundStart);
@@ -86,7 +86,7 @@ TEST(TurnOrder, playerRotation) {
     EXPECT_EQ(state->turnNum, turn);
 
     state = AdvanceGameState(std::move(state));
-    EXPECT_EQ(state->currState, StateFunctionType::kPlayerPlayer);
+    EXPECT_EQ(state->currState, StateFunctionType::kPlayerHand);
     state = AdvanceGameState(std::move(state));
     EXPECT_EQ(state->currState, StateFunctionType::kDiscard);
     state = AdvanceGameState(std::move(state));
@@ -127,14 +127,14 @@ TEST(StateMachine, earlyGameTransitions) {
   // Advance through Round Start
   state = AdvanceThroughState(std::move(state), StateFunctionType::kRoundStart);
 
-  // Verify early game transitions (RoundStart -> Draw -> PlayerPlayer)
+  // Verify early game transitions (RoundStart -> Draw -> PlayerHand)
   // After round start, next state should be draw
   EXPECT_EQ(state->nextState, StateFunctionType::kDraw);
   state = AdvanceGameState(std::move(state));
   EXPECT_EQ(state->currState, StateFunctionType::kDraw);
 
   // After draw, next state should be player hand
-  EXPECT_EQ(state->nextState, StateFunctionType::kPlayerPlayer);
+  EXPECT_EQ(state->nextState, StateFunctionType::kPlayerHand);
 }
 
 TEST(DiscardMechanics, discardDecreasesTileCount) {
@@ -146,7 +146,7 @@ TEST(DiscardMechanics, discardDecreasesTileCount) {
 
   // Move through player hand to discard
   state = AdvanceGameState(std::move(state));
-  EXPECT_EQ(state->currState, StateFunctionType::kPlayerPlayer);
+  EXPECT_EQ(state->currState, StateFunctionType::kPlayerHand);
   EXPECT_EQ(state->nextState, StateFunctionType::kDiscard);
 
   const int discards_before = state->players[0].discards_count;

@@ -57,7 +57,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
   for (Hand& player : state->players) {
     if (need_decision.at(player.id)) {
       Event temp_decision =
-          GetValidDecisionOrThrow(*state, player, /*inPlayer=*/false);
+          GetValidDecisionOrThrow(*state, player, /*inHand=*/false);
       if (temp_decision.type < decision.type) {  // lower is higher priority
         temp_decision.player = player.id;
         temp_decision.piece =

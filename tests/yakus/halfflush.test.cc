@@ -56,7 +56,7 @@ TEST(isHalfFlush, 3Han) {
   FAIL();
 }
 
-TEST(isHalfFlush, BadPlayer) {
+TEST(isHalfFlush, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("11m234m111p222z", &player);

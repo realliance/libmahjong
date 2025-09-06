@@ -30,7 +30,7 @@ TEST(isTriplePon, 2Han) {
   FAIL();
 }
 
-TEST(isTriplePon, BadPlayer) {
+TEST(isTriplePon, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("111m111p222m666z44m", &player);

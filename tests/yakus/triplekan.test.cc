@@ -85,7 +85,7 @@ TEST(isThreeKans, WithOtherMelds) {
   FAIL();
 }
 
-TEST(isThreeKans, BadPlayer) {
+TEST(isThreeKans, BadHand) {
   const Meld meld_a = {
       .type = SetType::kConcealedKan,
       .start = Piece(kOneBamboo),

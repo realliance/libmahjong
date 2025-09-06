@@ -95,7 +95,7 @@ TEST(isThreeConcealedPons, PonsMustBeConcealedNegative) {
   SUCCEED();
 }
 
-TEST(isThreeConcealedPons, BadPlayer) {
+TEST(isThreeConcealedPons, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("111m111p234567s44m", &player);

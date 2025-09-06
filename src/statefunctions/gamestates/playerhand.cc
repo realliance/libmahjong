@@ -12,11 +12,12 @@
 #include "types/hand.h"
 #include "types/piecetype.h"
 #include "types/statefunction.h"
+#include "types/typeprinter.h"
 
 namespace mahjong {
 
 namespace {
-std::unique_ptr<GameState> PlayerPlayer(std::unique_ptr<GameState> state) {
+std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
   const std::vector<PossibleDecision> decisions = {
       PossibleDecision{.type = Event::kTsumo, .func = CanTsumo},
       PossibleDecision{.type = Event::kConcealedKan, .func = CanConcealedKan},
@@ -27,9 +28,10 @@ std::unique_ptr<GameState> PlayerPlayer(std::unique_ptr<GameState> state) {
                          return !player.riichi;
                        }}};
 
+  const Hand& player = state->players[state->currentPlayer];
   bool decision_asked = false;
   for (const auto& [decision, decisionIsPossible] : decisions) {
-    if (decisionIsPossible(*state, state->players[state->currentPlayer])) {
+    if (decisionIsPossible(*state, player)) {
       decision_asked = true;
       state->controllers.at(state->currentPlayer)
           ->ReceiveEvent(Event{
@@ -50,9 +52,8 @@ std::unique_ptr<GameState> PlayerPlayer(std::unique_ptr<GameState> state) {
     decision.decision = true;
     state->nextState = StateFunctionType::kDiscard;
   } else {
-    decision =
-        GetValidDecisionOrThrow(*state, state->players[state->currentPlayer],
-                                /*inPlayer=*/true);
+    decision = GetValidDecisionOrThrow(*state, player,
+                                       /*inHand=*/true);
   }
 
   // note riichi handling is a lil borked on the player agency side
@@ -88,5 +89,5 @@ std::unique_ptr<GameState> PlayerPlayer(std::unique_ptr<GameState> state) {
 }
 }  // namespace
 
-REGISTER_ROUTE(PlayerPlayer, StateFunctionType::kPlayerPlayer);
+REGISTER_ROUTE(PlayerHand, StateFunctionType::kPlayerHand);
 }  // namespace mahjong

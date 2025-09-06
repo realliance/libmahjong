@@ -9,7 +9,6 @@
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
-#include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
 #include "types/walls.h"
@@ -26,27 +25,17 @@ bool CanRon(const GameState& state, const Hand& player) {
   }
 
   // Build the theoretical hand
-  auto& tmp_player = const_cast<Hand&>(player);
+  Hand tmp_player = player;
   tmp_player.live[tmp_player.live_count++] = state.pendingPiece;
 
   // If this Ron is occurring due to a concealed kan discard,
   if (state.concealedKan) {
     // If it happens to be a ron for a thirteen orphans,
-    // it's allowed and you can ron
-    if (yaku::isThirteenOrphans(state, player)) {
-      tmp_player.live[--tmp_player.live_count] = kError;
-      return true;
-    }
-
-    // otherwise, you can't
-    tmp_player.live[--tmp_player.live_count] = kError;
-    return false;
+    // it's allowed and you can ron otherwise, you can't.
+    return yaku::isThirteenOrphans(state, player);
   }
-
   // if not a concealed kan, check if it's complete
-  const bool can_ron = isComplete(state, player);
-  tmp_player.live[--tmp_player.live_count] = kError;
-  return can_ron;
+  return isComplete(state, player);
 }
 
 bool CanKan(const GameState& state, const Hand& player) {

@@ -34,7 +34,7 @@ TEST(isPinfu, 1Han) {
   FAIL();
 }
 
-TEST(isPinfu, BadPlayer) {
+TEST(isPinfu, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("123m555p234678s44m", &player);

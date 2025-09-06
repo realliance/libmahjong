@@ -48,7 +48,7 @@ TEST(isPureStraight, Closed) {
   FAIL();
 }
 
-TEST(isPureStraight, BadPlayer) {
+TEST(isPureStraight, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("123m456m999m555p11z", &player);

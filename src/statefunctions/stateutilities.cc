@@ -57,7 +57,7 @@ void DiscardPiece(Hand& player, Piece p) {
 }
 
 Piece AskForDiscard(const GameState& state) {
-  state.controllers.at(state.currentPlayer)
+  state.controllers[state.currentPlayer]
       ->ReceiveEvent(Event{
           .type = Event::kDiscard,        // type
           .player = state.currentPlayer,  // player
@@ -66,23 +66,23 @@ Piece AskForDiscard(const GameState& state) {
       });
 
   return Piece(GetValidDecisionOrThrow(
-                   state, state.players[state.currentPlayer], /*inPlayer=*/true)
+                   state, state.players[state.currentPlayer], /*inHand=*/true)
                    .piece);
 }
 
 Event GetValidDecisionOrThrow(const GameState& state, const Hand& player,
-                              bool inPlayer) {
+                              bool inHand) {
   Event decision;
   bool valid = false;
   int i = 0;
   while (!valid) {
     if (i > 100) {
       Event replacement_decision = decision;
-      replacement_decision.type = inPlayer ? Event::kDiscard : Event::kDecline;
-      if (inPlayer) {
+      replacement_decision.type = inHand ? Event::kDiscard : Event::kDecline;
+      if (inHand) {
         replacement_decision.piece = player.live_range().back().toUint8_t();
       }
-      if (ValidateDecision(state, player, replacement_decision, inPlayer)) {
+      if (ValidateDecision(state, player, replacement_decision, inHand)) {
         return replacement_decision;
       }
       std::cerr
@@ -90,26 +90,26 @@ Event GetValidDecisionOrThrow(const GameState& state, const Hand& player,
           << '\n';
       std::cerr << "Decision.type: " << decision.type << " Decision.piece "
                 << decision.piece << " player: " << player.id
-                << " inPlayer: " << (inPlayer ? "true" : "false") << '\n';
+                << " inHand: " << (inHand ? "true" : "false") << '\n';
       std::cerr << "ERROR: was not able to recover from invalid event." << '\n';
       throw 0xBAD22222;
     }
     i++;
-    decision = state.controllers.at(player.id)->RetrieveDecision();
-    valid = ValidateDecision(state, player, decision, inPlayer);
+    decision = state.controllers[player.id]->RetrieveDecision();
+    valid = ValidateDecision(state, player, decision, inHand);
   }
   return decision;
 }
 
 bool ValidateDecision(const GameState& state, const Hand& player,
-                      Event decision, bool inPlayer) {
+                      Event decision, bool inHand) {
   if (decision.type > Event::kDiscard) {
     return false;
   }
-  if (decision.type > Event::kDecline && !inPlayer) {
+  if (decision.type > Event::kDecline && !inHand) {
     return false;
   }
-  if (decision.type < Event::kTsumo && inPlayer) {
+  if (decision.type < Event::kTsumo && inHand) {
     return false;
   }
   switch (decision.type) {

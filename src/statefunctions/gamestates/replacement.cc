@@ -16,7 +16,7 @@ namespace mahjong {
 namespace {
 std::unique_ptr<GameState> Replacement(std::unique_ptr<GameState> state) {
   const Piece draw = Walls::TakeReplacementTile(*state);
-  Hand& player = state->players.at(state->currentPlayer);
+  Hand& player = state->players[state->currentPlayer];
   player.live[player.live_count++] = draw;
   state->pendingPiece = draw;
 
@@ -29,7 +29,7 @@ std::unique_ptr<GameState> Replacement(std::unique_ptr<GameState> state) {
                    .decision = false,                                // decision
                });
 
-  state->nextState = StateFunctionType::kPlayerPlayer;
+  state->nextState = StateFunctionType::kPlayerHand;
   return state;
 }
 }  // namespace

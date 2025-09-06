@@ -42,14 +42,14 @@ bool isOutsideHand(const GameState& state, const Hand& player,
     }
   }
   // Terminals in all Sets and All Terminals and Honors are more valuable and
-  // score instead of Outside Player.
+  // score instead of Outside Hand.
   return chi && !isTerminalsInAllSets(state, player, branch) &&
          !isAllTerminalsAndHonors(state, player);
 }
 
 REGISTER_YAKU({
     .id = "outsidehand",
-    .name = "Outside Player",
+    .name = "Outside Hand",
     .type = Yaku::kBonusWhenClosed,
     .value = 1,
     .is_yaku_func = yaku::isOutsideHand,
