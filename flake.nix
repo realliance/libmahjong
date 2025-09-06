@@ -23,7 +23,7 @@
           ninja
         ];
 
-        llvmPackage = pkgs.llvmPackages_20;
+        llvmPackage = pkgs.llvmPackages_19;
 
         # Override the existing gtest package to use clang
         clangGtest = pkgs.gtest.override {
@@ -89,25 +89,6 @@
         };
 
         packages = rec {
-          gcc = pkgs.stdenv.mkDerivation (
-            commonAttrs
-            // {
-              nativeBuildInputs = buildPackages;
-              # Add any runtime dependencies your library needs
-              propagatedBuildInputs = with pkgs; [
-                # Add dependencies that users of your library will need
-              ];
-
-              # This ensures dependent packages can find your library
-              setupHook = pkgs.writeText "setup-hook.sh" ''
-                addLibmahjongLibs() {
-                  addToSearchPath LD_LIBRARY_PATH $1/lib
-                }
-                addEnvHooks "$targetOffset" addLibmahjongLibs
-              '';
-            }
-          );
-
           clang = llvmPackage.stdenv.mkDerivation (
             commonAttrs
             // {
