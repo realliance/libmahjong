@@ -31,7 +31,7 @@ TEST(isPureDoubleChi, 1Han) {
   FAIL();
 }
 
-TEST(isPureDoubleChi, BadPlayer) {
+TEST(isPureDoubleChi, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("234m123m555p888s88p", &player);

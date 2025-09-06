@@ -94,7 +94,7 @@ TEST(isWindOrDragonPon, CanWhenOpen) {
   FAIL();
 }
 
-TEST(isWindOrDragonPon, BadPlayer) {
+TEST(isWindOrDragonPon, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("123m456m222p11p", &player);

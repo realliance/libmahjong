@@ -19,8 +19,8 @@ void AlertPlayers(const GameState& state, Event e);
 Piece AskForDiscard(const GameState& state);
 uint8_t CountPieces(const Hand& player, Piece p);
 bool ValidateDecision(const GameState& state, const Hand& player,
-                      Event decision, bool inPlayer);
+                      Event decision, bool inHand);
 Event GetValidDecisionOrThrow(const GameState& state, const Hand& player,
-                              bool inPlayer);
+                              bool inHand);
 
 }  // namespace mahjong

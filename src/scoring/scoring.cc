@@ -59,7 +59,7 @@ const int kFuRounding = 10;
 
 }  // namespace
 
-Score scorePlayer(const GameState& state, const Hand& player) {
+Score scoreHand(const GameState& state, const Hand& player) {
   auto root = breakdownHand(player.live_range());
   Score s;
   s.han = 0;

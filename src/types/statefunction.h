@@ -13,7 +13,7 @@ enum class StateFunctionType {
   kGameStart,
   kRoundStart,
   kDraw,
-  kPlayerPlayer,
+  kPlayerHand,
   kPon,
   kChi,
   kKan,

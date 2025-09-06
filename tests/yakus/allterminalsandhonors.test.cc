@@ -35,7 +35,7 @@ TEST(isAllTerminalsAndHonors, 2Han) {
   FAIL();
 }
 
-TEST(isAllTerminalsAndHonors, BadPlayer) {
+TEST(isAllTerminalsAndHonors, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("222z111p111m888s66z", &player);

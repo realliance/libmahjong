@@ -48,7 +48,7 @@ TEST(isMixedTripleChi, Closed) {
   FAIL();
 }
 
-TEST(isMixedTripleChi, BadPlayer) {
+TEST(isMixedTripleChi, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("123p123p123s555p11z", &player);

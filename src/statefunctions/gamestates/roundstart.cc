@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <array>
-#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <vector>
@@ -9,6 +8,7 @@
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/statefunction.h"
 #include "types/walls.h"
 #include "types/winds.h"
@@ -18,13 +18,13 @@ namespace mahjong {
 namespace {
 std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
   Walls::New(*state);
-  for (size_t i = 0; i < 4; i++) {
+  for (Hand& player : state->players) {
     auto hand = Walls::TakeHand(*state);
-    state->controllers.at(i)->RoundStart(
-        hand, static_cast<Wind>((i + 3 * (state->roundNum % 4)) % 4),
+    state->controllers.at(player.id)->RoundStart(
+        hand, static_cast<Wind>((player.id + 3 * (state->roundNum % 4)) % 4),
         (state->roundNum > 3) ? kSouth : kEast);
-    state->players[i].live_count = hand.size();
-    std::ranges::move(hand, state->players[i].live.begin());
+    player.live_count = hand.size();
+    std::ranges::move(hand, player.live.begin());
   }
 
   AlertPlayers(*state,

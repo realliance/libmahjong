@@ -15,16 +15,17 @@ namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
-  Hand& caller_player = state->players[state->lastCaller];
-  caller_player.live[caller_player.live_count++] = state->pendingPiece;
+  if (Hand& player = state->players[state->currentPlayer];
+      player.riichi && player.discards_count == player.riichiPieceDiscard) {
+    state->riichiSticks--;
+    player.riichi = false;
+  }
+
+  state->players[state->lastCaller]
+      .live[state->players[state->lastCaller].live_count++] =
+      state->pendingPiece;
 
   std::array<int, 4> basic_points = {};
-  Hand& curr_player = state->players[state->currentPlayer];
-  if (curr_player.riichi &&
-      curr_player.discards_count == curr_player.riichiPieceDiscard) {
-    state->riichiSticks--;
-    curr_player.riichi = false;
-  }
   for (Hand& player : state->players) {
     if (player.hasRonned) {
       AlertPlayers(*state, Event{
@@ -34,7 +35,7 @@ std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
                                    state->pendingPiece.toUint8_t()),  // piece
                                .decision = false,  // decision
                            });
-      basic_points.at(player.id) = getBasicPoints(scorePlayer(*state, player));
+      basic_points.at(player.id) = getBasicPoints(scoreHand(*state, player));
     }
     if (player.riichi) {
       player.score -= 1000;
@@ -67,7 +68,7 @@ std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
 
   state->players[state->currentPlayer].score -= payment;
 
-  if (state->players.at(state->roundNum % 4).hasRonned) {
+  if (state->players[state->roundNum % 4].hasRonned) {
     state->counters++;
   } else {
     state->roundNum++;
@@ -76,7 +77,7 @@ std::unique_ptr<GameState> Ron(std::unique_ptr<GameState> state) {
 
   bool allzeros = true;
   for (int i = 0; i < 4; i++) {
-    if (state->players.at(i).score != 0) {
+    if (state->players[i].score != 0) {
       allzeros = false;
     }
   }

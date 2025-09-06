@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "analysis/analysis.h"
-#include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/piecetype.h"
 #include "types/sets.h"

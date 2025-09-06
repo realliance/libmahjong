@@ -17,29 +17,19 @@ namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
-  state->players.at(state->lastCaller).open = true;
-
-  AlertPlayers(*state, Event{
-                           .type = Event::kPon,          // type
-                           .player = state->lastCaller,  // player
-                           .piece = static_cast<int16_t>(
-                               state->pendingPiece.toUint8_t()),  // piece
-                           .decision = false,                     // decision
-                       });
-
-  if (state->players.at(state->currentPlayer).riichi &&
-      state->players.at(state->currentPlayer).discards_count ==
-          state->players.at(state->currentPlayer).riichiPieceDiscard) {
-    state->players.at(state->currentPlayer).riichiPieceDiscard++;
+  if (Hand& player = state->players[state->currentPlayer];
+      player.riichi && player.discards_count == player.riichiPieceDiscard) {
+    player.riichiPieceDiscard++;
   }
 
-  Hand& player = state->players.at(state->lastCaller);
   state->currentPlayer = state->lastCaller;
   state->lastCall = state->turnNum;
   state->concealedKan = false;
   state->turnNum++;
 
-  if (RemovePieces(state->players[state->lastCaller], state->pendingPiece,
+  Hand& player = state->players.at(state->currentPlayer);
+  player.open = true;
+  if (RemovePieces(player, state->pendingPiece,
                    /*count=*/2) != 2) {
     std::cerr << "Not enough pieces to remove in Pon" << '\n';
     state->nextState = StateFunctionType::kError;
@@ -49,6 +39,14 @@ std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
       .type = SetType::kPon,
       .start = state->pendingPiece,
   };
+
+  AlertPlayers(*state, Event{
+                           .type = Event::kPon,          // type
+                           .player = state->lastCaller,  // player
+                           .piece = static_cast<int16_t>(
+                               state->pendingPiece.toUint8_t()),  // piece
+                           .decision = false,                     // decision
+                       });
 
   state->pendingPiece = AskForDiscard(*state);
 

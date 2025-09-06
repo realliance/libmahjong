@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "analysis/handnode.h"
-#include "types/gamestate.h"
 #include "types/hand.h"
 #include "types/piecetype.h"
 
@@ -19,5 +18,5 @@ struct Branch {
 };
 
 std::unique_ptr<Node> breakdownHand(const std::span<const Piece>& pieces);
-std::vector<Branch> AnalyzeHand(const Hand& player, bool only_complete = false);
+std::vector<Branch> AnalyzeHand(const Hand& hand, bool only_complete = false);
 }  // namespace mahjong

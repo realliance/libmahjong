@@ -16,10 +16,14 @@ namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
+  Hand& player = state->players[state->currentPlayer];
+  player.riichiRound = state->turnNum;
+  player.riichiPieceDiscard = player.discards_count;
+  player.riichi = true;
+
   // TODO(#22): Ask the players if they want to riichi
-  state->pendingPiece = getPossibleWaits(state->players[state->currentPlayer])
-                            .begin()
-                            ->second.front();
+  state->pendingPiece = getPossibleWaits(player).begin()->second.front();
+  state->riichiSticks++;
 
   AlertPlayers(*state,
                Event{
@@ -29,12 +33,6 @@ std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
                        Piece(state->pendingPiece).toUint8_t()),  // piece
                    .decision = false,                            // decision
                });
-
-  Hand& player = state->players[state->currentPlayer];
-  player.riichiRound = state->turnNum;
-  player.riichiPieceDiscard = player.discards_count;
-  player.riichi = true;
-  state->riichiSticks++;
 
   state->nextState = StateFunctionType::kDiscard;
   return state;

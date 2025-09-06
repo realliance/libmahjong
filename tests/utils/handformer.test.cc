@@ -10,28 +10,28 @@
 
 namespace mahjong {
 
-TEST(PlayerFormer, HandFromNotationFormSet) {
+TEST(HandFormer, HandFromNotationFormSet) {
   const std::vector<Piece> hand = {Piece(kOneBamboo), Piece(kTwoBamboo),
                                    Piece(kThreeBamboo)};
   auto result = HandFromNotation("123s");
   EXPECT_EQ(result, hand);
 }
 
-TEST(PlayerFormer, HandFromNotationFormWithManySuits) {
+TEST(HandFormer, HandFromNotationFormWithManySuits) {
   const std::vector<Piece> hand = {Piece(kOneBamboo), Piece(kTwoBamboo),
                                    Piece(kThreeBamboo), Piece(kFourCharacter)};
   auto result = HandFromNotation("123s4m");
   EXPECT_EQ(result, hand);
 }
 
-TEST(PlayerFormer, HandFromNotationFormRedFives) {
+TEST(HandFormer, HandFromNotationFormRedFives) {
   const std::vector<Piece> hand = {Piece(kRedFiveCharacter),
                                    Piece(kRedFiveBamboo), Piece(kRedFivePin)};
   auto result = HandFromNotation("0m0s0p");
   EXPECT_EQ(result, hand);
 }
 
-TEST(PlayerFormer, HandFromNotationFormHonors) {
+TEST(HandFormer, HandFromNotationFormHonors) {
   const std::vector<Piece> hand = {Piece(kEastWind),    Piece(kSouthWind),
                                    Piece(kWestWind),    Piece(kNorthWind),
                                    Piece(kWhiteDragon), Piece(kGreenDragon),
@@ -40,7 +40,7 @@ TEST(PlayerFormer, HandFromNotationFormHonors) {
   EXPECT_EQ(result, hand);
 }
 
-TEST(PlayerFormer, HandFromNotationFormTerminals) {
+TEST(HandFormer, HandFromNotationFormTerminals) {
   const std::vector<Piece> hand = {Piece(kOneCharacter), Piece(kNineCharacter),
                                    Piece(kOneBamboo),    Piece(kNineBamboo),
                                    Piece(kOnePin),       Piece(kNinePin)};
@@ -48,20 +48,20 @@ TEST(PlayerFormer, HandFromNotationFormTerminals) {
   EXPECT_EQ(result, hand);
 }
 
-TEST(PlayerFormer, HandFromNotationInvalidPiece) {
+TEST(HandFormer, HandFromNotationInvalidPiece) {
   const std::vector<Piece> hand = {Piece(Piece::kError)};
   auto result = HandFromNotation("7g");
   EXPECT_EQ(result, hand);
 }
 
-TEST(PlayerFormer, HandFromNotationInvalidPieceSet) {
+TEST(HandFormer, HandFromNotationInvalidPieceSet) {
   const std::vector<Piece> hand = {Piece(Piece::kError), Piece(Piece::kError),
                                    Piece(Piece::kError)};
   auto result = HandFromNotation("799g");
   EXPECT_EQ(result, hand);
 }
 
-TEST(PlayerFormer, IsValidNotationWithValidNotations) {
+TEST(HandFormer, IsValidNotationWithValidNotations) {
   EXPECT_TRUE(IsValidNotation("123s"));
   EXPECT_TRUE(IsValidNotation("123s456m"));
   EXPECT_TRUE(IsValidNotation("11z22z33z"));
@@ -72,7 +72,7 @@ TEST(PlayerFormer, IsValidNotationWithValidNotations) {
   EXPECT_TRUE(IsValidNotation(""));
 }
 
-TEST(PlayerFormer, IsValidNotationWithInvaildNotations) {
+TEST(HandFormer, IsValidNotationWithInvaildNotations) {
   EXPECT_FALSE(IsValidNotation("123"));
   EXPECT_FALSE(IsValidNotation("123g456m"));
   EXPECT_FALSE(IsValidNotation("11z22z33"));
@@ -80,35 +80,35 @@ TEST(PlayerFormer, IsValidNotationWithInvaildNotations) {
   EXPECT_FALSE(IsValidNotation("8z"));
 }
 
-TEST(PlayerFormer, PlayerToNotationSingleSet) {
+TEST(HandFormer, HandToNotationSingleSet) {
   const std::vector<Piece> hand = {Piece(kOneBamboo), Piece(kTwoBamboo),
                                    Piece(kThreeBamboo)};
-  EXPECT_EQ(PlayerToNotation(hand), "123s");
+  EXPECT_EQ(HandToNotation(hand), "123s");
 }
 
-TEST(PlayerFormer, PlayerToNotationMultipleSets) {
+TEST(HandFormer, HandToNotationMultipleSets) {
   const std::vector<Piece> hand = {
       Piece(kOneBamboo),     Piece(kTwoBamboo), Piece(kThreeBamboo),
       Piece(kFourPin),       Piece(kFivePin),   Piece(kSixPin),
       Piece(kNineCharacter), Piece(kEastWind),  Piece(kWestWind),
   };
-  EXPECT_EQ(PlayerToNotation(hand), "13z123s456p9m");
+  EXPECT_EQ(HandToNotation(hand), "13z123s456p9m");
 }
 
-TEST(PlayerFormer, PlayerToNotationSkipsErrorPieces) {
+TEST(HandFormer, HandToNotationSkipsErrorPieces) {
   const std::vector<Piece> hand = {
       Piece(kOneBamboo),
       Piece(Piece::kError),
       Piece(kThreeBamboo),
   };
-  EXPECT_EQ(PlayerToNotation(hand), "13s");
+  EXPECT_EQ(HandToNotation(hand), "13s");
 }
 
-TEST(PlayerFormer, PlayerToNotationRedFives) {
+TEST(HandFormer, HandToNotationRedFives) {
   const std::vector<Piece> hand = {
       Piece(kFiveBamboo),
       Piece(kRedFiveBamboo),
   };
-  EXPECT_EQ(PlayerToNotation(hand), "50s");
+  EXPECT_EQ(HandToNotation(hand), "50s");
 }
 }  // namespace mahjong

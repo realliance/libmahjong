@@ -14,8 +14,8 @@ std::unique_ptr<GameState> Exhaust(std::unique_ptr<GameState> state) {
   int total_winners = 0;
   for (int i = 0; i < 4; i++) {
     // TODO(#21): Implement no tenpai if you have all pieces of your wait
-    if (state->players.at(i).riichi || !getWaits(state->players[i]).empty()) {
-      winning_players.at(i) = 1;
+    if (state->players[i].riichi || !getWaits(state->players[i]).empty()) {
+      winning_players[i] = 1;
       total_winners++;
     }
   }
@@ -25,24 +25,24 @@ std::unique_ptr<GameState> Exhaust(std::unique_ptr<GameState> state) {
   }
   if (total_winners < 4 && total_winners > 0) {
     for (int i = 0; i < 4; i++) {
-      if (winning_players.at(i) != 0) {
-        state->players.at(i).score = 3000 / total_winners;
+      if (winning_players[i] != 0) {
+        state->players[i].score = 3000 / total_winners;
       } else {
         switch (total_winners) {
           case 1:
-            state->players.at(i).score = -1000;
+            state->players[i].score = -1000;
             break;
           case 2:
-            state->players.at(i).score = -1500;
+            state->players[i].score = -1500;
             break;
           case 3:
-            state->players.at(i).score = -3000;
+            state->players[i].score = -3000;
             break;
           default:
             break;
         }
       }
-      if (state->players.at(i).riichi) {
+      if (state->players[i].riichi) {
         state->players[i].score -= 1000;
       }
     }

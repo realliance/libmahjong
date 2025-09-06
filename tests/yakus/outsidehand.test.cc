@@ -64,7 +64,7 @@ TEST(isOutsideHand, NoChi) {
   SUCCEED();
 }
 
-TEST(isOutsideHand, BadPlayer) {
+TEST(isOutsideHand, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("111m234p111s999m66z", &player);

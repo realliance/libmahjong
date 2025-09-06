@@ -18,7 +18,7 @@ bool isFullyConcealedHand(const GameState& state, const Hand& player,
 
 REGISTER_YAKU({
     .id = "fullyconcealedhand",
-    .name = "Fully Concealed Player",
+    .name = "Fully Concealed Hand",
     .type = Yaku::kClosed,
     .value = 1,
     .is_yaku_func = yaku::isFullyConcealedHand,

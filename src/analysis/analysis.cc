@@ -22,10 +22,10 @@ void countPieces(Breakdown* b) {
 }
 }  // namespace
 
-std::vector<Branch> AnalyzeHand(const Hand& player, const bool only_complete) {
+std::vector<Branch> AnalyzeHand(const Hand& hand, const bool only_complete) {
   Branch base_branch;
-  base_branch.open = !player.melds.empty();
-  for (const auto& meld : player.melds_range()) {
+  base_branch.open = !hand.melds.empty();
+  for (const Meld& meld : hand.melds_range()) {
     switch (meld.type) {
       case SetType::kChi:
         base_branch.chis.emplace_back(meld.start);
@@ -42,7 +42,7 @@ std::vector<Branch> AnalyzeHand(const Hand& player, const bool only_complete) {
     }
   }
   std::vector<Branch> branches;
-  const std::unique_ptr<Node> root = breakdownHand(player.live_range());
+  const std::unique_ptr<Node> root = breakdownHand(hand.live_range());
   for (const auto& branch_vec : Node::AsBranchVectors(root.get())) {
     branches.push_back(base_branch);
     Branch& branch = branches.back();

@@ -6,7 +6,6 @@
 
 #include "controllers/playercontroller.h"
 #include "types/hand.h"
-#include "types/meld.h"
 #include "types/piecetype.h"
 #include "types/settings.h"
 #include "types/statefunction.h"

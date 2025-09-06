@@ -56,7 +56,7 @@ TEST(isFullFlush, 6Han) {
   FAIL();
 }
 
-TEST(isFullFlush, BadPlayerHonors) {
+TEST(isFullFlush, BadHandHonors) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("111m222m111z666m99m", &player);
@@ -73,7 +73,7 @@ TEST(isFullFlush, BadPlayerHonors) {
   SUCCEED();
 }
 
-TEST(isFullFlush, BadPlayerSuit) {
+TEST(isFullFlush, BadHandSuit) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("111m222m111p666m99m", &player);
@@ -90,7 +90,7 @@ TEST(isFullFlush, BadPlayerSuit) {
   SUCCEED();
 }
 
-TEST(isFullFlush, BadPlayerFullFlushHonors) {
+TEST(isFullFlush, BadHandFullFlushHonors) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("111z222z333z444z55z", &player);

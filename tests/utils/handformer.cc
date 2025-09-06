@@ -134,7 +134,7 @@ bool IsValidNotation(const std::string& notation) {
   return current_set.empty();
 }
 
-std::string PlayerToNotation(const std::vector<Piece>& hand) {
+std::string HandToNotation(const std::vector<Piece>& hand) {
   std::map<Piece::Type, std::vector<uint8_t>> suit_and_tiles;
 
   for (const auto& t : hand) {

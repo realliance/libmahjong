@@ -24,27 +24,22 @@ std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
                                state->pendingPiece.toUint8_t()),  // piece
                            .decision = false,                     // decision
                        });
-  if (RemovePieces(state->players[state->currentPlayer], state->pendingPiece,
+  Hand& player = state->players[state->currentPlayer];
+  if (RemovePieces(player, state->pendingPiece,
                    /*count=*/1) != 1) {
     std::cerr << "Not Enough pieces to remove in ConvertedKan" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;
   }
-
-  Hand& player = state->players[state->currentPlayer];
-  if (auto* meld = std::ranges::find(player.melds,
-                                     Meld{
-                                         .type = SetType::kPon,
-                                         .start = state->pendingPiece,
-                                     });
-      meld != player.melds.end()) {
-    meld->type = SetType::kKan;
-    state->nextState = StateFunctionType::kKanDiscard;
+  Meld* meld = std::ranges::find(
+      player.melds, Meld{.type = SetType::kPon, .start = state->pendingPiece});
+  if (meld == player.melds.end()) {
+    std::cerr << "Could Not find matching pon" << '\n';
+    state->nextState = StateFunctionType::kError;
     return state;
   }
-
-  std::cerr << "Could Not find matching pon" << '\n';
-  state->nextState = StateFunctionType::kError;
+  meld->type = SetType::kKan;
+  state->nextState = StateFunctionType::kKanDiscard;
   return state;
 }
 }  // namespace

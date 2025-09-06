@@ -55,7 +55,7 @@ TEST(isTerminalsInAllSets, 3Han) {
   FAIL();
 }
 
-TEST(isTerminalsInAllSets, BadPlayer) {
+TEST(isTerminalsInAllSets, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("123m789m222p11s", &player);

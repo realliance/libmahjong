@@ -75,7 +75,7 @@ TEST(isAllPons, ConcealedKan) {
   FAIL();
 }
 
-TEST(isAllPons, BadPlayer) {
+TEST(isAllPons, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("111m222p666z789m44m", &player);

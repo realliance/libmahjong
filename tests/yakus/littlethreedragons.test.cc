@@ -56,7 +56,7 @@ TEST(isLittleThreeDragons, WhenOpen) {
   FAIL();
 }
 
-TEST(isLittleThreeDragons, BadPlayer) {
+TEST(isLittleThreeDragons, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("666z111m222p77s", &player);

@@ -15,7 +15,7 @@ std::unique_ptr<GameState> Draw(std::unique_ptr<GameState> state) {
   state->pendingPiece = Walls::TakePiece(*state);
   Hand& player = state->players[state->currentPlayer];
   player.live[player.live_count++] = state->pendingPiece;
-  state->nextState = StateFunctionType::kPlayerPlayer;
+  state->nextState = StateFunctionType::kPlayerHand;
   return state;
 }
 }  // namespace

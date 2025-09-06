@@ -79,8 +79,8 @@ int main() {
   // state->lastCall = 36;
   // state->pendingPiece = kNineCharacter;
   // state->roundNum = 2;
-  // state->players[0].live = {kNineCharacter,kNineCharacter,kNineCharacter,kOnePin,kTwoPin,kThreePin,kEastWind,kEastWind};
-  // state->players[0].melds = {
+  // state->hands[0].live = {kNineCharacter,kNineCharacter,kNineCharacter,kOnePin,kTwoPin,kThreePin,kEastWind,kEastWind};
+  // state->hands[0].melds = {
   //   {
   //     Meld::kChi,
   //     kThreeBamboo

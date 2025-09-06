@@ -63,28 +63,28 @@ std::ostream& operator<<(std::ostream& os, const mahjong::GameState& state) {
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const mahjong::Hand& player) {
-  os << "{ open: " << player.open;
-  os << " riichi: " << player.riichi;
-  os << " riichiPieceDiscard: " << player.riichiPieceDiscard;
-  os << " riichiRound: " << player.riichiRound;
+std::ostream& operator<<(std::ostream& os, const mahjong::Hand& hand) {
+  os << "{ open: " << hand.open;
+  os << " riichi: " << hand.riichi;
+  os << " riichiPieceDiscard: " << hand.riichiPieceDiscard;
+  os << " riichiRound: " << hand.riichiRound;
   os << " live: [" << '\n';
   os << "hasRonned: " << '\n';
-  os << "hasRonned: {" << player.hasRonned << "}" << '\n';
-  os << " points: " << player.points;
-  for (const auto& piece : player.live_range()) {
+  os << "hasRonned: {" << hand.hasRonned << "}" << '\n';
+  os << " points: " << hand.points;
+  for (const auto& piece : hand.live_range()) {
     os << piece.toStr() << ", ";
   }
   os << "]" << '\n';
   os << "melds: [" << '\n';
-  for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : hand.melds_range()) {
     os << "{ type: " << meld.typeToStr();
     os << ", start: " << meld.start.toStr() << "}";
     os << ", ";
   }
   os << "]" << '\n';
   os << "discards: [" << '\n';
-  for (const auto& piece : player.discards) {
+  for (const auto& piece : hand.discards) {
     os << piece.toStr() << ", ";
   }
   os << "]" << '\n';

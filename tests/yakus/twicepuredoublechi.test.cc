@@ -48,7 +48,7 @@ TEST(isTwicePureDoubleChi, MustBeConcealed) {
   SUCCEED();
 }
 
-TEST(isTwicePureDoubleChi, BadPlayer) {
+TEST(isTwicePureDoubleChi, BadHand) {
   auto game_state = GameState();
   Hand& player = game_state.players[0];
   HandFromNotation("789p789p234m567m11z", &player);
