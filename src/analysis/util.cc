@@ -34,6 +34,11 @@ std::vector<Piece> completeSet(const Piece a, const Piece b) {
     return {};
   }
   if (std::abs(piece_diff) != 1) {
+    // piece_diff: -2 / 2
+    // piece_diff >> 1: -1 / 1
+    // b + piece_diff >> 1: c
+    // a - b == -2: b (c) a
+    // a - b ==  2: a (c) b
     return {b + (piece_diff >> 1)};
   }
   std::vector<Piece> waits;
