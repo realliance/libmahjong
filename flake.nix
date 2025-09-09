@@ -23,7 +23,7 @@
           ninja
         ];
 
-        llvmPackage = pkgs.llvmPackages_19;
+        llvmPackage = pkgs.llvmPackages_21;
 
         # Override the existing gtest package to use clang
         clangGtest = pkgs.gtest.override {
@@ -51,25 +51,35 @@
           };
         };
 
+        clangToolsWithLibcxx = llvmPackage.clang-tools.override {
+          enableLibcxx = true;
+        };
+
         clangNativeBuildInputs =
           buildPackages
           ++ (with llvmPackage; [
-            clang-tools # Add clang-tools which includes clang-tidy
             libcxx
-            clang
-            lldb # Use LLDB for debugging instead of GDB
+            libcxx.dev
+            libcxxClang
+            lldb
           ])
+          ++ [
+            clangToolsWithLibcxx
+          ]
           ++ (with pkgs; [
             clangGtest # Use our clang-built GTest instead of pkgs.gtest
             clangGtest.dev # Include the development headers
           ]);
       in
       {
-        devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.stdenv; } {
+        devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.libcxxStdenv; } {
           nativeBuildInputs = clangNativeBuildInputs;
 
           # Disable all hardening
           hardeningDisable = [ "all" ];
+
+          NIX_CFLAGS_COMPILE = "-stdlib=libc++";
+          NIX_CFLAGS_LINK = "-stdlib=libc++ -L${llvmPackage.libcxx}/lib -lc++abi";
 
           shellHook = ''
             mkdir -p .vscode
@@ -84,7 +94,7 @@
 
             ${pkgs.cmake}/bin/cmake -S . -B build -G Ninja \
               -Dlibmahjong_build_tests=ON \
-              -DCMAKE_CXX_FLAGS="-O1 -g -I${clangGtest.dev}/include -I${llvmPackage.libcxx}/include/c++/v1"
+              -DCMAKE_CXX_FLAGS="-O1 -g -I${clangGtest.dev}/include"
           '';
         };
 
@@ -92,11 +102,43 @@
           clang = llvmPackage.stdenv.mkDerivation (
             commonAttrs
             // {
-              nativeBuildInputs = clangNativeBuildInputs;
+              nativeBuildInputs = clangNativeBuildInputs ++ [ llvmPackage.libcxx ];
+
+              buildInputs = [ llvmPackage.libcxx ];
 
               hardeningDisable = [ "all" ];
 
-              # This ensures dependent packages can find your library
+              preConfigure = ''
+                # Create wrapper for clang++ to force libc++
+                mkdir -p $TMPDIR/wrappers
+                cat > $TMPDIR/wrappers/clang++ << EOF
+                #!/bin/sh
+                exec ${llvmPackage.libcxxClang}/bin/clang++ \
+                  -stdlib=libc++ \
+                  -Wno-unused-command-line-argument \
+                  -isystem ${llvmPackage.libcxx.dev}/include/c++/v1 \
+                  "\$@"
+                EOF
+                chmod +x $TMPDIR/wrappers/clang++
+
+                # Pass through wrapper for clang
+                ln -s ${llvmPackage.libcxxClang}/bin/clang $TMPDIR/wrappers/clang
+
+                # Create wrapper for clang-tidy for libc++ headers
+                cat > $TMPDIR/wrappers/clang-tidy << EOF
+                #!/bin/sh
+                exec ${clangToolsWithLibcxx}/bin/clang-tidy \
+                  --extra-arg=-stdlib=libc++ \
+                  --extra-arg=-isystem${llvmPackage.libcxx.dev}/include/c++/v1 \
+                  "\$@"
+                EOF
+                chmod +x $TMPDIR/wrappers/clang-tidy
+
+                ln -s ${clangToolsWithLibcxx}/bin/clang-scan-deps $TMPDIR/wrappers/clang-scan-deps
+
+                export PATH="$TMPDIR/wrappers:$PATH"
+              '';
+
               setupHook = pkgs.writeText "setup-hook.sh" ''
                 addLibmahjongLibs() {
                   addToSearchPath LD_LIBRARY_PATH $1/lib
