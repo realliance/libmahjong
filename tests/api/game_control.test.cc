@@ -23,7 +23,7 @@ const api::CGameSettings kDefaultSettings{
 TEST(Api, InitGameState) {
   const api::CGameSettings settings = kDefaultSettings;
 
-  mahjong::GameState* state = api::InitGameState(&settings);
+  const mahjong::GameState* state = api::InitGameState(&settings);
   EXPECT_NE(state, nullptr);
 }
 
@@ -46,7 +46,7 @@ TEST(Api, AdvanceGameState) {
   mahjong::GameState* state = api::InitGameState(&settings);
   EXPECT_NE(state->seed, 0);
 
-  mahjong::GameState* new_state = api::AdvanceGameState(state);
+  const mahjong::GameState* new_state = api::AdvanceGameState(state);
   EXPECT_NE(new_state, nullptr);
 }
 
@@ -224,7 +224,7 @@ TEST(Api, GameControllerValidation) {
   // If an invalid controller is used, InitGameState should return nullptr
   api::CGameSettings invalid_settings = settings;
   invalid_settings.seat_controllers[0] = "InvalidController";
-  mahjong::GameState* state = api::InitGameState(&invalid_settings);
+  const mahjong::GameState* state = api::InitGameState(&invalid_settings);
   EXPECT_EQ(state, nullptr);
 }
 

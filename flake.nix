@@ -55,6 +55,34 @@
           enableLibcxx = true;
         };
 
+        setupLibcxxWrappers = ''
+          mkdir -p $TMPDIR/wrappers
+          cat > $TMPDIR/wrappers/clang++ << EOF
+          #!/bin/sh
+          exec ${llvmPackage.libcxxClang}/bin/clang++ \
+            -stdlib=libc++ \
+            -Wno-unused-command-line-argument \
+            -isystem ${llvmPackage.libcxx.dev}/include/c++/v1 \
+            "\$@"
+          EOF
+          chmod +x $TMPDIR/wrappers/clang++
+
+          ln -s ${llvmPackage.libcxxClang}/bin/clang $TMPDIR/wrappers/clang
+
+          cat > $TMPDIR/wrappers/clang-tidy << EOF
+          #!/bin/sh
+          exec ${clangToolsWithLibcxx}/bin/clang-tidy \
+            --extra-arg=-stdlib=libc++ \
+            --extra-arg=-isystem${llvmPackage.libcxx.dev}/include/c++/v1 \
+            "\$@"
+          EOF
+          chmod +x $TMPDIR/wrappers/clang-tidy
+
+          ln -s ${clangToolsWithLibcxx}/bin/clang-scan-deps $TMPDIR/wrappers/clang-scan-deps
+
+          export PATH="$TMPDIR/wrappers:$PATH"
+        '';
+
         clangNativeBuildInputs =
           buildPackages
           ++ (with llvmPackage; [
@@ -108,36 +136,7 @@
 
               hardeningDisable = [ "all" ];
 
-              preConfigure = ''
-                # Create wrapper for clang++ to force libc++
-                mkdir -p $TMPDIR/wrappers
-                cat > $TMPDIR/wrappers/clang++ << EOF
-                #!/bin/sh
-                exec ${llvmPackage.libcxxClang}/bin/clang++ \
-                  -stdlib=libc++ \
-                  -Wno-unused-command-line-argument \
-                  -isystem ${llvmPackage.libcxx.dev}/include/c++/v1 \
-                  "\$@"
-                EOF
-                chmod +x $TMPDIR/wrappers/clang++
-
-                # Pass through wrapper for clang
-                ln -s ${llvmPackage.libcxxClang}/bin/clang $TMPDIR/wrappers/clang
-
-                # Create wrapper for clang-tidy for libc++ headers
-                cat > $TMPDIR/wrappers/clang-tidy << EOF
-                #!/bin/sh
-                exec ${clangToolsWithLibcxx}/bin/clang-tidy \
-                  --extra-arg=-stdlib=libc++ \
-                  --extra-arg=-isystem${llvmPackage.libcxx.dev}/include/c++/v1 \
-                  "\$@"
-                EOF
-                chmod +x $TMPDIR/wrappers/clang-tidy
-
-                ln -s ${clangToolsWithLibcxx}/bin/clang-scan-deps $TMPDIR/wrappers/clang-scan-deps
-
-                export PATH="$TMPDIR/wrappers:$PATH"
-              '';
+              preConfigure = setupLibcxxWrappers;
 
               setupHook = pkgs.writeText "setup-hook.sh" ''
                 addLibmahjongLibs() {
@@ -152,10 +151,13 @@
             pkgs.runCommand "libmahjong-tests"
               {
                 nativeBuildInputs = clangNativeBuildInputs;
+                buildInputs = [ llvmPackage.libcxx ];
                 src = ./.;
                 hardeningDisable = [ "all" ];
               }
               ''
+                ${setupLibcxxWrappers}
+
                 # Create output directory
                 mkdir -p $out
 
@@ -178,10 +180,13 @@
             pkgs.runCommand "libmahjong-coverage"
               {
                 nativeBuildInputs = clangNativeBuildInputs;
+                buildInputs = [ llvmPackage.libcxx ];
                 src = ./.;
                 hardeningDisable = [ "all" ];
               }
               ''
+                ${setupLibcxxWrappers}
+
                 mkdir -p $out
 
                 cmake -S $src \
