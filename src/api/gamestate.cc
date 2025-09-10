@@ -109,9 +109,8 @@ mahjong::GameState* InitGameState(const CGameSettings* settings) {
 }
 
 mahjong::GameState* AdvanceGameState(mahjong::GameState* state) {
-  std::unique_ptr<mahjong::GameState> new_state =
-      mahjong::AdvanceGameState(std::unique_ptr<mahjong::GameState>(state));
-  return new_state.release();
+  return mahjong::AdvanceGameState(std::unique_ptr<mahjong::GameState>(state))
+      .release();
 }
 
 CObservedGameState ObserveGameState(mahjong::GameState* state) {
