@@ -27,7 +27,7 @@
 
         # Override the existing gtest package to use clang
         clangGtest = pkgs.gtest.override {
-          stdenv = llvmPackage.stdenv;
+          stdenv = llvmPackage.libcxxStdenv;
         };
 
         commonAttrs = {
