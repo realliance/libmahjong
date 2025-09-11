@@ -7,7 +7,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-pedantic -Wall -Wextra -Werror -Wno-unused-parameter)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  add_compile_options(-Wmost -Wno-missing-designated-field-initializers -ferror-limit=0)
+  add_compile_options(-Wmost -Wno-missing-designated-field-initializers
+                      -ferror-limit=0 -fsanitize=memory)
+  add_link_options(-fsanitize=memory)
 endif()
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   add_compile_options(-Wno-missing-field-initializers)
@@ -24,8 +26,11 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
   option(libmahjong_build_tools "whether or not examples should be built" ON)
   option(libmahjong_build_tests "whether or not tests should be built" ON)
   option(libmahjong_use_clang_utils
-         "whether or not project is compiled with clang-tidy" ON)
-  option(libmahjong_use_precompiled_headers "whether or not to build with precompiled_headers, incompatible with clang-tidy" OFF)
+         "whether or not project is compiled with clang-tidy" OFF)
+  option(
+    libmahjong_use_precompiled_headers
+    "whether or not to build with precompiled_headers, incompatible with clang-tidy"
+    OFF)
   option(libmahjong_enable_coverage "Enable coverage reporting" OFF)
 endif()
 
@@ -35,24 +40,15 @@ add_library(coverage_config INTERFACE)
 if(libmahjong_enable_coverage)
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # GCC coverage flags
-    target_compile_options(coverage_config INTERFACE
-      -O0
-      -g
-      --coverage 
-    )
+    target_compile_options(coverage_config INTERFACE -O0 -g --coverage)
     target_link_options(coverage_config INTERFACE --coverage)
   elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     # Clang coverage flags
-    target_compile_options(coverage_config INTERFACE
-      -O0
-      -g
-      -fprofile-instr-generate
-      -fcoverage-mapping
-    )
-    target_link_options(coverage_config INTERFACE 
-      -fprofile-instr-generate
-      -fcoverage-mapping
-    )
+    target_compile_options(
+      coverage_config INTERFACE -O0 -g -fprofile-instr-generate
+                                -fcoverage-mapping)
+    target_link_options(coverage_config INTERFACE -fprofile-instr-generate
+                        -fcoverage-mapping)
   endif()
 endif()
 

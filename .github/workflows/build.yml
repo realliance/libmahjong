@@ -11,13 +11,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - toolchain: gcc
+          - toolchain: clang
+      fail-fast: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - uses: cachix/install-nix-action@v30
       - name: Build using Nix
         run: |
-          nix build -L
+          nix build -L '.#${{ matrix.toolchain }}'
   test:
     name: Run ctests
     runs-on: ubuntu-latest

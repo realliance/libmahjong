@@ -1,8 +1,8 @@
 #pragma once
 #include <functional>
-#include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "controllers/playercontroller.h"
@@ -17,7 +17,7 @@ class ControllerManager {
     return controller_manager;
   }
 
-  std::map<std::string, newControllerInst> GetAvailableControllersMap() {
+  std::unordered_map<std::string, newControllerInst> GetAvailableControllersMap() {
     return available_controllers_;
   }
   std::vector<std::string> GetAvailableControllers();
@@ -26,7 +26,7 @@ class ControllerManager {
   bool RegisterController(newControllerInst newFunc, const std::string& Name);
 
  private:
-  std::map<std::string, newControllerInst> available_controllers_;
+  std::unordered_map<std::string, newControllerInst> available_controllers_;
 };
 
 #define REGISTER_PLAYER_CONTROLLER(controller)                          \

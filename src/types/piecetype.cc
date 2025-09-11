@@ -100,7 +100,7 @@ Piece Piece::formPiece(Piece::Type suit, uint8_t number, bool isRedFive) {
   return Piece(kError);
 }
 
-const std::map<uint8_t, std::string> kStrMap = {
+const std::unordered_map<uint8_t, std::string> kStrMap = {
     {Piece::kError, "ERRORPIECE"},
     {Piece::kRedDragon, "Red Dragon"},
     {Piece::kWhiteDragon, "White Dragon"},

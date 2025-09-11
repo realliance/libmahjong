@@ -23,11 +23,26 @@
           ninja
         ];
 
-        llvmPackage = pkgs.llvmPackages_21;
+        llvmPackageVersion = pkgs.llvmPackages_21;
+        gccPackage = pkgs.gcc15Stdenv;
+
+        llvmPackage = pkgs.wrapCCWith {
+          cc = llvmPackageVersion.clang-unwrapped;
+          libcxx = pkgs.gcc15Stdenv.cc.cc;
+          extraPackages = [ 
+            llvmPackageVersion.compiler-rt
+            llvmPackageVersion.lldb
+            llvmPackageVersion.clang
+          ];
+          extraBuildCommands = ''
+            ln -s "${llvmPackage.compiler-rt.out}/lib" "$rsrc/lib"
+            ln -s "${llvmPackage.compiler-rt.out}/share" "$rsrc/share"
+          '';
+        };
 
         # Override the existing gtest package to use clang
         clangGtest = pkgs.gtest.override {
-          stdenv = llvmPackage.libcxxStdenv;
+          stdenv = llvmPackage.stdenv;
         };
 
         commonAttrs = {
@@ -51,63 +66,23 @@
           };
         };
 
-        clangToolsWithLibcxx = llvmPackage.clang-tools.override {
-          enableLibcxx = true;
-        };
-
-        setupLibcxxWrappers = ''
-          mkdir -p $TMPDIR/wrappers
-          cat > $TMPDIR/wrappers/clang++ << EOF
-          #!/bin/sh
-          exec ${llvmPackage.libcxxClang}/bin/clang++ \
-            -stdlib=libc++ \
-            -Wno-unused-command-line-argument \
-            -isystem ${llvmPackage.libcxx.dev}/include/c++/v1 \
-            "\$@"
-          EOF
-          chmod +x $TMPDIR/wrappers/clang++
-
-          ln -s ${llvmPackage.libcxxClang}/bin/clang $TMPDIR/wrappers/clang
-
-          cat > $TMPDIR/wrappers/clang-tidy << EOF
-          #!/bin/sh
-          exec ${clangToolsWithLibcxx}/bin/clang-tidy \
-            --extra-arg=-stdlib=libc++ \
-            --extra-arg=-isystem${llvmPackage.libcxx.dev}/include/c++/v1 \
-            "\$@"
-          EOF
-          chmod +x $TMPDIR/wrappers/clang-tidy
-
-          ln -s ${clangToolsWithLibcxx}/bin/clang-scan-deps $TMPDIR/wrappers/clang-scan-deps
-
-          export PATH="$TMPDIR/wrappers:$PATH"
-        '';
-
         clangNativeBuildInputs =
           buildPackages
-          ++ (with llvmPackage; [
-            libcxx
-            libcxx.dev
-            libcxxClang
-            lldb
-          ])
-          ++ [
-            clangToolsWithLibcxx
-          ]
           ++ (with pkgs; [
-            clangGtest # Use our clang-built GTest instead of pkgs.gtest
-            clangGtest.dev # Include the development headers
+            clang-tools # Add clang-tools which includes clang-tidy
+            gtest # Use our clang-built GTest instead of pkgs.gtest
+            gtest.dev # Include the development headers
+            clang
+            lldb # Use LLDB for debugging instead of GDB
+            gcc15Stdenv.cc.cc
           ]);
       in
       {
-        devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.libcxxStdenv; } {
+        devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.stdenv; } {
           nativeBuildInputs = clangNativeBuildInputs;
 
           # Disable all hardening
           hardeningDisable = [ "all" ];
-
-          NIX_CFLAGS_COMPILE = "-stdlib=libc++";
-          NIX_CFLAGS_LINK = "-stdlib=libc++ -L${llvmPackage.libcxx}/lib -lc++abi";
 
           shellHook = ''
             mkdir -p .vscode
@@ -122,22 +97,38 @@
 
             ${pkgs.cmake}/bin/cmake -S . -B build -G Ninja \
               -Dlibmahjong_build_tests=ON \
-              -DCMAKE_CXX_FLAGS="-O1 -g -I${clangGtest.dev}/include"
+              -DCMAKE_CXX_FLAGS="-O1 -g -I${clangGtest.dev}/include -I${pkgs.gcc15Stdenv.cc.cc}/include/c++/v1"
           '';
         };
 
         packages = rec {
+          gcc = gccPackage.mkDerivation (
+            commonAttrs
+            // {
+              nativeBuildInputs = buildPackages;
+              # Add any runtime dependencies your library needs
+              propagatedBuildInputs = with pkgs; [
+                # Add dependencies that users of your library will need
+              ];
+
+              # This ensures dependent packages can find your library
+              setupHook = pkgs.writeText "setup-hook.sh" ''
+                addLibmahjongLibs() {
+                  addToSearchPath LD_LIBRARY_PATH $1/lib
+                }
+                addEnvHooks "$targetOffset" addLibmahjongLibs
+              '';
+            }
+          );
+
           clang = llvmPackage.stdenv.mkDerivation (
             commonAttrs
             // {
-              nativeBuildInputs = clangNativeBuildInputs ++ [ llvmPackage.libcxx ];
-
-              buildInputs = [ llvmPackage.libcxx ];
+              nativeBuildInputs = clangNativeBuildInputs;
 
               hardeningDisable = [ "all" ];
 
-              preConfigure = setupLibcxxWrappers;
-
+              # This ensures dependent packages can find your library
               setupHook = pkgs.writeText "setup-hook.sh" ''
                 addLibmahjongLibs() {
                   addToSearchPath LD_LIBRARY_PATH $1/lib
@@ -151,13 +142,10 @@
             pkgs.runCommand "libmahjong-tests"
               {
                 nativeBuildInputs = clangNativeBuildInputs;
-                buildInputs = [ llvmPackage.libcxx ];
                 src = ./.;
                 hardeningDisable = [ "all" ];
               }
               ''
-                ${setupLibcxxWrappers}
-
                 # Create output directory
                 mkdir -p $out
 
@@ -180,13 +168,10 @@
             pkgs.runCommand "libmahjong-coverage"
               {
                 nativeBuildInputs = clangNativeBuildInputs;
-                buildInputs = [ llvmPackage.libcxx ];
                 src = ./.;
                 hardeningDisable = [ "all" ];
               }
               ''
-                ${setupLibcxxWrappers}
-
                 mkdir -p $out
 
                 cmake -S $src \

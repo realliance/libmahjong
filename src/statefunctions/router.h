@@ -1,5 +1,5 @@
 #pragma once
-#include <map>
+#include <unordered_map>
 
 #include "types/statefunction.h"
 
@@ -15,7 +15,7 @@ class Router {
   bool RegisterRoute(StateFunctionFunc func, const StateFunctionType& type);
 
  private:
-  std::map<StateFunctionType, StateFunctionFunc> routes_;
+  std::unordered_map<StateFunctionType, StateFunctionFunc> routes_;
 };
 
 #define REGISTER_ROUTE(func, type)                                     \
