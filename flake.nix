@@ -23,27 +23,26 @@
           ninja
         ];
 
-        llvmPackageVersion = pkgs.llvmPackages_21;
+        llvmPackage = pkgs.llvmPackages_21;
         gccPackage = pkgs.gcc15Stdenv;
 
-        llvmPackage = pkgs.wrapCCWith {
-          cc = llvmPackageVersion.clang-unwrapped;
-          libcxx = pkgs.gcc15Stdenv.cc.cc;
-          extraPackages = [ 
-            llvmPackageVersion.compiler-rt
-            llvmPackageVersion.lldb
-            llvmPackageVersion.clang
-          ];
+        # clang wrapper with gcc's libstdc++
+        clangWithGccStdlib = pkgs.wrapCCWith {
+          cc = llvmPackage.clang-unwrapped;
+          bintools = gccPackage.cc.bintools;
           extraBuildCommands = ''
-            ln -s "${llvmPackage.compiler-rt.out}/lib" "$rsrc/lib"
-            ln -s "${llvmPackage.compiler-rt.out}/share" "$rsrc/share"
+            echo "-isystem ${gccPackage.cc.cc}/include/c++/${gccPackage.cc.version}" >> $out/nix-support/cc-cflags
+            echo "-isystem ${gccPackage.cc.cc}/include/c++/${gccPackage.cc.version}/x86_64-unknown-linux-gnu" >> $out/nix-support/cc-cflags
           '';
         };
 
-        # Override the existing gtest package to use clang
-        clangGtest = pkgs.gtest.override {
-          stdenv = llvmPackage.stdenv;
-        };
+        # Create stdenv with clang + gcc libstdc++
+        clangStdenv = pkgs.overrideCC gccPackage clangWithGccStdlib;
+
+        # Override clang-tools to match our clang + gcc libstdc++ env
+        clangTools = llvmPackage.clang-tools.overrideAttrs (oldAttrs: {
+          stdenv = clangStdenv;
+        });
 
         commonAttrs = {
           pname = "libmahjong";
@@ -66,19 +65,12 @@
           };
         };
 
-        clangNativeBuildInputs =
-          buildPackages
-          ++ (with pkgs; [
-            clang-tools # Add clang-tools which includes clang-tidy
-            gtest # Use our clang-built GTest instead of pkgs.gtest
-            gtest.dev # Include the development headers
-            clang
-            lldb # Use LLDB for debugging instead of GDB
-            gcc15Stdenv.cc.cc
-          ]);
+        clangNativeBuildInputs = buildPackages ++ [
+          clangTools
+        ];
       in
       {
-        devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.stdenv; } {
+        devShells.default = pkgs.mkShell.override { stdenv = clangStdenv; } {
           nativeBuildInputs = clangNativeBuildInputs;
 
           # Disable all hardening
@@ -97,7 +89,7 @@
 
             ${pkgs.cmake}/bin/cmake -S . -B build -G Ninja \
               -Dlibmahjong_build_tests=ON \
-              -DCMAKE_CXX_FLAGS="-O1 -g -I${clangGtest.dev}/include -I${pkgs.gcc15Stdenv.cc.cc}/include/c++/v1"
+              -DCMAKE_CXX_FLAGS="-O1 -g"
           '';
         };
 
@@ -121,7 +113,7 @@
             }
           );
 
-          clang = llvmPackage.stdenv.mkDerivation (
+          clang = clangStdenv.mkDerivation (
             commonAttrs
             // {
               nativeBuildInputs = clangNativeBuildInputs;
