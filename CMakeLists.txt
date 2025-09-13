@@ -8,8 +8,11 @@ add_compile_options(-pedantic -Wall -Wextra -Werror -Wno-unused-parameter)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   add_compile_options(-Wmost -Wno-missing-designated-field-initializers
-                      -ferror-limit=0 -fsanitize=memory)
-  add_link_options(-fsanitize=memory)
+                      -ferror-limit=0)
+  if(libmahjong_enable_msan)
+    add_compile_options(-fsanitize=memory)
+    add_link_options(-fsanitize=memory)
+  endif()
 endif()
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   add_compile_options(-Wno-missing-field-initializers)
@@ -32,6 +35,7 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     "whether or not to build with precompiled_headers, incompatible with clang-tidy"
     OFF)
   option(libmahjong_enable_coverage "Enable coverage reporting" OFF)
+  option(libmahjong_enable_msan "Enable memory sanitizer" OFF)
 endif()
 
 # Code Coverage Configuration

@@ -65,8 +65,18 @@
           };
         };
 
+        clangGtest = pkgs.gtest.override {
+          stdenv = clangStdenv;
+        };
+
         clangNativeBuildInputs = buildPackages ++ [
           clangTools
+        ];
+
+        testNativeBuildInputs = clangNativeBuildInputs ++ [
+          clangGtest
+          clangGtest.dev
+          llvmPackage.compiler-rt # Add compiler-rt for coverage runtime
         ];
       in
       {
@@ -130,36 +140,39 @@
             }
           );
 
-          tests =
-            pkgs.runCommand "libmahjong-tests"
-              {
-                nativeBuildInputs = clangNativeBuildInputs;
-                src = ./.;
-                hardeningDisable = [ "all" ];
-              }
-              ''
-                # Create output directory
-                mkdir -p $out
+          tests = clangStdenv.mkDerivation {
+            pname = "libmahjong-tests";
+            version = "0.1.0";
+            src = ./.;
+            nativeBuildInputs = testNativeBuildInputs;
+            hardeningDisable = [ "all" ];
 
-                # Create build directory and configure with tests enabled
-                cmake -S $src \
-                      -B build \
-                      -G Ninja \
-                      -Dlibmahjong_build_tools=OFF \
-                      -Dlibmahjong_build_tests=ON
+            # Disable memory sanitizer for tests
+            # libstdc++ isnt instrumented and therefore isnt
+            # detecting things properly compared to libc++
+            # It might be possible to resolve this with some more
+            # complicated nix configurations but it might be awful
+            cmakeFlags = [
+              "-Dlibmahjong_build_tools=OFF"
+              "-Dlibmahjong_build_tests=ON"
+              "-Dlibmahjong_enable_msan=OFF"
+            ];
 
-                # Build the project with tests
-                cmake --build build
+            installPhase = ''
+              runHook preInstall
 
-                # Run tests with JUnit output
-                (ctest --test-dir build --output-on-failure --output-junit $out/test.xml || 
-                  (echo "Tests failed but continuing build" && cp -r build/Testing $out/test-details))
-              '';
+              mkdir -p $out
+              ctest --output-on-failure --output-junit $out/test.xml
+
+              runHook postInstall
+            '';
+          };
 
           coverage =
             pkgs.runCommand "libmahjong-coverage"
               {
                 nativeBuildInputs = clangNativeBuildInputs;
+                buildInputs = [ llvmPackage.libcxx ];
                 src = ./.;
                 hardeningDisable = [ "all" ];
               }
