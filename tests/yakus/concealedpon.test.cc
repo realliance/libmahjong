@@ -17,14 +17,14 @@
 namespace mahjong::yaku {
 TEST(isThreeConcealedPons, 2Han) {
   auto game_state = GameState();
-  Hand& player = game_state.players[0];
-  HandFromNotation("111m111p111s666z44m", &player);
-  player.open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("111m111p111s666z44m", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(player.live_range());
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isThreeConcealedPons(game_state, player, branch)) {
+    if (isThreeConcealedPons(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -34,18 +34,18 @@ TEST(isThreeConcealedPons, 2Han) {
 
 TEST(isThreeConcealedPons, PonsMustBeConcealed) {
   auto game_state = GameState();
-  Hand& player = game_state.players[0];
-  HandFromNotation("111m111p111s44m", &player);
-  player.melds[player.meld_count++] = Meld{
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("111m111p111s44m", &hand);
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kChi,
       .start = kTwoBamboo,
   };
-  player.open = true;
+  hand.open = true;
 
-  auto root = breakdownHand(player.live_range());
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isThreeConcealedPons(game_state, player, branch)) {
+    if (isThreeConcealedPons(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -55,18 +55,18 @@ TEST(isThreeConcealedPons, PonsMustBeConcealed) {
 
 TEST(isThreeConcealedPons, CanHaveAdditionalOpenPon) {
   auto game_state = GameState();
-  Hand& player = game_state.players[0];
-  HandFromNotation("111m111p111s44m", &player);
-  player.melds[player.meld_count++] = Meld{
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("111m111p111s44m", &hand);
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = kTwoBamboo,
   };
-  player.open = true;
+  hand.open = true;
 
-  auto root = breakdownHand(player.live_range());
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isThreeConcealedPons(game_state, player, branch)) {
+    if (isThreeConcealedPons(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -76,18 +76,18 @@ TEST(isThreeConcealedPons, CanHaveAdditionalOpenPon) {
 
 TEST(isThreeConcealedPons, PonsMustBeConcealedNegative) {
   auto game_state = GameState();
-  Hand& player = game_state.players[0];
-  HandFromNotation("111m111p234s44m", &player);
-  player.melds[player.meld_count++] = Meld{
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("111m111p234s44m", &hand);
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = kOneBamboo,
   };
-  player.open = true;
+  hand.open = true;
 
-  auto root = breakdownHand(player.live_range());
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isThreeConcealedPons(game_state, player, branch)) {
+    if (isThreeConcealedPons(game_state, hand, branch)) {
       FAIL();
       return;
     }
@@ -97,14 +97,14 @@ TEST(isThreeConcealedPons, PonsMustBeConcealedNegative) {
 
 TEST(isThreeConcealedPons, BadHand) {
   auto game_state = GameState();
-  Hand& player = game_state.players[0];
-  HandFromNotation("111m111p234567s44m", &player);
-  player.open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("111m111p234567s44m", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(player.live_range());
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isThreeConcealedPons(game_state, player, branch)) {
+    if (isThreeConcealedPons(game_state, hand, branch)) {
       FAIL();
       return;
     }

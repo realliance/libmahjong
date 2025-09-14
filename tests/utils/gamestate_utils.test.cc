@@ -48,10 +48,10 @@ TEST(GameStateUtils, InitializeTestRoundDefault) {
   }
 
   // Draw occurred
-  EXPECT_EQ(state->players[0].live_count, 14);
+  EXPECT_EQ(state->hands[0].live_count, 14);
 
   for (int i = 1; i < kNumPlayers; i++) {
-    EXPECT_EQ(state->players[i].live_count, 13);
+    EXPECT_EQ(state->hands[i].live_count, 13);
   }
 }
 

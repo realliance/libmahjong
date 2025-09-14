@@ -12,9 +12,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isSevenPairs(const GameState& /* state */, const Hand& player,
+bool isSevenPairs(const GameState& /* state */, const Hand& hand,
                   const std::vector<const mahjong::Node*>& branch) {
-  if (player.open) {
+  if (hand.open) {
     return false;
   }
   std::set<Piece> pairs;

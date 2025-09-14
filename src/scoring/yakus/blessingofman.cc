@@ -9,18 +9,18 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isBlessingOfMan(const GameState& state, const Hand& player,
+bool isBlessingOfMan(const GameState& state, const Hand& hand,
                      const std::vector<const mahjong::Node*>& /*branch*/) {
-  if (player.open) {
+  if (hand.open) {
     return false;
   }
-  if (state.turnNum > player.id) {
+  if (state.turnNum > hand.id) {
     return false;
   }
   if (state.lastCall >= 0) {
     return false;
   }
-  if (player.hasRonned) {
+  if (hand.hasRonned) {
     return true;
   }
   return false;

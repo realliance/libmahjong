@@ -10,9 +10,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isAfterAKan(const GameState& state, const Hand& player,
+bool isAfterAKan(const GameState& state, const Hand& hand,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
-  if (state.currentPlayer != player.id) {
+  if (state.currentPlayer != hand.id) {
     return false;
   }
   if (state.prevState == StateFunctionType::kReplacement) {

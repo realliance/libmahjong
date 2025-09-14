@@ -17,9 +17,9 @@ namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
-  if (Hand& player = state->players[state->currentPlayer];
-      player.riichi && player.discards_count == player.riichiPieceDiscard) {
-    player.riichiPieceDiscard++;
+  if (Hand& hand = state->hands[state->currentPlayer];
+      hand.riichi && hand.discards_count == hand.riichiPieceDiscard) {
+    hand.riichiPieceDiscard++;
   }
 
   state->currentPlayer = state->lastCaller;
@@ -27,15 +27,15 @@ std::unique_ptr<GameState> Pon(std::unique_ptr<GameState> state) {
   state->concealedKan = false;
   state->turnNum++;
 
-  Hand& player = state->players.at(state->currentPlayer);
-  player.open = true;
-  if (RemovePieces(player, state->pendingPiece,
+  Hand& hand = state->hands.at(state->currentPlayer);
+  hand.open = true;
+  if (RemovePieces(hand, state->pendingPiece,
                    /*count=*/2) != 2) {
     std::cerr << "Not enough pieces to remove in Pon" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;
   }
-  player.melds[player.meld_count++] = Meld{
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kPon,
       .start = state->pendingPiece,
   };

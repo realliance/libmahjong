@@ -82,9 +82,9 @@ TEST(Api, ObserveGameState) {
 
   // Check arrays are properly sized and initialized
   for (int i = 0; i < 4; i++) {
-    EXPECT_EQ(observed.scores[i], state->players[i].score);
-    EXPECT_EQ(observed.points[i], state->players[i].points);
-    EXPECT_EQ(observed.hasRonned[i], state->players[i].hasRonned);
+    EXPECT_EQ(observed.scores[i], state->hands[i].score);
+    EXPECT_EQ(observed.points[i], state->hands[i].points);
+    EXPECT_EQ(observed.hasRonned[i], state->hands[i].hasRonned);
   }
 
   api::FreeGameState(state);
@@ -124,7 +124,7 @@ TEST(Api, ObserveGameStateAfterAdvancement) {
 
   // Check points are copied
   for (int i = 0; i < 4; i++) {
-    EXPECT_EQ(observed.points[i], state->players[i].points);
+    EXPECT_EQ(observed.points[i], state->hands[i].points);
   }
 
   api::FreeGameState(state);
@@ -145,7 +145,7 @@ TEST(Api, ObserveGameStateHandsAndDiscards) {
   // Check that hands are copied (after round start, players should have hands)
   for (int player = 0; player < 4; player++) {
     const api::CHand& c_hand = observed.hands[player];
-    const mahjong::Hand& cpp_hand = state->players[player];
+    const mahjong::Hand& cpp_hand = state->hands[player];
 
     // Check live pieces
     EXPECT_EQ(c_hand.livePieceCount, static_cast<int>(cpp_hand.live_count));

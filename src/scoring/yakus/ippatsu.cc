@@ -11,11 +11,11 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isIppatsu(const GameState& state, const Hand& player,
+bool isIppatsu(const GameState& state, const Hand& hand,
                const std::vector<const mahjong::Node*>& /*branch*/) {
-  return (isRiichi(state, player) || isDoubleRiichi(state, player)) &&
-         (state.turnNum - player.riichiRound <= 4 &&
-          state.lastCall < player.riichiRound);
+  return (isRiichi(state, hand) || isDoubleRiichi(state, hand)) &&
+         (state.turnNum - hand.riichiRound <= 4 &&
+          state.lastCall < hand.riichiRound);
 }
 
 REGISTER_YAKU({

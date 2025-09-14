@@ -11,10 +11,10 @@ namespace mahjong {
 namespace {
 std::unique_ptr<GameState> GameStart(std::unique_ptr<GameState> state) {
   int i = 0;
-  for (Hand& player : state->players) {
-    player.id = i++;
-    player.points = kStartingPoints;
-    state->controllers[player.id]->GameStart(player.id);
+  for (Hand& hand : state->hands) {
+    hand.id = i++;
+    hand.points = kStartingPoints;
+    state->controllers[hand.id]->GameStart(hand.id);
   }
   state->g.seed(state->seed);
   state->nextState = StateFunctionType::kRoundStart;

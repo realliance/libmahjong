@@ -10,7 +10,7 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isTerminalsInAllSets(const GameState& /*state*/, const Hand& player,
+bool isTerminalsInAllSets(const GameState& /*state*/, const Hand& hand,
                           const std::vector<const mahjong::Node*>& branch) {
   for (const auto* node : branch) {
     switch (node->type()) {
@@ -31,7 +31,7 @@ bool isTerminalsInAllSets(const GameState& /*state*/, const Hand& player,
         break;
     }
   }
-  for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : hand.melds_range()) {
     switch (meld.type) {
       case SetType::kSingle:
         return false;

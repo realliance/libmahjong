@@ -9,15 +9,15 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isBlessingOfHeaven(const GameState& state, const Hand& player,
+bool isBlessingOfHeaven(const GameState& state, const Hand& hand,
                         const std::vector<const mahjong::Node*>& /*branch*/) {
-  if (player.open) {
+  if (hand.open) {
     return false;
   }
-  if (player.id != 0) {
+  if (hand.id != 0) {
     return false;
   }
-  if (state.players[0].hasRonned) {
+  if (state.hands[0].hasRonned) {
     return false;
   }
   if (state.turnNum != 0) {

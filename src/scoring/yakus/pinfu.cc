@@ -13,9 +13,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isPinfu(const GameState& state, const Hand& player,
+bool isPinfu(const GameState& state, const Hand& hand,
              const std::vector<const mahjong::Node*>& branch) {
-  if (player.open) {
+  if (hand.open) {
     return false;
   }
   for (const auto* node : branch) {
@@ -39,13 +39,13 @@ bool isPinfu(const GameState& state, const Hand& player,
           return false;
         }
         if (node->start() ==
-            Piece::fromWind(GetSeat(state.roundNum, player.id))) {
+            Piece::fromWind(GetSeat(state.roundNum, hand.id))) {
           return false;
         }
       }
     }
   }
-  return getWaits(player, state.pendingPiece).size() >= 2;
+  return getWaits(hand, state.pendingPiece).size() >= 2;
 }
 
 REGISTER_YAKU({

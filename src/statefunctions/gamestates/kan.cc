@@ -25,9 +25,9 @@ std::unique_ptr<GameState> Kan(std::unique_ptr<GameState> state) {
                            .decision = false,                     // decision
                        });
 
-  if (Hand& player = state->players[state->currentPlayer];
-      player.riichi && player.discards_count == player.riichiPieceDiscard) {
-    player.riichiPieceDiscard++;
+  if (Hand& hand = state->hands[state->currentPlayer];
+      hand.riichi && hand.discards_count == hand.riichiPieceDiscard) {
+    hand.riichiPieceDiscard++;
   }
 
   state->lastCall = state->turnNum;
@@ -35,15 +35,15 @@ std::unique_ptr<GameState> Kan(std::unique_ptr<GameState> state) {
   state->turnNum++;
   state->currentPlayer = state->lastCaller;
 
-  Hand& player = state->players[state->currentPlayer];
-  player.open = true;
-  if (RemovePieces(player, state->pendingPiece,
+  Hand& hand = state->hands[state->currentPlayer];
+  hand.open = true;
+  if (RemovePieces(hand, state->pendingPiece,
                    /*count=*/3) != 3) {
     std::cerr << "Not Enough Pieces to remove in kan" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;
   }
-  player.melds[player.meld_count++] = Meld{
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kKan,
       .start = state->pendingPiece,
   };

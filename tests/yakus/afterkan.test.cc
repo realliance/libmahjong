@@ -16,16 +16,16 @@ namespace mahjong::yaku {
 
 TEST(isAfterAKan, 1Han) {
   auto game_state = GameState();
-  Hand& player = game_state.players[0];
-  HandFromNotation("123m789m1111z999s55z", &player);
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m789m1111z999s55z", &hand);
   game_state.currentPlayer = 0;
 
   game_state.prevState = StateFunctionType::kReplacement;
 
-  auto root = breakdownHand(player.live_range());
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAfterAKan(game_state, player, branch)) {
+    if (isAfterAKan(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -35,16 +35,16 @@ TEST(isAfterAKan, 1Han) {
 
 TEST(isAfterAKan, DoesntApply) {
   auto game_state = GameState();
-  Hand& player = game_state.players[0];
-  HandFromNotation("123m789m1111z999s55z", &player);
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m789m1111z999s55z", &hand);
   game_state.currentPlayer = 0;
 
   game_state.prevState = StateFunctionType::kPon;
 
-  auto root = breakdownHand(player.live_range());
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAfterAKan(game_state, player, branch)) {
+    if (isAfterAKan(game_state, hand, branch)) {
       FAIL();
       return;
     }
@@ -54,16 +54,16 @@ TEST(isAfterAKan, DoesntApply) {
 
 TEST(isAfterAKan, WrongPlayer) {
   auto game_state = GameState();
-  Hand& player = game_state.players[0];
-  HandFromNotation("123m789m1111z999s55z", &player);
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m789m1111z999s55z", &hand);
   game_state.currentPlayer = 2;
 
   game_state.prevState = StateFunctionType::kReplacement;
 
-  auto root = breakdownHand(player.live_range());
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAfterAKan(game_state, player, branch)) {
+    if (isAfterAKan(game_state, hand, branch)) {
       FAIL();
       return;
     }

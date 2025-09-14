@@ -53,12 +53,12 @@ TEST(Calls, AcceptPon) {
   auto state = InitializeTestRound(12345, std::move(controllers));
 
   // Override with hopeless hands
-  Hand& player0 = state->players[0];
+  Hand& hand0 = state->hands[0];
   // 14 Pieces because has drawn in InitializeTestRound.
-  HandFromNotation("11447m2258p33699s", &player0);
+  HandFromNotation("11447m2258p33699s", &hand0);
   // Has the pair of nine bamboo 13 Pieces, yet to draw.
-  Hand& player1 = state->players[1];
-  HandFromNotation("13579m99s246p135z", &player1);
+  Hand& hand1 = state->hands[1];
+  HandFromNotation("13579m99s246p135z", &hand1);
 
   // Advance to pon event
   // Should take 4 iterations: draw, player hand, discard, and then the pon
@@ -74,12 +74,12 @@ TEST(Calls, AcceptPon) {
   // - State should be kDiscard (Player 1 needs to discard)
   EXPECT_EQ(state->currentPlayer, 1);
   EXPECT_EQ(state->currState, StateFunctionType::kDiscard);
-  EXPECT_EQ(player1.meld_count, 1);
-  EXPECT_EQ(player1.melds[0].type, SetType::kPon);
-  EXPECT_EQ(player1.melds[0].start, Piece(Piece::kNineBamboo));
+  EXPECT_EQ(hand1.meld_count, 1);
+  EXPECT_EQ(hand1.melds[0].type, SetType::kPon);
+  EXPECT_EQ(hand1.melds[0].start, Piece(Piece::kNineBamboo));
 
   // Player 1's live hand should be reduced by 3 tiles (pon + discard)
-  EXPECT_EQ(player1.live_count, 10);
+  EXPECT_EQ(hand1.live_count, 10);
 }
 
 }  // namespace mahjong

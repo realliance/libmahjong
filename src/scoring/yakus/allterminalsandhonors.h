@@ -7,7 +7,7 @@
 
 namespace mahjong::yaku {
 bool isAllTerminalsAndHonors(
-    const GameState& state, const Hand& player,
+    const GameState& state, const Hand& hand,
     const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
 }

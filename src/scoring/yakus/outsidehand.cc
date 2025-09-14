@@ -12,7 +12,7 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isOutsideHand(const GameState& state, const Hand& player,
+bool isOutsideHand(const GameState& state, const Hand& hand,
                    const std::vector<const mahjong::Node*>& branch) {
   bool chi = false;
   for (const auto* node : branch) {
@@ -28,7 +28,7 @@ bool isOutsideHand(const GameState& state, const Hand& player,
       }
     }
   }
-  for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : hand.melds_range()) {
     if (meld.type == SetType::kChi) {
       if (meld.start.isTerminal() || (meld.start + 2).isTerminal()) {
         chi = true;
@@ -43,8 +43,8 @@ bool isOutsideHand(const GameState& state, const Hand& player,
   }
   // Terminals in all Sets and All Terminals and Honors are more valuable and
   // score instead of Outside Hand.
-  return chi && !isTerminalsInAllSets(state, player, branch) &&
-         !isAllTerminalsAndHonors(state, player);
+  return chi && !isTerminalsInAllSets(state, hand, branch) &&
+         !isAllTerminalsAndHonors(state, hand);
 }
 
 REGISTER_YAKU({

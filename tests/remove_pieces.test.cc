@@ -9,39 +9,39 @@
 namespace mahjong {
 
 TEST(RemovePieces, RemoveCorrectAmount) {
-  Hand player;
-  player.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
-  player.live_count = 4;
+  Hand hand;
+  hand.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
+  hand.live_count = 4;
 
-  EXPECT_EQ(RemovePieces(player, kOneCharacter, 1), 1);
-  EXPECT_EQ(player.live_count, 3);
+  EXPECT_EQ(RemovePieces(hand, kOneCharacter, 1), 1);
+  EXPECT_EQ(hand.live_count, 3);
 }
 
 TEST(RemovePieces, RemoveOnlyTheOnesAvailable) {
-  Hand player;
-  player.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
-  player.live_count = 4;
+  Hand hand;
+  hand.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
+  hand.live_count = 4;
 
-  EXPECT_EQ(RemovePieces(player, kFourPin, 2), 1);
-  EXPECT_EQ(player.live_count, 3);
+  EXPECT_EQ(RemovePieces(hand, kFourPin, 2), 1);
+  EXPECT_EQ(hand.live_count, 3);
 }
 
 TEST(RemovePieces, OnlyRemovesOne) {
-  Hand player;
-  player.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
-  player.live_count = 4;
+  Hand hand;
+  hand.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
+  hand.live_count = 4;
 
-  EXPECT_EQ(RemovePieces(player, kWhiteDragon, 1), 1);
-  EXPECT_EQ(player.live[2], kWhiteDragon);
+  EXPECT_EQ(RemovePieces(hand, kWhiteDragon, 1), 1);
+  EXPECT_EQ(hand.live[2], kWhiteDragon);
 }
 
 TEST(RemovePieces, RemovesZeroWhenPieceDoesntExist) {
-  Hand player;
-  player.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
-  player.live_count = 4;
+  Hand hand;
+  hand.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
+  hand.live_count = 4;
 
-  EXPECT_EQ(RemovePieces(player, kGreenDragon, 8), 0);
-  EXPECT_EQ(player.live_count, 4);
+  EXPECT_EQ(RemovePieces(hand, kGreenDragon, 8), 0);
+  EXPECT_EQ(hand.live_count, 4);
 }
 
 }  // namespace mahjong

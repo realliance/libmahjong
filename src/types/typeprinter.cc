@@ -35,8 +35,8 @@ std::ostream& operator<<(std::ostream& os, const mahjong::GameState& state) {
   os << "seed: " << state.seed << '\n';
   os << "pendingPiece: " << state.pendingPiece.toStr() << '\n';
   os << "hands: " << '\n';
-  for (size_t i = 0; i < state.players.size(); i++) {
-    os << "hand[" << i << "]: {" << state.players.at(i) << "}" << '\n';
+  for (size_t i = 0; i < state.hands.size(); i++) {
+    os << "hand[" << i << "]: {" << state.hands.at(i) << "}" << '\n';
   }
   os << "controllers: " << '\n';
   for (size_t i = 0; i < state.controllers.size(); i++) {

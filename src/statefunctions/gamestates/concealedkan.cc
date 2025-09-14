@@ -24,14 +24,14 @@ std::unique_ptr<GameState> ConcealedKan(std::unique_ptr<GameState> state) {
                                state->pendingPiece.toUint8_t()),  // piece
                            .decision = false,                     // decision
                        });
-  Hand& player = state->players[state->currentPlayer];
-  if (RemovePieces(player, state->pendingPiece,
+  Hand& hand = state->hands[state->currentPlayer];
+  if (RemovePieces(hand, state->pendingPiece,
                    /*count=*/4) != 4) {
     std::cerr << "Not Enough pieces to remove in ConcealedKan" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;
   }
-  player.melds[player.meld_count++] = Meld{
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kConcealedKan,
       .start = state->pendingPiece,
   };

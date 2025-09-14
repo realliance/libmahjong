@@ -26,7 +26,7 @@ struct GameState {
   bool concealedKan = false;
   Piece pendingPiece = Piece(Piece::Type::kError);
 
-  std::array<Hand, kNumPlayers> players;
+  std::array<Hand, kNumPlayers> hands;
   std::array<Piece, kLivingWallCount> livingWall;
   std::array<Piece, kDeadWallCount> deadWall;
 

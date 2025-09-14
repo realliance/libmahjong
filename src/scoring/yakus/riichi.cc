@@ -9,10 +9,9 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isRiichi(const GameState& state, const Hand& player,
+bool isRiichi(const GameState& state, const Hand& hand,
               const std::vector<const mahjong::Node*>& /*branch*/) {
-  return player.riichi && !player.open &&
-         (state.turnNum > 4 || state.lastCall < 0);
+  return hand.riichi && !hand.open && (state.turnNum > 4 || state.lastCall < 0);
 }
 
 REGISTER_YAKU({

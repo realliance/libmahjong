@@ -6,7 +6,7 @@
 #include "types/hand.h"
 
 namespace mahjong::yaku {
-bool isFullFlush(const GameState& state, const Hand& player,
+bool isFullFlush(const GameState& state, const Hand& hand,
                  const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
 }

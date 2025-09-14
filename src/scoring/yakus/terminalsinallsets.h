@@ -6,7 +6,7 @@
 #include "types/hand.h"
 
 namespace mahjong::yaku {
-bool isTerminalsInAllSets(const GameState& state, const Hand& player,
+bool isTerminalsInAllSets(const GameState& state, const Hand& hand,
                           const std::vector<const mahjong::Node*>& branch);
 
 }

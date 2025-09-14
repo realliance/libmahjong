@@ -141,12 +141,12 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
 
   // Player data
   for (int i = 0; i < 4; i++) {
-    observed.scores[i] = state->players[i].score;
-    observed.points[i] = state->players[i].points;
-    observed.hasRonned[i] = state->players[i].hasRonned;
+    observed.scores[i] = state->hands[i].score;
+    observed.points[i] = state->hands[i].points;
+    observed.hasRonned[i] = state->hands[i].hasRonned;
 
     // Convert Hand to CHand
-    const auto& cpp_hand = state->players[i];
+    const auto& cpp_hand = state->hands[i];
     CHand& c_hand = observed.hands[i];
 
     // Live pieces

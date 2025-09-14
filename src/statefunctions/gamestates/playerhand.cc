@@ -24,14 +24,14 @@ std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
       PossibleDecision{.type = Event::kConvertedKan, .func = CanConvertedKan},
       PossibleDecision{.type = Event::kRiichi, .func = CanRiichi},
       PossibleDecision{.type = Event::kDiscard,
-                       .func = [](const GameState&, const Hand& player) {
-                         return !player.riichi;
+                       .func = [](const GameState&, const Hand& hand) {
+                         return !hand.riichi;
                        }}};
 
-  const Hand& player = state->players[state->currentPlayer];
+  const Hand& hand = state->hands[state->currentPlayer];
   bool decision_asked = false;
   for (const auto& [decision, decisionIsPossible] : decisions) {
-    if (decisionIsPossible(*state, player)) {
+    if (decisionIsPossible(*state, hand)) {
       decision_asked = true;
       state->controllers.at(state->currentPlayer)
           ->ReceiveEvent(Event{
@@ -52,7 +52,7 @@ std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
     decision.decision = true;
     state->nextState = StateFunctionType::kDiscard;
   } else {
-    decision = GetValidDecisionOrThrow(*state, player,
+    decision = GetValidDecisionOrThrow(*state, hand,
                                        /*inHand=*/true);
   }
 

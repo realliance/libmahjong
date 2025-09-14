@@ -18,13 +18,13 @@ namespace mahjong {
 namespace {
 std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
   Walls::New(*state);
-  for (Hand& player : state->players) {
-    auto hand = Walls::TakeHand(*state);
-    state->controllers.at(player.id)->RoundStart(
-        hand, static_cast<Wind>((player.id + 3 * (state->roundNum % 4)) % 4),
+  for (Hand& hand : state->hands) {
+    auto draw = Walls::TakeHand(*state);
+    state->controllers.at(hand.id)->RoundStart(
+        draw, static_cast<Wind>((hand.id + 3 * (state->roundNum % 4)) % 4),
         (state->roundNum > 3) ? kSouth : kEast);
-    player.live_count = hand.size();
-    std::ranges::move(hand, player.live.begin());
+    hand.live_count = draw.size();
+    std::ranges::move(draw, hand.live.begin());
   }
 
   AlertPlayers(*state,

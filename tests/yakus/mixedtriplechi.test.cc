@@ -16,14 +16,14 @@ namespace mahjong::yaku {
 
 TEST(isMixedTripleChi, Open) {
   auto game_state = GameState();
-  Hand& player = game_state.players[0];
-  HandFromNotation("123p123m123s555p11z", &player);
-  player.open = true;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123p123m123s555p11z", &hand);
+  hand.open = true;
 
-  auto root = breakdownHand(player.live_range());
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isMixedTripleChi(game_state, player, branch)) {
+    if (isMixedTripleChi(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -33,14 +33,14 @@ TEST(isMixedTripleChi, Open) {
 
 TEST(isMixedTripleChi, Closed) {
   auto game_state = GameState();
-  Hand& player = game_state.players[0];
-  HandFromNotation("123p123m123s555p11z", &player);
-  player.open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123p123m123s555p11z", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(player.live_range());
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isMixedTripleChi(game_state, player, branch)) {
+    if (isMixedTripleChi(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -50,14 +50,14 @@ TEST(isMixedTripleChi, Closed) {
 
 TEST(isMixedTripleChi, BadHand) {
   auto game_state = GameState();
-  Hand& player = game_state.players[0];
-  HandFromNotation("123p123p123s555p11z", &player);
-  player.open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123p123p123s555p11z", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(player.live_range());
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isMixedTripleChi(game_state, player, branch)) {
+    if (isMixedTripleChi(game_state, hand, branch)) {
       FAIL();
       return;
     }

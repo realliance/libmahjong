@@ -11,7 +11,7 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isMixedTripleChi(const GameState& /* state */, const Hand& player,
+bool isMixedTripleChi(const GameState& /* state */, const Hand& hand,
                       const std::vector<const mahjong::Node*>& branch) {
   const int k_piecesinasuit = 9;
   std::array<bool, k_piecesinasuit> bamboo_chi = {};
@@ -30,7 +30,7 @@ bool isMixedTripleChi(const GameState& /* state */, const Hand& player,
       }
     }
   }
-  for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : hand.melds_range()) {
     if (meld.type == SetType::kChi) {
       if (meld.start.getSuit() == Piece::Type::kBambooSuit) {
         bamboo_chi.at(meld.start.getPieceNum()) = true;

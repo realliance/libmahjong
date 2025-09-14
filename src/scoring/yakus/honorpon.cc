@@ -15,7 +15,7 @@
 
 namespace mahjong::yaku {
 namespace {
-bool findPon(const GameState& /* state */, const Hand& player,
+bool findPon(const GameState& /* state */, const Hand& hand,
              const std::vector<const mahjong::Node*>& branch,
              const Piece& piece) {
   for (const auto* node : branch) {
@@ -23,7 +23,7 @@ bool findPon(const GameState& /* state */, const Hand& player,
       return true;
     }
   }
-  for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : hand.melds_range()) {
     if (meld.type >= SetType::kPon && meld.start == piece) {
       return true;
     }
@@ -33,31 +33,31 @@ bool findPon(const GameState& /* state */, const Hand& player,
 
 }  // namespace
 
-bool isSeatWind(const GameState& state, const Hand& player,
+bool isSeatWind(const GameState& state, const Hand& hand,
                 const std::vector<const mahjong::Node*>& branch) {
-  return findPon(state, player, branch,
-                 Piece::fromWind(GetSeat(state.roundNum, player.id)));
+  return findPon(state, hand, branch,
+                 Piece::fromWind(GetSeat(state.roundNum, hand.id)));
 }
 
-bool isPrevalentWind(const GameState& state, const Hand& player,
+bool isPrevalentWind(const GameState& state, const Hand& hand,
                      const std::vector<const mahjong::Node*>& branch) {
-  return findPon(state, player, branch,
+  return findPon(state, hand, branch,
                  Piece::fromWind(state.roundNum > 3 ? kSouth : kEast));
 }
 
-bool isGreenDragon(const GameState& state, const Hand& player,
+bool isGreenDragon(const GameState& state, const Hand& hand,
                    const std::vector<const mahjong::Node*>& branch) {
-  return findPon(state, player, branch, kGreenDragon);
+  return findPon(state, hand, branch, kGreenDragon);
 }
 
-bool isRedDragon(const GameState& state, const Hand& player,
+bool isRedDragon(const GameState& state, const Hand& hand,
                  const std::vector<const mahjong::Node*>& branch) {
-  return findPon(state, player, branch, kRedDragon);
+  return findPon(state, hand, branch, kRedDragon);
 }
 
-bool isWhiteDragon(const GameState& state, const Hand& player,
+bool isWhiteDragon(const GameState& state, const Hand& hand,
                    const std::vector<const mahjong::Node*>& branch) {
-  return findPon(state, player, branch, kWhiteDragon);
+  return findPon(state, hand, branch, kWhiteDragon);
 }
 
 REGISTER_YAKUS({

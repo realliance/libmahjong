@@ -25,7 +25,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
                                state->pendingPiece.toUint8_t()),  // piece
                            .decision = false,                     // decision
                        });
-  DiscardPiece(state->players[state->currentPlayer], state->pendingPiece);
+  DiscardPiece(state->hands[state->currentPlayer], state->pendingPiece);
 
   const std::vector<PossibleDecision> decisions = {
       {.type = Event::kChi, .func = CanChi},
@@ -35,14 +35,14 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
   };
 
   std::array<bool, 4> need_decision = {false, false, false, false};
-  for (const Hand& player : state->players) {
-    if (player.id == state->currentPlayer) {
+  for (const Hand& hand : state->hands) {
+    if (hand.id == state->currentPlayer) {
       continue;
     }
     for (const auto& [decision, decisionIsPossible] : decisions) {
-      if (decisionIsPossible(*state, player)) {
-        need_decision.at(player.id) = true;
-        state->controllers.at(player.id)->ReceiveEvent(Event{
+      if (decisionIsPossible(*state, hand)) {
+        need_decision.at(hand.id) = true;
+        state->controllers.at(hand.id)->ReceiveEvent(Event{
             .type = decision,                // type
             .player = state->currentPlayer,  // player
             .piece =
@@ -54,18 +54,18 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
   }
 
   Event decision = kDeclineEvent;
-  for (Hand& player : state->players) {
-    if (need_decision.at(player.id)) {
+  for (Hand& hand : state->hands) {
+    if (need_decision.at(hand.id)) {
       Event temp_decision =
-          GetValidDecisionOrThrow(*state, player, /*inHand=*/false);
+          GetValidDecisionOrThrow(*state, hand, /*inHand=*/false);
       if (temp_decision.type < decision.type) {  // lower is higher priority
-        temp_decision.player = player.id;
+        temp_decision.player = hand.id;
         temp_decision.piece =
             static_cast<int16_t>(state->pendingPiece.toUint8_t());
         decision = temp_decision;
       }
       if (temp_decision.type == Event::kRon) {
-        player.hasRonned = true;
+        hand.hasRonned = true;
       }
     }
   }

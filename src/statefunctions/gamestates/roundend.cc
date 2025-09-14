@@ -21,8 +21,8 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
   state->concealedKan = false;
   state->lastCaller = -1;
   state->pendingPiece = Piece(Piece::kError);
-  for (auto& player : state->players) {
-    player.hasRonned = false;
+  for (auto& hand : state->hands) {
+    hand.hasRonned = false;
   }
 
   state->controllers = {};
@@ -31,30 +31,29 @@ std::unique_ptr<GameState> RoundEnd(std::unique_ptr<GameState> state) {
   if (state->roundNum > last_round && state->riichiSticks > 0) {
     std::vector<int> winners;
     int highscore = -100000;
-    for (const Hand& player : state->players) {
-      if (player.points + player.score > highscore) {
-        highscore = player.points + player.score;
+    for (const Hand& hand : state->hands) {
+      if (hand.points + hand.score > highscore) {
+        highscore = hand.points + hand.score;
         winners.clear();
-        winners.push_back(player.id);
-      } else if (player.points + player.score == highscore) {
-        winners.push_back(player.id);
+        winners.push_back(hand.id);
+      } else if (hand.points + hand.score == highscore) {
+        winners.push_back(hand.id);
       }
     }
     for (const auto& winner : winners) {
-      state->players.at(winner).score +=
+      state->hands.at(winner).score +=
           (state->riichiSticks * 1000) / winners.size();
     }
   }
 
   // TODO(#17): Scoring
-  for (Hand& player : state->players) {
-    AlertPlayers(*state,
-                 Event{.type = Event::kPointDiff,
-                       .player = player.id,
-                       .piece = static_cast<int16_t>(player.score / 100),
-                       .decision = false});
-    player.points += player.score;
-    player.score = 0;
+  for (Hand& hand : state->hands) {
+    AlertPlayers(*state, Event{.type = Event::kPointDiff,
+                               .player = hand.id,
+                               .piece = static_cast<int16_t>(hand.score / 100),
+                               .decision = false});
+    hand.points += hand.score;
+    hand.score = 0;
   }
 
   // TODO (#14): for now naively increment the round number

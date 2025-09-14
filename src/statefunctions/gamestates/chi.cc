@@ -30,9 +30,9 @@ Piece GetChiStart(const Hand& hand, Piece piece) {
 }
 
 std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
-  if (Hand& player = state->players[state->currentPlayer];
-      player.riichi && player.discards_count == player.riichiPieceDiscard) {
-    player.riichiPieceDiscard++;
+  if (Hand& hand = state->hands[state->currentPlayer];
+      hand.riichi && hand.discards_count == hand.riichiPieceDiscard) {
+    hand.riichiPieceDiscard++;
   }
 
   state->currentPlayer = state->lastCaller;
@@ -40,11 +40,11 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
   state->concealedKan = false;
   state->turnNum++;
 
-  Hand& player = state->players[state->currentPlayer];
-  player.open = true;
+  Hand& hand = state->hands[state->currentPlayer];
+  hand.open = true;
   // only gives a single one of the chis
   // ui oof
-  const Piece chi_start = GetChiStart(player, state->pendingPiece);
+  const Piece chi_start = GetChiStart(hand, state->pendingPiece);
   if (chi_start == kError) {
     std::cerr << "Failed to get start of Chi" << '\n';
     state->nextState = StateFunctionType::kError;
@@ -55,7 +55,7 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
     if (chi_start + i == state->pendingPiece) {
       continue;
     }
-    if (RemovePieces(player, chi_start + i,
+    if (RemovePieces(hand, chi_start + i,
                      /*count=*/1) != 1) {
       std::cerr << "Not Enough Pieces to remove in Chi" << '\n';
       state->nextState = StateFunctionType::kError;
@@ -63,7 +63,7 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
     }
   }
 
-  player.melds[player.meld_count++] = Meld{
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kChi,
       .start = chi_start,
   };

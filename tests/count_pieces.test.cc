@@ -9,14 +9,14 @@
 namespace mahjong {
 
 TEST(CountPieces, CountPieces) {
-  Hand player;
-  player.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
-  player.live_count = 4;
+  Hand hand;
+  hand.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
+  hand.live_count = 4;
 
-  EXPECT_EQ(CountPieces(player, kOneCharacter), 1);
-  EXPECT_EQ(CountPieces(player, kFourPin), 1);
-  EXPECT_EQ(CountPieces(player, kWhiteDragon), 2);
-  EXPECT_EQ(CountPieces(player, kGreenDragon), 0);
+  EXPECT_EQ(CountPieces(hand, kOneCharacter), 1);
+  EXPECT_EQ(CountPieces(hand, kFourPin), 1);
+  EXPECT_EQ(CountPieces(hand, kWhiteDragon), 2);
+  EXPECT_EQ(CountPieces(hand, kGreenDragon), 0);
 }
 
 }  // namespace mahjong

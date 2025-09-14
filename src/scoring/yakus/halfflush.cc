@@ -10,11 +10,11 @@
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isHalfFlush(const GameState& state, const Hand& player,
+bool isHalfFlush(const GameState& state, const Hand& hand,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
-  const int suit = player.live[0].getSuit();
+  const int suit = hand.live[0].getSuit();
   bool honors = false;
-  for (const auto& piece : player.live_range()) {
+  for (const auto& piece : hand.live_range()) {
     if (piece.isHonor()) {
       honors = true;
       continue;
@@ -23,7 +23,7 @@ bool isHalfFlush(const GameState& state, const Hand& player,
       return false;
     }
   }
-  for (const auto& meld : player.melds_range()) {
+  for (const auto& meld : hand.melds_range()) {
     if (meld.start.isHonor()) {
       honors = true;
       continue;
@@ -33,7 +33,7 @@ bool isHalfFlush(const GameState& state, const Hand& player,
     }
   }
   // Full Flush scores instead of Half Flush.
-  return honors && !isFullFlush(state, player);
+  return honors && !isFullFlush(state, hand);
 }
 
 REGISTER_YAKU({
