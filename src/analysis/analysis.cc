@@ -64,7 +64,7 @@ std::vector<Branch> AnalyzeHand(const Hand& hand, const bool only_complete) {
       }
     }
     branch.complete = branch.singles.empty();
-    if(only_complete && !branch.complete){
+    if (only_complete && !branch.complete) {
       branches.pop_back();
     }
   }

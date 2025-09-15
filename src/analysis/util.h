@@ -25,7 +25,7 @@ std::vector<Piece> getWaits(const Hand& hand, const Piece& piece);
 std::map<Piece, std::vector<Piece>> getPossibleWaits(const Hand& hand);
 
 using SetCheckFunc = std::function<bool(SetType, Piece)>;
-// Calls func on each set in branch, returns true if and only if func returns 
+// Calls func on each set in branch, returns true if and only if func returns
 // true for all sets. Exits immediately on false.
 bool CheckBranch(const Branch& branch, const SetCheckFunc& func);
 

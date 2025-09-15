@@ -17,7 +17,8 @@ class ControllerManager {
     return controller_manager;
   }
 
-  std::unordered_map<std::string, newControllerInst> GetAvailableControllersMap() {
+  std::unordered_map<std::string, newControllerInst>
+  GetAvailableControllersMap() {
     return available_controllers_;
   }
   std::vector<std::string> GetAvailableControllers();

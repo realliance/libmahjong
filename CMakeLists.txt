@@ -29,7 +29,7 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
   option(libmahjong_build_tools "whether or not examples should be built" ON)
   option(libmahjong_build_tests "whether or not tests should be built" ON)
   option(libmahjong_use_clang_utils
-         "whether or not project is compiled with clang-tidy" OFF)
+         "whether or not project is compiled with clang-tidy" ON)
   option(
     libmahjong_use_precompiled_headers
     "whether or not to build with precompiled_headers, incompatible with clang-tidy"

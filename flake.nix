@@ -130,6 +130,10 @@
 
               hardeningDisable = [ "all" ];
 
+              cmakeFlags = commonAttrs.cmakeFlags ++ [
+                "-Dlibmahjong_use_clang_utils=OFF"
+              ];
+
               # This ensures dependent packages can find your library
               setupHook = pkgs.writeText "setup-hook.sh" ''
                 addLibmahjongLibs() {
@@ -155,6 +159,7 @@
             cmakeFlags = [
               "-Dlibmahjong_build_tools=OFF"
               "-Dlibmahjong_build_tests=ON"
+              "-Dlibmahjong_use_clang_utils=OFF"
               "-Dlibmahjong_enable_msan=OFF"
             ];
 
