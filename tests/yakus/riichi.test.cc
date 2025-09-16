@@ -1,5 +1,7 @@
 #include "scoring/yakus/riichi.h"
+
 #include <gtest/gtest.h>
+
 #include <array>
 #include <string>
 

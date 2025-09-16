@@ -1,14 +1,9 @@
 #pragma once
-#include <functional>
 #include <memory>
-#include <optional>
 #include <vector>
 
 #include "controllers/playercontroller.h"
-#include "statefunctions/router.h"
-#include "types/event.h"
 #include "types/gamestate.h"
-#include "types/piecetype.h"
 #include "types/statefunction.h"
 
 namespace mahjong {
@@ -18,7 +13,8 @@ std::unique_ptr<GameState> AdvanceUntilState(std::unique_ptr<GameState> state,
                                              StateFunctionType targetState,
                                              int maxIterations = 100);
 
-// Advances game state until it reaches the target state, then advances once more
+// Advances game state until it reaches the target state, then advances once
+// more
 std::unique_ptr<GameState> AdvanceThroughState(std::unique_ptr<GameState> state,
                                                StateFunctionType targetState,
                                                int maxIterations = 100);

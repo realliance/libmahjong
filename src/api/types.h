@@ -76,15 +76,15 @@ struct CHand {
 };
 
 struct CObservedGameState {
-  int currentPlayer;  // Whose turn it is
-  int turnNum;        // Turn counter within current round
-  int roundNum;       // Current round number
-  int riichiSticks;   // Number of riichi sticks on the table
-  int counters;       // Honba counters
-  int lastCall;       // Turn number when last call (chi/pon/kan) was made
-  int lastCaller;     // Player index who made the last call
-  bool
-      concealedKan;  // Whether concealed kan was just performed (affects ron rules)
+  int currentPlayer;    // Whose turn it is
+  int turnNum;          // Turn counter within current round
+  int roundNum;         // Current round number
+  int riichiSticks;     // Number of riichi sticks on the table
+  int counters;         // Honba counters
+  int lastCall;         // Turn number when last call (chi/pon/kan) was made
+  int lastCaller;       // Player index who made the last call
+  bool concealedKan;    // Whether concealed kan was just performed (affects ron
+                        // rules)
   uint64_t seed;        // Random seed used for wall generation and shuffling
   CPiece pendingPiece;  // Current piece being processed
   int scores[4];        // Temporary round score changes

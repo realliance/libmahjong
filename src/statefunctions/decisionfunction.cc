@@ -7,7 +7,6 @@
 #include "analysis/util.h"
 #include "scoring/scoring.h"
 #include "scoring/yakus/thirteenorphans.h"
-
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
 #include "types/piecetype.h"

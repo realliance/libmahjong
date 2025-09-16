@@ -40,7 +40,8 @@ bool isOutsideHand(const GameState& state, int player,
       }
     }
   }
-  // Terminals in all Sets and All Terminals and Honors are more valuable and score instead of Outside Hand.
+  // Terminals in all Sets and All Terminals and Honors are more valuable and
+  // score instead of Outside Hand.
   return chi && !isTerminalsInAllSets(state, player, branch) &&
          !isAllTerminalsAndHonors(state, player);
 }

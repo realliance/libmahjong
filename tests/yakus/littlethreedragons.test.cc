@@ -1,12 +1,13 @@
 #include "scoring/yakus/littlethreedragons.h"
+
 #include <gtest/gtest.h>
+
 #include <array>
 #include <memory>
 #include <string>
 #include <vector>
 
 #include "analysis/analysis.h"
-
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
 #include "types/hand.h"

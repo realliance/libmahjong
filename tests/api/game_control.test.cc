@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+
 #include <array>
 #include <cstdint>
 #include <memory>
@@ -79,8 +80,8 @@ TEST(Api, ObserveGameState) {
   // Check state function name, the rest will be in unknown positions
   // until we advance the game state
   EXPECT_EQ(observed.nextState,
-            api::CStateFunctionType::
-                kGameStart);  // Initial state should be GameStart
+            api::CStateFunctionType::kGameStart);  // Initial state should be
+                                                   // GameStart
 
   // Check arrays are properly sized and initialized
   for (int i = 0; i < 4; i++) {
@@ -114,7 +115,8 @@ TEST(Api, ObserveGameStateAfterAdvancement) {
   EXPECT_EQ(observed.seed, state->seed);
 
   // After advancement, some fields should have changed from initial values
-  // (exact values depend on game logic, but we can check they're copied correctly)
+  // (exact values depend on game logic, but we can check they're copied
+  // correctly)
   EXPECT_EQ(observed.riichiSticks, state->riichiSticks);
   EXPECT_EQ(observed.counters, state->counters);
 

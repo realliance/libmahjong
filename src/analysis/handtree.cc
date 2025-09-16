@@ -167,8 +167,7 @@ void driver(Breakdown* b) {
           // Check if we can start a chi with this piece
           if (possibleChiForward(b->counts, chi_start)) {
             // Find the position of chi_start in the pieces vector
-            auto piece_itr =
-                std::ranges::find(b->pieces, chi_start);
+            auto piece_itr = std::ranges::find(b->pieces, chi_start);
             if (piece_itr != b->pieces.end()) {
               breakdownForwardChi(b, *piece_itr);
             }

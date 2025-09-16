@@ -1,4 +1,5 @@
 #include "scoring/scoring.h"
+
 #include <algorithm>
 #include <vector>
 

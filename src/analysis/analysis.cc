@@ -1,8 +1,10 @@
 #include "analysis/analysis.h"
+
 #include <algorithm>
 #include <memory>
 #include <utility>
 #include <vector>
+
 #include "analysis/handnode.h"
 #include "analysis/handtree.h"
 #include "types/hand.h"
@@ -78,8 +80,8 @@ std::unique_ptr<Node> breakdownHand(const std::vector<Piece>& pieces) {
   b.pieces = pieces;
   countPieces(&b);
   std::ranges::sort(b.pieces);
-  auto [begin,end] = std::ranges::unique(b.pieces);
-  b.pieces.erase(begin,end);
+  auto [begin, end] = std::ranges::unique(b.pieces);
+  b.pieces.erase(begin, end);
 
   driver(&b);
 
