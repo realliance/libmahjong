@@ -1,6 +1,6 @@
 target_sources(
   libmahjong
-  PRIVATE "handnode.cc" "handtree.cc" "possiblesets.cc" "util.cc"
+  PRIVATE "analysis.cc" "handnode.cc" "handtree.cc" "util.cc"
   PUBLIC FILE_SET
          HEADERS
          BASE_DIRS
@@ -8,4 +8,5 @@ target_sources(
          FILES
          "analysis.h"
          "handnode.h"
+         "handtree.h"
          "util.h")

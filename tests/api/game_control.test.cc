@@ -25,6 +25,7 @@ TEST(Api, InitGameState) {
 
   mahjong::GameState* state = api::InitGameState(&settings);
   EXPECT_NE(state, nullptr);
+  api::FreeGameState(state);
 }
 
 TEST(Api, SettingsConversion) {
@@ -38,6 +39,7 @@ TEST(Api, SettingsConversion) {
     EXPECT_EQ(state->players[i].controller->Name(),
               settings.seat_controllers[i]);
   }
+  api::FreeGameState(state);
 }
 
 TEST(Api, AdvanceGameState) {
@@ -46,8 +48,9 @@ TEST(Api, AdvanceGameState) {
   mahjong::GameState* state = api::InitGameState(&settings);
   EXPECT_NE(state->seed, 0);
 
-  mahjong::GameState* new_state = api::AdvanceGameState(state);
-  EXPECT_NE(new_state, nullptr);
+  state = api::AdvanceGameState(state);
+  EXPECT_NE(state, nullptr);
+  api::FreeGameState(state);
 }
 
 TEST(Api, ObserveGameState) {
@@ -226,6 +229,7 @@ TEST(Api, GameControllerValidation) {
   invalid_settings.seat_controllers[0] = "InvalidController";
   mahjong::GameState* state = api::InitGameState(&invalid_settings);
   EXPECT_EQ(state, nullptr);
+  api::FreeGameState(state);
 }
 
 }  // namespace

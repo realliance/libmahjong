@@ -7,6 +7,7 @@
 #include <iterator>
 #include <map>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -15,21 +16,21 @@
 
 namespace mahjong {
 
-const std::map<char, Piece::Type> kNotationToSuit = {
+const std::unordered_map<char, Piece::Type> kNotationToSuit = {
     {'m', Piece::Type::kCharacterSuit},
     {'s', Piece::Type::kBambooSuit},
     {'p', Piece::Type::kPinSuit},
     {'z', Piece::Type::kHonorSuit},
 };
 
-const std::map<Piece::Type, char> kSuitToNotation = {
+const std::unordered_map<Piece::Type, char> kSuitToNotation = {
     {Piece::Type::kCharacterSuit, 'm'},
     {Piece::Type::kBambooSuit, 's'},
     {Piece::Type::kPinSuit, 'p'},
     {Piece::Type::kHonorSuit, 'z'},
 };
 
-const std::map<uint8_t, Piece::Type> kNotationToHonor = {
+const std::unordered_map<uint8_t, Piece::Type> kNotationToHonor = {
     {1, Piece::Type::kEastWind},    {2, Piece::Type::kSouthWind},
     {3, Piece::Type::kWestWind},    {4, Piece::Type::kNorthWind},
     {5, Piece::Type::kWhiteDragon}, {6, Piece::Type::kGreenDragon},

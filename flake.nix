@@ -23,12 +23,26 @@
           ninja
         ];
 
-        llvmPackage = pkgs.llvmPackages_20;
+        llvmPackage = pkgs.llvmPackages_21;
+        gccPackage = pkgs.gcc15Stdenv;
 
-        # Override the existing gtest package to use clang
-        clangGtest = pkgs.gtest.override {
-          stdenv = llvmPackage.stdenv;
+        # clang wrapper with gcc's libstdc++
+        clangWithGccStdlib = pkgs.wrapCCWith {
+          cc = llvmPackage.clang-unwrapped;
+          bintools = gccPackage.cc.bintools;
+          extraBuildCommands = ''
+            echo "-isystem ${gccPackage.cc.cc}/include/c++/${gccPackage.cc.version}" >> $out/nix-support/cc-cflags
+            echo "-isystem ${gccPackage.cc.cc}/include/c++/${gccPackage.cc.version}/x86_64-unknown-linux-gnu" >> $out/nix-support/cc-cflags
+          '';
         };
+
+        # Create stdenv with clang + gcc libstdc++
+        clangStdenv = pkgs.overrideCC gccPackage clangWithGccStdlib;
+
+        # Override clang-tools to match our clang + gcc libstdc++ env
+        clangTools = llvmPackage.clang-tools.overrideAttrs (oldAttrs: {
+          stdenv = clangStdenv;
+        });
 
         commonAttrs = {
           pname = "libmahjong";
@@ -51,21 +65,22 @@
           };
         };
 
-        clangNativeBuildInputs =
-          buildPackages
-          ++ (with llvmPackage; [
-            clang-tools # Add clang-tools which includes clang-tidy
-            libcxx
-            clang
-            lldb # Use LLDB for debugging instead of GDB
-          ])
-          ++ (with pkgs; [
-            clangGtest # Use our clang-built GTest instead of pkgs.gtest
-            clangGtest.dev # Include the development headers
-          ]);
+        clangGtest = pkgs.gtest.override {
+          stdenv = clangStdenv;
+        };
+
+        clangNativeBuildInputs = buildPackages ++ [
+          clangTools
+        ];
+
+        testNativeBuildInputs = clangNativeBuildInputs ++ [
+          clangGtest
+          clangGtest.dev
+          llvmPackage.compiler-rt # Add compiler-rt for coverage runtime
+        ];
       in
       {
-        devShells.default = pkgs.mkShell.override { stdenv = llvmPackage.stdenv; } {
+        devShells.default = pkgs.mkShell.override { stdenv = clangStdenv; } {
           nativeBuildInputs = clangNativeBuildInputs;
 
           # Disable all hardening
@@ -84,12 +99,12 @@
 
             ${pkgs.cmake}/bin/cmake -S . -B build -G Ninja \
               -Dlibmahjong_build_tests=ON \
-              -DCMAKE_CXX_FLAGS="-O1 -g -I${clangGtest.dev}/include -I${llvmPackage.libcxx}/include/c++/v1"
+              -DCMAKE_CXX_FLAGS="-O1 -g"
           '';
         };
 
         packages = rec {
-          gcc = pkgs.stdenv.mkDerivation (
+          gcc = gccPackage.mkDerivation (
             commonAttrs
             // {
               nativeBuildInputs = buildPackages;
@@ -108,12 +123,16 @@
             }
           );
 
-          clang = llvmPackage.stdenv.mkDerivation (
+          clang = clangStdenv.mkDerivation (
             commonAttrs
             // {
               nativeBuildInputs = clangNativeBuildInputs;
 
               hardeningDisable = [ "all" ];
+
+              cmakeFlags = commonAttrs.cmakeFlags ++ [
+                "-Dlibmahjong_use_clang_utils=OFF"
+              ];
 
               # This ensures dependent packages can find your library
               setupHook = pkgs.writeText "setup-hook.sh" ''
@@ -125,36 +144,40 @@
             }
           );
 
-          tests =
-            pkgs.runCommand "libmahjong-tests"
-              {
-                nativeBuildInputs = clangNativeBuildInputs;
-                src = ./.;
-                hardeningDisable = [ "all" ];
-              }
-              ''
-                # Create output directory
-                mkdir -p $out
+          tests = clangStdenv.mkDerivation {
+            pname = "libmahjong-tests";
+            version = "0.1.0";
+            src = ./.;
+            nativeBuildInputs = testNativeBuildInputs;
+            hardeningDisable = [ "all" ];
 
-                # Create build directory and configure with tests enabled
-                cmake -S $src \
-                      -B build \
-                      -G Ninja \
-                      -Dlibmahjong_build_tools=OFF \
-                      -Dlibmahjong_build_tests=ON
+            # Disable memory sanitizer for tests
+            # libstdc++ isnt instrumented and therefore isnt
+            # detecting things properly compared to libc++
+            # It might be possible to resolve this with some more
+            # complicated nix configurations but it might be awful
+            cmakeFlags = [
+              "-Dlibmahjong_build_tools=OFF"
+              "-Dlibmahjong_build_tests=ON"
+              "-Dlibmahjong_use_clang_utils=OFF"
+              "-Dlibmahjong_enable_msan=OFF"
+            ];
 
-                # Build the project with tests
-                cmake --build build
+            installPhase = ''
+              runHook preInstall
 
-                # Run tests with JUnit output
-                (ctest --test-dir build --output-on-failure --output-junit $out/test.xml || 
-                  (echo "Tests failed but continuing build" && cp -r build/Testing $out/test-details))
-              '';
+              mkdir -p $out
+              ctest --output-on-failure --output-junit $out/test.xml
+
+              runHook postInstall
+            '';
+          };
 
           coverage =
             pkgs.runCommand "libmahjong-coverage"
               {
                 nativeBuildInputs = clangNativeBuildInputs;
+                buildInputs = [ llvmPackage.libcxx ];
                 src = ./.;
                 hardeningDisable = [ "all" ];
               }

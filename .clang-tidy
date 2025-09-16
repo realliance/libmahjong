@@ -20,6 +20,7 @@ Checks: >
   -readability-identifier-length,
   -readability-magic-numbers,
   -readability-avoid-return-with-void-value,
+  -readability-convert-member-functions-to-static,
   -readability-function-cognitive-complexity,
   -readability-use-anyofallof,
   -bugprone-narrowing-conversions,

@@ -1,28 +1,18 @@
+#include "analysis/handtree.h"
+
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <memory>
-#include <utility>
 #include <vector>
 
-#include "analysis/analysis.h"
 #include "analysis/handnode.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
 
 namespace mahjong {
-
-struct Breakdown {
-  std::unique_ptr<Node> rootNode;
-  Node* currentNode{};
-  int id = 0;
-  std::map<Piece, int> counts;
-  std::map<Piece, int> possibilities;
-  std::vector<Piece> pieces;
-};
-
 namespace {
 
 const int kMaxPossible = 14;
@@ -51,12 +41,6 @@ bool possiblePair(const std::map<Piece, int>& counts, Piece p) {
 
 bool possiblePon(const std::map<Piece, int>& counts, Piece p) {
   return counts.contains(p) && counts.at(p) >= 3;
-}
-
-void countPieces(Breakdown* b) {
-  for (const auto& p : b->pieces) {
-    b->counts[p]++;
-  }
 }
 
 Piece updatePossibilities(Breakdown* b) {
@@ -161,6 +145,7 @@ void resetCounts(Breakdown* b, const Node* target) {
     b->currentNode = b->currentNode->parent();
   }
 }
+}  // namespace
 
 // NOLINTNEXTLINE(misc-no-recursion)
 void driver(Breakdown* b) {
@@ -314,21 +299,5 @@ void driver(Breakdown* b) {
       }
     }
   }
-}
-
-}  // namespace
-
-std::unique_ptr<Node> breakdownHand(const std::vector<Piece>& pieces) {
-  Breakdown b;
-  b.rootNode = std::make_unique<Node>(/*id=*/b.id++);
-  b.currentNode = b.rootNode.get();
-  b.pieces = pieces;
-  countPieces(&b);
-  std::sort(b.pieces.begin(), b.pieces.end());
-  b.pieces.erase(std::unique(b.pieces.begin(), b.pieces.end()), b.pieces.end());
-
-  driver(&b);
-
-  return std::move(b.rootNode);
 }
 }  // namespace mahjong

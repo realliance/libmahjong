@@ -254,8 +254,7 @@ bool isOpenPinfu(const GameState& state, int player,
       return false;
     }
   }
-  auto waits = isInTenpai(state.hands.at(player).live, /*allWaits=*/true);
-  return waits.size() != 1;
+  return getWaits(state.hands[player], state.pendingPiece).size() >= 2;
 }
 
 bool isComplete(const GameState& state, int player) {

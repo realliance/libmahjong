@@ -131,6 +131,6 @@ bool CanRiichi(const GameState& state, int player) {
   if (state.hands.at(player).open) {
     return false;
   }
-  return !isInTenpai(state.hands.at(player).live, /*allWaits=*/false).empty();
+  return !getPossibleWaits(state.hands[player]).empty();
 }
 }  // namespace mahjong

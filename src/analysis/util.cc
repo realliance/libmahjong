@@ -1,11 +1,11 @@
 #include "analysis/util.h"
 
 #include <algorithm>
-#include <array>
-#include <cstdint>
+#include <cstdlib>
+#include <map>
 #include <vector>
 #include "analysis/analysis.h"
-#include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
@@ -25,131 +25,102 @@ const std::vector<Piece> kPieceSet{
 };
 }  // namespace
 
-std::vector<Piece> getRiichiDiscard(std::vector<Piece> hand) {
-  if (hand.empty()) {
+std::vector<Piece> completeSet(const Piece a, const Piece b) {
+  if (a.getSuit() != b.getSuit()) {
     return {};
   }
-  std::array<int8_t, Piece::kPiecesize> counts = {};
-  std::array<bool, Piece::kPiecesize> removedbefore = {};
-  std::vector<Piece> remove_me;
-  for (const auto& p : hand) {
-    counts.at(p.toUint8_t())++;
-  }
-  for (int i = 0; i < 9; i++) {
-    const Piece removed = hand.front();
-    hand.erase(hand.begin());
-    if (removedbefore.at(removed.toUint8_t())) {
-      hand.push_back(removed);
-      continue;
-    }
-    removedbefore.at(removed.toUint8_t()) = true;
-    for (const auto& p : kPieceSet) {
-      if (counts.at(p.toUint8_t()) == 4 || p == removed) {
-        continue;
-      }
-      hand.push_back(p);
-      auto root = breakdownHand(hand);
-      if (root->IsComplete()) {
-        remove_me.push_back(removed);
-      }
-
-      hand.pop_back();
-    }
-    hand.push_back(removed);
-  }
-  return remove_me;
-}
-
-// TODO(#20): This is an extremely inefficient algorithm but it's probably good enough for
-// the frequency it needs to be ran
-// will revisit if necessary
-// assumption is 14 piece hand
-std::vector<Piece> isInTenpai13Pieces(std::vector<Piece> hand, bool allWaits) {
-  const int min_singles = countSingles(hand);
-  // These numbers were found by looking at a lot of handtrees and their single count
-  if (min_singles > 5 || min_singles == 3 || min_singles == 0) {
+  const int piece_diff = static_cast<int>(a.getPieceNum()) - b.getPieceNum();
+  if (std::abs(piece_diff) > 2) {
     return {};
   }
-  std::array<int8_t, Piece::kPiecesize> counts = {};
+  if (std::abs(piece_diff) != 1) {
+    // piece_diff: -2 / 2
+    // piece_diff >> 1: -1 / 1
+    // b + piece_diff >> 1: c
+    // a - b == -2: b (c) a
+    // a - b ==  2: a (c) b
+    return {b + (piece_diff >> 1)};
+  }
   std::vector<Piece> waits;
-  for (const auto& p : hand) {
-    counts.at(p.toUint8_t())++;
+  if (a + piece_diff != kError) {
+    waits.push_back(a + piece_diff);
   }
-  for (const auto& p : kPieceSet) {
-    if (counts.at(p.toUint8_t()) == 4) {
-      continue;
-    }
-    hand.push_back(p);
-    auto root = breakdownHand(hand);
-    if (root->IsComplete()) {
-      waits.push_back(p);
-      if (!allWaits) {
-        return waits;
-      }
-    }
-
-    hand.pop_back();
+  if (b - piece_diff != kError) {
+    waits.push_back(b - piece_diff);
   }
   return waits;
 }
 
-const int kPiecesinahand = 14;
-
-std::vector<Piece> isInTenpai(std::vector<Piece> hand, bool allWaits) {
-  if (hand.empty()) {
+std::vector<Piece> getWaits(const Hand& hand) {
+  // 13, 10, 7, 4, 1 are possible piece counts for non-melded tiles
+  if (hand.live.empty() || hand.live.size() % 3 != 1) {
     return {};
   }
-  const int min_singles = countSingles(hand);
-  // These numbers are the same as above except one more piece means 1 higher on the single count
-  if (min_singles > 6 || min_singles == 1 || min_singles == 4 ||
-      min_singles == 0) {
-    return {};
-  }
-  std::array<bool, Piece::kPiecesize> removedbefore = {};
+  constexpr int kMaxSingles = 2;
   std::vector<Piece> waits;
-  for (int i = 0; i < kPiecesinahand; i++) {
-    const Piece removed = hand.front();
-    hand.erase(hand.begin());
-    if (removedbefore.at(removed.toUint8_t())) {
-      hand.push_back(removed);
+  for (const Branch& branch : AnalyzeHand(hand)) {
+    if (branch.singles.size() > kMaxSingles) {
       continue;
     }
-    removedbefore.at(removed.toUint8_t()) = true;
-    std::vector<Piece> tempwaits = isInTenpai13Pieces(hand, allWaits);
-    if (!tempwaits.empty()) {
-      if (!allWaits) {
-        return tempwaits;
-      }
-      waits.insert(waits.begin(), tempwaits.begin(), tempwaits.end());
+    if (branch.singles.size() == 1 &&
+        (branch.pairs.empty() || branch.pairs.size() == 6)) {
+      waits.emplace_back(branch.singles.front());
+    } else if (branch.singles.size() == 2) {
+      waits.append_range(completeSet(branch.singles[0], branch.singles[1]));
     }
-    hand.push_back(removed);
   }
   return waits;
 }
 
-int countSingles(const std::vector<Piece>& hand) {
-  auto root = breakdownHand(hand);
-  int min_singles = 15;
-  for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    int singles = 0;
-    for (const auto* node : branch) {
-      if (node->type() == SetType::kSingle) {
-        singles++;
-      }
-    }
-    min_singles = std::min(singles, min_singles);
-  }
-  return min_singles;
+std::vector<Piece> getWaits(const Hand& hand, const Piece& piece) {
+  Hand new_hand = hand;
+  new_hand.live.erase(std::ranges::find(new_hand.live, piece));
+  return getWaits(new_hand);
 }
 
-int countPiece(const GameState& state, int player, Piece p) {
-  int count = 0;
-  for (const auto& piece : state.hands.at(player).live) {
-    if (piece == p) {
-      count++;
+std::map<Piece, std::vector<Piece>> getPossibleWaits(const Hand& hand) {
+  // 14, 11, 8, 5, 2 are the possible piece counts for non-melded tiles.
+  if (hand.live.empty() || hand.live.size() % 3 != 2) {
+    return {};
+  }
+  constexpr int kMaxSingles = 3;
+  std::map<Piece, std::vector<Piece>> waits;
+  for (const Branch& branch : AnalyzeHand(hand)) {
+    if (branch.singles.size() > kMaxSingles) {
+      continue;
+    }
+    if (branch.singles.size() == 2 &&
+        (branch.pairs.empty() || branch.pairs.size() == 6)) {
+      waits[branch.singles[0]].emplace_back(branch.singles[1]);
+      waits[branch.singles[1]].emplace_back(branch.singles[0]);
+    } else if (branch.singles.size() == 3) {
+      waits[branch.singles[0]].append_range(
+          completeSet(branch.singles[1], branch.singles[2]));
+      waits[branch.singles[1]].append_range(
+          completeSet(branch.singles[2], branch.singles[0]));
+      waits[branch.singles[2]].append_range(
+          completeSet(branch.singles[0], branch.singles[1]));
     }
   }
-  return count;
+  return waits;
+}
+
+bool CheckBranch(const Branch& branch, const SetCheckFunc& func) {
+  return std::ranges::all_of(
+             branch.chis,
+             [&func](Piece p) { return func(SetType::kChi, p); }) &&
+         std::ranges::all_of(
+             branch.pons,
+             [&func](Piece p) { return func(SetType::kPon, p); }) &&
+         std::ranges::all_of(
+             branch.kans,
+             [&func](Piece p) { return func(SetType::kKan, p); }) &&
+         std::ranges::all_of(
+             branch.pairs,
+             [&func](Piece p) { return func(SetType::kSingle, p); }) &&
+         std::ranges::all_of(branch.singles, [&func](Piece p) {
+           return func(SetType::kPair, p);
+         });
 }
 
 }  // namespace mahjong
