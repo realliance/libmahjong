@@ -2,12 +2,13 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <vector>
 
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
+#include "types/meld.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
 #include "types/statefunction.h"
@@ -23,14 +24,17 @@ std::unique_ptr<GameState> ConcealedKan(std::unique_ptr<GameState> state) {
                                state->pendingPiece.toUint8_t()),  // piece
                            .decision = false,                     // decision
                        });
-  if (RemovePieces(*state, state->currentPlayer, state->pendingPiece,
+  Hand& hand = state->hands[state->currentPlayer];
+  if (RemovePieces(hand, state->pendingPiece,
                    /*count=*/4) != 4) {
     std::cerr << "Not Enough pieces to remove in ConcealedKan" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;
   }
-  state->hands.at(state->currentPlayer)
-      .melds.push_back({SetType::kConcealedKan, state->pendingPiece});
+  hand.melds[hand.meld_count++] = Meld{
+      .type = SetType::kConcealedKan,
+      .start = state->pendingPiece,
+  };
   state->concealedKan = true;
   state->nextState = StateFunctionType::kKanDiscard;
   return state;

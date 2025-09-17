@@ -5,18 +5,19 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isBlessingOfHeaven(const GameState& state, int player,
+bool isBlessingOfHeaven(const GameState& state, const Hand& hand,
                         const std::vector<const mahjong::Node*>& /*branch*/) {
-  if (state.hands.at(player).open) {
+  if (hand.open) {
     return false;
   }
-  if (player != 0) {
+  if (hand.id != 0) {
     return false;
   }
-  if (state.hasRonned[0]) {
+  if (state.hands[0].hasRonned) {
     return false;
   }
   if (state.turnNum != 0) {

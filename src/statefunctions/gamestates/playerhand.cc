@@ -4,14 +4,15 @@
 #include <memory>
 #include <vector>
 
-#include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/piecetype.h"
 #include "types/statefunction.h"
+#include "types/typeprinter.h"
 
 namespace mahjong {
 
@@ -23,16 +24,17 @@ std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
       PossibleDecision{.type = Event::kConvertedKan, .func = CanConvertedKan},
       PossibleDecision{.type = Event::kRiichi, .func = CanRiichi},
       PossibleDecision{.type = Event::kDiscard,
-                       .func = [](const GameState& state, int) {
-                         return !state.hands.at(state.currentPlayer).riichi;
+                       .func = [](const GameState&, const Hand& hand) {
+                         return !hand.riichi;
                        }}};
 
+  const Hand& hand = state->hands[state->currentPlayer];
   bool decision_asked = false;
   for (const auto& [decision, decisionIsPossible] : decisions) {
-    if (decisionIsPossible(*state, state->currentPlayer)) {
+    if (decisionIsPossible(*state, hand)) {
       decision_asked = true;
-      state->players.at(state->currentPlayer)
-          .controller->ReceiveEvent(Event{
+      state->controllers.at(state->currentPlayer)
+          ->ReceiveEvent(Event{
               .type = decision,                // type
               .player = state->currentPlayer,  // player
               .piece = static_cast<int16_t>(
@@ -50,8 +52,8 @@ std::unique_ptr<GameState> PlayerHand(std::unique_ptr<GameState> state) {
     decision.decision = true;
     state->nextState = StateFunctionType::kDiscard;
   } else {
-    decision =
-        GetValidDecisionOrThrow(*state, state->currentPlayer, /*inHand=*/true);
+    decision = GetValidDecisionOrThrow(*state, hand,
+                                       /*inHand=*/true);
   }
 
   // note riichi handling is a lil borked on the player agency side

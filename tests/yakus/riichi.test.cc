@@ -15,48 +15,52 @@ namespace mahjong::yaku {
 
 TEST(isRiichi, Riichi) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
-  game_state.hands[0].riichi = true;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("555m555p555s111z44m", &hand);
+  hand.riichi = true;
 
-  game_state.hands[0].riichiRound = 7;
+  hand.riichiRound = 7;
   game_state.turnNum = 15;
   game_state.lastCall = 2;
 
-  EXPECT_TRUE(isRiichi(game_state, 0));
+  EXPECT_TRUE(isRiichi(game_state, hand));
 }
 
 TEST(isRiichi, Ippatsu) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
-  game_state.hands[0].riichi = true;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("555m555p555s111z44m", &hand);
+  hand.riichi = true;
 
-  game_state.hands[0].riichiRound = 14;
+  hand.riichiRound = 14;
   game_state.turnNum = 15;
   game_state.lastCall = 2;
 
-  EXPECT_TRUE(isIppatsu(game_state, 0));
+  EXPECT_TRUE(isIppatsu(game_state, hand));
 }
 
 TEST(isRiichi, DoubleRiichi) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
-  game_state.hands[0].riichi = true;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("555m555p555s111z44m", &hand);
+  hand.riichi = true;
 
-  game_state.hands[0].riichiRound = 1;
+  hand.riichiRound = 1;
   game_state.turnNum = 2;
   game_state.lastCall = -1;
 
-  EXPECT_TRUE(isDoubleRiichi(game_state, 0));
+  EXPECT_TRUE(isDoubleRiichi(game_state, hand));
 }
 
 TEST(isRiichi, NoRiichi) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("555m555p555s111z44m"));
-  game_state.hands[0].riichi = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("555m555p555s111z44m", &hand);
+  hand.riichi = false;
 
   game_state.turnNum = 2;
   game_state.lastCall = -1;
 
-  EXPECT_FALSE(isRiichi(game_state, 0));
+  EXPECT_FALSE(isRiichi(game_state, hand));
 }
 }  // namespace mahjong::yaku

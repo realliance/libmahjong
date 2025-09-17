@@ -14,13 +14,14 @@ namespace mahjong {
 
 TEST(GamePlay, Furiten) {
   auto state = GameState();
-  state.hands[0] = Hand(HandFromNotation("123m456p234678s44m"));
-  state.hands[0].open = false;
-  EXPECT_TRUE(isComplete(state, 0));
+  Hand& hand = state.hands[0];
+  HandFromNotation("123m456p234678s44m", &hand);
+  hand.open = false;
+  EXPECT_TRUE(isComplete(state, hand));
   state.pendingPiece = Piece(kFourPin);
   // Place Four Pin in Discard Pile
-  state.hands[0].discards = {kFourPin};
-  EXPECT_FALSE(CanRon(state, 0));
+  hand.discards = {kFourPin};
+  EXPECT_FALSE(CanRon(state, hand));
 }
 
 }  // namespace mahjong

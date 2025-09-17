@@ -16,13 +16,14 @@ namespace mahjong::yaku {
 
 TEST(isTwicePureDoubleChi, 3Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("789p789p234m234m11z"));
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("789p789p234m234m11z", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isTwicePureDoubleChi(game_state, 0, branch)) {
+    if (isTwicePureDoubleChi(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -32,13 +33,14 @@ TEST(isTwicePureDoubleChi, 3Han) {
 
 TEST(isTwicePureDoubleChi, MustBeConcealed) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("789p789p234m234m11z"));
-  game_state.hands[0].open = true;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("789p789p234m234m11z", &hand);
+  hand.open = true;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isTwicePureDoubleChi(game_state, 0, branch)) {
+    if (isTwicePureDoubleChi(game_state, hand, branch)) {
       FAIL();
       return;
     }
@@ -48,13 +50,14 @@ TEST(isTwicePureDoubleChi, MustBeConcealed) {
 
 TEST(isTwicePureDoubleChi, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("789p789p234m567m11z"));
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("789p789p234m567m11z", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isTwicePureDoubleChi(game_state, 0, branch)) {
+    if (isTwicePureDoubleChi(game_state, hand, branch)) {
       FAIL();
       return;
     }

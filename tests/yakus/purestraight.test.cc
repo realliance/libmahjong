@@ -16,13 +16,14 @@ namespace mahjong::yaku {
 
 TEST(isPureStraight, Open) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m456m789m555p11z"));
-  game_state.hands[0].open = true;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m456m789m555p11z", &hand);
+  hand.open = true;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isPureStraight(game_state, 0, branch)) {
+    if (isPureStraight(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -32,13 +33,14 @@ TEST(isPureStraight, Open) {
 
 TEST(isPureStraight, Closed) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m456m789m555p11z"));
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m456m789m555p11z", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isPureStraight(game_state, 0, branch)) {
+    if (isPureStraight(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -48,13 +50,14 @@ TEST(isPureStraight, Closed) {
 
 TEST(isPureStraight, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m456m999m555p11z"));
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m456m999m555p11z", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isPureStraight(game_state, 0, branch)) {
+    if (isPureStraight(game_state, hand, branch)) {
       FAIL();
       return;
     }

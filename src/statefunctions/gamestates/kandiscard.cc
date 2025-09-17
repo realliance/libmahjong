@@ -2,12 +2,12 @@
 #include <cstdint>
 #include <memory>
 
-#include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/piecetype.h"
 #include "types/statefunction.h"
 
@@ -16,14 +16,14 @@ namespace mahjong {
 namespace {
 std::unique_ptr<GameState> KanDiscard(std::unique_ptr<GameState> state) {
   std::array<bool, 4> need_decision = {false, false, false, false};
-  for (int player = 0; player < 4; player++) {
-    if (player == state->currentPlayer) {
+  for (const Hand& hand : state->hands) {
+    if (hand.id == state->currentPlayer) {
       continue;
     }
-    if (CanRon(*state, player)) {
-      need_decision.at(player) = true;
-      state->players.at(state->currentPlayer)
-          .controller->ReceiveEvent(Event{
+    if (CanRon(*state, hand)) {
+      need_decision.at(hand.id) = true;
+      state->controllers.at(state->currentPlayer)
+          ->ReceiveEvent(Event{
               .type = Event::kRon,             // type
               .player = state->currentPlayer,  // player
               .piece = static_cast<int16_t>(
@@ -34,12 +34,12 @@ std::unique_ptr<GameState> KanDiscard(std::unique_ptr<GameState> state) {
   }
 
   bool have_ronned = false;
-  for (int i = 0; i < 4; i++) {
-    if (need_decision.at(i)) {
+  for (Hand& hand : state->hands) {
+    if (need_decision.at(hand.id)) {
       const Event temp_decision =
-          GetValidDecisionOrThrow(*state, i, /*inHand=*/false);
+          GetValidDecisionOrThrow(*state, hand, /*inHand=*/false);
       if (temp_decision.type == Event::kRon) {
-        state->hasRonned.at(i) = true;
+        hand.hasRonned = true;
         have_ronned = true;
       }
     }

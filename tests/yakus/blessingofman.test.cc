@@ -15,20 +15,22 @@
 namespace mahjong::yaku {
 TEST(isBlessingOfMan, 5Han) {
   auto game_state = GameState();
-  game_state.hands[3] = Hand(HandFromNotation("123m123p444m111z55m"));
-  game_state.hands[3].open = false;
+  Hand& hand = game_state.hands[3];
+  HandFromNotation("123m123p444m111z55m", &hand);
+  hand.open = false;
+  hand.id = 3;
 
   game_state.turnNum = 1;
 
   // No calls have occured
   game_state.lastCall = -1;
 
-  game_state.hasRonned[3] = true;
+  hand.hasRonned = true;
 
-  auto root = breakdownHand(game_state.hands.at(3).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isBlessingOfMan(game_state, 3, branch)) {
+    if (isBlessingOfMan(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -38,20 +40,21 @@ TEST(isBlessingOfMan, 5Han) {
 
 TEST(isBlessingOfMan, MustBeARon) {
   auto game_state = GameState();
-  game_state.hands[3] = Hand(HandFromNotation("123m123p444m111z55m"));
-  game_state.hands[3].open = false;
+  Hand& hand = game_state.hands[3];
+  HandFromNotation("123m123p444m111z55m", &hand);
+  hand.open = false;
 
   game_state.turnNum = 3;
 
   // No calls have occured
   game_state.lastCall = -1;
 
-  game_state.hasRonned[3] = false;
+  hand.hasRonned = false;
 
-  auto root = breakdownHand(game_state.hands.at(3).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isBlessingOfMan(game_state, 3, branch)) {
+    if (isBlessingOfMan(game_state, hand, branch)) {
       FAIL();
       return;
     }
@@ -61,20 +64,21 @@ TEST(isBlessingOfMan, MustBeARon) {
 
 TEST(isBlessingOfMan, MustBeBeforePlayerFirstTurn) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m123p444m111z55m"));
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m123p444m111z55m", &hand);
+  hand.open = false;
 
   game_state.turnNum = 2;
 
   // No calls have occured
   game_state.lastCall = -1;
 
-  game_state.hasRonned[0] = true;
+  hand.hasRonned = true;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isBlessingOfMan(game_state, 0, branch)) {
+    if (isBlessingOfMan(game_state, hand, branch)) {
       FAIL();
       return;
     }
@@ -84,19 +88,20 @@ TEST(isBlessingOfMan, MustBeBeforePlayerFirstTurn) {
 
 TEST(isBlessingOfMan, NoCalledMustHaveOccured) {
   auto game_state = GameState();
-  game_state.hands[3] = Hand(HandFromNotation("123m123p444m111z55m"));
-  game_state.hands[3].open = false;
+  Hand& hand = game_state.hands[3];
+  HandFromNotation("123m123p444m111z55m", &hand);
+  hand.open = false;
 
   game_state.turnNum = 1;
 
   game_state.lastCall = 0;
 
-  game_state.hasRonned[3] = true;
+  hand.hasRonned = true;
 
-  auto root = breakdownHand(game_state.hands.at(3).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isBlessingOfMan(game_state, 3, branch)) {
+    if (isBlessingOfMan(game_state, hand, branch)) {
       FAIL();
       return;
     }

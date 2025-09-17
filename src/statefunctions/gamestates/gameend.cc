@@ -4,16 +4,15 @@
 #include "statefunctions/router.h"
 #include "types/event.h"
 #include "types/gamestate.h"
-#include "types/player.h"
 #include "types/statefunction.h"
 
 namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> GameEnd(std::unique_ptr<GameState> state) {
-  for (auto& player : state->players) {
-    player.controller->ReceiveEvent(kEndEvent);
-    player.controller.reset();
+  for (auto& controller : state->controllers) {
+    controller->ReceiveEvent(kEndEvent);
+    controller.reset();
   }
   return state;
 }

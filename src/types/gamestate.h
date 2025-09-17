@@ -2,13 +2,13 @@
 #include <array>
 #include <cstdint>
 #include <random>
+#include <ranges>
 
+#include "controllers/playercontroller.h"
 #include "types/hand.h"
 #include "types/piecetype.h"
-#include "types/player.h"
 #include "types/settings.h"
 #include "types/statefunction.h"
-#include "types/walls.h"
 
 namespace mahjong {
 
@@ -20,18 +20,23 @@ struct GameState {
   int counters = 0;
   int lastCall = -1;
   int lastCaller = -1;
+  int livingWallIndex = 0;
+  int deadWallIndex = 0;
+  int doraCount = 1;
   bool concealedKan = false;
+  Piece pendingPiece = Piece(Piece::Type::kError);
+
+  std::array<Hand, kNumPlayers> hands;
+  std::array<Piece, kLivingWallCount> livingWall;
+  std::array<Piece, kDeadWallCount> deadWall;
+
   uint64_t seed = 0;
   std::mt19937_64 g;
-  Piece pendingPiece = Piece(Piece::Type::kError);
+  std::array<std::unique_ptr<PlayerController>, kNumPlayers> controllers = {};
+
   StateFunctionType prevState;
   StateFunctionType currState;
   StateFunctionType nextState;
-  Walls walls;
-  std::array<int, kNumPlayers> scores = {};
-  std::array<bool, kNumPlayers> hasRonned = {};
-  std::array<Hand, kNumPlayers> hands = {};
-  std::array<Player, kNumPlayers> players = {};
 };
 
 }  // namespace mahjong

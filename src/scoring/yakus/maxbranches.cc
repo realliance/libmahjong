@@ -5,16 +5,17 @@
 
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/sets.h"
 
 namespace mahjong::yaku {
-bool isMaxBranches(const GameState& state, int player,
+bool isMaxBranches(const GameState& /*state*/, const Hand& hand,
                    const std::vector<const mahjong::Node*>& /*branch*/) {
-  const int start = state.hands.at(player).live[0].getPieceNum();
-  const int suit = state.hands.at(player).live[0].getSuit();
+  const int start = hand.live[0].getPieceNum();
+  const int suit = hand.live[0].getSuit();
   std::array<int, 6> sets = {};
   const std::array<int, 6> final = {3, 3, 2, 2, 2, 2};
-  for (const auto& piece : state.hands.at(player).live) {
+  for (const auto& piece : hand.live_range()) {
     if (piece.getSuit() != suit) {
       return false;
     }
@@ -23,7 +24,7 @@ bool isMaxBranches(const GameState& state, int player,
     }
     sets.at(piece.getPieceNum() - start)++;
   }
-  for (const auto& meld : state.hands.at(player).melds) {
+  for (const auto& meld : hand.melds_range()) {
     if (meld.start.getSuit() != suit) {
       return false;
     }

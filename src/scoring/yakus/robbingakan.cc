@@ -5,13 +5,14 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/statefunction.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isRobbingAKan(const GameState& state, int player,
+bool isRobbingAKan(const GameState& state, const Hand& hand,
                    const std::vector<const mahjong::Node*>& /*branch*/) {
-  if (!state.hasRonned.at(player)) {
+  if (!hand.hasRonned) {
     return false;
   }
   if (state.nextState == StateFunctionType::kKanDiscard) {

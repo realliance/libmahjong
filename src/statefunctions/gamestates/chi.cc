@@ -2,12 +2,13 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <vector>
 
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
+#include "types/meld.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
@@ -15,40 +16,57 @@
 
 namespace mahjong {
 namespace {
-Piece GetChiStart(const GameState& state, int player) {
-  if (CountPieces(state, player, state.pendingPiece - 2) > 0 &&
-      CountPieces(state, player, state.pendingPiece - 1) > 0) {
-    return state.pendingPiece - 2;
+Piece GetChiStart(const Hand& hand, Piece piece) {
+  if (CountPieces(hand, piece - 2) > 0 && CountPieces(hand, piece - 1) > 0) {
+    return piece - 2;
   }
-  if (CountPieces(state, player, state.pendingPiece - 1) > 0 &&
-      CountPieces(state, player, state.pendingPiece + 1) > 0) {
-    return state.pendingPiece - 1;
+  if (CountPieces(hand, piece - 1) > 0 && CountPieces(hand, piece + 1) > 0) {
+    return piece - 1;
   }
-  if (CountPieces(state, player, state.pendingPiece + 1) > 0 &&
-      CountPieces(state, player, state.pendingPiece + 2) > 0) {
-    return state.pendingPiece;
+  if (CountPieces(hand, piece + 1) > 0 && CountPieces(hand, piece + 2) > 0) {
+    return piece;
   }
   return kError;
 }
 
 std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
+  if (Hand& hand = state->hands[state->currentPlayer];
+      hand.riichi && hand.discards_count == hand.riichiPieceDiscard) {
+    hand.riichiPieceDiscard++;
+  }
+
+  state->currentPlayer = state->lastCaller;
+  state->lastCall = state->turnNum;
+  state->concealedKan = false;
+  state->turnNum++;
+
+  Hand& hand = state->hands[state->currentPlayer];
+  hand.open = true;
   // only gives a single one of the chis
   // ui oof
-  const Piece chi_start = GetChiStart(*state, state->lastCaller);
+  const Piece chi_start = GetChiStart(hand, state->pendingPiece);
   if (chi_start == kError) {
     std::cerr << "Failed to get start of Chi" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;
   }
 
-  if (state->hands.at(state->currentPlayer).riichi &&
-      state->hands.at(state->currentPlayer).discards.size() ==
-          state->hands.at(state->currentPlayer).riichiPieceDiscard) {
-    state->hands.at(state->currentPlayer).riichiPieceDiscard++;
+  for (int i = 0; i < 3; ++i) {
+    if (chi_start + i == state->pendingPiece) {
+      continue;
+    }
+    if (RemovePieces(hand, chi_start + i,
+                     /*count=*/1) != 1) {
+      std::cerr << "Not Enough Pieces to remove in Chi" << '\n';
+      state->nextState = StateFunctionType::kError;
+      return state;
+    }
   }
 
-  state->hands.at(state->lastCaller).open = true;
-  state->currentPlayer = state->lastCaller;
+  hand.melds[hand.meld_count++] = Meld{
+      .type = SetType::kChi,
+      .start = chi_start,
+  };
 
   AlertPlayers(
       *state,
@@ -58,24 +76,6 @@ std::unique_ptr<GameState> Chi(std::unique_ptr<GameState> state) {
           .piece = static_cast<int16_t>(chi_start.toUint8_t()),  // piece
           .decision = false,                                     // decision
       });
-
-  state->hands.at(state->lastCaller).live.push_back(state->pendingPiece);
-  state->hands.at(state->lastCaller).sort();
-  state->lastCall = state->turnNum;
-  state->concealedKan = false;
-  state->turnNum++;
-
-  if (RemovePieces(*state, state->lastCaller, chi_start, /*count=*/1) != 1 ||
-      RemovePieces(*state, state->lastCaller, chi_start + 1, /*count=*/1) !=
-          1 ||
-      RemovePieces(*state, state->lastCaller, chi_start + 2, /*count=*/1) !=
-          1) {
-    std::cerr << "Not Enough Pieces to remove in Chi" << '\n';
-    state->nextState = StateFunctionType::kError;
-    return state;
-  }
-  state->hands.at(state->lastCaller)
-      .melds.push_back({SetType::kChi, chi_start});
 
   state->pendingPiece = AskForDiscard(*state);
 

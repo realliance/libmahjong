@@ -5,12 +5,14 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
+#include "types/walls.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isBottomOfTheSea(const GameState& state, int /*player*/,
+bool isBottomOfTheSea(const GameState& state, const Hand& /*hand*/,
                       const std::vector<const mahjong::Node*>& /*branch*/) {
-  return state.walls.GetRemainingPieces() == 0;
+  return Walls::GetRemainingPieces(state) == 0;
 }
 
 REGISTER_YAKU({

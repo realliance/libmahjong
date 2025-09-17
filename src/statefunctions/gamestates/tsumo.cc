@@ -7,6 +7,7 @@
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/piecetype.h"
 #include "types/statefunction.h"
 
@@ -21,22 +22,23 @@ std::unique_ptr<GameState> Tsumo(std::unique_ptr<GameState> state) {
                                state->pendingPiece.toUint8_t()),  // piece
                            .decision = false,                     // decision
                        });
-  const int basic_points =
-      getBasicPoints(scoreHand(*state, state->currentPlayer));
-  state->scores.at(state->currentPlayer) += state->riichiSticks * 1000;
-  state->riichiSticks = 0;
-  state->scores.at(state->currentPlayer) += state->counters * 300;
 
-  for (int i = 0; i < 4; i++) {
-    if (i == state->currentPlayer) {
-      if (state->hands.at(state->currentPlayer).riichi) {
-        state->scores.at(i) -= 1000;
+  Hand& winning_hand = state->hands[state->currentPlayer];
+  const int basic_points = getBasicPoints(scoreHand(*state, winning_hand));
+  winning_hand.score += state->riichiSticks * 1000;
+  state->riichiSticks = 0;
+  winning_hand.score += state->counters * 300;
+
+  for (Hand& hand : state->hands) {
+    if (hand.id == winning_hand.id) {
+      if (hand.riichi) {
+        hand.score -= 1000;
       }
       continue;
     }
     int amount = 0;
     if (state->currentPlayer == state->roundNum % 4 ||
-        i == state->roundNum % 4) {
+        hand.id == state->roundNum % 4) {
       amount = 2 * basic_points;
     } else {
       amount = basic_points;
@@ -44,12 +46,12 @@ std::unique_ptr<GameState> Tsumo(std::unique_ptr<GameState> state) {
     if ((amount % 100) != 0) {
       amount = amount + (100 - (amount % 100));
     }
-    state->scores.at(i) -= amount;
-    state->scores.at(i) -= state->counters * 100;
-    if (state->hands.at(i).riichi) {
-      state->scores.at(i) -= 1000;
+    hand.score -= amount;
+    hand.score -= state->counters * 100;
+    if (hand.riichi) {
+      hand.score -= 1000;
     }
-    state->scores.at(state->currentPlayer) += amount;
+    winning_hand.score += amount;
   }
 
   if (state->currentPlayer == state->roundNum % 4) {

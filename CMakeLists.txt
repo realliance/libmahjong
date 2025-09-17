@@ -94,19 +94,17 @@ if(libmahjong_build_tests)
   add_subdirectory(tests)
 endif()
 
-if(libmahjong_use_clang_utils)
-  find_program(clang_format_path NAMES clang-format)
-  if(clang_format_path)
-    set(clang_format_flags -i)
-    get_target_property(libmahjong_sources libmahjong SOURCES)
-    get_target_property(libmahjong_includes libmahjong HEADER_SET)
-    set(format_files ${libmahjong_sources} ${libmahjong_includes}
-                     ${test_sources} ${tool_sources})
-    add_custom_target(
-      format
-      COMMAND ${clang_format_path} ${clang_format_flags} ${format_files}
-      WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
-      VERBATIM)
-    set_target_properties(format PROPERTIES FOLDER code_utils)
-  endif()
+find_program(clang_format_path NAMES clang-format)
+if(clang_format_path)
+  set(clang_format_flags -i)
+  get_target_property(libmahjong_sources libmahjong SOURCES)
+  get_target_property(libmahjong_includes libmahjong HEADER_SET)
+  set(format_files ${libmahjong_sources} ${libmahjong_includes} ${test_sources}
+                   ${tool_sources})
+  add_custom_target(
+    format
+    COMMAND ${clang_format_path} ${clang_format_flags} ${format_files}
+    WORKING_DIRECTORY ${libmahjong_SOURCE_DIR}
+    VERBATIM)
+  set_target_properties(format PROPERTIES FOLDER code_utils)
 endif()

@@ -5,11 +5,12 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/sets.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isTerminalsInAllSets(const GameState& state, int player,
+bool isTerminalsInAllSets(const GameState& /*state*/, const Hand& hand,
                           const std::vector<const mahjong::Node*>& branch) {
   for (const auto* node : branch) {
     switch (node->type()) {
@@ -30,7 +31,7 @@ bool isTerminalsInAllSets(const GameState& state, int player,
         break;
     }
   }
-  for (const auto& meld : state.hands.at(player).melds) {
+  for (const auto& meld : hand.melds_range()) {
     switch (meld.type) {
       case SetType::kSingle:
         return false;

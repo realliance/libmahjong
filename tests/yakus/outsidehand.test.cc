@@ -16,13 +16,14 @@ namespace mahjong::yaku {
 
 TEST(isOutsideHand, Open) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m111z999s55z"));
-  game_state.hands[0].open = true;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m789m111z999s55z", &hand);
+  hand.open = true;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isOutsideHand(game_state, 0, branch)) {
+    if (isOutsideHand(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -32,13 +33,14 @@ TEST(isOutsideHand, Open) {
 
 TEST(isOutsideHand, Closed) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m111z999s55z"));
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m789m111z999s55z", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isOutsideHand(game_state, 0, branch)) {
+    if (isOutsideHand(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -48,12 +50,13 @@ TEST(isOutsideHand, Closed) {
 
 TEST(isOutsideHand, NoChi) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m111p111s999m66z"));
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("111m111p111s999m66z", &hand);
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isOutsideHand(game_state, 0, branch)) {
+    if (isOutsideHand(game_state, hand, branch)) {
       FAIL();
       return;
     }
@@ -63,12 +66,13 @@ TEST(isOutsideHand, NoChi) {
 
 TEST(isOutsideHand, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m234p111s999m66z"));
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("111m234p111s999m66z", &hand);
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isOutsideHand(game_state, 0, branch)) {
+    if (isOutsideHand(game_state, hand, branch)) {
       FAIL();
       return;
     }

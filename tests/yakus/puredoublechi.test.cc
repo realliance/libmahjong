@@ -16,13 +16,14 @@ namespace mahjong::yaku {
 
 TEST(isPureDoubleChi, 1Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("234m234m555p888s88p"));
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("234m234m555p888s88p", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isPureDoubleChi(game_state, 0, branch)) {
+    if (isPureDoubleChi(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -32,13 +33,14 @@ TEST(isPureDoubleChi, 1Han) {
 
 TEST(isPureDoubleChi, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("234m123m555p888s88p"));
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("234m123m555p888s88p", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isPureDoubleChi(game_state, 0, branch)) {
+    if (isPureDoubleChi(game_state, hand, branch)) {
       FAIL();
       return;
     }
@@ -48,13 +50,14 @@ TEST(isPureDoubleChi, BadHand) {
 
 TEST(isPureDoubleChi, MustBeConcealed) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("234m234m555p888s88p"));
-  game_state.hands[0].open = true;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("234m234m555p888s88p", &hand);
+  hand.open = true;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isPureDoubleChi(game_state, 0, branch)) {
+    if (isPureDoubleChi(game_state, hand, branch)) {
       FAIL();
       return;
     }

@@ -3,7 +3,6 @@
 #include <array>
 #include <memory>
 #include <string>
-#include <vector>
 
 #include "analysis/analysis.h"
 #include "analysis/handnode.h"
@@ -20,12 +19,13 @@ namespace mahjong::yaku {
 
 TEST(isAllPons, 2Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m222p888s666z44m"));
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("111m222p888s666z44m", &hand);
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAllPons(game_state, 0, branch)) {
+    if (isAllPons(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -34,20 +34,19 @@ TEST(isAllPons, 2Han) {
 }
 
 TEST(isAllPons, WithKans) {
-  const Meld meld = {
+  auto game_state = GameState();
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("111m222p666z44m", &hand);
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kKan,
       .start = Piece(kFivePin),
   };
+  hand.open = true;
 
-  auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m222p666z44m"));
-  game_state.hands[0].melds = {meld};
-  game_state.hands[0].open = true;
-
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAllPons(game_state, 0, branch)) {
+    if (isAllPons(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -56,20 +55,19 @@ TEST(isAllPons, WithKans) {
 }
 
 TEST(isAllPons, ConcealedKan) {
-  const Meld meld = {
+  auto game_state = GameState();
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("111m222p666z44m", &hand);
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kConcealedKan,
       .start = Piece(kFivePin),
   };
+  hand.open = false;
 
-  auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m222p666z44m"));
-  game_state.hands[0].melds = {meld};
-  game_state.hands[0].open = false;
-
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAllPons(game_state, 0, branch)) {
+    if (isAllPons(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -79,13 +77,14 @@ TEST(isAllPons, ConcealedKan) {
 
 TEST(isAllPons, BadHand) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("111m222p666z789m44m"));
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("111m222p666z789m44m", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isAllPons(game_state, 0, branch)) {
+    if (isAllPons(game_state, hand, branch)) {
       FAIL();
       return;
     }

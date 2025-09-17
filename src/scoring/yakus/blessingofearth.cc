@@ -5,12 +5,13 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isBlessingOfEarth(const GameState& state, int player,
+bool isBlessingOfEarth(const GameState& state, const Hand& hand,
                        const std::vector<const mahjong::Node*>& /*branch*/) {
-  if (state.hands.at(player).open) {
+  if (hand.open) {
     return false;
   }
   if (state.turnNum > 3) {
@@ -19,7 +20,7 @@ bool isBlessingOfEarth(const GameState& state, int player,
   if (state.lastCall >= 0) {
     return false;
   }
-  if (state.hasRonned.at(player)) {
+  if (hand.hasRonned) {
     return false;
   }
   return true;

@@ -1,13 +1,12 @@
 #include "gamestate_utils.h"
 
-#include <algorithm>
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <functional>
 #include <memory>
 #include <stdexcept>
 #include <utility>
-#include <vector>
 
 #include "controllers/playercontroller.h"
 #include "statefunctions/router.h"
@@ -53,37 +52,24 @@ std::unique_ptr<GameState> CreateTestGameState(uint64_t seed) {
   auto state = std::make_unique<GameState>();
   state->seed = seed;
   for (int i = 0; i < kNumPlayers; i++) {
-    state->players[i].controller = std::make_unique<PlayerControllerFake>();
+    state->controllers[i] = std::make_unique<PlayerControllerFake>();
   }
   state->nextState = StateFunctionType::kGameStart;
   return state;
 }
 
 std::unique_ptr<GameState> InitializeTestRound(
-    uint64_t seed,
-    std::vector<std::unique_ptr<PlayerController>> playerControllers) {
+    uint64_t seed, std::array<std::unique_ptr<PlayerController>, kNumPlayers>
+                       playerControllers) {
   auto state = std::make_unique<GameState>();
   state->seed = seed;
 
   // Use provided controllers or default to PlayerControllerFake
-  if (!playerControllers.empty()) {
-    const size_t num_players =
-        std::min(playerControllers.size(), static_cast<size_t>(kNumPlayers));
-    for (size_t i = 0; i < num_players; i++) {
-      if (playerControllers[i]) {
-        state->players[i].controller = std::move(playerControllers[i]);
-      } else {
-        state->players[i].controller = std::make_unique<PlayerControllerFake>();
-      }
-    }
-    // Fill remaining players with default controllers
-    for (size_t i = num_players; i < kNumPlayers; i++) {
-      state->players[i].controller = std::make_unique<PlayerControllerFake>();
-    }
-  } else {
-    // All players get default fake controllers
-    for (int i = 0; i < kNumPlayers; i++) {
-      state->players[i].controller = std::make_unique<PlayerControllerFake>();
+  for (size_t i = 0; i < kNumPlayers; i++) {
+    if (playerControllers[i]) {
+      state->controllers[i] = std::move(playerControllers[i]);
+    } else {
+      state->controllers[i] = std::make_unique<PlayerControllerFake>();
     }
   }
 

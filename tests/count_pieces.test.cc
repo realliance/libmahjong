@@ -3,20 +3,20 @@
 #include <array>
 
 #include "statefunctions/stateutilities.h"
-#include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/pieces.h"
-#include "types/piecetype.h"
 
 namespace mahjong {
 
 TEST(CountPieces, CountPieces) {
-  GameState state;
-  state.hands[0].live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
+  Hand hand;
+  hand.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
+  hand.live_count = 4;
 
-  EXPECT_EQ(CountPieces(state, 0, kOneCharacter), 1);
-  EXPECT_EQ(CountPieces(state, 0, kFourPin), 1);
-  EXPECT_EQ(CountPieces(state, 0, kWhiteDragon), 2);
-  EXPECT_EQ(CountPieces(state, 0, kGreenDragon), 0);
+  EXPECT_EQ(CountPieces(hand, kOneCharacter), 1);
+  EXPECT_EQ(CountPieces(hand, kFourPin), 1);
+  EXPECT_EQ(CountPieces(hand, kWhiteDragon), 2);
+  EXPECT_EQ(CountPieces(hand, kGreenDragon), 0);
 }
 
 }  // namespace mahjong

@@ -5,21 +5,22 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isFullFlush(const GameState& state, int player,
+bool isFullFlush(const GameState& /*state*/, const Hand& hand,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
-  if (state.hands.at(player).live.front().isHonor()) {
+  if (hand.live[0].isHonor()) {
     return false;
   }
-  const int suit = state.hands.at(player).live.front().getSuit();
-  for (const auto& piece : state.hands.at(player).live) {
+  const int suit = hand.live[0].getSuit();
+  for (const auto& piece : hand.live_range()) {
     if (piece.getSuit() != suit) {
       return false;
     }
   }
-  for (const auto& meld : state.hands.at(player).melds) {
+  for (const auto& meld : hand.melds_range()) {
     if (meld.start.getSuit() != suit) {
       return false;
     }

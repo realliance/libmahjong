@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <span>
 #include <utility>
 #include <vector>
 
@@ -24,7 +25,7 @@ void countPieces(Breakdown* b) {
 std::vector<Branch> AnalyzeHand(const Hand& hand, const bool only_complete) {
   Branch base_branch;
   base_branch.open = !hand.melds.empty();
-  for (const Meld& meld : hand.melds) {
+  for (const Meld& meld : hand.melds_range()) {
     switch (meld.type) {
       case SetType::kChi:
         base_branch.chis.emplace_back(meld.start);
@@ -41,7 +42,7 @@ std::vector<Branch> AnalyzeHand(const Hand& hand, const bool only_complete) {
     }
   }
   std::vector<Branch> branches;
-  const std::unique_ptr<Node> root = breakdownHand(hand.live);
+  const std::unique_ptr<Node> root = breakdownHand(hand.live_range());
   for (const auto& branch_vec : Node::AsBranchVectors(root.get())) {
     branches.push_back(base_branch);
     Branch& branch = branches.back();
@@ -73,11 +74,11 @@ std::vector<Branch> AnalyzeHand(const Hand& hand, const bool only_complete) {
   return branches;
 }
 
-std::unique_ptr<Node> breakdownHand(const std::vector<Piece>& pieces) {
+std::unique_ptr<Node> breakdownHand(const std::span<const Piece>& pieces) {
   Breakdown b;
   b.rootNode = std::make_unique<Node>(/*id=*/b.id++);
   b.currentNode = b.rootNode.get();
-  b.pieces = pieces;
+  b.pieces = std::vector<Piece>(pieces.begin(), pieces.end());
   countPieces(&b);
   std::ranges::sort(b.pieces);
   auto [begin, end] = std::ranges::unique(b.pieces);

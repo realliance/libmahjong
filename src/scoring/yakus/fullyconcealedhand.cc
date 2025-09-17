@@ -5,13 +5,15 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
+#include "types/walls.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isFullyConcealedHand(const GameState& state, int player,
+bool isFullyConcealedHand(const GameState& state, const Hand& hand,
                           const std::vector<const mahjong::Node*>& /*branch*/) {
-  return state.currentPlayer == player && !state.hands.at(player).open &&
-         state.walls.GetRemainingPieces() > 0;
+  return state.currentPlayer == hand.id && !hand.open &&
+         Walls::GetRemainingPieces(state) > 0;
 }
 
 REGISTER_YAKU({

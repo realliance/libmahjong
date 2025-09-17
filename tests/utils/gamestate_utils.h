@@ -1,9 +1,9 @@
 #pragma once
 #include <memory>
-#include <vector>
 
 #include "controllers/playercontroller.h"
 #include "types/gamestate.h"
+#include "types/settings.h"
 #include "types/statefunction.h"
 
 namespace mahjong {
@@ -25,6 +25,7 @@ std::unique_ptr<GameState> CreateTestGameState(uint64_t seed = 12345);
 // Advances through standard round initialization
 std::unique_ptr<GameState> InitializeTestRound(
     uint64_t seed = 12345,
-    std::vector<std::unique_ptr<PlayerController>> playerControllers = {});
+    std::array<std::unique_ptr<PlayerController>, kNumPlayers>
+        playerControllers = {});
 
 }  // namespace mahjong

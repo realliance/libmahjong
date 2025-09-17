@@ -5,13 +5,14 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/statefunction.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isAfterAKan(const GameState& state, int player,
+bool isAfterAKan(const GameState& state, const Hand& hand,
                  const std::vector<const mahjong::Node*>& /*branch*/) {
-  if (state.currentPlayer != player) {
+  if (state.currentPlayer != hand.id) {
     return false;
   }
   if (state.prevState == StateFunctionType::kReplacement) {

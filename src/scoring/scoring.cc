@@ -10,10 +10,12 @@
 #include "scoring/yakus/sevenpairs.h"
 #include "scoring/yakus/thirteenorphans.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/pieces.h"
 #include "types/piecetype.h"
 #include "types/score.h"
 #include "types/sets.h"
+#include "types/walls.h"
 
 namespace mahjong {
 
@@ -57,13 +59,13 @@ const int kFuRounding = 10;
 
 }  // namespace
 
-Score scoreHand(const GameState& state, int player) {
-  auto root = breakdownHand(state.hands.at(player).live);
+Score scoreHand(const GameState& state, const Hand& hand) {
+  auto root = breakdownHand(hand.live_range());
   Score s;
   s.han = 0;
   s.yakuman = 0;
   s.fu = 0;
-  if (!root->IsComplete() && !yaku::isThirteenOrphans(state, player)) {
+  if (!root->IsComplete() && !yaku::isThirteenOrphans(state, hand)) {
     return s;
   }
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
@@ -75,10 +77,10 @@ Score scoreHand(const GameState& state, int player) {
     }
 
     for (const auto& yaku : Yakus::Instance().GetYakus()) {
-      if (yaku.type == Yaku::kClosed && state.hands[player].open) {
+      if (yaku.type == Yaku::kClosed && hand.open) {
         continue;
       }
-      if (!yaku.is_yaku_func(state, player, branch)) {
+      if (!yaku.is_yaku_func(state, hand, branch)) {
         continue;
       }
       switch (yaku.type) {
@@ -87,7 +89,7 @@ Score scoreHand(const GameState& state, int player) {
           branchscore.han += yaku.value;
           break;
         case Yaku::kBonusWhenClosed:
-          branchscore.han += yaku.value + (state.hands[player].open ? 0 : 1);
+          branchscore.han += yaku.value + (hand.open ? 0 : 1);
           break;
         case Yaku::kYakuman:
           branchscore.yakuman++;
@@ -95,13 +97,13 @@ Score scoreHand(const GameState& state, int player) {
       }
     }
 
-    for (const auto& dora : state.walls.GetDoras()) {
-      for (const auto& p : state.hands.at(player).live) {
+    for (const auto& dora : Walls::GetDoras(state)) {
+      for (const auto& p : hand.live_range()) {
         if (p == dora) {
           branchscore.han++;
         }
       }
-      for (const auto& meld : state.hands.at(player).melds) {
+      for (const auto& meld : hand.melds_range()) {
         if (meld.start == dora) {
           branchscore.han++;
         }
@@ -115,7 +117,7 @@ Score scoreHand(const GameState& state, int player) {
         }
       }
     }
-    branchscore.fu = getFu(state, player, branch);
+    branchscore.fu = getFu(state, hand, branch);
     if (getBasicPoints(branchscore) > getBasicPoints(s)) {
       s = branchscore;
     }
@@ -154,30 +156,30 @@ int getBasicPoints(Score s) {
 
 const int kSevenpairs = 25;
 
-int getFu(const GameState& state, int player,
+int getFu(const GameState& state, const Hand& hand,
           const std::vector<const mahjong::Node*>& branch) {
-  if (yaku::isSevenPairs(state, player, branch)) {
+  if (yaku::isSevenPairs(state, hand, branch)) {
     return kSevenpairs;
   }
-  if (yaku::isPinfu(state, player, branch)) {
-    if (state.hasRonned.at(player)) {
+  if (yaku::isPinfu(state, hand, branch)) {
+    if (hand.hasRonned) {
       return kPinfuDiscard;
     }
     return kPinfuSelfdraw;
   }
   int fu = 0;
-  if (!state.hands.at(player).open && state.hasRonned.at(player)) {
+  if (!hand.open && hand.hasRonned) {
     fu = kConcealedDiscard;
   } else {
     fu = kOpenOrSelfdraw;
   }
-  const bool open = state.hands.at(player).open;
-  if (isOpenPinfu(state, player, branch)) {
+  const bool open = hand.open;
+  if (isOpenPinfu(state, hand, branch)) {
     fu += kOpenpinfu;
-  } else if (!state.hasRonned.at(player)) {
+  } else if (!hand.hasRonned) {
     fu += kSelfdraw;
   }
-  for (const auto& meld : state.hands.at(player).melds) {
+  for (const auto& meld : hand.melds_range()) {
     if (meld.type == SetType::kKan) {
       if (!meld.start.isHonor() && !meld.start.isTerminal()) {
         fu += open ? kSimplekan : kCsimplekan;
@@ -231,7 +233,7 @@ int getFu(const GameState& state, int player,
          (kFuRounding - (fu % kFuRounding));  // rounding up to multiple of ten
 }
 
-bool isOpenPinfu(const GameState& state, int player,
+bool isOpenPinfu(const GameState& state, const Hand& hand,
                  const std::vector<const mahjong::Node*>& branch) {
   for (const auto* node : branch) {
     if (node->type() == SetType::kPon) {
@@ -250,17 +252,17 @@ bool isOpenPinfu(const GameState& state, int player,
       }
     }
   }
-  for (const auto& meld : state.hands.at(player).melds) {
+  for (const auto& meld : hand.melds_range()) {
     if (meld.type > SetType::kChi) {
       return false;
     }
   }
-  return getWaits(state.hands[player], state.pendingPiece).size() >= 2;
+  return getWaits(hand, state.pendingPiece).size() >= 2;
 }
 
-bool isComplete(const GameState& state, int player) {
-  auto root = breakdownHand(state.hands.at(player).live);
-  if (!root->IsComplete() && !yaku::isThirteenOrphans(state, player)) {
+bool isComplete(const GameState& state, const Hand& hand) {
+  auto root = breakdownHand(hand.live_range());
+  if (!root->IsComplete() && !yaku::isThirteenOrphans(state, hand)) {
     return false;
   }
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
@@ -270,8 +272,8 @@ bool isComplete(const GameState& state, int player) {
       continue;
     }
     if (std::ranges::any_of(Yakus::Instance().GetYakus(),
-                            [&state, player, &branch](const auto& yaku) {
-                              return yaku.is_yaku_func(state, player, branch);
+                            [&state, hand, &branch](const auto& yaku) {
+                              return yaku.is_yaku_func(state, hand, branch);
                             })) {
       return true;
     }

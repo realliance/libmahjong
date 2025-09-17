@@ -8,6 +8,7 @@
 #include "controllers/controllermanager.h"
 #include "statefunctions/statecontroller.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/settings.h"
 #include "types/statefunction.h"
 
@@ -140,23 +141,23 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
 
   // Player data
   for (int i = 0; i < 4; i++) {
-    observed.scores[i] = state->scores[i];
-    observed.points[i] = state->players[i].points;
-    observed.hasRonned[i] = state->hasRonned[i];
+    observed.scores[i] = state->hands[i].score;
+    observed.points[i] = state->hands[i].points;
+    observed.hasRonned[i] = state->hands[i].hasRonned;
 
     // Convert Hand to CHand
     const auto& cpp_hand = state->hands[i];
     CHand& c_hand = observed.hands[i];
 
     // Live pieces
-    const int live_piece_count = static_cast<int>(cpp_hand.live.size());
+    const int live_piece_count = static_cast<int>(cpp_hand.live_count);
     c_hand.livePieceCount = std::min(live_piece_count, kMaxLiveHandSize);
     for (int j = 0; j < c_hand.livePieceCount; j++) {
       c_hand.livePieces[j] = static_cast<CPiece>(cpp_hand.live[j].toUint8_t());
     }
 
     // Melds
-    const int meld_count = static_cast<int>(cpp_hand.melds.size());
+    const int meld_count = cpp_hand.meld_count;
     c_hand.meldCount = std::min(meld_count, kMaxMeldsPerHand);
     for (int j = 0; j < c_hand.meldCount; j++) {
       c_hand.melds[j].type = static_cast<CMeldType>(cpp_hand.melds[j].type);
@@ -166,8 +167,7 @@ CObservedGameState ObserveGameState(mahjong::GameState* state) {
 
     // Discards
     const auto& discards = cpp_hand.discards;
-    const int discards_size = static_cast<int>(discards.size());
-    c_hand.discardCount = std::min(discards_size, kMaxDiscardsPerPlayer);
+    c_hand.discardCount = cpp_hand.discards_count;
     for (auto j = 0; j < c_hand.discardCount; j++) {
       c_hand.discards[j] = static_cast<CPiece>(discards[j].toUint8_t());
     }

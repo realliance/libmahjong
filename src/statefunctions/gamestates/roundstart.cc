@@ -1,10 +1,9 @@
+#include <algorithm>
 #include <array>
-#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <vector>
 
-#include "controllers/playercontroller.h"
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
@@ -18,13 +17,14 @@ namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
-  state->walls = Walls(state->g);
-  for (size_t i = 0; i < 4; i++) {
-    auto hand = state->walls.TakeHand();
-    state->players.at(i).controller->RoundStart(
-        hand, static_cast<Wind>((i + 3 * (state->roundNum % 4)) % 4),
+  Walls::New(*state);
+  for (Hand& hand : state->hands) {
+    auto draw = Walls::TakeHand(*state);
+    state->controllers.at(hand.id)->RoundStart(
+        draw, static_cast<Wind>((hand.id + 3 * (state->roundNum % 4)) % 4),
         (state->roundNum > 3) ? kSouth : kEast);
-    state->hands.at(i) = Hand(hand);
+    hand.live_count = draw.size();
+    std::ranges::move(draw, hand.live.begin());
   }
 
   AlertPlayers(*state,
@@ -32,7 +32,7 @@ std::unique_ptr<GameState> RoundStart(std::unique_ptr<GameState> state) {
                    .type = Event::kDora,  // type
                    .player = -1,          // player
                    .piece = static_cast<int16_t>(
-                       state->walls.GetDoras()[0].toUint8_t()),  // piece
+                       Walls::GetDoras(*state)[0].toUint8_t()),  // piece
                    .decision = false,                            // decision
                });
 

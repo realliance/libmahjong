@@ -1,28 +1,27 @@
 #include <gtest/gtest.h>
 
-#include <array>
-
 #include "statefunctions/stateutilities.h"
-#include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/pieces.h"
-#include "types/piecetype.h"
 
 namespace mahjong {
 
 TEST(DiscardPiece, DiscardsCorrectPiece) {
-  GameState state;
-  state.hands[0].live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
+  Hand hand;
+  hand.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
+  hand.live_count = 4;
 
-  DiscardPiece(state, 0, kOneCharacter);
-  EXPECT_EQ(state.hands[0].discards[0], kOneCharacter);
+  DiscardPiece(hand, kOneCharacter);
+  EXPECT_EQ(hand.discards[0], kOneCharacter);
 }
 
 TEST(DiscardPiece, DoesntDiscardInCorrectPiece) {
-  GameState state;
-  state.hands[0].live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
+  Hand hand;
+  hand.live = {kOneCharacter, kFourPin, kWhiteDragon, kWhiteDragon};
+  hand.live_count = 4;
 
-  DiscardPiece(state, 0, kGreenDragon);
-  EXPECT_EQ(state.hands[0].live.size(), 4);
+  DiscardPiece(hand, kGreenDragon);
+  EXPECT_EQ(hand.live_count, 4);
 }
 
 }  // namespace mahjong

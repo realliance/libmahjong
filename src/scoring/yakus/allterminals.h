@@ -3,9 +3,10 @@
 
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 
 namespace mahjong::yaku {
-bool isAllTerminals(const GameState& state, int player,
+bool isAllTerminals(const GameState& state, const Hand& hand,
                     const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
 }

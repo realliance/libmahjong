@@ -3,9 +3,10 @@
 
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 
 namespace mahjong::yaku {
-bool isPinfu(const GameState& state, int player,
+bool isPinfu(const GameState& state, const Hand& hand,
              const std::vector<const mahjong::Node*>& branch);
 
 }

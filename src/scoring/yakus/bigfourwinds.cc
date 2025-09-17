@@ -5,11 +5,12 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/sets.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isBigFourWinds(const GameState& state, int player,
+bool isBigFourWinds(const GameState& /*state*/, const Hand& hand,
                     const std::vector<const mahjong::Node*>& branch) {
   int pons = 0;
   for (const auto* node : branch) {
@@ -27,7 +28,7 @@ bool isBigFourWinds(const GameState& state, int player,
     }
     pons++;
   }
-  for (const auto& meld : state.hands.at(player).melds) {
+  for (const auto& meld : hand.melds_range()) {
     switch (meld.start.toUint8_t()) {
       case Piece::Type::kEastWind:
       case Piece::Type::kSouthWind:

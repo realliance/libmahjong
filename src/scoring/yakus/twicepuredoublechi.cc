@@ -6,13 +6,14 @@
 #include "analysis/handnode.h"
 #include "scoring/yakus.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/sets.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isTwicePureDoubleChi(const GameState& state, int player,
+bool isTwicePureDoubleChi(const GameState& /*state*/, const Hand& hand,
                           const std::vector<const mahjong::Node*>& branch) {
-  if (state.hands.at(player).open) {
+  if (hand.open) {
     return false;
   }
   int pairs = 0;

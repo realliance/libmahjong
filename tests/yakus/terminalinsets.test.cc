@@ -3,7 +3,6 @@
 #include <array>
 #include <memory>
 #include <string>
-#include <vector>
 
 #include "analysis/analysis.h"
 #include "analysis/handnode.h"
@@ -19,20 +18,19 @@
 namespace mahjong::yaku {
 
 TEST(isTerminalsInAllSets, 2Han) {
-  const Meld meld = {
+  auto game_state = GameState();
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m789m111p11s", &hand);
+  hand.open = true;
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kChi,
       .start = Piece(kSevenPin),
   };
 
-  auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m111p11s"));
-  game_state.hands[0].open = true;
-  game_state.hands[0].melds = {meld};
-
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isTerminalsInAllSets(game_state, 0, branch)) {
+    if (isTerminalsInAllSets(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -42,13 +40,14 @@ TEST(isTerminalsInAllSets, 2Han) {
 
 TEST(isTerminalsInAllSets, 3Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m111p789p11s"));
-  game_state.hands[0].open = false;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m789m111p789p11s", &hand);
+  hand.open = false;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isTerminalsInAllSets(game_state, 0, branch)) {
+    if (isTerminalsInAllSets(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -57,20 +56,20 @@ TEST(isTerminalsInAllSets, 3Han) {
 }
 
 TEST(isTerminalsInAllSets, BadHand) {
-  const Meld meld = {
+  auto game_state = GameState();
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m789m222p11s", &hand);
+  hand.open = true;
+  hand.open = true;
+  hand.melds[hand.meld_count++] = Meld{
       .type = SetType::kChi,
       .start = Piece(kSevenPin),
   };
 
-  auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m222p11s"));
-  game_state.hands[0].open = true;
-  game_state.hands[0].melds = {meld};
-
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isTerminalsInAllSets(game_state, 0, branch)) {
+    if (isTerminalsInAllSets(game_state, hand, branch)) {
       FAIL();
       return;
     }

@@ -12,7 +12,6 @@ target_sources(
          "meld.h"
          "pieces.h"
          "piecetype.h"
-         "player.h"
          "score.h"
          "settings.h"
          "statefunction.h"

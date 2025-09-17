@@ -4,11 +4,12 @@
 
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 
 namespace mahjong {
 
-using yakuFunc = std::function<int(const mahjong::GameState&, int,
-                                   const std::vector<const mahjong::Node*>&)>;
+using yakuFunc = std::function<int(const GameState&, const Hand&,
+                                   const std::vector<const Node*>&)>;
 
 using Han = int;
 

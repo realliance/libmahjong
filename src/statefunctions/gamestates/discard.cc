@@ -4,12 +4,12 @@
 #include <memory>
 #include <vector>
 
-#include "controllers/playercontroller.h"
 #include "statefunctions/decisionfunction.h"
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/piecetype.h"
 #include "types/statefunction.h"
 #include "types/walls.h"
@@ -25,7 +25,7 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
                                state->pendingPiece.toUint8_t()),  // piece
                            .decision = false,                     // decision
                        });
-  DiscardPiece(*state, state->currentPlayer, state->pendingPiece);
+  DiscardPiece(state->hands[state->currentPlayer], state->pendingPiece);
 
   const std::vector<PossibleDecision> decisions = {
       {.type = Event::kChi, .func = CanChi},
@@ -35,14 +35,14 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
   };
 
   std::array<bool, 4> need_decision = {false, false, false, false};
-  for (int player = 0; player < 4; player++) {
-    if (player == state->currentPlayer) {
+  for (const Hand& hand : state->hands) {
+    if (hand.id == state->currentPlayer) {
       continue;
     }
     for (const auto& [decision, decisionIsPossible] : decisions) {
-      if (decisionIsPossible(*state, player)) {
-        need_decision.at(player) = true;
-        state->players.at(player).controller->ReceiveEvent(Event{
+      if (decisionIsPossible(*state, hand)) {
+        need_decision.at(hand.id) = true;
+        state->controllers.at(hand.id)->ReceiveEvent(Event{
             .type = decision,                // type
             .player = state->currentPlayer,  // player
             .piece =
@@ -54,24 +54,24 @@ std::unique_ptr<GameState> Discard(std::unique_ptr<GameState> state) {
   }
 
   Event decision = kDeclineEvent;
-  for (int i = 0; i < 4; i++) {
-    if (need_decision.at(i)) {
+  for (Hand& hand : state->hands) {
+    if (need_decision.at(hand.id)) {
       Event temp_decision =
-          GetValidDecisionOrThrow(*state, i, /*inHand=*/false);
+          GetValidDecisionOrThrow(*state, hand, /*inHand=*/false);
       if (temp_decision.type < decision.type) {  // lower is higher priority
-        temp_decision.player = i;
+        temp_decision.player = hand.id;
         temp_decision.piece =
             static_cast<int16_t>(state->pendingPiece.toUint8_t());
         decision = temp_decision;
       }
       if (temp_decision.type == Event::kRon) {
-        state->hasRonned.at(i) = true;
+        hand.hasRonned = true;
       }
     }
   }
 
   if (decision.type == Event::kDecline &&
-      state->walls.GetRemainingPieces() == 0) {
+      Walls::GetRemainingPieces(*state) == 0) {
     state->nextState = StateFunctionType::kExhaust;
     return state;
   }

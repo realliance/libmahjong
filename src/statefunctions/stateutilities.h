@@ -2,6 +2,8 @@
 #include <cstdint>
 
 #include "types/event.h"
+#include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/piecetype.h"
 #include "types/winds.h"
 
@@ -10,14 +12,15 @@ struct GameState;
 
 Wind GetSeat(int round, int player);
 
-uint8_t RemovePieces(GameState& state, int player, Piece p, uint8_t count);
-void DiscardPiece(GameState& state, int player, Piece p);
+uint8_t RemovePieces(Hand& hand, Piece p, uint8_t count);
+void DiscardPiece(Hand& hand, Piece p);
 
 void AlertPlayers(const GameState& state, Event e);
 Piece AskForDiscard(const GameState& state);
-uint8_t CountPieces(const GameState& state, int player, Piece p);
-bool ValidateDecision(const GameState& state, int player, Event decision,
+uint8_t CountPieces(const Hand& hand, Piece p);
+bool ValidateDecision(const GameState& state, const Hand& hand, Event decision,
                       bool inHand);
-Event GetValidDecisionOrThrow(const GameState& state, int player, bool inHand);
+Event GetValidDecisionOrThrow(const GameState& state, const Hand& hand,
+                              bool inHand);
 
 }  // namespace mahjong

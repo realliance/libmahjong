@@ -2,12 +2,13 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <vector>
 
 #include "statefunctions/router.h"
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
+#include "types/meld.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
 #include "types/statefunction.h"
@@ -24,28 +25,28 @@ std::unique_ptr<GameState> Kan(std::unique_ptr<GameState> state) {
                            .decision = false,                     // decision
                        });
 
-  if (state->hands.at(state->currentPlayer).riichi &&
-      state->hands.at(state->currentPlayer).discards.size() ==
-          state->hands.at(state->currentPlayer).riichiPieceDiscard) {
-    state->hands.at(state->currentPlayer).riichiPieceDiscard++;
+  if (Hand& hand = state->hands[state->currentPlayer];
+      hand.riichi && hand.discards_count == hand.riichiPieceDiscard) {
+    hand.riichiPieceDiscard++;
   }
 
-  state->hands.at(state->lastCaller).open = true;
-  state->currentPlayer = state->lastCaller;
-  state->hands.at(state->lastCaller).live.push_back(state->pendingPiece);
-  state->hands.at(state->lastCaller).sort();
   state->lastCall = state->turnNum;
   state->concealedKan = false;
   state->turnNum++;
+  state->currentPlayer = state->lastCaller;
 
-  if (RemovePieces(*state, state->lastCaller, state->pendingPiece,
-                   /*count=*/4) != 4) {
+  Hand& hand = state->hands[state->currentPlayer];
+  hand.open = true;
+  if (RemovePieces(hand, state->pendingPiece,
+                   /*count=*/3) != 3) {
     std::cerr << "Not Enough Pieces to remove in kan" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;
   }
-  state->hands.at(state->lastCaller)
-      .melds.push_back({SetType::kKan, state->pendingPiece});
+  hand.melds[hand.meld_count++] = Meld{
+      .type = SetType::kKan,
+      .start = state->pendingPiece,
+  };
 
   state->nextState = StateFunctionType::kKanDiscard;
   return state;

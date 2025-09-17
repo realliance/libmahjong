@@ -7,14 +7,15 @@
 #include "scoring/yakus.h"
 #include "statefunctions/stateutilities.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/pieces.h"
 #include "types/sets.h"
 #include "types/yaku.h"
 
 namespace mahjong::yaku {
-bool isPinfu(const GameState& state, int player,
+bool isPinfu(const GameState& state, const Hand& hand,
              const std::vector<const mahjong::Node*>& branch) {
-  if (state.hands.at(player).open) {
+  if (hand.open) {
     return false;
   }
   for (const auto* node : branch) {
@@ -37,13 +38,14 @@ bool isPinfu(const GameState& state, int player,
         if (node->start() == kEastWind && state.roundNum < 4) {
           return false;
         }
-        if (node->start() == Piece::fromWind(GetSeat(state.roundNum, player))) {
+        if (node->start() ==
+            Piece::fromWind(GetSeat(state.roundNum, hand.id))) {
           return false;
         }
       }
     }
   }
-  return getWaits(state.hands[player], state.pendingPiece).size() >= 2;
+  return getWaits(hand, state.pendingPiece).size() >= 2;
 }
 
 REGISTER_YAKU({

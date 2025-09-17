@@ -3,9 +3,10 @@
 
 #include "analysis/handnode.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 
 namespace mahjong::yaku {
-bool isRobbingAKan(const GameState& state, int player,
+bool isRobbingAKan(const GameState& state, const Hand& hand,
                    const std::vector<const mahjong::Node*>& /*unused*/ = {});
 
 }

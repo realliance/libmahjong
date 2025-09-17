@@ -2,28 +2,27 @@
 
 #include <array>
 #include <memory>
-#include <string>
-#include <vector>
 
 #include "analysis/analysis.h"
 #include "analysis/handnode.h"
 #include "scoring/yakus/bottomofthesea.h"
 #include "types/gamestate.h"
 #include "types/hand.h"
-#include "types/walls.h"
+#include "types/settings.h"
 #include "utils/handformer.h"
 
 namespace mahjong::yaku {
 
 TEST(isBottomOfTheSea, 1Han) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m111z999s55z"));
-  game_state.walls.livingWalls.clear();
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m789m111z999s55z", &hand);
+  game_state.livingWallIndex = kLivingWallCount;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isBottomOfTheSea(game_state, 0, branch)) {
+    if (isBottomOfTheSea(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -33,14 +32,15 @@ TEST(isBottomOfTheSea, 1Han) {
 
 TEST(isBottomOfTheSea, 1HanRonned) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m111z999s55z"));
-  game_state.walls.livingWalls.clear();
-  game_state.hasRonned[0] = true;
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m789m111z999s55z", &hand);
+  game_state.livingWallIndex = kLivingWallCount;
+  game_state.hands[0].hasRonned = true;
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isBottomOfTheSea(game_state, 0, branch)) {
+    if (isBottomOfTheSea(game_state, hand, branch)) {
       SUCCEED();
       return;
     }
@@ -50,12 +50,13 @@ TEST(isBottomOfTheSea, 1HanRonned) {
 
 TEST(isBottomOfTheSea, DoesntApply) {
   auto game_state = GameState();
-  game_state.hands[0] = Hand(HandFromNotation("123m789m111z999s55z"));
+  Hand& hand = game_state.hands[0];
+  HandFromNotation("123m789m111z999s55z", &hand);
 
-  auto root = breakdownHand(game_state.hands.at(0).live);
+  auto root = breakdownHand(hand.live_range());
 
   for (const auto& branch : Node::AsBranchVectors(root.get())) {
-    if (isBottomOfTheSea(game_state, 0, branch)) {
+    if (isBottomOfTheSea(game_state, hand, branch)) {
       FAIL();
       return;
     }

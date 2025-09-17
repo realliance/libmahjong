@@ -1,26 +1,32 @@
 #pragma once
-#include <algorithm>
-#include <cstddef>
-#include <utility>
-#include <vector>
+
+#include <array>
 
 #include "types/meld.h"
 #include "types/piecetype.h"
-
+#include "types/settings.h"
 namespace mahjong {
 
-class Hand {
- public:
-  Hand() = default;
-  explicit Hand(std::vector<Piece> live) : live(std::move(std::move(live))) {}
-  void sort() { std::ranges::sort(live); }
-  std::vector<Piece> live;
-  std::vector<Meld> melds;
-  std::vector<Piece> discards;
-  bool open = false;
+struct Hand {
+  int id;
+  std::array<Piece, kMaxDiscardCount> discards;
+  int discards_count = 0;
   bool riichi = false;
-  size_t riichiPieceDiscard = -1;
-  int riichiRound = -1;
+  int riichiPieceDiscard;
+  int riichiRound;
+  int score;
+  bool hasRonned;
+  int points;
+  bool open;
+  std::array<Piece, 14> live;
+  int live_count = 13;
+  std::array<Meld, 4> melds;
+  int meld_count = 0;
+  [[nodiscard]] std::ranges::subrange<const Piece*> live_range() const {
+    return std::ranges::subrange(live.begin(), live.begin() + live_count);
+  }
+  [[nodiscard]] std::ranges::subrange<const Meld*> melds_range() const {
+    return std::ranges::subrange(melds.begin(), melds.begin() + meld_count);
+  }
 };
-
 }  // namespace mahjong

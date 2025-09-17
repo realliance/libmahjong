@@ -8,6 +8,7 @@
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/piecetype.h"
 #include "types/statefunction.h"
 
@@ -15,10 +16,14 @@ namespace mahjong {
 
 namespace {
 std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
+  Hand& hand = state->hands[state->currentPlayer];
+  hand.riichiRound = state->turnNum;
+  hand.riichiPieceDiscard = hand.discards_count;
+  hand.riichi = true;
+
   // TODO(#22): Ask the players if they want to riichi
-  state->pendingPiece = getPossibleWaits(state->hands[state->currentPlayer])
-                            .begin()
-                            ->second.front();
+  state->pendingPiece = getPossibleWaits(hand).begin()->second.front();
+  state->riichiSticks++;
 
   AlertPlayers(*state,
                Event{
@@ -28,12 +33,6 @@ std::unique_ptr<GameState> Riichi(std::unique_ptr<GameState> state) {
                        Piece(state->pendingPiece).toUint8_t()),  // piece
                    .decision = false,                            // decision
                });
-
-  state->hands.at(state->currentPlayer).riichiRound = state->turnNum;
-  state->hands.at(state->currentPlayer).riichiPieceDiscard =
-      state->hands.at(state->currentPlayer).discards.size();
-  state->hands.at(state->currentPlayer).riichi = true;
-  state->riichiSticks++;
 
   state->nextState = StateFunctionType::kDiscard;
   return state;

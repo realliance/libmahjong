@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <iostream>
@@ -7,6 +8,7 @@
 #include "statefunctions/stateutilities.h"
 #include "types/event.h"
 #include "types/gamestate.h"
+#include "types/hand.h"
 #include "types/meld.h"
 #include "types/piecetype.h"
 #include "types/sets.h"
@@ -22,22 +24,22 @@ std::unique_ptr<GameState> ConvertedKan(std::unique_ptr<GameState> state) {
                                state->pendingPiece.toUint8_t()),  // piece
                            .decision = false,                     // decision
                        });
-  if (RemovePieces(*state, state->currentPlayer, state->pendingPiece,
+  Hand& hand = state->hands[state->currentPlayer];
+  if (RemovePieces(hand, state->pendingPiece,
                    /*count=*/1) != 1) {
     std::cerr << "Not Enough pieces to remove in ConvertedKan" << '\n';
     state->nextState = StateFunctionType::kError;
     return state;
   }
-  state->concealedKan = false;
-  for (auto& meld : state->hands.at(state->currentPlayer).melds) {
-    if (meld.type == SetType::kPon && meld.start == state->pendingPiece) {
-      meld.type = SetType::kKan;
-      state->nextState = StateFunctionType::kKanDiscard;
-      return state;
-    }
+  Meld* meld = std::ranges::find(
+      hand.melds, Meld{.type = SetType::kPon, .start = state->pendingPiece});
+  if (meld == hand.melds.end()) {
+    std::cerr << "Could Not find matching pon" << '\n';
+    state->nextState = StateFunctionType::kError;
+    return state;
   }
-  std::cerr << "Could Not find matching pon" << '\n';
-  state->nextState = StateFunctionType::kError;
+  meld->type = SetType::kKan;
+  state->nextState = StateFunctionType::kKanDiscard;
   return state;
 }
 }  // namespace
