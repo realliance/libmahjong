@@ -15,6 +15,7 @@ namespace mahjong {
 TEST(GamePlay, Furiten) {
   auto state = GameState();
   Hand& hand = state.hands[0];
+  hand.id = 0;
   HandFromNotation("123m456p234678s44m", &hand);
   hand.open = false;
   EXPECT_TRUE(isComplete(state, hand));
