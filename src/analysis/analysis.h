@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <span>
 
 #include "analysis/handnode.h"
 #include "types/hand.h"
