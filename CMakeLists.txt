@@ -92,6 +92,8 @@ if(libmahjong_use_clang_utils AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
 endif()
 
+add_subdirectory(extern)
+
 add_library(libmahjong SHARED)
 add_subdirectory(src)
 
