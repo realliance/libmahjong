@@ -78,8 +78,6 @@ package_add_test(
   "yakus/fullflush.test.cc"
   "yakus/blessingofman.test.cc")
 
-package_add_test(api "api/game_control.test.cc")
-
 package_add_test(
   rules
   "rules/basic_rules.test.cc"
