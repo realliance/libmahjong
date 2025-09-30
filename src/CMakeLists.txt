@@ -1,7 +1,6 @@
 set_target_properties(libmahjong PROPERTIES PREFIX "")
 set_target_properties(libmahjong PROPERTIES OUTPUT_NAME "libmahjong")
 
-add_subdirectory(api)
 add_subdirectory(controllers)
 add_subdirectory(statefunctions)
 add_subdirectory(types)

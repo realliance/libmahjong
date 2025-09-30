@@ -17,32 +17,36 @@
       let
         pkgs = import nixpkgs { inherit system; };
 
+        llvmPackage = pkgs.llvmPackages_21;
+        gccPackage = pkgs.gcc15Stdenv;
+
         buildPackages = with pkgs; [
           cmake
           git
           ninja
         ];
 
-        llvmPackage = pkgs.llvmPackages_21;
-        gccPackage = pkgs.gcc15Stdenv;
-
         # clang wrapper with gcc's libstdc++
         clangWithGccStdlib = pkgs.wrapCCWith {
           cc = llvmPackage.clang-unwrapped;
-          bintools = gccPackage.cc.bintools;
+          bintools = llvmPackage.bintools;
+          libcxx = gccPackage.cc.cc.lib;
           extraBuildCommands = ''
             echo "-isystem ${gccPackage.cc.cc}/include/c++/${gccPackage.cc.version}" >> $out/nix-support/cc-cflags
             echo "-isystem ${gccPackage.cc.cc}/include/c++/${gccPackage.cc.version}/x86_64-unknown-linux-gnu" >> $out/nix-support/cc-cflags
+
+            echo "-isystem ${gccPackage.cc.cc}/include/c++/${gccPackage.cc.version}" > $out/nix-support/libcxx-cxxflags
+            echo "-isystem ${gccPackage.cc.cc}/include/c++/${gccPackage.cc.version}/x86_64-unknown-linux-gnu" >> $out/nix-support/libcxx-cxxflags
           '';
         };
 
-        # Create stdenv with clang + gcc libstdc++
-        clangStdenv = pkgs.overrideCC gccPackage clangWithGccStdlib;
+        clangStdenv = pkgs.stdenvAdapters.overrideCC gccPackage clangWithGccStdlib;
 
-        # Override clang-tools to match our clang + gcc libstdc++ env
-        clangTools = llvmPackage.clang-tools.overrideAttrs (oldAttrs: {
+        clangTools = llvmPackage.clang-tools.override {
           stdenv = clangStdenv;
-        });
+          clang = clangWithGccStdlib;
+          clang-unwrapped = llvmPackage.clang-unwrapped;
+        };
 
         commonAttrs = {
           pname = "libmahjong";
@@ -80,11 +84,15 @@
         ];
       in
       {
-        devShells.default = pkgs.mkShell.override { stdenv = clangStdenv; } {
+        devShells.default = clangStdenv.mkDerivation {
+          name = "libmahjong-dev";
           nativeBuildInputs = clangNativeBuildInputs;
 
           # Disable all hardening
           hardeningDisable = [ "all" ];
+
+          # Explicitly set to prevent contamination
+          NIX_CFLAGS_COMPILE = "-isystem ${gccPackage.cc.cc}/include/c++/${gccPackage.cc.version} -isystem ${gccPackage.cc.cc}/include/c++/${gccPackage.cc.version}/x86_64-unknown-linux-gnu";
 
           shellHook = ''
             mkdir -p .vscode
@@ -98,7 +106,7 @@
             echo "}" >> .vscode/settings.json
 
             ${pkgs.cmake}/bin/cmake -S . -B build -G Ninja \
-              -Dlibmahjong_build_tests=ON \
+              -Dlibmahjong_build_tests=OFF \
               -DCMAKE_CXX_FLAGS="-O1 -g"
           '';
         };
